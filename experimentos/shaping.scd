@@ -1,27 +1,15 @@
 // Experimentos para conseguir hacer el shaping de los osciladores
 
-b = Buffer.alloc(s, 2048);
 
-(
-// Se puede variar el contenido de la tabla de onda en tiempo real.
-// Para hacer el shaping de los osciladores, hay que rellenar la tabla cada vez que se cambia la forma de onda.
-var array = (-0.3!1024).rand;
-var sig = Signal.newFrom(array).asWavetable;
-b.loadCollection(sig);
-)
-
-{Osc.ar(b, mul:1!2)}.play
-
-b.zero // para poner a cero el buffer
 
 
 //////////////////////////////////////////////////////////////////////////////////
 
-// Onda cuadrada variando la simetría
+// Onda cuadrada variando la simetría (aproximación con tabla de onda)
 
 b = Buffer.alloc(s, 2**11);
 (
-var proporcionPositiva = 1; // shape variable en onda cuadrada.
+var proporcionPositiva = 0.2; // shape variable en onda cuadrada.
 var table;
 var tablePos;
 var tableNeg;
@@ -38,3 +26,69 @@ b.loadCollection(sig);
 )
 
 {Osc.ar(b, mul:0.2!2, freq:100)}.play
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+// Onda cuadrada variando la simetría (aproximación con frecuencia modulada)
+// Solo funciona cuando el índice de modulación no es mayor que la frecuencia
+
+(
+{
+	var freq = 100;
+	var vol = 0.5;
+	var indiceMod = 100;
+	var sigPort, sigMod;
+	sigMod = SinOsc.ar(freq, pi, indiceMod);
+
+	sigPort = PulseDPW.ar(freq + sigMod, 0.5);
+}.plot;
+)
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Onda sinusoidal variando la simetría (aproximación con tabla de onda)
+// En el punto 0 se produce un cambio brusco, pero es la mejor aproximación por ahora
+
+b = Buffer.alloc(s, 2**11);
+(
+var proporcionPos = 0.9; // shape variable en onda cuadrada.
+var table;
+var tablePos;
+var tableNeg;
+var tableSize = (2**10).asInt;
+var sizePos = (tableSize * proporcionPos).round.asInt;
+var sizeNeg = tableSize-sizePos;
+var sig;
+tablePos = sizePos.collect({arg i; (i/sizePos*(pi)).sin});
+tableNeg = sizeNeg.collect({arg i; (i/sizeNeg*(pi)).sin})*(-1);
+table = tablePos++tableNeg;
+
+// Quizás si la fase se multiplica por la función exponenciaĺ adecuada se puede "distorsionar" la onda sinusoidal evitando los cambios bruscos en 0
+//table = tableSize.collect({arg i; (i/tableSize*(2pi)).sin});
+
+
+// creada la tabla dependiendo de la proporción, se pasa al buffer
+sig = Signal.newFrom(table).asWavetable;
+b.loadCollection(sig);
+
+{Osc.ar(b, mul:0.2!2, freq:100)}.plot;
+)
+
+{Osc.ar(b, mul:0.2!2, freq:180)}.play;
+
+
+
+/////////////////////////////////////////////////
+// Ensayo de oscilación con una envolvente.
+(
+{
+	var freq = 100;
+	var sig;
+	sig = Env.new(levels: [0,1,0,-1,0,0], times: ((1/freq)/4)!4, curve: [-3,3,-3,3],releaseNode:4, loopNode: 0).ar() * 0.2;
+}.play;
+)
+
+
+
+Env.new(levels: [0,1,0,-1,0], times: ((1/200)/4)!4, curve: [-8,8,-8,8]).plot
