@@ -2,14 +2,26 @@
 
 
 
+// Onda cuadrada generada por una envolvente variando la forma (shape)
+// Solución más sencilla y eficiente ***************************************************
+(
+{
+	var proporcionPos = 0.1;
+	var freq = 100;
+	var ratioPos = proporcionPos * (1/freq);
+	var ratioNeg = (1/freq)-ratioPos;
+	var sig;
+	sig = Env.new(levels: [0,1,0,0], times: [ratioPos, ratioNeg], curve: \step ,releaseNode:2, loopNode: 0).ar() * 0.2;
+}.play;
+)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-// Onda cuadrada variando la simetría (aproximación con tabla de onda)
+// Onda cuadrada variando la forma (shape) (aproximación con tabla de onda)
 
 b = Buffer.alloc(s, 2**11);
 (
-var proporcionPositiva = 0.2; // shape variable en onda cuadrada.
+var proporcionPositiva = 0.1; // shape variable en onda cuadrada.
 var table;
 var tablePos;
 var tableNeg;
@@ -25,12 +37,12 @@ sig = Signal.newFrom(table).asWavetable;
 b.loadCollection(sig);
 )
 
-{Osc.ar(b, mul:0.2!2, freq:100)}.play
+{Osc.ar(b, mul:0.2, freq:100)}.play
 
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-// Onda cuadrada variando la simetría (aproximación con frecuencia modulada)
+// Onda cuadrada variando la forma (shape) (aproximación con frecuencia modulada)
 // Solo funciona cuando el índice de modulación no es mayor que la frecuencia
 
 (
@@ -46,8 +58,32 @@ b.loadCollection(sig);
 )
 
 
-///////////////////////////////////////////////////////////////////////////////
-// Onda sinusoidal variando la simetría (aproximación con tabla de onda)
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
+// Onda SINUSOIDAL variando la simetría (morphing)
+// Método más eficiente y sencillo. **************************************************
+
+(
+{
+	var freq = 200;
+	var symmetry = 1; // -1 = simetría negativa, 0 = senoidal, 1 =  simetría positiva
+	var sigSin = SinOsc.ar(freq, 0, 1-symmetry.abs);
+	var sigSym = SinOsc.ar(freq, 0, symmetry.abs).abs * symmetry;
+	var sig = (sigSym + sigSin);
+	sig = sig * 0.2;
+
+}.plot;
+
+)
+
+
+// Onda SINUSOIDAL variando la simetría (aproximación con tabla de onda)
 // En el punto 0 se produce un cambio brusco, pero es la mejor aproximación por ahora
 
 b = Buffer.alloc(s, 2**11);
@@ -64,7 +100,7 @@ tablePos = sizePos.collect({arg i; (i/sizePos*(pi)).sin});
 tableNeg = sizeNeg.collect({arg i; (i/sizeNeg*(pi)).sin})*(-1);
 table = tablePos++tableNeg;
 
-// Quizás si la fase se multiplica por la función exponenciaĺ adecuada se puede "distorsionar" la onda sinusoidal evitando los cambios bruscos en 0
+// Quizás si la fase se multiplica por la función exponenciaĺ adecuada se puede "distorsionar" la onda sinusoidal evitando los cambios bruscos en 0...
 //table = tableSize.collect({arg i; (i/tableSize*(2pi)).sin});
 
 
@@ -92,3 +128,7 @@ b.loadCollection(sig);
 
 
 Env.new(levels: [0,1,0,-1,0], times: ((1/200)/4)!4, curve: [-8,8,-8,8]).plot
+
+
+
+
