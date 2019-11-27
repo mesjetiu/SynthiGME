@@ -12,7 +12,7 @@
 	var ratioNeg = (1/freq)-ratioPos;
 	var sig;
 	sig = Env.new(levels: [0,1,0,0], times: [ratioPos, ratioNeg], curve: \step ,releaseNode:2, loopNode: 0).ar() * 0.2;
-}.play;
+}.plot;
 )
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -72,9 +72,9 @@ b.loadCollection(sig);
 (
 {
 	var freq = 200;
-	var symmetry = 1; // -1 = simetría negativa, 0 = senoidal, 1 =  simetría positiva
+	var symmetry = -1; // -1 = simetría negativa, 0 = senoidal, 1 =  simetría positiva
 	var sigSin = SinOsc.ar(freq, 0, 1-symmetry.abs);
-	var sigSym = SinOsc.ar(freq, 0, symmetry.abs).abs * symmetry;
+	var sigSym = SinOsc.ar(freq).abs * symmetry;
 	var sig = (sigSym + sigSin);
 	sig = sig * 0.2;
 
@@ -84,7 +84,7 @@ b.loadCollection(sig);
 
 
 // Onda SINUSOIDAL variando la simetría (aproximación con tabla de onda)
-// En el punto 0 se produce un cambio brusco, pero es la mejor aproximación por ahora
+// En el punto 0 se produce un cambio brusco
 
 b = Buffer.alloc(s, 2**11);
 (
