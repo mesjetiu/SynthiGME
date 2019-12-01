@@ -139,10 +139,10 @@ S100_Oscillator {
 			("S100_Oscillator/setSawtoothLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
-	setFreqOscilator {| freq |
+	setFreqOscillator {| freq |
 		if((freq>=0).and( {freq<=10000}), {
 			freqOscillator = freq;
-			oscillator.set(\frequency, freq)}, {
+			oscillator.set(\freq, freq)}, {
 			("S100_Oscillator/setFreqOscillator: " + freq + " no es un valor entre 0 y 1").postln});
 	}
 }
