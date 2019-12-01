@@ -2,7 +2,7 @@ Synthi100 {
 	var <server; // Servidor por defecto
 
 	// Módulos que incluye:
-	var oscillators;
+	var prOscillators;
 
 	// Buses internos de entrada y salida:
 	var <audioInBuses;
@@ -13,13 +13,15 @@ Synthi100 {
 	var <externAudioOutBuses;
 
 	// Diccionario con los símbolos de cada módulo:
-	var moduleDictionary;
+	var prModuleDictionary;
 
 	// Opciones:
 	var <numAudioInBuses = 8;
 	var <numAudioOutBuses = 8;
 
-	// Métodos de clase:
+
+
+	// Métodos de clase //////////////////////////////////////////////////////////////////
 
 	*initClass {
 		// Inicializa otras clases antes de esta
@@ -29,6 +31,10 @@ Synthi100 {
 	*new { |server, audioInBuses, audioOutBuses|
 		^super.new.init(server, audioInBuses, audioOutBuses);
 	}
+
+
+
+	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init { arg serv = Server.local, aInBuses, aOutBuses;
 		server = serv;
@@ -40,21 +46,21 @@ Synthi100 {
 		this.setExternAudioInBuses (aInBuses);
 		this.setExternAudioOutBuses (aOutBuses);
 		// Módulos
-		oscillators = 12.collect({S100_Oscillator.new});
+		prOscillators = 12.collect({S100_Oscillator.new});
 		// Diccionario de módulos
-		moduleDictionary = Dictionary.newFrom(List[
-			\Osc01, oscillators[0],
-			\Osc02, oscillators[1],
-			\Osc03, oscillators[2],
-			\Osc04, oscillators[3],
-			\Osc05, oscillators[4],
-			\Osc06, oscillators[5],
-			\Osc07, oscillators[6],
-			\Osc08, oscillators[7],
-			\Osc09, oscillators[8],
-			\Osc10, oscillators[9],
-			\Osc11, oscillators[10],
-			\Osc12, oscillators[11],
+		prModuleDictionary = Dictionary.newFrom(List[
+			\Osc01, prOscillators[0],
+			\Osc02, prOscillators[1],
+			\Osc03, prOscillators[2],
+			\Osc04, prOscillators[3],
+			\Osc05, prOscillators[4],
+			\Osc06, prOscillators[5],
+			\Osc07, prOscillators[6],
+			\Osc08, prOscillators[7],
+			\Osc09, prOscillators[8],
+			\Osc10, prOscillators[9],
+			\Osc11, prOscillators[10],
+			\Osc12, prOscillators[11],
 		]);
 	}
 
@@ -79,17 +85,17 @@ Synthi100 {
 
 	play {
 		// Aquí se arrancan todos los Synths de todos los módulos (el servidor debe están arrancado)
-		oscillators.do({|i| i.createSynth});
-		//oscillators[0].createSynth(server);
+		prOscillators.do({|i| i.createSynth});
+		//prOscillators[0].createSynth(server);
 	}
 
 	stop {
-		oscillators.do({|i| i.freeSynth});
+		prOscillators.do({|i| i.freeSynth});
 	}
 
 
 	setOscillatorPulseLevel {|module, level |
-		moduleDictionary[module].setPulseLevel(level);
+		prModuleDictionary[module].setPulseLevel(level);
 	}
 
 	/// HACER EL RESTO DE MÉTODOS DEL MISMO MODO QUE EL ANTERIOR.
