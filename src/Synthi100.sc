@@ -1,5 +1,5 @@
 Synthi100 {
-	var <server; // Servidor por defecto
+	var <>server; // Servidor por defecto
 
 	// Módulos que incluye:
 	var prOscillators;
