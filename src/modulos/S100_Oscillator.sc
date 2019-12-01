@@ -13,16 +13,29 @@ S100_Oscillator {
 	var <sawtoothLevel = 0;
 	var <freqOscillator = 100;
 	var <>outBus = 0;
+	var <server;
 
 	// Opciones
 	var <outVol = 1;
+
+	// Métodos de clase //////////////////////////////////////////////////////////////////
+
+
+	*new { |server, audioOutBus|
+		^super.new.init(server, audioOutBus);
+	}
 
 
 
 	// Métodos de instancia ////////////////////////////////////////////
 
+	init { arg serv = Server.local, aOutBus;
+		outBus = aOutBus;
+		server = serv;
+	}
+
 	// Crea el Synth en el servidor
-	createSynth { arg server;
+	createSynth {
 		if(oscillator.isNil, {
 			oscillator = SynthDef(\oscillator, {
 				// Parámetros manuales del S100
@@ -72,7 +85,7 @@ S100_Oscillator {
 				\triangleLevel, triangleLevel,
 				\sawtoothLevel, sawtoothLevel,
 				\freq, freqOscillator,
-				\outBus, 0,
+				\outBus, outBus,
 				\outVol, 1,
 			]);
 		});
