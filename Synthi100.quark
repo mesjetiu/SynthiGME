@@ -1,0 +1,6 @@
+(
+name: "Synthi100",
+summary: "Clase Synthi100, emulando el EMS Synthi 100 del GME de Cuenca",
+license: "GPL",
+copyright: "Carlos Arturo Guerra Parra, 2019"
+)
