@@ -46,7 +46,7 @@ Synthi100 {
 		this.setExternAudioInBuses (aInBuses);
 		this.setExternAudioOutBuses (aOutBuses);
 		// Módulos
-		prOscillators = 12.collect({S100_Oscillator.new});
+		prOscillators = 12.collect({S100_Oscillator.new(serv, externAudioOutBuses[0])}); // Se conecta provisionalmente directamente con "externAudioOutBuses". En el futuro se hara por medio de PatchBay.
 		// Diccionario de módulos
 		prModuleDictionary = Dictionary.newFrom(List[
 			\Osc01, prOscillators[0],
@@ -94,19 +94,18 @@ Synthi100 {
 	}
 
 
+	// Setters de los diferentes parámetros de los módulos en formato OSC /////////////////////////
+
 	setOscillatorPulseLevel {|module, level |
 		prModuleDictionary[module].setPulseLevel(level);
 	}
 
 	/// HACER EL RESTO DE MÉTODOS DEL MISMO MODO QUE EL ANTERIOR.
-/*
-	setPulseShape {| shape |
-		if((shape>=0).and( {shape<=1}), {
-			pulseShape = shape;
-			oscillator.set(\pulseShape, shape)}, {
-			("S100_Oscillator/setPulseShape: " + shape + " no es un valor entre 0 y 1").postln});
-	}
 
+	setOscillatorPulseShape {|module, shape |
+		prModuleDictionary[module].setPulseShape(shape);
+	}
+/*
 	setSineLevel {| level |
 		if((level>=0).and( {level<=1}), {
 			sineLevel = level;
