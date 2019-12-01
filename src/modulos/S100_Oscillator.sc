@@ -1,10 +1,11 @@
+
 S100_Oscillator {
 	// Synth de la instancia
 	var oscillator = nil;
 
 	// Valores de los parámetros del Synth
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
-	var <pulseLevel = 0.3;
+	var <pulseLevel = 0;
 	var <pulseShape = 0.5; // de 0 a 1
 	var <sineLevel = 0;
 	var <sineSymmetry = 0; // de -1 a 1
@@ -12,13 +13,16 @@ S100_Oscillator {
 	var <sawtoothLevel = 0;
 	var <freqOscillator = 100;
 	var <>outBus = 0;
+
+	// Opciones
 	var <outVol = 1;
+
 
 
 	// Métodos de instancia ////////////////////////////////////////////
 
 	// Crea el Synth en el servidor
-	createSynth {
+	createSynth { arg server;
 		if(oscillator.isNil, {
 			oscillator = SynthDef(\oscillator, {
 				// Parámetros manuales del S100
@@ -60,7 +64,7 @@ S100_Oscillator {
 				var sig = sigPulse + sigSine + sigTriangle + sigSawtooth;
 
 				Out.ar(outBus, sig);
-			}).play(args:[
+			}).play(server, args:[
 				\pulseLevel, pulseLevel,
 				\pulseShape, pulseShape,
 				\sineLevel, sineLevel,
