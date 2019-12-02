@@ -3,6 +3,7 @@ Synthi100 {
 
 	// Módulos que incluye:
 	var prOscillators;
+	var <conectionOut;
 
 	// Buses internos de entrada y salida:
 	var <audioInBuses;
@@ -45,11 +46,14 @@ Synthi100 {
 		externAudioOutBuses = numAudioOutBuses.collect({nil});
 		this.setExternAudioInBuses (aInBuses);
 		this.setExternAudioOutBuses (aOutBuses);
+
 		// Módulos
-		prOscillators = 12.collect({S100_Oscillator.new(serv, externAudioOutBuses[0])}); // Se conecta provisionalmente directamente con "externAudioOutBuses". En el futuro se hara por medio de PatchBay.
+		prOscillators = 12.collect({S100_Oscillator.new(serv)});
+
 
 		// Diccionario de parámetros de la interfaz física del Synthi 100
 		prParameterDictionary = Dictionary.newFrom(List[
+			\Osc01Range, {|range| prOscillators[0].setRange(range)},
 			\Osc01PulseLevel, {|level| prOscillators[0].setPulseLevel(level)},
 			\Osc01PulseShape, {|shape| prOscillators[0].setPulseShape(shape)},
 			\Osc01SineLevel, {|level| prOscillators[0].setSineLevel(level)},
@@ -58,6 +62,7 @@ Synthi100 {
 			\Osc01SawtoothLevel, {|level| prOscillators[0].setSawtoothLevel(level)},
 			\Osc01Frequency, {|freq| prOscillators[0].setFreqOscillator(freq)},
 
+			\Osc02Range, {|range| prOscillators[1].setRange(range)},
 			\Osc02PulseLevel, {|level| prOscillators[1].setPulseLevel(level)},
 			\Osc02PulseShape, {|shape| prOscillators[1].setPulseShape(shape)},
 			\Osc02SineLevel, {|level| prOscillators[1].setSineLevel(level)},
@@ -66,6 +71,7 @@ Synthi100 {
 			\Osc02SawtoothLevel, {|level| prOscillators[1].setSawtoothLevel(level)},
 			\Osc02Frequency, {|freq| prOscillators[1].setFreqOscillator(freq)},
 
+			\Osc03Range, {|range| prOscillators[2].setRange(range)},
 			\Osc03PulseLevel, {|level| prOscillators[2].setPulseLevel(level)},
 			\Osc03PulseShape, {|shape| prOscillators[2].setPulseShape(shape)},
 			\Osc03SineLevel, {|level| prOscillators[2].setSineLevel(level)},
@@ -74,6 +80,7 @@ Synthi100 {
 			\Osc03SawtoothLevel, {|level| prOscillators[2].setSawtoothLevel(level)},
 			\Osc03Frequency, {|freq| prOscillators[2].setFreqOscillator(freq)},
 
+			\Osc04Range, {|range| prOscillators[3].setRange(range)},
 			\Osc04PulseLevel, {|level| prOscillators[3].setPulseLevel(level)},
 			\Osc04PulseShape, {|shape| prOscillators[3].setPulseShape(shape)},
 			\Osc04SineLevel, {|level| prOscillators[3].setSineLevel(level)},
@@ -82,6 +89,7 @@ Synthi100 {
 			\Osc04SawtoothLevel, {|level| prOscillators[3].setSawtoothLevel(level)},
 			\Osc04Frequency, {|freq| prOscillators[3].setFreqOscillator(freq)},
 
+			\Osc05Range, {|range| prOscillators[4].setRange(range)},
 			\Osc05PulseLevel, {|level| prOscillators[4].setPulseLevel(level)},
 			\Osc05PulseShape, {|shape| prOscillators[4].setPulseShape(shape)},
 			\Osc05SineLevel, {|level| prOscillators[4].setSineLevel(level)},
@@ -90,6 +98,7 @@ Synthi100 {
 			\Osc05SawtoothLevel, {|level| prOscillators[4].setSawtoothLevel(level)},
 			\Osc05Frequency, {|freq| prOscillators[4].setFreqOscillator(freq)},
 
+			\Osc06Range, {|range| prOscillators[5].setRange(range)},
 			\Osc06PulseLevel, {|level| prOscillators[5].setPulseLevel(level)},
 			\Osc06PulseShape, {|shape| prOscillators[5].setPulseShape(shape)},
 			\Osc06SineLevel, {|level| prOscillators[5].setSineLevel(level)},
@@ -98,6 +107,7 @@ Synthi100 {
 			\Osc06SawtoothLevel, {|level| prOscillators[5].setSawtoothLevel(level)},
 			\Osc06Frequency, {|freq| prOscillators[5].setFreqOscillator(freq)},
 
+			\Osc07Range, {|range| prOscillators[6].setRange(range)},
 			\Osc07PulseLevel, {|level| prOscillators[6].setPulseLevel(level)},
 			\Osc07PulseShape, {|shape| prOscillators[6].setPulseShape(shape)},
 			\Osc07SineLevel, {|level| prOscillators[6].setSineLevel(level)},
@@ -106,6 +116,7 @@ Synthi100 {
 			\Osc07SawtoothLevel, {|level| prOscillators[6].setSawtoothLevel(level)},
 			\Osc07Frequency, {|freq| prOscillators[6].setFreqOscillator(freq)},
 
+			\Osc08Range, {|range| prOscillators[7].setRange(range)},
 			\Osc08PulseLevel, {|level| prOscillators[7].setPulseLevel(level)},
 			\Osc08PulseShape, {|shape| prOscillators[7].setPulseShape(shape)},
 			\Osc08SineLevel, {|level| prOscillators[7].setSineLevel(level)},
@@ -114,6 +125,7 @@ Synthi100 {
 			\Osc08SawtoothLevel, {|level| prOscillators[7].setSawtoothLevel(level)},
 			\Osc08Frequency, {|freq| prOscillators[7].setFreqOscillator(freq)},
 
+			\Osc09Range, {|range| prOscillators[8].setRange(range)},
 			\Osc09PulseLevel, {|level| prOscillators[8].setPulseLevel(level)},
 			\Osc09PulseShape, {|shape| prOscillators[8].setPulseShape(shape)},
 			\Osc09SineLevel, {|level| prOscillators[8].setSineLevel(level)},
@@ -122,6 +134,7 @@ Synthi100 {
 			\Osc09SawtoothLevel, {|level| prOscillators[8].setSawtoothLevel(level)},
 			\Osc09Frequency, {|freq| prOscillators[8].setFreqOscillator(freq)},
 
+			\Osc10Range, {|range| prOscillators[9].setRange(range)},
 			\Osc10PulseLevel, {|level| prOscillators[9].setPulseLevel(level)},
 			\Osc10PulseShape, {|shape| prOscillators[9].setPulseShape(shape)},
 			\Osc10SineLevel, {|level| prOscillators[9].setSineLevel(level)},
@@ -130,6 +143,7 @@ Synthi100 {
 			\Osc10SawtoothLevel, {|level| prOscillators[9].setSawtoothLevel(level)},
 			\Osc10Frequency, {|freq| prOscillators[9].setFreqOscillator(freq)},
 
+			\Osc11Range, {|range| prOscillators[10].setRange(range)},
 			\Osc11PulseLevel, {|level| prOscillators[10].setPulseLevel(level)},
 			\Osc11PulseShape, {|shape| prOscillators[10].setPulseShape(shape)},
 			\Osc11SineLevel, {|level| prOscillators[10].setSineLevel(level)},
@@ -138,6 +152,7 @@ Synthi100 {
 			\Osc11SawtoothLevel, {|level| prOscillators[10].setSawtoothLevel(level)},
 			\Osc11Frequency, {|freq| prOscillators[10].setFreqOscillator(freq)},
 
+			\Osc12Range, {|range| prOscillators[11].setRange(range)},
 			\Osc12PulseLevel, {|level| prOscillators[11].setPulseLevel(level)},
 			\Osc12PulseShape, {|shape| prOscillators[11].setPulseShape(shape)},
 			\Osc12SineLevel, {|level| prOscillators[11].setSineLevel(level)},
@@ -149,7 +164,7 @@ Synthi100 {
 	}
 
 
-	// Métodos de instancia:
+	// Métodos de instancia /////////////////////////////////////////////////////////////////////////
 	setExternAudioInBuses {arg audioBuses;
 		if(audioBuses.class == Array, {
 			numAudioInBuses.do({|i|
@@ -168,17 +183,28 @@ Synthi100 {
 
 
 	play {
-		// Aquí se arrancan todos los Synths de todos los módulos (el servidor debe están arrancado)
+		// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
+		conectionOut = prOscillators.collect({|i|
+			SynthDef(\conection, {
+				//var out1 = externAudioOutBuses[0];
+				//var out2 = externAudioOutBuses[1];
+				var sig = In.ar(i.outBus);
+				Out.ar(0, sig);
+				Out.ar(1, sig);
+			}).play(server);
+		});
+
+		// Se arrancan todos los Synths de todos los módulos (el servidor debe están arrancado)
 		prOscillators.do({|i| i.createSynth});
-		//prOscillators[0].createSynth(server);
 	}
 
 	stop {
+		conectionOut.do({|i| i.freeSynth});
 		prOscillators.do({|i| i.freeSynth});
 	}
 
 
-	// Setter de los diferentes parámetros de los módulos en formato OSC /////////////////////////
+	// Setter de los diferentes parámetros de los módulos en formato OSC
 
 	setParameterOSC {|simbol, value|
 		prParameterDictionary[simbol].value(value);

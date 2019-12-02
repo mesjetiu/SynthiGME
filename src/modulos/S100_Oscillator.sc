@@ -1,10 +1,10 @@
-
 S100_Oscillator {
 	// Synth de la instancia
 	var oscillator = nil;
 
 	// Valores de los parámetros del Synth
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
+	var <range = "hi"; // Valores: "hi" y "lo". Por ahora no tiene ningún efecto
 	var <pulseLevel = 0;
 	var <pulseShape = 0.5; // de 0 a 1
 	var <sineLevel = 0;
@@ -12,7 +12,7 @@ S100_Oscillator {
 	var <triangleLevel = 0;
 	var <sawtoothLevel = 0;
 	var <freqOscillator = 100;
-	var <>outBus = 0;
+	var <inBus, <outBus;
 	var <server;
 
 	// Opciones
@@ -21,17 +21,18 @@ S100_Oscillator {
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
 
-	*new { |server, audioOutBus|
-		^super.new.init(server, audioOutBus);
+	*new { |server|
+		^super.new.init(server);
 	}
 
 
 
 	// Métodos de instancia ////////////////////////////////////////////
 
-	init { arg serv = Server.local, aOutBus;
-		outBus = aOutBus;
+	init { arg serv = Server.local;
 		server = serv;
+		inBus = Bus.audio(server);
+		outBus = Bus.audio(server);
 	}
 
 	// Crea el Synth en el servidor
@@ -49,6 +50,7 @@ S100_Oscillator {
 
 				// Parámetros de SC
 				outVol,
+				inBus,
 				outBus;
 
 				// Pulse
@@ -77,7 +79,9 @@ S100_Oscillator {
 				var sig = sigPulse + sigSine + sigTriangle + sigSawtooth;
 
 				Out.ar(outBus, sig);
-			}).play(server, args:[
+			//	Out.ar(0, sig!2);
+		}, [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, nil, nil, 0.5]
+			).play(server, args:[
 				\pulseLevel, pulseLevel,
 				\pulseShape, pulseShape,
 				\sineLevel, sineLevel,
@@ -85,6 +89,7 @@ S100_Oscillator {
 				\triangleLevel, triangleLevel,
 				\sawtoothLevel, sawtoothLevel,
 				\freq, freqOscillator,
+				\inBus, inBus,
 				\outBus, outBus,
 				\outVol, 1,
 			]);
@@ -97,52 +102,66 @@ S100_Oscillator {
 		oscillator = nil;
 	}
 
+
+	// Setters ////////////////////////////////////////////////////////////////////////////////////
+	setRange {| rang |
+		if((rang=="hi").and(rang=="lo"), {range = rang}, {
+			("S100_Oscillator/setRange: " + rang + " debe contener los valores hi o lo").postln})
+	}
+
 	setPulseLevel {| level |
-		if((level>=0).and( {level<=1}), {
+		if((level>=0).and(level<=1), {
 			pulseLevel = level;
 			oscillator.set(\pulseLevel, level)}, {
 			("S100_Oscillator/setPulseLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
 	setPulseShape {| shape |
-		if((shape>=0).and( {shape<=1}), {
+		if((shape>=0).and(shape<=1), {
 			pulseShape = shape;
 			oscillator.set(\pulseShape, shape)}, {
 			("S100_Oscillator/setPulseShape: " + shape + " no es un valor entre 0 y 1").postln});
 	}
 
 	setSineLevel {| level |
-		if((level>=0).and( {level<=1}), {
+		if((level>=0).and(level<=1), {
 			sineLevel = level;
 			oscillator.set(\sineLevel, level)}, {
 			("S100_Oscillator/setSineLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
 	setSineSymmetry {| symmetry |
-		if((symmetry>=-1).and( {symmetry<=1}), {
+		if((symmetry>=-1).and(symmetry<=1), {
 			sineSymmetry = symmetry;
 			oscillator.set(\sineSymmetry, symmetry)}, {
 			("S100_Oscillator/setSineSymmetry: " + symmetry + " no es un valor entre -1 y 1").postln});
 	}
 
 	setTriangleLevel {| level |
-		if((level>=0).and( {level<=1}), {
-			pulseLevel = level;
+		if((level>=0).and(level<=1), {
+			triangleLevel = level;
 			oscillator.set(\triangleLevel, level)}, {
 			("S100_Oscillator/setTriangleLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
 	setSawtoothLevel {| level |
-		if((level>=0).and( {level<=1}), {
+		if((level>=0).and(level<=1), {
 			sawtoothLevel = level;
 			oscillator.set(\sawtoothLevel, level)}, {
 			("S100_Oscillator/setSawtoothLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
 	setFreqOscillator {| freq |
-		if((freq>=0).and( {freq<=10000}), {
+		if((freq>=0).and(freq<=10000), {
 			freqOscillator = freq;
 			oscillator.set(\freq, freq)}, {
 			("S100_Oscillator/setFreqOscillator: " + freq + " no es un valor entre 0 y 1").postln});
+	}
+
+	setOutVol {| level |
+		if((level>=0).and(level<=1), {
+			outVol = level;
+			oscillator.set(\outVol, level)}, {
+			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
 	}
 }
