@@ -17,12 +17,61 @@ S100_Oscillator {
 
 	// Opciones
 	var <outVol = 1;
+	var <run; // true o false: estado del Synth
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
 
 	*new { |server|
+		this.addSynthDef();
 		^super.new.init(server);
+	}
+
+	*addSynthDef {
+		SynthDef(\oscillator, {
+			// Parámetros manuales del S100
+			arg pulseLevel,
+			pulseShape, // de 0 a 1
+			sineLevel,
+			sineSymmetry, // de -1 a 1
+			triangleLevel,
+			sawtoothLevel,
+			freq,
+
+			// Parámetros de SC
+			outVol,
+			inBus,
+			outBus;
+
+			// Pulse
+			var pulsePos = pulseShape * (1/freq);
+			var pulseNeg = (1/freq) - pulsePos;
+			var sigPulse = Env.new(
+				levels: [0,1,0,0],
+				times: [pulsePos, pulseNeg],
+				curve: \step,
+				releaseNode:2,
+				loopNode: 0
+			).ar() * pulseLevel * outVol;
+
+			// Sine
+			var sigSym = SinOsc.ar(freq).abs * sineSymmetry;
+			var sigSine =
+			(sigSym + SinOsc.ar(freq, 0, (1-sineSymmetry.abs) * sineLevel)) * outVol;
+
+			// Triangle
+			var sigTriangle = LFTri.ar(freq, 0, triangleLevel * outVol);
+
+			// Sawtooth
+			var sigSawtooth = Saw.ar(freq, sawtoothLevel * outVol);
+
+			// Suma de señales
+			var sig = sigPulse + sigSine + sigTriangle + sigSawtooth;
+
+			Out.ar(outBus, sig);
+			//	Out.ar(0, sig!2);
+		}, [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, nil, nil, 0.5]
+		).add
 	}
 
 
@@ -38,50 +87,7 @@ S100_Oscillator {
 	// Crea el Synth en el servidor
 	createSynth {
 		if(oscillator.isNil, {
-			oscillator = SynthDef(\oscillator, {
-				// Parámetros manuales del S100
-				arg pulseLevel,
-				pulseShape, // de 0 a 1
-				sineLevel,
-				sineSymmetry, // de -1 a 1
-				triangleLevel,
-				sawtoothLevel,
-				freq,
-
-				// Parámetros de SC
-				outVol,
-				inBus,
-				outBus;
-
-				// Pulse
-				var pulsePos = pulseShape * (1/freq);
-				var pulseNeg = (1/freq) - pulsePos;
-				var sigPulse = Env.new(
-					levels: [0,1,0,0],
-					times: [pulsePos, pulseNeg],
-					curve: \step,
-					releaseNode:2,
-					loopNode: 0
-				).ar() * pulseLevel * outVol;
-
-				// Sine
-				var sigSym = SinOsc.ar(freq).abs * sineSymmetry;
-				var sigSine =
-				(sigSym + SinOsc.ar(freq, 0, (1-sineSymmetry.abs) * sineLevel)) * outVol;
-
-				// Triangle
-				var sigTriangle = LFTri.ar(freq, 0, triangleLevel * outVol);
-
-				// Sawtooth
-				var sigSawtooth = Saw.ar(freq, sawtoothLevel * outVol);
-
-				// Suma de señales
-				var sig = sigPulse + sigSine + sigTriangle + sigSawtooth;
-
-				Out.ar(outBus, sig);
-			//	Out.ar(0, sig!2);
-		}, [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, nil, nil, 0.5]
-			).play(server, args:[
+			oscillator = Synth(\oscillator, [
 				\pulseLevel, pulseLevel,
 				\pulseShape, pulseShape,
 				\sineLevel, sineLevel,
@@ -92,7 +98,7 @@ S100_Oscillator {
 				\inBus, inBus,
 				\outBus, outBus,
 				\outVol, 1,
-			]);
+			], server);
 		});
 	}
 
@@ -100,6 +106,11 @@ S100_Oscillator {
 	freeSynth {
 		oscillator.free;
 		oscillator = nil;
+	}
+
+	runSynth {| estado |
+		oscillator.run(estado);
+		run = estado;
 	}
 
 
