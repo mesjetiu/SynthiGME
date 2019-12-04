@@ -114,7 +114,7 @@ S100_Oscillator {
 	}
 
 
-	// Setters ////////////////////////////////////////////////////////////////////////////////////
+	// Setters Oscillators////////////////////////////////////////////////////////////////////////
 	setRange {| rang |
 		if((rang=="hi").and(rang=="lo"), {range = rang}, {
 			("S100_Oscillator/setRange: " + rang + " debe contener los valores hi o lo").postln})
@@ -162,7 +162,7 @@ S100_Oscillator {
 			("S100_Oscillator/setSawtoothLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
-	setFreqOscillator {| freq |
+	setFrequency {| freq |
 		if((freq>=0).and(freq<=10000), {
 			freqOscillator = freq;
 			oscillator.set(\freq, freq)}, {
@@ -175,4 +175,5 @@ S100_Oscillator {
 			oscillator.set(\outVol, level)}, {
 			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
 	}
+	//End Setters Oscillators//////////////////////////////////////////////////////////////////////
 }
