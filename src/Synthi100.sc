@@ -48,7 +48,7 @@ Synthi100 {
 		this.setExternAudioOutBuses (aOutBuses);
 
 		// Módulos
-		prOscillators = 12.collect({S100_Oscillator.new(serv)});
+		prOscillators = 12.collect({S100_Oscillator(serv)});
 
 
 		// Diccionario de parámetros de la interfaz física del Synthi 100
@@ -197,7 +197,7 @@ Synthi100 {
 	}
 
 	stop {
-		conectionOut.do({|i| i.stop});
+		conectionOut.do({|i| i.free}); // provisional
 		prOscillators.do({|i| i.stop});
 	}
 

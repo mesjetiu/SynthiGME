@@ -11,7 +11,7 @@ S100_Oscillator {
 	var <sineSymmetry = 0; // de -1 a 11
 	var <triangleLevel = 0;
 	var <sawtoothLevel = 0;
-	var <freqOscillator = 100;
+	var <freqOscillator = 0;
 
 	// Otras variables de la clase
 	var <inBus, <outBus;
@@ -91,8 +91,9 @@ S100_Oscillator {
 
 	// Crea el Synth en el servidor
 	play {
-		if(oscillator.isNil, {
-			oscillator = Synth.newPaused(\oscillator, [
+		if(oscillator.isPlaying==false, {
+			oscillator = nil;
+			oscillator = Synth(\oscillator, [
 				\pulseLevel, pulseLevel,
 				\pulseShape, pulseShape,
 				\sineLevel, sineLevel,
@@ -103,13 +104,16 @@ S100_Oscillator {
 				\inBus, inBus,
 				\outBus, outBus,
 				\outVol, 1,
-			], server);
+			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
+		this.runSynth;
 	}
 
 	// Libera el Synth del servidor
 	stop {
-		oscillator.free;
+		if(oscillator.isPlaying, {
+			oscillator.free;
+		});
 		oscillator = nil;
 	}
 
