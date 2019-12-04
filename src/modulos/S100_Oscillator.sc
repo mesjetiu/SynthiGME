@@ -85,7 +85,7 @@ S100_Oscillator {
 	}
 
 	// Crea el Synth en el servidor
-	createSynth {
+	play {
 		if(oscillator.isNil, {
 			oscillator = Synth(\oscillator, [
 				\pulseLevel, pulseLevel,
@@ -103,7 +103,7 @@ S100_Oscillator {
 	}
 
 	// Libera el Synth del servidor
-	freeSynth {
+	stop {
 		oscillator.free;
 		oscillator = nil;
 	}

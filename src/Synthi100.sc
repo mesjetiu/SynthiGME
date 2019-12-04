@@ -186,8 +186,6 @@ Synthi100 {
 		// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
 		conectionOut = prOscillators.collect({|i|
 			SynthDef(\conection, {
-				//var out1 = externAudioOutBuses[0];
-				//var out2 = externAudioOutBuses[1];
 				var sig = In.ar(i.outBus);
 				Out.ar(0, sig);
 				Out.ar(1, sig);
@@ -195,12 +193,12 @@ Synthi100 {
 		});
 
 		// Se arrancan todos los Synths de todos los módulos (el servidor debe están arrancado)
-		prOscillators.do({|i| i.createSynth});
+		prOscillators.do({|i| i.play});
 	}
 
 	stop {
-		conectionOut.do({|i| i.freeSynth});
-		prOscillators.do({|i| i.freeSynth});
+		conectionOut.do({|i| i.stop});
+		prOscillators.do({|i| i.stop});
 	}
 
 
