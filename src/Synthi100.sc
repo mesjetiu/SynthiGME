@@ -27,6 +27,7 @@ Synthi100 {
 	*initClass {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(S100_Oscillator);
+		Class.initClassTree(S100_PatchbayAudio);
 	}
 
 	*new { |server, audioInBuses, audioOutBuses|
