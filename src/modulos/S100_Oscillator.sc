@@ -11,7 +11,7 @@ S100_Oscillator {
 	var <sineSymmetry = 0; // de -1 a 11
 	var <triangleLevel = 0;
 	var <sawtoothLevel = 0;
-	var <freqOscillator = 0;
+	var <freqOscillator = 100;
 
 	// Otras variables de la clase
 	var <inBus, <outBus;
@@ -45,15 +45,9 @@ S100_Oscillator {
 			outBus;
 
 			// Pulse
-			var pulsePos = pulseShape * (1/freq);
-			var pulseNeg = (1/freq) - pulsePos;
-			var sigPulse = Env.new(
-				levels: [0,1,0,0],
-				times: [pulsePos, pulseNeg],
-				curve: \step,
-				releaseNode:2,
-				loopNode: 0
-			).ar() * pulseLevel * outVol;
+			var sigPulse = LFPulse.ar(freq: freq, width: pulseShape, mul: pulseLevel * outVol);
+			//var sigPulse=Pulse.ar(freq: freq,width: 1-pulseShape,mul: pulseLevel*outVol); //sin alias.
+
 
 			// Sine
 			var sigSym = SinOsc.ar(freq).abs * sineSymmetry;
