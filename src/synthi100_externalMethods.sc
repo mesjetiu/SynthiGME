@@ -3,6 +3,9 @@
 	// devuelve un diccionario con todos los parámetros modificables con los mandos del Synthi 100
 	createParameterDictionary {
 		^Dictionary.newFrom(List[
+
+			// Osciladores ///////////////////////////////////////////////////////////////////////
+
 			"/osc/1/range", {|range| prOscillators[0].setRange(range)},
 			"/osc/1/pulse/level", {|level| prOscillators[0].setPulseLevel(level)},
 			"/osc/1/pulse/shape", {|shape| prOscillators[0].setPulseShape(shape)},

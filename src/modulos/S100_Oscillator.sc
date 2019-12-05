@@ -100,7 +100,7 @@ S100_Oscillator {
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
-		this.runSynth;
+		this.synthRun;
 	}
 
 	// Libera el Synth del servidor
@@ -111,7 +111,8 @@ S100_Oscillator {
 		oscillator = nil;
 	}
 
-	runSynth {
+	// Pausa o reanuda los Synths dependiendo de si su salida es 0 o no.
+	synthRun {
 		var outputTotal = (pulseLevel + sineLevel + triangleLevel + sawtoothLevel) * outVol;
 		if (outputTotal==0, {
 			running = false;
@@ -133,7 +134,7 @@ S100_Oscillator {
 	setPulseLevel {| level |
 		if((level>=0).and(level<=1), {
 			pulseLevel = level;
-			this.runSynth();
+			this.synthRun();
 			oscillator.set(\pulseLevel, level)}, {
 			("S100_Oscillator/setPulseLevel: " + level + " no es un valor entre 0 y 1").postln})
 	}
@@ -148,7 +149,7 @@ S100_Oscillator {
 	setSineLevel {| level |
 		if((level>=0).and(level<=1), {
 			sineLevel = level;
-			this.runSynth();
+			this.synthRun();
 			oscillator.set(\sineLevel, level)}, {
 			("S100_Oscillator/setSineLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
@@ -163,7 +164,7 @@ S100_Oscillator {
 	setTriangleLevel {| level |
 		if((level>=0).and(level<=1), {
 			triangleLevel = level;
-			this.runSynth();
+			this.synthRun();
 			oscillator.set(\triangleLevel, level)}, {
 			("S100_Oscillator/setTriangleLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
@@ -171,7 +172,7 @@ S100_Oscillator {
 	setSawtoothLevel {| level |
 		if((level>=0).and(level<=1), {
 			sawtoothLevel = level;
-			this.runSynth();
+			this.synthRun();
 			oscillator.set(\sawtoothLevel, level)}, {
 			("S100_Oscillator/setSawtoothLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
@@ -186,7 +187,7 @@ S100_Oscillator {
 	setOutVol {| level |
 		if((level>=0).and(level<=1), {
 			outVol = level;
-			this.runSynth();
+			this.synthRun();
 			oscillator.set(\outVol, level)}, {
 			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
 	}
