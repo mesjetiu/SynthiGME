@@ -11,7 +11,7 @@
 			"/osc/1/pulse/shape", {|shape| prOscillators[0].setPulseShape(shape)},
 			"/osc/1/sine/level", {|level| prOscillators[0].setSineLevel(level)},
 			"/osc/1/sine/symmetry", {|symmetry| prOscillators[0].setSineSymmetry(symmetry)},
-			"/osc/1/trianglelevel", {|level| prOscillators[0].setTriangleLevel(level)},
+			"/osc/1/triangle/level", {|level| prOscillators[0].setTriangleLevel(level)},
 			"/osc/1/sawtooth/level", {|level| prOscillators[0].setSawtoothLevel(level)},
 			"/osc/1/frequency", {|freq| prOscillators[0].setFrequency(freq)},
 
