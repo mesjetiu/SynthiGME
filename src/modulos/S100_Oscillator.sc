@@ -25,7 +25,6 @@ S100_Oscillator {
 
 
 	*new { |server|
-		this.addSynthDef(); // TODO: hacer esta llamada una sola vez desde Synthi100.
 		^super.new.init(server);
 	}
 

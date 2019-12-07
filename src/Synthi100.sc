@@ -40,6 +40,8 @@ Synthi100 {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init { arg serv = Server.local, aInBuses, aOutBuses;
+		// Se añaden al servidor las declaracines SynthDefs
+		S100_Oscillator.addSynthDef;
 		server = serv;
 		// Buses de audio de entrada y salida
 		audioInBuses = numAudioInBuses.collect({Bus.audio(server, 1)});
