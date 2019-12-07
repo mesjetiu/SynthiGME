@@ -13,6 +13,12 @@ S100_OutputChannels {
 		^super.new.init(server);
 	}
 
+	*addSynthDef {
+		SynthDef(\S100_outputChannel, {
+		}
+		).add
+	}
+
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
@@ -23,4 +29,7 @@ S100_OutputChannels {
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
 	}
+
+
+
 }

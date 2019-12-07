@@ -10,7 +10,11 @@ S100_PatchbayAudio {
 		^super.new.init(server, oscillators, outputs);
 	}
 
-
+	*addSynthDef {
+		SynthDef(\S100_pachNode, {
+		}
+		).add
+	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 

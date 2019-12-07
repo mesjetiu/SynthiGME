@@ -42,6 +42,8 @@ Synthi100 {
 	init { arg serv = Server.local, aInBuses, aOutBuses;
 		// Se añaden al servidor las declaracines SynthDefs
 		S100_Oscillator.addSynthDef;
+		S100_OutputChannels.addSynthDef;
+		S100_PatchbayAudio.addSynthDef;
 		server = serv;
 		// Buses de audio de entrada y salida
 		audioInBuses = numAudioInBuses.collect({Bus.audio(server, 1)});
