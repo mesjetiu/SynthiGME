@@ -1,15 +1,17 @@
 S100_OutputChannel {
+	// Synth de la instancia
+	var channelSynth = nil;
 
 	var <server;
-	var <inputBuses; // Array de 8 buses, entradas del amplificador.
-	var <outputBuses; // Array de 8 buses, salidas del amplificador.
+	var <inputBus; // Array de 8 buses, entradas del amplificador.
+	var <outputBus; // Array de 8 buses, salidas del amplificador.
 	var <outBusL; // Canal izquierdo de la salida stereo.
 	var <outBusR; // Canal derecho de la salida stereo.
 	// Parámetros correspondientes a los diales del Synthi.
 	var <filter; // Filtro pasabajos y pasaaltos.
-	var <pan; // Para salida stereo mezclando todos los canales (comprobar en el Synthi).
-	var <on; // Activa y desactiva el canal.
-	var <level; // Nivel de volumen de salida.
+	var <pan; // Entre -1 y 1. Para salida stereo (comprobar en el Synthi).
+	var <on; // true o false. Activa y desactiva el canal.
+	var <level; // Entre 0 y 1. Nivel de volumen de salida.
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -20,7 +22,20 @@ S100_OutputChannel {
 
 	*addSynthDef {
 		SynthDef(\S100_outputChannel, {
+			arg inputBus,
+			outputBus,
+			outBusL,
+			outBusR,
+			pan,
+			level;
 
+			var sigIn = In.ar(inputBus);
+			var sig = sigIn * level;
+			var sigPanned = Pan2.ar(sig, pan);
+
+			Out.ar(outputBus, sig);
+			Out.ar(outBusL, sigPanned[0]);
+			Out.ar(outBusR, sigPanned[1]);
 		}
 		).add
 	}
@@ -30,8 +45,8 @@ S100_OutputChannel {
 
 	init { arg serv = Server.local;
 		server = serv;
-		inputBuses = 8.collect({Bus.audio(server)});
-		outputBuses = 8.collect({Bus.audio(server)});
+		inputBus = Bus.audio(server);
+		outputBus = Bus.audio(server);
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
 	}
