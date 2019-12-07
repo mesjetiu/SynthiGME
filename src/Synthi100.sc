@@ -1,5 +1,5 @@
 Synthi100 {
-	var <>server; // Servidor por defecto
+	var <server; // Servidor por defecto
 
 	// Módulos que incluye:
 	var prOscillators;
@@ -17,8 +17,8 @@ Synthi100 {
 	var prParameterDictionary;
 
 	// Opciones:
-	var <numAudioInBuses = 8;
-	var <numAudioOutBuses = 8;
+	const numAudioInBuses = 8;
+	const numAudioOutBuses = 8;
 
 
 
@@ -27,6 +27,7 @@ Synthi100 {
 	*initClass {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(S100_Oscillator);
+		Class.initClassTree(S100_OutputChannels);
 		Class.initClassTree(S100_PatchbayAudio);
 	}
 
@@ -79,9 +80,10 @@ Synthi100 {
 		// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
 		conectionOut = prOscillators.collect({|i|
 			SynthDef(\conection, {
-				var sig = In.ar(i.outBus);
-				Out.ar(0, sig);
-				Out.ar(1, sig);
+				var sig1 = In.ar(i.outBus1);
+				var sig2 = In.ar(i.outBus2);
+				Out.ar(0, sig1);
+				Out.ar(1, sig2);
 			}).play(server);
 		});
 

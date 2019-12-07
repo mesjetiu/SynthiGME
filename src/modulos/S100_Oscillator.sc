@@ -2,7 +2,7 @@ S100_Oscillator {
 	// Synth de la instancia
 	var oscillator = nil;
 
-	// Valores de los parámetros del Synth
+	// Valores de los parámetros del Synthi 100
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
 	var <range = "hi"; // Valores: "hi" y "lo". Por ahora no tiene ningún efecto
 	var <pulseLevel = 0;
@@ -14,7 +14,8 @@ S100_Oscillator {
 	var <freqOscillator = 100;
 
 	// Otras variables de la clase
-	var <inBus, <outBus;
+	var <outBus1; // pulso y al senoide (por comprobar en Synthi)
+	var <outBus2; // triángulo y diente de sierra (por comprobar en Synthi)
 	var <server;
 	var <outVol = 1;
 	var <running; // true o false: Si el sintetizador está activo o pausado
@@ -24,7 +25,7 @@ S100_Oscillator {
 
 
 	*new { |server|
-		this.addSynthDef();
+		this.addSynthDef(); // TODO: hacer esta llamada una sola vez desde Synthi100.
 		^super.new.init(server);
 	}
 
@@ -41,29 +42,31 @@ S100_Oscillator {
 
 			// Parámetros de SC
 			outVol,
-			inBus,
-			outBus;
+			outBus1,
+			outBus2;
 
 			// Pulse
-			var sigPulse = LFPulse.ar(freq: freq, width: pulseShape, mul: pulseLevel * outVol);
+			var sigPulse = LFPulse.ar(freq: freq, width: pulseShape, mul: pulseLevel);
 			//var sigPulse=Pulse.ar(freq: freq,width: 1-pulseShape,mul: pulseLevel*outVol); //sin alias.
 
 
 			// Sine
 			var sigSym = SinOsc.ar(freq).abs * sineSymmetry;
 			var sigSine =
-			(sigSym + SinOsc.ar(freq, 0, (1-sineSymmetry.abs) * sineLevel)) * outVol;
+			(sigSym + SinOsc.ar(freq, 0, (1-sineSymmetry.abs) * sineLevel));
 
 			// Triangle
-			var sigTriangle = LFTri.ar(freq, 0, triangleLevel * outVol);
+			var sigTriangle = LFTri.ar(freq, 0, triangleLevel);
 
 			// Sawtooth
-			var sigSawtooth = Saw.ar(freq, sawtoothLevel * outVol);
+			var sigSawtooth = Saw.ar(freq, sawtoothLevel);
 
 			// Suma de señales
-			var sig = sigPulse + sigSine + sigTriangle + sigSawtooth;
+			var sig1 = sigPulse + sigSine;
+			var sig2 = sigTriangle + sigSawtooth;
 
-			Out.ar(outBus, sig);
+			Out.ar(outBus1, sig1 * outVol);
+			Out.ar(outBus2, sig2 * outVol);
 			//	Out.ar(0, sig!2);
 		}, [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, nil, nil, 0.5]
 		).add
@@ -75,8 +78,8 @@ S100_Oscillator {
 
 	init { arg serv = Server.local;
 		server = serv;
-		inBus = Bus.audio(server);
-		outBus = Bus.audio(server);
+		outBus1 = Bus.audio(server);
+		outBus2 = Bus.audio(server);
 		pauseRoutine = Routine({
 			0.5.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
 			oscillator.run(false);
@@ -95,8 +98,8 @@ S100_Oscillator {
 				\triangleLevel, triangleLevel,
 				\sawtoothLevel, sawtoothLevel,
 				\freq, freqOscillator,
-				\inBus, inBus,
-				\outBus, outBus,
+				\outBus1, outBus1,
+				\outBus2, outBus2,
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
@@ -181,7 +184,7 @@ S100_Oscillator {
 		if((freq>=0).and(freq<=10000), {
 			freqOscillator = freq;
 			oscillator.set(\freq, freq)}, {
-			("S100_Oscillator/setFreqOscillator: " + freq + " no es un valor entre 0 y 1").postln});
+			("S100_Oscillator/setFreqOscillator: " + freq + " no es un valor entre 0 y 10000").postln});
 	}
 
 	setOutVol {| level |
