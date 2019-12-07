@@ -1,4 +1,4 @@
-S100_OutputChannels {
+S100_OutputChannel {
 
 	var <server;
 	var <inputBuses; // Array de 8 buses, entradas del amplificador.

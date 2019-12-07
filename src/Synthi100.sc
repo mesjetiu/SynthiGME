@@ -27,7 +27,7 @@ Synthi100 {
 	*initClass {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(S100_Oscillator);
-		Class.initClassTree(S100_OutputChannels);
+		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_PatchbayAudio);
 	}
 
@@ -42,7 +42,7 @@ Synthi100 {
 	init { arg serv = Server.local, aInBuses, aOutBuses;
 		// Se añaden al servidor las declaracines SynthDefs
 		S100_Oscillator.addSynthDef;
-		S100_OutputChannels.addSynthDef;
+		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
 		server = serv;
 		// Buses de audio de entrada y salida
