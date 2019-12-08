@@ -53,7 +53,6 @@ S100_Oscillator {
 			var sigPulse = LFPulse.ar(freq: freq, width: pulseShape, mul: pulseLevel);
 			//var sigPulse=Pulse.ar(freq: freq,width: 1-pulseShape,mul: pulseLevel*outVol); //sin alias.
 
-
 			// Sine
 			var sigSym = SinOsc.ar(freq).abs * sineSymmetry * sineLevel;
 			var sigSine =
