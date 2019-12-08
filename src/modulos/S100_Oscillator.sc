@@ -1,6 +1,6 @@
 S100_Oscillator {
 	// Synth de la instancia
-	var oscillator = nil;
+	var oscillatorSynth = nil;
 
 	// Valores de los parámetros del Synthi 100
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
@@ -29,7 +29,7 @@ S100_Oscillator {
 	}
 
 	*addSynthDef {
-		SynthDef(\oscillator, {
+		SynthDef(\S100_oscillator, {
 			// Parámetros manuales del S100
 			arg pulseLevel,
 			pulseShape, // de 0 a 1
@@ -81,15 +81,15 @@ S100_Oscillator {
 		outBus2 = Bus.audio(server);
 		pauseRoutine = Routine({
 			0.5.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
-			oscillator.run(false);
+			oscillatorSynth.run(false);
 		});
 	}
 
 	// Crea el Synth en el servidor
 	play {
-		if(oscillator.isPlaying==false, {
-			oscillator = nil;
-			oscillator = Synth(\oscillator, [
+		if(oscillatorSynth.isPlaying==false, {
+			oscillatorSynth = nil;
+			oscillatorSynth = Synth(\S100_oscillator, [
 				\pulseLevel, pulseLevel/10,
 				\pulseShape, pulseShape/10,
 				\sineLevel, sineLevel/10,
@@ -107,10 +107,10 @@ S100_Oscillator {
 
 	// Libera el Synth del servidor
 	stop {
-		if(oscillator.isPlaying, {
-			oscillator.free;
+		if(oscillatorSynth.isPlaying, {
+			oscillatorSynth.free;
 		});
-		oscillator = nil;
+		oscillatorSynth = nil;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
@@ -123,7 +123,7 @@ S100_Oscillator {
 		}, {
 			pauseRoutine.stop;
 			running = true;
-			oscillator.run(true);
+			oscillatorSynth.run(true);
 		});
 	}
 
@@ -137,14 +137,14 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			pulseLevel = level;
 			this.synthRun();
-			oscillator.set(\pulseLevel, level/10)}, {
+			oscillatorSynth.set(\pulseLevel, level/10)}, {
 			("S100_Oscillator/setPulseLevel: " + level + " no es un valor entre 0 y 1").postln})
 	}
 
 	setPulseShape {| shape |
 		if((shape>=0).and(shape<=10), {
 			pulseShape = shape;
-			oscillator.set(\pulseShape, shape/10)}, {
+			oscillatorSynth.set(\pulseShape, shape/10)}, {
 			("S100_Oscillator/setPulseShape: " + shape + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -152,14 +152,14 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			sineLevel = level;
 			this.synthRun();
-			oscillator.set(\sineLevel, level/10)}, {
+			oscillatorSynth.set(\sineLevel, level/10)}, {
 			("S100_Oscillator/setSineLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
 	setSineSymmetry {| symmetry |
 		if((symmetry>=0).and(symmetry<=10), {
 			sineSymmetry = symmetry;
-			oscillator.set(\sineSymmetry, (symmetry/5)-1)}, {
+			oscillatorSynth.set(\sineSymmetry, (symmetry/5)-1)}, {
 			("S100_Oscillator/setSineSymmetry: " + symmetry + " no es un valor entre -1 y 1").postln});
 	}
 
@@ -167,7 +167,7 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			triangleLevel = level;
 			this.synthRun();
-			oscillator.set(\triangleLevel, level/10)}, {
+			oscillatorSynth.set(\triangleLevel, level/10)}, {
 			("S100_Oscillator/setTriangleLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -175,7 +175,7 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			sawtoothLevel = level;
 			this.synthRun();
-			oscillator.set(\sawtoothLevel, level/10)}, {
+			oscillatorSynth.set(\sawtoothLevel, level/10)}, {
 			("S100_Oscillator/setSawtoothLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -183,7 +183,7 @@ S100_Oscillator {
 		if((freq>=0).and(freq<=10), {
 			// frecuencias entre 1 y 10000 Hz
 			freqOscillator = freq;
-			oscillator.set(\freq, (10000.pow(1/10)).pow(freq))}, {
+			oscillatorSynth.set(\freq, (10000.pow(1/10)).pow(freq))}, {
 			("S100_Oscillator/setFreqOscillator: " + freq + " no es un valor entre 0 y 10000").postln});
 	}
 
@@ -191,7 +191,7 @@ S100_Oscillator {
 		if((level>=0).and(level<=1), {
 			outVol = level;
 			this.synthRun();
-			oscillator.set(\outVol, level)}, {
+			oscillatorSynth.set(\outVol, level)}, {
 			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
 	}
 	//End Setters Oscillators//////////////////////////////////////////////////////////////////////
