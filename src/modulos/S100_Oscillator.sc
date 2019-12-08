@@ -126,6 +126,37 @@ S100_Oscillator {
 		});
 	}
 
+	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
+
+	convertPulseLevel {|level|
+		^(level/10);
+	}
+
+	convertPulseShape {|shape|
+		^(shape/10);
+	}
+
+	convertSineLevel {|level|
+		^(level/10);
+	}
+
+	convertSineSymmetry {|symmetry|
+		^((symmetry/5)-1);
+	}
+
+	convertSawtoothLevel {|level|
+		^(level/10);
+	}
+
+	convertTriangleLevel {|level|
+		^(level/10);
+	}
+
+	convertFrequency {|freq|
+		^(10000.pow(1/10).pow(freq));
+	}
+
+
 	// Setters Oscillators////////////////////////////////////////////////////////////////////////
 	setRange {| rang |
 		if((rang=="hi").and(rang=="lo"), {range = rang}, {
@@ -136,14 +167,14 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			pulseLevel = level;
 			this.synthRun();
-			oscillatorSynth.set(\pulseLevel, level/10)}, {
+			oscillatorSynth.set(\pulseLevel, this.convertPulseLevel(level))}, {
 			("S100_Oscillator/setPulseLevel: " + level + " no es un valor entre 0 y 1").postln})
 	}
 
 	setPulseShape {| shape |
 		if((shape>=0).and(shape<=10), {
 			pulseShape = shape;
-			oscillatorSynth.set(\pulseShape, shape/10)}, {
+			oscillatorSynth.set(\pulseShape, this.convertPulseShape(shape))}, {
 			("S100_Oscillator/setPulseShape: " + shape + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -151,14 +182,14 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			sineLevel = level;
 			this.synthRun();
-			oscillatorSynth.set(\sineLevel, level/10)}, {
+			oscillatorSynth.set(\sineLevel, this.convertSineLevel(level))}, {
 			("S100_Oscillator/setSineLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
 	setSineSymmetry {| symmetry |
 		if((symmetry>=0).and(symmetry<=10), {
 			sineSymmetry = symmetry;
-			oscillatorSynth.set(\sineSymmetry, (symmetry/5)-1)}, {
+			oscillatorSynth.set(\sineSymmetry, this.convertSineSymmetry(symmetry))}, {
 			("S100_Oscillator/setSineSymmetry: " + symmetry + " no es un valor entre -1 y 1").postln});
 	}
 
@@ -166,7 +197,7 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			triangleLevel = level;
 			this.synthRun();
-			oscillatorSynth.set(\triangleLevel, level/10)}, {
+			oscillatorSynth.set(\triangleLevel, this.convertTriangleLevel(level))}, {
 			("S100_Oscillator/setTriangleLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -174,7 +205,7 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			sawtoothLevel = level;
 			this.synthRun();
-			oscillatorSynth.set(\sawtoothLevel, level/10)}, {
+			oscillatorSynth.set(\sawtoothLevel, this.convertSawtoothLevel(level))}, {
 			("S100_Oscillator/setSawtoothLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -182,7 +213,7 @@ S100_Oscillator {
 		if((freq>=0).and(freq<=10), {
 			// frecuencias entre 1 y 10000 Hz
 			freqOscillator = freq;
-			oscillatorSynth.set(\freq, (10000.pow(1/10)).pow(freq))}, {
+			oscillatorSynth.set(\freq, this.convertFrequency(freq))}, {
 			("S100_Oscillator/setFreqOscillator: " + freq + " no es un valor entre 0 y 10000").postln});
 	}
 
