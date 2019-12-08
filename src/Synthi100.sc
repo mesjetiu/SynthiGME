@@ -3,6 +3,7 @@ Synthi100 {
 
 	// Módulos que incluye:
 	var prOscillators;
+	var prOutputChannels;
 	var <conectionOut;
 
 	// Buses internos de entrada y salida:
@@ -55,7 +56,7 @@ Synthi100 {
 
 		// Módulos
 		prOscillators = 12.collect({S100_Oscillator(serv)});
-
+		prOutputChannels = 8.collect({S100_OutputChannel(serv)});
 
 		// Diccionario de parámetros de la interfaz física del Synthi 100
 		prParameterDictionary = this.createParameterDictionary;
@@ -81,6 +82,7 @@ Synthi100 {
 
 
 	play {
+		// TODO: Crear alguna rutina para colocar en orden todos los Synths en el servidor. Ahora están colocados mezclados los osciladores y los conectores.
 		// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
 		conectionOut = prOscillators.collect({|i|
 			SynthDef(\conection, {

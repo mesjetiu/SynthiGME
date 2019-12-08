@@ -13,7 +13,7 @@ S100_Oscillator {
 	var <sawtoothLevel = 0;
 	var <freqOscillator = 6;
 
-	// Otras variables de la clase
+	// Otros atributos de instancia
 	var <outBus1; // pulso y al senoide (por comprobar en Synthi)
 	var <outBus2; // triángulo y diente de sierra (por comprobar en Synthi)
 	var <server;
@@ -113,7 +113,7 @@ S100_Oscillator {
 		oscillator = nil;
 	}
 
-	// Pausa o reanuda los Synths dependiendo de si su salida es 0 o no.
+	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
 		var outputTotal = (pulseLevel + sineLevel + triangleLevel + sawtoothLevel) * outVol;
 		if (outputTotal==0, {
