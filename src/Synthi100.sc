@@ -94,12 +94,12 @@ Synthi100 {
 		});
 
 		// Se arrancan todos los Synths de todos los módulos (el servidor debe están arrancado)
-		prOscillators.do({|i| i.play});
+		prOscillators.do({|i| i.createSynth});
 	}
 
 	stop {
 		conectionOut.do({|i| i.free}); // provisional
-		prOscillators.do({|i| i.stop});
+		prOscillators.do({|i| i.freeSynth});
 	}
 
 

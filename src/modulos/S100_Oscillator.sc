@@ -5,13 +5,13 @@ S100_Oscillator {
 	// Valores de los parámetros del Synthi 100
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
 	var <range = "hi"; // Valores: "hi" y "lo". Por ahora no tiene ningún efecto
-	var <pulseLevel = 0; // Todos los valores son entre 0 y 10.
+	var <pulseLevel = 0; // Todos los valores son entre 0 y 10, como los diales del Synthi 100.
 	var <pulseShape = 5;
 	var <sineLevel = 0;
 	var <sineSymmetry = 5;
 	var <triangleLevel = 0;
 	var <sawtoothLevel = 0;
-	var <freqOscillator = 6;
+	var <freqOscillator = 5;
 
 	// Otros atributos de instancia
 	var <outBus1; // pulso y al senoide (por comprobar en Synthi)
@@ -30,17 +30,17 @@ S100_Oscillator {
 
 	*addSynthDef {
 		SynthDef(\S100_oscillator, {
-			// Parámetros manuales del S100
-			arg pulseLevel,
+			// Parámetros manuales del S100 convertidos a unidades manejables (niveles de 0 a 1, hercios, etc.)
+			arg pulseLevel, // de 0 a 1
 			pulseShape, // de 0 a 1
-			sineLevel,
-			sineSymmetry, // de -1 a 1
-			triangleLevel,
-			sawtoothLevel,
-			freq,
+			sineLevel, // de 0 a 1
+			sineSymmetry, // de -1 a 1. 0 = sinusoide
+			triangleLevel, // de 0 a 1
+			sawtoothLevel, // de 0 a 1
+			freq, // de 1 a 10000 (aproximadamente)
 
 			// Parámetros de SC
-			outVol,
+			outVol, // de 0 a 1
 			outBus1,
 			outBus2;
 
@@ -66,7 +66,6 @@ S100_Oscillator {
 
 			Out.ar(outBus1, sig1 * outVol);
 			Out.ar(outBus2, sig2 * outVol);
-			//	Out.ar(0, sig!2);
 		}, [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, nil, nil]
 		).add
 	}
@@ -86,7 +85,7 @@ S100_Oscillator {
 	}
 
 	// Crea el Synth en el servidor
-	play {
+	createSynth {
 		if(oscillatorSynth.isPlaying==false, {
 			oscillatorSynth = nil;
 			oscillatorSynth = Synth(\S100_oscillator, [
@@ -106,7 +105,7 @@ S100_Oscillator {
 	}
 
 	// Libera el Synth del servidor
-	stop {
+	freeSynth {
 		if(oscillatorSynth.isPlaying, {
 			oscillatorSynth.free;
 		});
