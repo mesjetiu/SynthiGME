@@ -1,4 +1,8 @@
 S100_Oscillator {
+
+	// Variables de la clase
+	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
+
 	// Synth de la instancia
 	var oscillatorSynth = nil;
 
@@ -11,7 +15,7 @@ S100_Oscillator {
 	var <sineSymmetry = 5;
 	var <triangleLevel = 0;
 	var <sawtoothLevel = 0;
-	var <freqOscillator = 5;
+	var <frequency = 5;
 
 	// Otros atributos de instancia
 	var <outBus1; // pulso y al senoide (por comprobar en Synthi)
@@ -20,6 +24,7 @@ S100_Oscillator {
 	var <outVol = 1; // Entre 0 y 1;
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
+
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
@@ -66,7 +71,7 @@ S100_Oscillator {
 
 			Out.ar(outBus1, sig1 * outVol);
 			Out.ar(outBus2, sig2 * outVol);
-		}, [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, nil, nil]
+		},[lag, lag, lag, lag, lag, lag, lag, lag, nil, nil]
 		).add
 	}
 
@@ -79,7 +84,7 @@ S100_Oscillator {
 		outBus1 = Bus.audio(server);
 		outBus2 = Bus.audio(server);
 		pauseRoutine = Routine({
-			0.5.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
+			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
 			oscillatorSynth.run(false);
 		});
 	}
@@ -89,13 +94,13 @@ S100_Oscillator {
 		if(oscillatorSynth.isPlaying==false, {
 			oscillatorSynth = nil;
 			oscillatorSynth = Synth(\S100_oscillator, [
-				\pulseLevel, pulseLevel/10,
-				\pulseShape, pulseShape/10,
-				\sineLevel, sineLevel/10,
-				\sineSymmetry, (sineSymmetry/5)-1,
-				\triangleLevel, triangleLevel/10,
-				\sawtoothLevel, sawtoothLevel/10,
-				\freq, (10000.pow(1/10)).pow(freqOscillator),
+				\pulseLevel, this.convertPulseLevel(pulseLevel),
+				\pulseShape, this.convertPulseShape(pulseShape),
+				\sineLevel, this.convertSineLevel(sineLevel),
+				\sineSymmetry, this.convertSineSymmetry(sineSymmetry),
+				\triangleLevel, this.convertTriangleLevel(triangleLevel),
+				\sawtoothLevel, this.convertSawtoothLevel(sawtoothLevel),
+				\freq, this.convertFrequency(frequency),
 				\outBus1, outBus1,
 				\outBus2, outBus2,
 				\outVol, 1,
@@ -212,9 +217,9 @@ S100_Oscillator {
 	setFrequency {| freq |
 		if((freq>=0).and(freq<=10), {
 			// frecuencias entre 1 y 10000 Hz
-			freqOscillator = freq;
+			frequency = freq;
 			oscillatorSynth.set(\freq, this.convertFrequency(freq))}, {
-			("S100_Oscillator/setFreqOscillator: " + freq + " no es un valor entre 0 y 10000").postln});
+			("S100_Oscillator/setfrequency: " + freq + " no es un valor entre 0 y 10000").postln});
 	}
 
 	setOutVol {| level |
