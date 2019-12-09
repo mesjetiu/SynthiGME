@@ -116,18 +116,22 @@ Synthi100 {
 					wait(waitTime);
 				});
 				wait(waitTime);
-
+/*
 				// Conexiones provisionales con patchbayAudio
-				modulPatchbayAudio.connect(
-					modulOscillators[0],
-					modulOscillators[0].outBus1,
-					modulOutputChannels[0].inputBus,
-					1);
-				modulPatchbayAudio.connect(
-					modulOscillators[0],
-					modulOscillators[0].outBus2,
-					modulOutputChannels[1].inputBus,
-					1);
+				modulPatchbayAudio.administrateNode(
+					fromModul: modulOscillators[0],
+					fromBus: modulOscillators[0].outBus1,
+					toBus: modulOutputChannels[0].inputBus,
+					coordenate: [2,2],
+					ganancy: 1);
+				modulPatchbayAudio.administrateNode(
+					fromModul: modulOscillators[0],
+					fromBus: modulOscillators[0].outBus2,
+					toBus: modulOutputChannels[1].inputBus,
+					coordenate: [1,1],
+					ganancy: 1);
+
+*/
 			}).play;
 		});
 	}
@@ -140,7 +144,7 @@ Synthi100 {
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC
 
-	setParameterOSC {|simbol, value|
-		prParameterDictionary[simbol].value(value);
+	setParameterOSC {|string, value|
+		prParameterDictionary[string].value(value);
 	}
 }
