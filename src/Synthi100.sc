@@ -11,9 +11,8 @@ Synthi100 {
 	var <audioInBuses;
 	var <audioOutBuses;
 
-	// Buses externos de entrada y salida: (se unen uno a uno a los buses internos)
-	var <externAudioInBuses;
-	var <externAudioOutBuses;
+	// Buses externos de entrada y salida:
+	var <stereoOutBuses;
 
 	// Diccionario con los símbolos de cada módulo:
 	var prParameterDictionary;
@@ -33,15 +32,15 @@ Synthi100 {
 		Class.initClassTree(S100_PatchbayAudio);
 	}
 
-	*new { |server, audioInBuses, audioOutBuses|
-		^super.new.init(server, audioInBuses, audioOutBuses);
+	*new { arg server = Server.local, stereoBuses = [0,1];
+		^super.new.init(server, stereoBuses);
 	}
 
 
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init { arg serv = Server.local, aInBuses, aOutBuses;
+	init {|serv, stereoBuses|
 		// Se añaden al servidor las declaracines SynthDefs
 		S100_Oscillator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
@@ -50,10 +49,7 @@ Synthi100 {
 		// Buses de audio de entrada y salida
 		audioInBuses = numAudioInBuses.collect({Bus.audio(server, 1)});
 		audioOutBuses = numAudioOutBuses.collect({Bus.audio(server, 1)});
-		externAudioInBuses = numAudioInBuses.collect({nil});
-		externAudioOutBuses = numAudioOutBuses.collect({nil});
-		this.setExternAudioInBuses (aInBuses);
-		this.setExternAudioOutBuses (aOutBuses);
+		stereoOutBuses = stereoBuses;
 
 		// Módulos
 		modulOscillators = 12.collect({S100_Oscillator(serv)});
@@ -66,22 +62,6 @@ Synthi100 {
 
 
 	// Métodos de instancia /////////////////////////////////////////////////////////////////////////
-	setExternAudioInBuses {arg audioBuses;
-		if(audioBuses.class == Array, {
-			numAudioInBuses.do({|i|
-				externAudioInBuses[i] = audioBuses[i];
-			})
-		})
-	}
-
-	setExternAudioOutBuses {arg audioBuses;
-		if(audioBuses.class== Array, {
-			numAudioOutBuses.do({|i|
-				externAudioOutBuses[i] = audioBuses[i];
-			})
-		})
-	}
-
 
 	play {
 		server.waitForBoot({
@@ -95,7 +75,7 @@ Synthi100 {
 				conectionOut = 2.collect({|i|
 					SynthDef(\conection, {
 						var sig = In.ar(modulOutputChannels[i].outputBus);
-						Out.ar(i, sig);
+						Out.ar(stereoOutBuses[i], sig);
 					}).play(server);
 					wait(waitTime);
 				});
