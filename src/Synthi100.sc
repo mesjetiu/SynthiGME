@@ -2,8 +2,8 @@ Synthi100 {
 	var <server; // Servidor por defecto
 
 	// Módulos que incluye:
-	var prOscillators;
-	var prOutputChannels;
+	var modulOscillators;
+	var modulOutputChannels;
 	var <conectionOut;
 
 	// Buses internos de entrada y salida:
@@ -55,8 +55,8 @@ Synthi100 {
 		this.setExternAudioOutBuses (aOutBuses);
 
 		// Módulos
-		prOscillators = 12.collect({S100_Oscillator(serv)});
-		prOutputChannels = 8.collect({S100_OutputChannel(serv)});
+		modulOscillators = 12.collect({S100_Oscillator(serv)});
+		modulOutputChannels = 8.collect({S100_OutputChannel(serv)});
 
 		// Diccionario de parámetros de la interfaz física del Synthi 100
 		prParameterDictionary = this.createParameterDictionary;
@@ -89,7 +89,7 @@ Synthi100 {
 			// Rutina para espaciar temporalmente la creacion de cada Synth, de forma que queden ordenados.
 			Routine({
 				var waitTime = 0.01; // Tiempo de espera entre la creación de cada Synth
-				conectionOut = prOscillators.collect({|i|
+				conectionOut = modulOscillators.collect({|i|
 					SynthDef(\conection, {
 						var sig1 = In.ar(i.outBus1);
 						var sig2 = In.ar(i.outBus2);
@@ -100,8 +100,15 @@ Synthi100 {
 				});
 				wait(waitTime);
 
-				// Se arrancan todos los Synths de todos los módulos
-				prOscillators.do({|i|
+				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
+				// Output Channels
+				modulOutputChannels.do({|i|
+					i.createSynth;
+					wait(waitTime);
+				});
+				wait(waitTime);
+				// Oscillators
+				modulOscillators.do({|i|
 					i.createSynth;
 					wait(waitTime);
 				});
@@ -111,7 +118,7 @@ Synthi100 {
 
 	stop {
 		conectionOut.do({|i| i.free}); // provisional
-		prOscillators.do({|i| i.freeSynth});
+		modulOscillators.do({|i| i.freeSynth});
 	}
 
 

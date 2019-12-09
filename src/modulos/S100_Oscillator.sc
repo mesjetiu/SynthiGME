@@ -91,7 +91,6 @@ S100_Oscillator {
 	// Crea el Synth en el servidor
 	createSynth {
 		if(oscillatorSynth.isPlaying==false, {
-			oscillatorSynth = nil;
 			oscillatorSynth = Synth(\S100_oscillator, [
 				\pulseLevel, this.convertPulseLevel(pulseLevel),
 				\pulseShape, this.convertPulseShape(pulseShape),
