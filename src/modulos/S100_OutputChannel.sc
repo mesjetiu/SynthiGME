@@ -4,7 +4,7 @@ S100_OutputChannel {
 	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 
 	// Synth de la instancia
-	var channelSynth = nil;
+	var <synth = nil;
 
 	var <server;
 	var <inputBus; // Array de 8 buses, entradas del amplificador.
@@ -16,7 +16,7 @@ S100_OutputChannel {
 	var <filter = 0; // Filtro pasabajos y pasaaltos.
 	var <pan = 0; // Entre -1 y 1. Para salida stereo (comprobar en el Synthi).
 	var <on = true; // true o false. Activa y desactiva el canal.
-	var <level = 0; // Entre 0 y 1. Nivel de volumen de salida.
+	var <level = 0.5; // Entre 0 y 1. Nivel de volumen de salida.
 
 
 	// Otros atributos de instancia
@@ -38,8 +38,8 @@ S100_OutputChannel {
 			outBusL,
 			outBusR,
 			filter,
-			pan,
-			level;
+			pan, // entre -1 y 1
+			level; // entre 0 y 1
 			var sigIn, sig, sigPanned;
 
 			sigIn = In.ar(inputBus);
@@ -68,14 +68,14 @@ S100_OutputChannel {
 		outBusR = Bus.audio(server);
 		pauseRoutine = Routine({
 			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
-			channelSynth.run(false);
+			synth.run(false);
 		});
 	}
 
 	// Crea el Synth en el servidor
 	createSynth {
-		if(channelSynth.isPlaying==false, {
-			channelSynth = Synth(\S100_outputChannel, [
+		if(synth.isPlaying==false, {
+			synth = Synth(\S100_outputChannel, [
 				\inputBus, inputBus,
 				\outputBus, outputBus,
 				\outBusL, outBusL,
@@ -91,10 +91,10 @@ S100_OutputChannel {
 
 	// Libera el Synth del servidor
 	freeSynth {
-		if(channelSynth.isPlaying, {
-			channelSynth.free;
+		if(synth.isPlaying, {
+			synth.free;
 		});
-		channelSynth = nil;
+		synth = nil;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
@@ -107,7 +107,7 @@ S100_OutputChannel {
 		}, {
 			pauseRoutine.stop;
 			running = true;
-			channelSynth.run(true);
+			synth.run(true);
 		});
 	}
 

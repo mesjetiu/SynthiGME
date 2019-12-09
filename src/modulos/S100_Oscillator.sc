@@ -4,7 +4,7 @@ S100_Oscillator {
 	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 
 	// Synth de la instancia
-	var oscillatorSynth = nil;
+	var <synth = nil;
 
 	// Valores de los parámetros del Synthi 100
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
@@ -68,8 +68,12 @@ S100_Oscillator {
 			var sig1 = sigPulse + sigSine;
 			var sig2 = sigTriangle + sigSawtooth;
 
+			//		Out.ar(outBus1, sig1 * outVol);
+			//		Out.ar(outBus2, sig2 * outVol);
+
 			Out.ar(outBus1, sig1 * outVol);
 			Out.ar(outBus2, sig2 * outVol);
+
 		},[lag, lag, lag, lag, lag, lag, lag, lag, nil, nil]
 		).add
 	}
@@ -84,14 +88,14 @@ S100_Oscillator {
 		outBus2 = Bus.audio(server);
 		pauseRoutine = Routine({
 			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
-			oscillatorSynth.run(false);
+			synth.run(false);
 		});
 	}
 
 	// Crea el Synth en el servidor
 	createSynth {
-		if(oscillatorSynth.isPlaying==false, {
-			oscillatorSynth = Synth(\S100_oscillator, [
+		if(synth.isPlaying==false, {
+			synth = Synth(\S100_oscillator, [
 				\pulseLevel, this.convertPulseLevel(pulseLevel),
 				\pulseShape, this.convertPulseShape(pulseShape),
 				\sineLevel, this.convertSineLevel(sineLevel),
@@ -109,10 +113,10 @@ S100_Oscillator {
 
 	// Libera el Synth del servidor
 	freeSynth {
-		if(oscillatorSynth.isPlaying, {
-			oscillatorSynth.free;
+		if(synth.isPlaying, {
+			synth.free;
 		});
-		oscillatorSynth = nil;
+		synth = nil;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
@@ -125,7 +129,7 @@ S100_Oscillator {
 		}, {
 			pauseRoutine.stop;
 			running = true;
-			oscillatorSynth.run(true);
+			synth.run(true);
 		});
 	}
 
@@ -170,14 +174,14 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			pulseLevel = level;
 			this.synthRun();
-			oscillatorSynth.set(\pulseLevel, this.convertPulseLevel(level))}, {
+			synth.set(\pulseLevel, this.convertPulseLevel(level))}, {
 			("S100_Oscillator/setPulseLevel: " + level + " no es un valor entre 0 y 1").postln})
 	}
 
 	setPulseShape {| shape |
 		if((shape>=0).and(shape<=10), {
 			pulseShape = shape;
-			oscillatorSynth.set(\pulseShape, this.convertPulseShape(shape))}, {
+			synth.set(\pulseShape, this.convertPulseShape(shape))}, {
 			("S100_Oscillator/setPulseShape: " + shape + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -185,14 +189,14 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			sineLevel = level;
 			this.synthRun();
-			oscillatorSynth.set(\sineLevel, this.convertSineLevel(level))}, {
+			synth.set(\sineLevel, this.convertSineLevel(level))}, {
 			("S100_Oscillator/setSineLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
 	setSineSymmetry {| symmetry |
 		if((symmetry>=0).and(symmetry<=10), {
 			sineSymmetry = symmetry;
-			oscillatorSynth.set(\sineSymmetry, this.convertSineSymmetry(symmetry))}, {
+			synth.set(\sineSymmetry, this.convertSineSymmetry(symmetry))}, {
 			("S100_Oscillator/setSineSymmetry: " + symmetry + " no es un valor entre -1 y 1").postln});
 	}
 
@@ -200,7 +204,7 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			triangleLevel = level;
 			this.synthRun();
-			oscillatorSynth.set(\triangleLevel, this.convertTriangleLevel(level))}, {
+			synth.set(\triangleLevel, this.convertTriangleLevel(level))}, {
 			("S100_Oscillator/setTriangleLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -208,7 +212,7 @@ S100_Oscillator {
 		if((level>=0).and(level<=10), {
 			sawtoothLevel = level;
 			this.synthRun();
-			oscillatorSynth.set(\sawtoothLevel, this.convertSawtoothLevel(level))}, {
+			synth.set(\sawtoothLevel, this.convertSawtoothLevel(level))}, {
 			("S100_Oscillator/setSawtoothLevel: " + level + " no es un valor entre 0 y 1").postln});
 	}
 
@@ -216,7 +220,7 @@ S100_Oscillator {
 		if((freq>=0).and(freq<=10), {
 			// frecuencias entre 1 y 10000 Hz
 			frequency = freq;
-			oscillatorSynth.set(\freq, this.convertFrequency(freq))}, {
+			synth.set(\freq, this.convertFrequency(freq))}, {
 			("S100_Oscillator/setfrequency: " + freq + " no es un valor entre 0 y 10000").postln});
 	}
 
@@ -224,7 +228,7 @@ S100_Oscillator {
 		if((level>=0).and(level<=1), {
 			outVol = level;
 			this.synthRun();
-			oscillatorSynth.set(\outVol, level)}, {
+			synth.set(\outVol, level)}, {
 			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
 	}
 	//End Setters Oscillators//////////////////////////////////////////////////////////////////////

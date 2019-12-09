@@ -3,7 +3,8 @@ Synthi100 {
 
 	// Módulos que incluye:
 	var modulOscillators;
-	var modulOutputChannels;
+	var <modulOutputChannels;
+	var modulPatchbayAudio;
 	var <conectionOut;
 
 	// Buses internos de entrada y salida:
@@ -57,6 +58,7 @@ Synthi100 {
 		// Módulos
 		modulOscillators = 12.collect({S100_Oscillator(serv)});
 		modulOutputChannels = 8.collect({S100_OutputChannel(serv)});
+		modulPatchbayAudio = S100_PatchbayAudio(server, modulOscillators, modulOutputChannels);
 
 		// Diccionario de parámetros de la interfaz física del Synthi 100
 		prParameterDictionary = this.createParameterDictionary;
@@ -84,34 +86,48 @@ Synthi100 {
 	play {
 		server.waitForBoot({
 			// TODO: Crear alguna rutina para colocar en orden todos los Synths en el servidor. Ahora están colocados mezclados los osciladores y los conectores.
-			// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
 
 			// Rutina para espaciar temporalmente la creacion de cada Synth, de forma que queden ordenados.
 			Routine({
 				var waitTime = 0.01; // Tiempo de espera entre la creación de cada Synth
-				conectionOut = modulOscillators.collect({|i|
+
+				// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
+				conectionOut = 2.collect({|i|
 					SynthDef(\conection, {
-						var sig1 = In.ar(i.outBus1);
-						var sig2 = In.ar(i.outBus2);
-						Out.ar(0, sig1);
-						Out.ar(1, sig2);
+						var sig = In.ar(modulOutputChannels[i].outputBus);
+						Out.ar(i, sig);
 					}).play(server);
-					wait(waitTime)
+					wait(waitTime);
 				});
 				wait(waitTime);
 
 				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
+
 				// Output Channels
 				modulOutputChannels.do({|i|
 					i.createSynth;
 					wait(waitTime);
 				});
 				wait(waitTime);
+
 				// Oscillators
 				modulOscillators.do({|i|
 					i.createSynth;
 					wait(waitTime);
 				});
+				wait(waitTime);
+
+				// Conexiones provisionales con patchbayAudio
+				modulPatchbayAudio.connect(
+					modulOscillators[0],
+					modulOscillators[0].outBus1,
+					modulOutputChannels[0].inputBus,
+					1);
+				modulPatchbayAudio.connect(
+					modulOscillators[0],
+					modulOscillators[0].outBus2,
+					modulOutputChannels[1].inputBus,
+					1);
 			}).play;
 		});
 	}
