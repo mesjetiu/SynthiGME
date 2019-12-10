@@ -127,4 +127,21 @@ Synthi100 {
 	setParameterOSC {|string, value|
 		prParameterDictionary[string].value(value);
 	}
+
+	// Setter de pruebas para sustituir a la anterior.
+	setParameterOSC2 {|string, value|
+		var splitted = string.split($/);
+		switch (splitted[1],
+			"osc", {
+				var index = splitted[2].asInt - 1;
+				3.do({splitted.removeAt(0)});
+				if (splitted.size == 1, {splitted.add(nil)});
+				modulOscillators[index].setParameter(splitted[0], splitted[1], value);
+			},
+			"patchA", {
+				//2.do({splitted.removeAt(0)});
+				//modulPathbayAudio
+			}
+		)
+	}
 }

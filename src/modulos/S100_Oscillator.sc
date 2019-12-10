@@ -232,4 +232,22 @@ S100_Oscillator {
 			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
 	}
 	//End Setters Oscillators//////////////////////////////////////////////////////////////////////
+
+	setParameter {arg parameter1, parameter2 = nil, value;
+		if (parameter2 == nil, {
+			switch (parameter1,
+				"range", {this.setRange(value)},
+				"frequency", {this.setFrequency(value)},
+			)
+		}, {
+			switch (parameter1++parameter2,
+				"pulselevel", {this.setPulseLevel(value)},
+				"pulseshape", {this.setPulseShape(value)},
+				"sinelevel", {this.setSineLevel(value)},
+				"sinesymmetry", {this.setSineSymmetry(value)},
+				"trianglelevel", {this.setTriangleLevel(value)},
+				"sawtoothlevel", {this.setSawtoothLevel(value)}
+			)
+		})
+	}
 }
