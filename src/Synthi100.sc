@@ -89,6 +89,7 @@ Synthi100 {
 					wait(waitTime);
 				});
 				wait(waitTime);
+				modulOutputChannels = modulOutputChannels.reverse; // para tenerlos en orden de arriba a abajo según la visibilidad entre synths en el mismo sentido
 
 				// Oscillators
 				modulOscillators.do({|i|
@@ -96,22 +97,8 @@ Synthi100 {
 					wait(waitTime);
 				});
 				wait(waitTime);
-/*
-				// Conexiones provisionales con patchbayAudio
-				modulPatchbayAudio.administrateNode(
-					fromModul: modulOscillators[0],
-					fromBus: modulOscillators[0].outBus1,
-					toBus: modulOutputChannels[0].inputBus,
-					coordenate: [2,2],
-					ganancy: 1);
-				modulPatchbayAudio.administrateNode(
-					fromModul: modulOscillators[0],
-					fromBus: modulOscillators[0].outBus2,
-					toBus: modulOutputChannels[1].inputBus,
-					coordenate: [1,1],
-					ganancy: 1);
+				modulOscillators = modulOscillators.reverse;
 
-*/
 			}).play;
 		});
 	}
@@ -119,6 +106,8 @@ Synthi100 {
 	stop {
 		conectionOut.do({|i| i.free}); // provisional
 		modulOscillators.do({|i| i.freeSynth});
+		modulOutputChannels.do({|i| i.freeSynth});
+		modulPatchbayAudio.freeSynths;
 	}
 
 
@@ -143,8 +132,8 @@ Synthi100 {
 				modulOscillators[index].setParameter(parameter, value);
 			},
 			"patchA", {
-				//2.do({splitted.removeAt(0)});
-				//modulPathbayAudio
+				2.do({splitted.removeAt(0)});
+				modulPatchbayAudio.setParameter
 			}
 		)
 	}
