@@ -7,8 +7,9 @@ S100_OutputChannel {
 	var <synth = nil;
 
 	var <server;
-	var <inputBus; // Array de 8 buses, entradas del amplificador.
-	var <outputBus; // Array de 8 buses, salidas del amplificador.
+	var <inputBus; // Entrada del amplificador.
+	var <outputBus; // Salida del amplificador.
+	var <inFeedbackBus; //
 	var <outBusL; // Canal izquierdo de la salida stereo.
 	var <outBusR; // Canal derecho de la salida stereo.
 

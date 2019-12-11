@@ -1,22 +1,25 @@
 S100_PatchbayAudio {
 
-	var <server;
+	var <server = nil;
 
 	// Array que almacena todas las conexiones. Dos dimensiones [from] [to]. Almacena el Synth Node.
-	var <nodeSynths;
-	// Array con las funciones para crear cada nodo.
-	var nodeFunctions;
+	var <nodeSynths = nil;
+	// Array con las funciones para crear cada nodo. (Para eliminar en el futuro cuando funcione bien "inputsOutputs")
+	var nodeFunctions = nil;
 
-	// Módulos del Synthi 100
-	var <modulOscillators;
-	var <modulOutputChannels;
+	// Módulos del Synthi 100 con entradas o salidas (en experimentación...)
+	// debería contener arrays de tres elementos:
+	// [synth, in/outputBus, feedbackIn/outputBus]
+	// Cada Diccionario del siguiente array corresponde a un número de los elementos de la tabla del Pathbay de audio. El "synth" sirve para colocar justo tras él al synth propio del nodo. Los buses pueden ser de entrada o salida dependiendo de si es de la coordenada horizontal o la vertical. Los buses de feedback son necesarios cuando un synth debe enviar señal a otro synth que se ejecuta antes.
+	// el índice de esta variable representará a los números únicos de cada punto de entrada o salida de las coordenadas del Patchbay de Audio. De esta forma, con solo pasar como parámetro las coordenadas del pin a this.administrateNode será posible hacer o deshacer la conexión correctamente.
+	var <inputsOutputs = nil;
 
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
-	*new { |server, oscillators, outputChannels|
-		^super.new.init(server, oscillators, outputChannels);
+	*new { |server|
+		^super.new.init(server);
 	}
 
 	*addSynthDef {
@@ -35,13 +38,54 @@ S100_PatchbayAudio {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init { arg serv = Server.local, oscills, outpts;
+	init { arg serv = Server.local;
 		server = serv;
-		modulOscillators = oscills;
-		modulOutputChannels = outpts;
-		nodeSynths = Array.fill2D(60, 60, {nil});
-		nodeFunctions = Array.fill2D(60, 60, {nil});
+		nodeSynths = Array.fill2D(66, 60, {nil}); // horizontal, vertical
+		nodeFunctions = Array.fill2D(66, 60, {nil});
 	}
+
+	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
+	connect {|oscillators, outputChannels|
+		inputsOutputs = this.ordenateInputsOutputs(oscillators, outputChannels);
+	}
+
+	// (experimentando...)
+	ordenateInputsOutputs {|oscillators, outputChannels|
+		var osc = oscillators;
+		var outc = outputChannels;
+		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
+		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
+		var index;
+
+		// Inputs horizontales (1-66)
+		index = 36; // Output Channels ocupan los números 36-43 horizontales
+		outputChannels.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\inBus, i.inputBus,
+				\inFeedbackBus, i.inFeedbackBus,
+			]);
+			index = index + 1;
+		});
+
+		// Outputs verticales (67-126)
+		index = 91; // Oscillators ocupan los números 91-108
+		oscillators.do({|i|
+			array[index-1] = Dictionary.newFrom(List[ // Sine y Saw
+				\synth, i.synth,
+				\outBus, i.outputBus1,
+			]);
+			index = index + 1;
+			array[index-1] = Dictionary.newFrom(List[ // Pulse y Triangle
+				\synth, i.synth,
+				\outBus, i.outputBus2,
+			]);
+			index = index + 1;
+		});
+
+		^array;
+	}
+
 
 	// Crea nodo de conexión entre dos módulos
 	administrateNode {
@@ -73,8 +117,31 @@ S100_PatchbayAudio {
 	}
 
 	// Nuevo método para sustituir al anterior
-	administrateNode2 {|coordenates, ganancy|
-
+	administrateNode2 {|vertical, horizontal, ganancy|
+		var ver = vertical - 67;
+		var hor = horizontal;
+		var fromSynth = inputsOutputs[vertical-1].at(\synth);
+		var fromBus = inputsOutputs[vertical-1].at(\outBus);
+		var toBus = inputsOutputs[horizontal-1].at(\inBus);
+		if(ganancy > 0, {
+			if(nodeSynths[hor-1][ver-1] == nil, {
+				nodeSynths[hor-1][ver-1] = Synth(
+					\S100_patchNode, [
+						\fromBus, fromBus,
+						\toBus, toBus,
+						\ganancy, ganancy
+					],
+					fromSynth,
+					\addAfter);
+			}, {
+				nodeSynths[hor-1][ver-1].set(\ganancy, ganancy);
+			})
+		},{
+			if(nodeSynths[hor-1][ver-1] != nil, {
+				nodeSynths[hor-1][ver-1].free;
+				nodeSynths[hor-1][ver-1] = nil;
+			})
+		})
 	}
 
 

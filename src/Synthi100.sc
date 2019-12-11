@@ -2,9 +2,9 @@ Synthi100 {
 	var <server; // Servidor por defecto
 
 	// Módulos que incluye:
-	var modulOscillators;
+	var <modulOscillators;
 	var <modulOutputChannels;
-	var modulPatchbayAudio;
+	var <modulPatchbayAudio;
 	var <conectionOut;
 
 	// Buses internos de entrada y salida:
@@ -54,7 +54,7 @@ Synthi100 {
 		// Módulos
 		modulOscillators = 12.collect({S100_Oscillator(serv)});
 		modulOutputChannels = 8.collect({S100_OutputChannel(serv)});
-		modulPatchbayAudio = S100_PatchbayAudio(server, modulOscillators, modulOutputChannels);
+		modulPatchbayAudio = S100_PatchbayAudio(server);
 
 		// Diccionario de parámetros de la interfaz física del Synthi 100
 		prParameterDictionary = this.createParameterDictionary;
@@ -89,7 +89,7 @@ Synthi100 {
 					wait(waitTime);
 				});
 				wait(waitTime);
-				modulOutputChannels = modulOutputChannels.reverse; // para tenerlos en orden de arriba a abajo según la visibilidad entre synths en el mismo sentido
+		//		modulOutputChannels = modulOutputChannels.reverse; // para tenerlos en orden de arriba a abajo según la visibilidad entre synths en el mismo sentido
 
 				// Oscillators
 				modulOscillators.do({|i|
@@ -97,7 +97,9 @@ Synthi100 {
 					wait(waitTime);
 				});
 				wait(waitTime);
-				modulOscillators = modulOscillators.reverse;
+			//	modulOscillators = modulOscillators.reverse;
+
+				modulPatchbayAudio.connect(modulOscillators, modulOutputChannels);
 
 			}).play;
 		});
@@ -133,7 +135,7 @@ Synthi100 {
 			},
 			"patchA", {
 				2.do({splitted.removeAt(0)});
-				modulPatchbayAudio.setParameter
+				modulPatchbayAudio.administrateNode2(splitted[0].asInt, splitted[1].asInt, value);
 			}
 		)
 	}

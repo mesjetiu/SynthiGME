@@ -18,8 +18,8 @@ S100_Oscillator {
 	var <frequency = 5;
 
 	// Otros atributos de instancia
-	var <outBus1; // pulso y al senoide (por comprobar en Synthi)
-	var <outBus2; // triángulo y diente de sierra (por comprobar en Synthi)
+	var <outputBus1; // Sine y Saw
+	var <outputBus2; // Pulse y Triangle
 	var <server;
 	var <outVol = 1; // Entre 0 y 1;
 	var <running; // true o false: Si el sintetizador está activo o pausado
@@ -46,8 +46,8 @@ S100_Oscillator {
 
 			// Parámetros de SC
 			outVol, // de 0 a 1
-			outBus1,
-			outBus2;
+			outputBus1,
+			outputBus2;
 
 			// Pulse
 			var sigPulse = LFPulse.ar(freq: freq, width: pulseShape, mul: pulseLevel);
@@ -65,14 +65,11 @@ S100_Oscillator {
 			var sigSawtooth = Saw.ar(freq, sawtoothLevel);
 
 			// Suma de señales
-			var sig1 = sigPulse + sigSine;
-			var sig2 = sigTriangle + sigSawtooth;
+			var sig1 = sigSine + sigSawtooth;
+			var sig2 = sigPulse + sigTriangle;
 
-			//		Out.ar(outBus1, sig1 * outVol);
-			//		Out.ar(outBus2, sig2 * outVol);
-
-			Out.ar(outBus1, sig1 * outVol);
-			Out.ar(outBus2, sig2 * outVol);
+			Out.ar(outputBus1, sig1 * outVol);
+			Out.ar(outputBus2, sig2 * outVol);
 
 		},[lag, lag, lag, lag, lag, lag, lag, lag, nil, nil]
 		).add
@@ -84,8 +81,8 @@ S100_Oscillator {
 
 	init { arg serv = Server.local;
 		server = serv;
-		outBus1 = Bus.audio(server);
-		outBus2 = Bus.audio(server);
+		outputBus1 = Bus.audio(server);
+		outputBus2 = Bus.audio(server);
 		pauseRoutine = Routine({
 			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
 			synth.run(false);
@@ -103,8 +100,8 @@ S100_Oscillator {
 				\triangleLevel, this.convertTriangleLevel(triangleLevel),
 				\sawtoothLevel, this.convertSawtoothLevel(sawtoothLevel),
 				\freq, this.convertFrequency(frequency),
-				\outBus1, outBus1,
-				\outBus2, outBus2,
+				\outputBus1, outputBus1,
+				\outputBus2, outputBus2,
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
