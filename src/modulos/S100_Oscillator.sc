@@ -233,14 +233,10 @@ S100_Oscillator {
 	}
 	//End Setters Oscillators//////////////////////////////////////////////////////////////////////
 
-	setParameter {arg parameter1, parameter2 = nil, value;
-		if (parameter2 == nil, {
-			switch (parameter1,
+	setParameter {|parameter, value|
+			switch (parameter,
 				"range", {this.setRange(value)},
 				"frequency", {this.setFrequency(value)},
-			)
-		}, {
-			switch (parameter1++parameter2,
 				"pulselevel", {this.setPulseLevel(value)},
 				"pulseshape", {this.setPulseShape(value)},
 				"sinelevel", {this.setSineLevel(value)},
@@ -248,6 +244,5 @@ S100_Oscillator {
 				"trianglelevel", {this.setTriangleLevel(value)},
 				"sawtoothlevel", {this.setSawtoothLevel(value)}
 			)
-		})
-	}
+		}
 }

@@ -134,9 +134,13 @@ Synthi100 {
 		switch (splitted[1],
 			"osc", {
 				var index = splitted[2].asInt - 1;
+				var parameter;
 				3.do({splitted.removeAt(0)});
-				if (splitted.size == 1, {splitted.add(nil)});
-				modulOscillators[index].setParameter(splitted[0], splitted[1], value);
+				if (splitted.size == 1,
+					{parameter = splitted[0]},
+					{parameter = splitted[0]++splitted[1]}
+				);
+				modulOscillators[index].setParameter(parameter, value);
 			},
 			"patchA", {
 				//2.do({splitted.removeAt(0)});
