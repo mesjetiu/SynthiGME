@@ -72,6 +72,23 @@ S100_PatchbayAudio {
 		})
 	}
 
+	// Nuevo método para sustituir al anterior
+	administrateNode2 {|coordenates, ganancy|
+
+	}
+
+
+	freeSynths {
+		nodeSynths.do({|i|
+			i.do({|j|
+				if(j != nil, {
+					j.free;
+					j = nil;
+				})
+			})
+		})
+	}
+
 
 
 }
