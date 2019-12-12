@@ -9,7 +9,7 @@ S100_OutputChannel {
 	var <server;
 	var <inputBus; // Entrada del amplificador.
 	var <outputBus; // Salida del amplificador.
-	var <inFeedbackBus; //
+	var <inFeedbackBus; // Entrada de feedback: admite audio del ciclo anterior.
 	var <outBusL; // Canal izquierdo de la salida stereo.
 	var <outBusR; // Canal derecho de la salida stereo.
 
@@ -35,6 +35,7 @@ S100_OutputChannel {
 	*addSynthDef {
 		SynthDef(\S100_outputChannel, {
 			arg inputBus,
+			inFeedbackBus,
 			outputBus,
 			outBusL,
 			outBusR,
@@ -54,7 +55,7 @@ S100_OutputChannel {
 			Out.ar(outputBus, sig);
 			Out.ar(outBusL, sigPanned[0]);
 			Out.ar(outBusR, sigPanned[1]);
-		}, [nil, nil, nil, nil, lag, lag, lag]
+		}, [nil, nil, nil, nil, nil, lag, lag, lag]
 		).add
 	}
 

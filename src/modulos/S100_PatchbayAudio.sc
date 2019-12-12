@@ -93,7 +93,17 @@ S100_PatchbayAudio {
 		var hor = horizontal;
 		var fromSynth = inputsOutputs[vertical-1].at(\synth);
 		var fromBus = inputsOutputs[vertical-1].at(\outBus);
-		var toBus = inputsOutputs[horizontal-1].at(\inBus);
+		var toSynth = inputsOutputs[horizontal-1].at(\synth);
+		var toBus; // su valor dependerá de la relación de orden de ejecución de ambos synths
+		var numFromSynth = fromSynth.asString.split($:)[1].split($ )[1].split($))[0];
+		var numToSynth = toSynth.asString.split($:)[1].split($ )[1].split($))[0];
+
+		if(numFromSynth > numToSynth, { // Si el synth de destino se ejecuta después que el de origen
+			toBus = inputsOutputs[horizontal-1].at(\inBus);
+		}, { // Si el synth de destino se ejecuta antes que el de origen
+			inputsOutputs[horizontal-1].at(\inFeedbackBus);
+		});
+
 		if(ganancy > 0, {
 			if(nodeSynths[hor-1][ver-1] == nil, {
 				nodeSynths[hor-1][ver-1] = Synth(
