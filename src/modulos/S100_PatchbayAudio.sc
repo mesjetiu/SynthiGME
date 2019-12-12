@@ -88,36 +88,7 @@ S100_PatchbayAudio {
 
 
 	// Crea nodo de conexión entre dos módulos
-	administrateNode {
-		arg fromModul = nil,
-		fromBus = nil,
-		toBus = nil,
-		coordenate,
-		ganancy = 1;
-
-		if(ganancy > 0, {
-			if(nodeSynths[coordenate[0]][coordenate[1]] == nil, {
-				nodeSynths[coordenate[0]][coordenate[1]] = Synth(
-					\S100_patchNode, [
-						\fromBus, fromBus,
-						\toBus, toBus,
-						\ganancy, ganancy
-					],
-					fromModul.synth,
-					\addAfter);
-			}, {
-				nodeSynths[coordenate[0]][coordenate[1]].set(\ganancy, ganancy);
-			})
-		},{
-			if(nodeSynths[coordenate[0]][coordenate[1]] != nil, {
-				nodeSynths[coordenate[0]][coordenate[1]].free;
-				nodeSynths[coordenate[0]][coordenate[1]] = nil;
-			})
-		})
-	}
-
-	// Nuevo método para sustituir al anterior
-	administrateNode2 {|vertical, horizontal, ganancy|
+	administrateNode {|vertical, horizontal, ganancy|
 		var ver = vertical - 67;
 		var hor = horizontal;
 		var fromSynth = inputsOutputs[vertical-1].at(\synth);

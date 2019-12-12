@@ -14,9 +14,6 @@ Synthi100 {
 	// Buses externos de entrada y salida:
 	var <stereoOutBuses;
 
-	// Diccionario con los símbolos de cada módulo:
-	var prParameterDictionary;
-
 	// Opciones:
 	const numAudioInBuses = 8;
 	const numAudioOutBuses = 8;
@@ -55,9 +52,6 @@ Synthi100 {
 		modulOscillators = 12.collect({S100_Oscillator(serv)});
 		modulOutputChannels = 8.collect({S100_OutputChannel(serv)});
 		modulPatchbayAudio = S100_PatchbayAudio(server);
-
-		// Diccionario de parámetros de la interfaz física del Synthi 100
-		prParameterDictionary = this.createParameterDictionary;
 	}
 
 
@@ -114,13 +108,7 @@ Synthi100 {
 
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC
-
 	setParameterOSC {|string, value|
-		prParameterDictionary[string].value(value);
-	}
-
-	// Setter de pruebas para sustituir a la anterior.
-	setParameterOSC2 {|string, value|
 		var splitted = string.split($/);
 		switch (splitted[1],
 			"osc", {
@@ -135,7 +123,7 @@ Synthi100 {
 			},
 			"patchA", {
 				2.do({splitted.removeAt(0)});
-				modulPatchbayAudio.administrateNode2(splitted[0].asInt, splitted[1].asInt, value);
+				modulPatchbayAudio.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
 			}
 		)
 	}

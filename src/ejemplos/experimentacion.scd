@@ -10,16 +10,16 @@ o.setParameterOSC("/patchA/92/37", 1);
 )
 
 (
-o.setParameterOSC2("/patchA/91/36", 1);
-o.setParameterOSC2("/patchA/92/37", 1);
+o.setParameterOSC("/patchA/91/36", 1);
+o.setParameterOSC("/patchA/92/37", 1);
 )
-o.setParameterOSC2("/osc/1/pulse/level", 10);
-o.setParameterOSC("/osc/1/pulse/shape", 5);
-o.setParameterOSC("/osc/1/sine/level", 10);
-o.setParameterOSC2("/osc/1/sine/symmetry", 5);
+o.setParameterOSC("/osc/1/pulse/level",5);
+o.setParameterOSC("/osc/1/pulse/shape", 1);
+o.setParameterOSC("/osc/1/sine/level", 9);
+o.setParameterOSC("/osc/1/sine/symmetry", 5);
 o.setParameterOSC("/osc/1/sawtooth/level", 10);
 o.setParameterOSC("/osc/1/triangle/level", 10);
-o.setParameterOSC2("/osc/1/frequency", 2);
+o.setParameterOSC("/osc/1/frequency", 7);
 o.modulOutputChannels[0].synth
 
 {PinkNoise.ar}.play
