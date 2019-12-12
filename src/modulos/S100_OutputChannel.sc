@@ -9,6 +9,7 @@ S100_OutputChannel {
 	var <server;
 	var <inputBus; // Entrada del amplificador.
 	var <outputBus; // Salida del amplificador.
+	var <outputBusNotProcessed; // equivale a la entrada del canal. Señal sin procesar.
 	var <inFeedbackBus; // Entrada de feedback: admite audio del ciclo anterior.
 	var <outBusL; // Canal izquierdo de la salida stereo.
 	var <outBusR; // Canal derecho de la salida stereo.
@@ -37,6 +38,7 @@ S100_OutputChannel {
 			arg inputBus,
 			inFeedbackBus,
 			outputBus,
+			outputBusNotProcessed,
 			outBusL,
 			outBusR,
 			filter,
@@ -44,7 +46,7 @@ S100_OutputChannel {
 			level; // entre 0 y 1
 			var sigIn, sig, sigPanned;
 
-			sigIn = In.ar(inputBus);
+			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 			// Realizar aquí el filtrado
 			// ................
 
@@ -53,9 +55,10 @@ S100_OutputChannel {
 			sigPanned = Pan2.ar(sig, pan);
 
 			Out.ar(outputBus, sig);
+			Out.ar(outputBusNotProcessed, sigIn);
 			Out.ar(outBusL, sigPanned[0]);
 			Out.ar(outBusR, sigPanned[1]);
-		}, [nil, nil, nil, nil, nil, lag, lag, lag]
+		}, [nil, nil, nil, nil, nil, nil, lag, lag, lag]
 		).add
 	}
 
@@ -65,7 +68,9 @@ S100_OutputChannel {
 	init { arg serv = Server.local;
 		server = serv;
 		inputBus = Bus.audio(server);
+		inFeedbackBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
+		outputBusNotProcessed = Bus.audio(server);
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
 		pauseRoutine = Routine({
@@ -79,7 +84,9 @@ S100_OutputChannel {
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_outputChannel, [
 				\inputBus, inputBus,
+				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
+				\outputBusNotProcessed, outputBusNotProcessed,
 				\outBusL, outBusL,
 				\outBusR, outBusR,
 				\filter, filter,

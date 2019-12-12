@@ -57,7 +57,7 @@ S100_PatchbayAudio {
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
 
-		// Inputs horizontales (1-66)
+		// Inputs horizontales (1-66) /////////////////////////////////////////////////////////////
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -68,7 +68,23 @@ S100_PatchbayAudio {
 			index = index + 1;
 		});
 
-		// Outputs verticales (67-126)
+		// Outputs verticales (67-126) ////////////////////////////////////////////////////////////
+		index = 67; // Inputs de Amplificador (Output channels) del 67-74
+		outputChannels.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\outBus, i.outputBusNotProcessed,
+			]);
+			index = index + 1;
+		});
+		index = 75; // Outputs de amplificador (Output channels) del 75-82
+		outputChannels.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\outBus, i.outputBus,
+			]);
+			index = index + 1;
+		});
 		index = 91; // Oscillators ocupan los números 91-108
 		oscillators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[ // Sine y Saw
