@@ -111,7 +111,7 @@ Synthi100 {
 	setParameterOSC {|string, value|
 		var splitted = string.split($/);
 		switch (splitted[1],
-			"osc", {
+			"osc", { // Ejemplo: "/osc/1/pulse/level"
 				var index = splitted[2].asInt - 1;
 				var parameter;
 				3.do({splitted.removeAt(0)});
@@ -119,12 +119,29 @@ Synthi100 {
 					{parameter = splitted[0]},
 					{parameter = splitted[0]++splitted[1]}
 				);
-				modulOscillators[index].setParameter(parameter, value);
+				switch (parameter,
+					"range", {modulOscillators[index].setRange(value)},
+					"frequency", {modulOscillators[index].setFrequency(value)},
+					"pulselevel", {modulOscillators[index].setPulseLevel(value)},
+					"pulseshape", {modulOscillators[index].setPulseShape(value)},
+					"sinelevel", {modulOscillators[index].setSineLevel(value)},
+					"sinesymmetry", {modulOscillators[index].setSineSymmetry(value)},
+					"trianglelevel", {modulOscillators[index].setTriangleLevel(value)},
+					"sawtoothlevel", {modulOscillators[index].setSawtoothLevel(value)}
+				)
+				//	modulOscillators[index].setParameter(parameter, value);
 			},
-			"patchA", {
+			"patchA", { // Ejemplo "/patchA/91/36"
 				2.do({splitted.removeAt(0)});
 				modulPatchbayAudio.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
-			}
+			},
+			"out", { // Ejemplo "/out/1/level"
+				var index = splitted[2].asInt - 1;
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0],
+					"level", {modulOutputChannels[index].setLevel(value)},
+				)
+			},
 		)
 	}
 }

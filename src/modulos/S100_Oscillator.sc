@@ -229,17 +229,4 @@ S100_Oscillator {
 			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
 	}
 	//End Setters Oscillators//////////////////////////////////////////////////////////////////////
-
-	setParameter {|parameter, value|
-			switch (parameter,
-				"range", {this.setRange(value)},
-				"frequency", {this.setFrequency(value)},
-				"pulselevel", {this.setPulseLevel(value)},
-				"pulseshape", {this.setPulseShape(value)},
-				"sinelevel", {this.setSineLevel(value)},
-				"sinesymmetry", {this.setSineSymmetry(value)},
-				"trianglelevel", {this.setTriangleLevel(value)},
-				"sawtoothlevel", {this.setSawtoothLevel(value)}
-			)
-		}
 }

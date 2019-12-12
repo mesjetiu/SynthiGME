@@ -17,7 +17,7 @@ S100_OutputChannel {
 	var <filter = 0; // Filtro pasabajos y pasaaltos.
 	var <pan = 0; // Entre -1 y 1. Para salida stereo (comprobar en el Synthi).
 	var <on = true; // true o false. Activa y desactiva el canal.
-	var <level = 0.5; // Entre 0 y 1. Nivel de volumen de salida.
+	var <level = 5; // Entre 0 y 1. Nivel de volumen de salida.
 
 
 	// Otros atributos de instancia
@@ -83,7 +83,7 @@ S100_OutputChannel {
 				\outBusR, outBusR,
 				\filter, filter,
 				\pan, pan,
-				\level, level,
+				\level, this.convertLevel(level),
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
@@ -110,6 +110,21 @@ S100_OutputChannel {
 			running = true;
 			synth.run(true);
 		});
+	}
+
+	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
+
+	convertLevel {|level|
+		^(level/10);
+	}
+
+	// Setters de los parámetros
+	setLevel {|lev|
+		if((lev>=0).and(lev<=10), {
+			level = lev;
+			this.synthRun();
+			synth.set(\level, this.convertLevel(lev))}, {
+			("S100_OutputChannel/setLevel: " + lev + " no es un valor entre 0 y 1").postln});
 	}
 
 }
