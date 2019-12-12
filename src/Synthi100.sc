@@ -140,6 +140,7 @@ Synthi100 {
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"level", {modulOutputChannels[index].setLevel(value)},
+					"filter", {modulOutputChannels[index].setFilter(value)},
 				)
 			},
 		)

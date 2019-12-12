@@ -33,7 +33,11 @@ o.setParameterOSC("/patchA/78/37", 0); // salida de output4 a output2
 o.setParameterOSC("/patchA/91/36", 1); // salida de osc1 a output1
 o.setParameterOSC("/patchA/92/37", 1); // salida de osc1 a output2
 )
+(
+o.setParameterOSC("/out/1/filter", 7);
+o.setParameterOSC("/out/2/filter", 4);
 
+)
 (
 o.setParameterOSC("/patchA/91/36", 0); // salida de osc1 a output1
 o.setParameterOSC("/patchA/92/37", 0); // salida de osc1 a output2
@@ -44,8 +48,8 @@ o.setParameterOSC("/osc/1/triangle/level",2);
 o.setParameterOSC("/osc/1/sawtooth/level", 2);
 )
 (
-o.setParameterOSC("/osc/1/pulse/shape", 0);
-o.setParameterOSC("/osc/1/triangle/level", 0);
+o.setParameterOSC("/osc/1/pulse/shape", 9);
+o.setParameterOSC("/osc/1/triangle/level", 3);
 )
 
 o.setParameterOSC("/osc/1/sine/level", 1);
@@ -55,6 +59,19 @@ o.setParameterOSC("/osc/1/frequency", 7);
 o.setParameterOSC("/out/1/level", 1);
 o.setParameterOSC("/out/2/level", 1);
 o.modulOutputChannels[0].synth
+
+5.linexp(0, 10, 1, 16000)
+16000.pow(1/10).pow(2);
+
+(
+var a, b;
+#a,b = [2,3];
+a.postln;
+b.postln;
+
+)
+
+
 
 
 a = {PinkNoise.ar*0.2}.play

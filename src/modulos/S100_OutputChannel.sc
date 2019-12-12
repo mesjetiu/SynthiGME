@@ -15,7 +15,7 @@ S100_OutputChannel {
 	var <outBusR; // Canal derecho de la salida stereo.
 
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
-	var <filter = 0; // Filtro pasabajos y pasaaltos.
+	var <filter = 5; // Filtro pasabajos y pasaaltos.
 	var <pan = 0; // Entre -1 y 1. Para salida stereo (comprobar en el Synthi).
 	var <on = true; // true o false. Activa y desactiva el canal.
 	var <level = 5; // Entre 0 y 1. Nivel de volumen de salida.
@@ -41,24 +41,27 @@ S100_OutputChannel {
 			outputBusNotProcessed,
 			outBusL,
 			outBusR,
-			filter,
+			freqHP,
+			freqLP,
 			pan, // entre -1 y 1
 			level; // entre 0 y 1
 			var sigIn, sig, sigPanned;
 
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
+
 			// Realizar aquí el filtrado
-			// ................
+			sig = HPF.ar(sigIn, freqHP, 0.5);
+			sig = sig + LPF.ar(sigIn, freqLP, 0.5);
 
-
-			sig = sigIn * level;
+			// Se aplica el nivel (level)
+			sig = sig * level;
 			sigPanned = Pan2.ar(sig, pan);
 
 			Out.ar(outputBus, sig);
 			Out.ar(outputBusNotProcessed, sigIn);
 			Out.ar(outBusL, sigPanned[0]);
 			Out.ar(outBusR, sigPanned[1]);
-		}, [nil, nil, nil, nil, nil, nil, lag, lag, lag]
+		}, [nil, nil, nil, nil, nil, nil, lag, lag, lag, lag]
 		).add
 	}
 
@@ -89,7 +92,8 @@ S100_OutputChannel {
 				\outputBusNotProcessed, outputBusNotProcessed,
 				\outBusL, outBusL,
 				\outBusR, outBusR,
-				\filter, filter,
+				\freqHP, this.convertFilter(filter)[0],
+				\freqLP, this.convertFilter(filter)[1],
 				\pan, pan,
 				\level, this.convertLevel(level),
 				\outVol, 1,
@@ -126,13 +130,43 @@ S100_OutputChannel {
 		^(level/10);
 	}
 
+	convertFilter {|filter| // Retorna las frecuencias de corte de ambos filtros: pasabajos y pasaaltos
+		var filterHP, filterLP;
+		filterHP = filter.linexp(
+			inMin: 5, // valor mínimo del dial
+			inMax: 10, // valor máximo del dial
+			outMin: 10, // frecuencia mínima (valor del dial: 1)
+			outMax: 16000 //frecuencia máxima (valor del dial: 10)
+		);
+		filterLP = filter.linexp(
+			inMin: 0, // valor mínimo del dial
+			inMax: 5, // valor máximo del dial
+			outMin: 10, // frecuencia mínima (valor del dial: 1)
+			outMax: 20000 //frecuencia máxima (valor del dial: 10)
+		);
+		^[filterHP, filterLP];
+	}
+
 	// Setters de los parámetros
 	setLevel {|lev|
 		if((lev>=0).and(lev<=10), {
 			level = lev;
 			this.synthRun();
-			synth.set(\level, this.convertLevel(lev))}, {
+			synth.set(\level, this.convertLevel(lev))
+		}, {
 			("S100_OutputChannel/setLevel: " + lev + " no es un valor entre 0 y 1").postln});
 	}
+
+	setFilter {|filt|
+		if((filt>=0).and(filt<=10), {
+			var freqHP, freqLP;
+			#freqHP,freqLP = this.convertFilter(filt);
+			filter = filt;
+			synth.set(\freqHP, freqHP);
+			synth.set(\freqLP, freqLP);
+		}, {
+			("S100_OutputChannel/setFilter: " + filt + " no es un valor entre 0 y 1").postln});
+	}
+
 
 }
