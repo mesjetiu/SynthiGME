@@ -4,6 +4,7 @@ S100_PatchbayAudio {
 
 	// Array que almacena todas las conexiones. Dos dimensiones [from] [to]. Almacena el Synth Node.
 	var <nodeSynths = nil;
+
 	// Array con las funciones para crear cada nodo. (Para eliminar en el futuro cuando funcione bien "inputsOutputs")
 	var nodeFunctions = nil;
 
@@ -40,7 +41,7 @@ S100_PatchbayAudio {
 
 	init { arg serv = Server.local;
 		server = serv;
-		nodeSynths = Array.fill2D(66, 60, {nil}); // horizontal, vertical
+		nodeSynths = Dictionary.new;
 		nodeFunctions = Array.fill2D(66, 60, {nil});
 	}
 
@@ -49,7 +50,7 @@ S100_PatchbayAudio {
 		inputsOutputs = this.ordenateInputsOutputs(oscillators, outputChannels);
 	}
 
-	// (experimentando...)
+	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
 	ordenateInputsOutputs {|oscillators, outputChannels|
 		var osc = oscillators;
 		var outc = outputChannels;
@@ -103,56 +104,49 @@ S100_PatchbayAudio {
 	}
 
 
+
+
 	// Crea nodo de conexión entre dos módulos
-	administrateNode {|vertical, horizontal, ganancy|
-		var ver = vertical - 67;
-		var hor = horizontal;
-		var fromSynth = inputsOutputs[vertical-1].at(\synth);
-		var fromBus = inputsOutputs[vertical-1].at(\outBus);
-		var toSynth = inputsOutputs[horizontal-1].at(\synth);
+	administrateNode {|ver, hor, ganancy|
+		var fromSynth = inputsOutputs[ver-1].at(\synth);
+		var fromBus = inputsOutputs[ver-1].at(\outBus);
+		var toSynth = inputsOutputs[hor-1].at(\synth);
 		var toBus; // su valor dependerá de la relación de orden de ejecución de ambos synths
 		var numFromSynth = fromSynth.asString.split($:)[1].split($ )[1].split($))[0];
 		var numToSynth = toSynth.asString.split($:)[1].split($ )[1].split($))[0];
 
 		if(numFromSynth > numToSynth, { // Si el synth de destino se ejecuta después que el de origen
-			toBus = inputsOutputs[horizontal-1].at(\inBus);
+			toBus = inputsOutputs[hor-1].at(\inBus);
 		}, { // Si el synth de destino se ejecuta antes que el de origen
-			inputsOutputs[horizontal-1].at(\inFeedbackBus);
+			inputsOutputs[hor-1].at(\inFeedbackBus);
 		});
 
 		if(ganancy > 0, {
-			if(nodeSynths[hor-1][ver-1] == nil, {
-				nodeSynths[hor-1][ver-1] = Synth(
-					\S100_patchNode, [
-						\fromBus, fromBus,
-						\toBus, toBus,
+			if(nodeSynths[[hor,ver].asString] == nil, {
+				nodeSynths.put(
+					[hor,ver].asString,
+					Dictionary.newFrom(List[
+						\synth, Synth(
+							\S100_patchNode, [
+								\fromBus, fromBus,
+								\toBus, toBus,
+								\ganancy, ganancy
+							],
+							fromSynth,
+							\addAfter
+						),
 						\ganancy, ganancy
-					],
-					fromSynth,
-					\addAfter);
+					])
+				)
 			}, {
-				nodeSynths[hor-1][ver-1].set(\ganancy, ganancy);
+				nodeSynths[[hor,ver].asString][\synth].set(\ganancy, ganancy);
+				nodeSynths[[hor,ver].asString][\ganancy] = ganancy;
 			})
 		},{
-			if(nodeSynths[hor-1][ver-1] != nil, {
-				nodeSynths[hor-1][ver-1].free;
-				nodeSynths[hor-1][ver-1] = nil;
+			if(nodeSynths[[hor,ver].asString] != nil, {
+				nodeSynths[[hor,ver].asString][\synth].free;
+				nodeSynths[[hor,ver].asString] = nil;
 			})
 		})
 	}
-
-
-	freeSynths {
-		nodeSynths.do({|i|
-			i.do({|j|
-				if(j != nil, {
-					j.free;
-					j = nil;
-				})
-			})
-		})
-	}
-
-
-
 }
