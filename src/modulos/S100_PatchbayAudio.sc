@@ -124,7 +124,7 @@ S100_PatchbayAudio {
 		if(ganancy > 0, {
 			if(nodeSynths[[hor,ver].asString] == nil, {
 				nodeSynths.put(
-					[hor,ver].asString,
+					[ver,hor].asString,
 					Dictionary.newFrom(List[
 						\synth, Synth(
 							\S100_patchNode, [
@@ -135,17 +135,18 @@ S100_PatchbayAudio {
 							fromSynth,
 							\addAfter
 						),
-						\ganancy, ganancy
+						\ganancy, ganancy,
+						\coordenates, [ver, hor]
 					])
 				)
 			}, {
-				nodeSynths[[hor,ver].asString][\synth].set(\ganancy, ganancy);
-				nodeSynths[[hor,ver].asString][\ganancy] = ganancy;
+				nodeSynths[[ver,hor].asString][\synth].set(\ganancy, ganancy);
+				nodeSynths[[ver,hor].asString][\ganancy] = ganancy;
 			})
 		},{
-			if(nodeSynths[[hor,ver].asString] != nil, {
-				nodeSynths[[hor,ver].asString][\synth].free;
-				nodeSynths[[hor,ver].asString] = nil;
+			if(nodeSynths[[ver,hor].asString] != nil, {
+				nodeSynths[[ver,hor].asString][\synth].free;
+				nodeSynths[[ver,hor].asString] = nil;
 			})
 		})
 	}

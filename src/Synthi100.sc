@@ -174,17 +174,13 @@ Synthi100 {
 			data.add([string ++ "level", oc.level]);
 		});
 
-/* //////  REFORMAR LA MANERA EN LA QUE SE ALMACENAN LOS SYNTHS EN PATCHBAYAUDIO. MEJOR CON DICCIONARIOS...
 		// Patchbay Audio:
-		modulPatchbayAudio.nodeSynths.do({|vertical,i|
-			vertical.do({|synth,j|
-				if (synth != nil, { // Si existe el nodo...
-					var ganancy =
-					data.add(["patchA/" ++ (i+67) ++ "/" ++ "j", ganancy])
-				})
-			});
+		modulPatchbayAudio.nodeSynths.do({|node|
+			var ver = node[\coordenates][0];
+			var hor = node[\coordenates][1];
+			data.add("/patchA/" ++ ver ++ "/" ++ hor);
 		});
-	*/
+
 		^data;
 	}
 }

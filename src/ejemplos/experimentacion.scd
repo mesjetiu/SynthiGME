@@ -5,10 +5,10 @@ o = Synthi100(s, stereoBuses: [0,1]);
 o.play
 o.stop
 (
-o.setParameterOSC("/patchA/91/38", 1); // salida de osc1 a output3
-o.setParameterOSC("/patchA/92/39", 1); // salida de osc1 a output4
-o.setParameterOSC("/patchA/77/36", 1); // salida de output3 a output1
-o.setParameterOSC("/patchA/78/37", 1); // salida de output4 a output2
+o.setParameterOSC("/patchA/91/38", 0); // salida de osc1 a output3
+o.setParameterOSC("/patchA/92/39", 0); // salida de osc1 a output4
+o.setParameterOSC("/patchA/77/36", 0); // salida de output3 a output1
+o.setParameterOSC("/patchA/78/37", 0); // salida de output4 a output2
 o.setParameterOSC("/out/3/level", 10);
 o.setParameterOSC("/out/4/level", 10);
 )
@@ -28,7 +28,7 @@ o.setParameterOSC("/patchA/77/36", 0); // salida de output3 a output1
 o.setParameterOSC("/patchA/78/37", 0); // salida de output4 a output2
 )
 
-
+o.getState
 (
 o.setParameterOSC("/patchA/91/36", 1); // salida de osc1 a output1
 o.setParameterOSC("/patchA/92/37", 1); // salida de osc1 a output2
@@ -86,3 +86,26 @@ Quarks.clear
 
 // no sé por qué no funciona tras instalarse desde Github...
 Quarks.install("https://github.com/mesjetiu/TFM_Arte_Sonoro_Supercollider.git")
+
+
+s.boot;
+(
+SynthDef("help-Synth-get", { | out, freq = 440|
+    Out.ar(out, SinOsc.ar(freq, 0, 0.1));
+}).add;
+)
+x = Synth("help-Synth-get");
+x.set(\freq, 220 + 440.rand);
+x.get(\freq, { arg value; ("freq is now:" + value + "Hz").postln; });
+x.get(\freq).postln;
+x.free;
+a = [2,3].asString
+
+b = a.asInt
+
+
+
+a =  Dictionary.newFrom(List[\a, 1, \b, 2, \c, 4]);
+a.findKeyForValue(1)
+
+
