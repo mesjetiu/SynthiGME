@@ -5,9 +5,6 @@ S100_PatchbayAudio {
 	// Array que almacena todas las conexiones. Dos dimensiones [from] [to]. Almacena el Synth Node.
 	var <nodeSynths = nil;
 
-	// Array con las funciones para crear cada nodo. (Para eliminar en el futuro cuando funcione bien "inputsOutputs")
-	var nodeFunctions = nil;
-
 	// Módulos del Synthi 100 con entradas o salidas (en experimentación...)
 	// debería contener arrays de tres elementos:
 	// [synth, in/outputBus, feedbackIn/outputBus]
@@ -32,7 +29,6 @@ S100_PatchbayAudio {
 			var sig = In.ar(fromBus) * ganancy;
 
 			Out.ar(toBus, sig);
-			//Out.ar(0, sig);
 		}
 		).add
 	}
@@ -42,7 +38,6 @@ S100_PatchbayAudio {
 	init { arg serv = Server.local;
 		server = serv;
 		nodeSynths = Dictionary.new;
-		nodeFunctions = Array.fill2D(66, 60, {nil});
 	}
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
