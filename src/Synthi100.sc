@@ -100,10 +100,13 @@ Synthi100 {
 	}
 
 	stop {
-		conectionOut.do({|i| i.free}); // provisional
+		// Por ahora no hace nada. Lo que debe hacer es apagar todos los synths de todos los módulos manteniendo todos los valores de los parámetros
+
+	/*	conectionOut.do({|i| i.free}); // provisional
 		modulOscillators.do({|i| i.freeSynth});
 		modulOutputChannels.do({|i| i.freeSynth});
 		modulPatchbayAudio.freeSynths;
+		*/
 	}
 
 
