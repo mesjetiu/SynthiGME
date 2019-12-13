@@ -2,6 +2,7 @@ S100_OutputChannel {
 
 	// Variables de la clase
 	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
+	classvar outVol = 1; // Entre 0 y 1
 
 	// Synth de la instancia
 	var <synth = nil;
@@ -17,12 +18,11 @@ S100_OutputChannel {
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
 	var <filter = 5; // Filtro pasabajos y pasaaltos.
 	var <pan = 0; // Entre -1 y 1. Para salida stereo (comprobar en el Synthi).
-	var <on = true; // true o false. Activa y desactiva el canal.
+	var <on = 1; // 1 o 0. Activa y desactiva el canal.
 	var <level = 5; // Entre 0 y 1. Nivel de volumen de salida.
 
 
 	// Otros atributos de instancia
-	var <outVol = 1;
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
 
@@ -147,6 +147,10 @@ S100_OutputChannel {
 		^[filterHP, filterLP];
 	}
 
+	convertPan {|p|
+		^(p/5)-1;
+	}
+
 	// Setters de los parámetros
 	setLevel {|lev|
 		if((lev>=0).and(lev<=10), {
@@ -168,5 +172,22 @@ S100_OutputChannel {
 			("S100_OutputChannel/setFilter: " + filt + " no es un valor entre 0 y 1").postln});
 	}
 
+	setOn {|value|
+		if((value == 0).or(value == 1), {
+			on = value;
+			this.synthRun();
+			synth.set(\level, value)
+		}, {
+			("S100_OutputChannel/setOn: " + value + " no es un valor de 0 o 1").postln});
+	}
+
+	setPan {|p|
+		if((p>=0).and(p<=10), {
+			pan = p;
+			this.synthRun();
+			synth.set(\level, this.convertPan(p))
+		}, {
+			("S100_OutputChannel/setPan: " + p + " no es un valor entre -1 y 1").postln});
+	}
 
 }

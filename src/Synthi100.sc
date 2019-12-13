@@ -83,7 +83,7 @@ Synthi100 {
 					wait(waitTime);
 				});
 				wait(waitTime);
-		//		modulOutputChannels = modulOutputChannels.reverse; // para tenerlos en orden de arriba a abajo según la visibilidad entre synths en el mismo sentido
+				//		modulOutputChannels = modulOutputChannels.reverse; // para tenerlos en orden de arriba a abajo según la visibilidad entre synths en el mismo sentido
 
 				// Oscillators
 				modulOscillators.do({|i|
@@ -91,7 +91,7 @@ Synthi100 {
 					wait(waitTime);
 				});
 				wait(waitTime);
-			//	modulOscillators = modulOscillators.reverse;
+				//	modulOscillators = modulOscillators.reverse;
 
 				modulPatchbayAudio.connect(modulOscillators, modulOutputChannels);
 
@@ -141,8 +141,50 @@ Synthi100 {
 				switch (splitted[0],
 					"level", {modulOutputChannels[index].setLevel(value)},
 					"filter", {modulOutputChannels[index].setFilter(value)},
+					"on", {modulOutputChannels[index].setOn(value)},
+					"pan", {modulOutputChannels[index].setPan(value)},
 				)
 			},
 		)
+	}
+
+	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de todos los módulos
+	getState {
+		var data = List.newClear(0);
+
+		// Oscillators:
+		modulOscillators.do({|osc, num|
+			var string = "/osc/" ++ (num + 1) ++ "/";
+			data.add([string ++ "range", osc.range]);
+			data.add([string ++ "pulse/level", osc.pulseLevel]);
+			data.add([string ++ "pulse/shape", osc.pulseShape]);
+			data.add([string ++ "sine/level", osc.sineLevel]);
+			data.add([string ++ "sine/symmetry", osc.sineSymmetry]);
+			data.add([string ++ "triangle/level", osc.triangleLevel]);
+			data.add([string ++ "sawtooth/level", osc.sawtoothLevel]);
+			data.add([string ++ "frequency", osc.frequency]);
+		});
+
+		// Output channels:
+		modulOutputChannels.do({|oc, num|
+			var string = "/out/" ++ (num + 1) ++ "/";
+			data.add([string ++ "filter", oc.filter]);
+			data.add([string ++ "pan", oc.pan]);
+			data.add([string ++ "on", oc.on]);
+			data.add([string ++ "level", oc.level]);
+		});
+
+/* //////  REFORMAR LA MANERA EN LA QUE SE ALMACENAN LOS SYNTHS EN PATCHBAYAUDIO. MEJOR CON DICCIONARIOS...
+		// Patchbay Audio:
+		modulPatchbayAudio.nodeSynths.do({|vertical,i|
+			vertical.do({|synth,j|
+				if (synth != nil, { // Si existe el nodo...
+					var ganancy =
+					data.add(["patchA/" ++ (i+67) ++ "/" ++ "j", ganancy])
+				})
+			});
+		});
+	*/
+		^data;
 	}
 }

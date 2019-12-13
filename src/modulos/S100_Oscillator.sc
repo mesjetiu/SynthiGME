@@ -2,6 +2,7 @@ S100_Oscillator {
 
 	// Variables de la clase
 	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
+	classvar outVol = 1; // Entre 0 y 1;
 
 	// Synth de la instancia
 	var <synth = nil;
@@ -21,7 +22,6 @@ S100_Oscillator {
 	var <outputBus1; // Sine y Saw
 	var <outputBus2; // Pulse y Triangle
 	var <server;
-	var <outVol = 1; // Entre 0 y 1;
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
 
@@ -129,6 +129,7 @@ S100_Oscillator {
 			synth.run(true);
 		});
 	}
+
 
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
 
