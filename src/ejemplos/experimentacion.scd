@@ -5,13 +5,13 @@ o = Synthi100(s, stereoBuses: [0,1]);
 o.play
 o.stop
 
-(
+
 o.setParameterOSC("/patchA/91/36", 1); // salida de osc1 a output1
 o.setParameterOSC("/patchA/92/37", 1); // salida de osc1 a output2
 
 o.setParameterOSC("/osc/1/triangle/level",2);
 o.setParameterOSC("/osc/1/sawtooth/level", 2);
-)
+
 
 (
 o.setParameterOSC("/patchA/91/36", 0); // salida de osc1 a output1
@@ -27,6 +27,15 @@ o.setParameterOSC("/osc/1/pulse/shape", 9);
 o.setParameterOSC("/osc/1/triangle/level", 3);
 )
 
+(
+o.setParameterOSC("/out/1/filter", 5);
+o.setParameterOSC("/out/2/filter", 5);
+)
+
+(
+o.setParameterOSC("/out/1/pan", 0);
+o.setParameterOSC("/out/2/pan", 10);
+)
 
 //////////////////////////
 (

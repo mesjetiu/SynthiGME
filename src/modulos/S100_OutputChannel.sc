@@ -17,7 +17,7 @@ S100_OutputChannel {
 
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
 	var <filter = 5; // Filtro pasabajos y pasaaltos.
-	var <pan = 0; // Entre -1 y 1. Para salida stereo (comprobar en el Synthi).
+	var <pan = 5; // Entre -1 y 1. Para salida stereo (comprobar en el Synthi).
 	var <on = 1; // 1 o 0. Activa y desactiva el canal.
 	var <level = 5; // Entre 0 y 1. Nivel de volumen de salida.
 
@@ -45,22 +45,24 @@ S100_OutputChannel {
 			freqLP,
 			pan, // entre -1 y 1
 			level; // entre 0 y 1
-			var sigIn, sig, sigPanned;
+			var sigIn, sig, sigPannedR, sigPannedL;
 
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 
-			// Realizar aquí el filtrado
+			// Se realiza el filtrado
 			sig = HPF.ar(sigIn, freqHP, 0.5);
 			sig = sig + LPF.ar(sigIn, freqLP, 0.5);
 
 			// Se aplica el nivel (level)
 			sig = sig * level;
-			sigPanned = Pan2.ar(sig, pan);
+
+			// Se aplica el paneo
+			#sigPannedL,sigPannedR = Pan2.ar(sig, pan);
 
 			Out.ar(outputBus, sig);
 			Out.ar(outputBusNotProcessed, sigIn);
-			Out.ar(outBusL, sigPanned[0]);
-			Out.ar(outBusR, sigPanned[1]);
+			Out.ar(outBusL, sigPannedL);
+			Out.ar(outBusR, sigPannedR);
 		}, [nil, nil, nil, nil, nil, nil, lag, lag, lag, lag]
 		).add
 	}
@@ -94,7 +96,7 @@ S100_OutputChannel {
 				\outBusR, outBusR,
 				\freqHP, this.convertFilter(filter)[0],
 				\freqLP, this.convertFilter(filter)[1],
-				\pan, pan,
+				\pan, this.convertPan(pan),
 				\level, this.convertLevel(level),
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
@@ -148,7 +150,7 @@ S100_OutputChannel {
 	}
 
 	convertPan {|p|
-		^(p/5)-1;
+		^((p/5)-1);
 	}
 
 	// Setters de los parámetros
@@ -176,7 +178,7 @@ S100_OutputChannel {
 		if((value == 0).or(value == 1), {
 			on = value;
 			this.synthRun();
-			synth.set(\level, value)
+			synth.set(\on, value)
 		}, {
 			("S100_OutputChannel/setOn: " + value + " no es un valor de 0 o 1").postln});
 	}
@@ -185,7 +187,7 @@ S100_OutputChannel {
 		if((p>=0).and(p<=10), {
 			pan = p;
 			this.synthRun();
-			synth.set(\level, this.convertPan(p))
+			synth.set(\pan, this.convertPan(p))
 		}, {
 			("S100_OutputChannel/setPan: " + p + " no es un valor entre -1 y 1").postln});
 	}

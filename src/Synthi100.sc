@@ -70,10 +70,10 @@ Synthi100 {
 				var waitTime = 0.01; // Tiempo de espera entre la creación de cada Synth
 
 				// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
-				conectionOut = 2.collect({|i|
+				conectionOut = modulOutputChannels.collect({|i|
 					SynthDef(\conection, {
-						var sig = In.ar(modulOutputChannels[i].outputBus);
-						Out.ar(stereoOutBuses[i], sig);
+						Out.ar(stereoOutBuses[0], In.ar(i.outBusL, 1));
+						Out.ar(stereoOutBuses[1], In.ar(i.outBusR, 1));
 					}).play(server);
 					wait(waitTime);
 				});
