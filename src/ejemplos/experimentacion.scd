@@ -1,13 +1,27 @@
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Arte_Sonoro_Supercollider")
 
 
-o = Synthi100(s, stereoBuses: [0,1]);
+o = Synthi100();
 o.play
+
+
+// Unimos los tres primeros osciladores a los tres primeros canales de salida:
+(
+o.setParameterOSC("/patchA/91/36", 1); // salida de osc1 a output1
+o.setParameterOSC("/patchA/92/37", 1); // salida de osc1 a output2
+
+o.setParameterOSC("/patchA/93/38", 1); // salida de osc2 a output3
+o.setParameterOSC("/patchA/94/39", 1); // salida de osc2 a output4
+
+o.setParameterOSC("/patchA/95/40", 1); // salida de osc3 a output5
+o.setParameterOSC("/patchA/96/41", 1); // salida de osc3 a output6
+)
+
 o.stop
 
 
-o.setParameterOSC("/patchA/91/36", 1); // salida de osc1 a output1
-o.setParameterOSC("/patchA/92/37", 1); // salida de osc1 a output2
+
+
 
 o.setParameterOSC("/osc/1/triangle/level",2);
 o.setParameterOSC("/osc/1/sawtooth/level", 2);

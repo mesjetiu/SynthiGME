@@ -17,6 +17,8 @@ Synthi100 {
 	// Función para tratamiento de mensajes de entrada de OSC desde otros dispositivos.
 	// Está en variable para poder pasarse como parámetro
 	var functionOSC;
+	// Dirección a la que enviar los mensajes OSC
+	var netAddr;
 
 	// Opciones:
 	const numAudioInBuses = 8;
@@ -42,6 +44,7 @@ Synthi100 {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init {|serv, stereoBuses|
+		this.prepareOSC;
 		// Se añaden al servidor las declaracines SynthDefs
 		S100_Oscillator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
@@ -97,8 +100,7 @@ Synthi100 {
 				wait(waitTime);
 				modulPatchbayAudio.connect(modulOscillators, modulOutputChannels);
 				wait(waitTime);
-				this.prepareOSC;
-
+				this.sendStateOSC;
 			}).play;
 		});
 	}
@@ -118,18 +120,27 @@ Synthi100 {
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	prepareOSC {
-		var netAddr;
 		NetAddr.broadcastFlag = true;
+		netAddr = NetAddr("255.255.255.255", 9000); // el puerto 9000 es por el que se enviarán los mensajes OSC
 		functionOSC = {|msg, time, addr, recvPort|
 			if("/osc".matchRegexp(msg[0].asString);, {
 				//	[msg, time, addr, recvPort].postln;
-				netAddr.sendMsg(msg[0],msg[1]); // reenvía en broadcasting el mensaje recibido para que otros dispositivos se puedan sicronizar con los cambios realizados en cualquiera de ellos.
+			//	netAddr.sendMsg(msg[0],msg[1]); // reenvía en broadcasting el mensaje recibido para que otros dispositivos se puedan sicronizar con los cambios realizados en cualquiera de ellos.
 				//	this.setParameterOSC(msg[0], msg[1]);
 				this.setParameterOSC(msg[0].asString, msg[1]);
 			});
 		};
-		netAddr = NetAddr("255.255.255.255", 9000); // el puerto 9000 es por el que se enviarán los mensajes OSC
 		thisProcess.addOSCRecvFunc(functionOSC);
+	}
+
+
+	// Envía el estado de todo el Synthi por OSC
+	// Para mejorarlo sería bueno mandar un bundle.
+	sendStateOSC {
+		this.getState.do({|msg|
+			var b =  NetAddr("255.255.255.255", 9000);
+			b.sendMsg(msg[0], msg[1]);
+		});
 	}
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC
@@ -170,7 +181,8 @@ Synthi100 {
 					"pan", {modulOutputChannels[index].setPan(value)},
 				)
 			},
-		)
+		);
+		netAddr.sendMsg(string, value);
 	}
 
 	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de todos los módulos
