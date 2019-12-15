@@ -123,11 +123,16 @@ Synthi100 {
 		NetAddr.broadcastFlag = true;
 		netAddr = NetAddr("255.255.255.255", 9000); // el puerto 9000 es por el que se enviarán los mensajes OSC
 		functionOSC = {|msg, time, addr, recvPort|
-			if("/osc".matchRegexp(msg[0].asString);, {
+			if(
+				"/osc".matchRegexp(msg[0].asString).or({
+					"/out".matchRegexp(msg[0].asString).or({
+						"/patchATouchOSC".matchRegexp(msg[0].asString)
+					})
+				}), {
 				//	[msg, time, addr, recvPort].postln;
-			//	netAddr.sendMsg(msg[0],msg[1]); // reenvía en broadcasting el mensaje recibido para que otros dispositivos se puedan sicronizar con los cambios realizados en cualquiera de ellos.
-				//	this.setParameterOSC(msg[0], msg[1]);
-				this.setParameterOSC(msg[0].asString, msg[1]);
+				//	netAddr.sendMsg(msg[0],msg[1]); // reenvía en broadcasting el mensaje recibido para que otros dispositivos se puedan sicronizar con los cambios realizados en cualquiera de ellos.
+					//	this.setParameterOSC(msg[0], msg[1]);
+					this.setParameterOSC(msg[0].asString, msg[1]);
 			});
 		};
 		thisProcess.addOSCRecvFunc(functionOSC);
@@ -137,10 +142,13 @@ Synthi100 {
 	// Envía el estado de todo el Synthi por OSC
 	// Para mejorarlo sería bueno mandar un bundle.
 	sendStateOSC {
-		this.getState.do({|msg|
-			var b =  NetAddr("255.255.255.255", 9000);
-			b.sendMsg(msg[0], msg[1]);
-		});
+		var b =  NetAddr("255.255.255.255", 9000);
+		Routine({
+			this.getState.do({|msg|
+				wait(0.01);
+				b.sendMsg(msg[0], msg[1]);
+			})
+		}).play;
 	}
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC
@@ -167,10 +175,18 @@ Synthi100 {
 				)
 				//	modulOscillators[index].setParameter(parameter, value);
 			},
-			"patchA", { // Ejemplo "/patchA/91/36"
+			"patchA", { // Ejemplo "/patchA/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horzontal
 				2.do({splitted.removeAt(0)});
 				modulPatchbayAudio.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
 			},
+	/*		// Mensaje DE PRUEBAS para TouchOSC con 3 osciladores
+			"patchATouchOSC", { // Patchbay de Audio desde TouchOSC, cuyo origen de coordenadas es izquierda abajo. Orden: horizontal y vertical (como un sistema normal de coordenadas)
+				var x, y;
+				2.do({splitted.removeAt(0)});
+				y = 7 - splitted[0].asInt + 90;
+				x = splitted[1].asInt + 35;
+				modulPatchbayAudio.administrateNode(x, y, value);
+			},*/
 			"out", { // Ejemplo "/out/1/level"
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
