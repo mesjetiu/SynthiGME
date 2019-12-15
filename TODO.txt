@@ -1,13 +1,29 @@
 Lista "To Do"
 
+
+
+* Módulo StereoMix para recoger los 8 canales del Synthi panearlo en dos canales con el parámetro "pan" de cada canal.
+* Crear un pequeño prototipo en TouchOSC con dos osciladores, cuatro salidas y algunos nodos para experimentar...
+* Parámetro "on-off" de Output channel
+* parámetro "hi-lo" de Oscillators
+* escribir a centros con Synthi 100 o técnicos que lo conozcan para pedir información.
 * Crear una hoja de cálculo con todos los módulos del Synthi indicando lo que está hecho y lo que no en cada momento
 * Método Synthi100.setState
-* Parámetro "on-off" de Output channel
 * Archivo de ayuda de Supercollider
 * Quark instalable desde Github
-* Módulo StereoMix para recoger los 8 canales del Synthi panearlo en dos canales con el parámetro "pan" de cada canal.
 * Módulo de ruido
 * Módulo de Ring modulator
-* Eliminar por eficiencia las comprobaciones de rangos de parámetros si no son necesarias (ya que, en teoría, todos van de 0 a 10 en los diales)
+* Eliminar por eficiencia las comprobaciones de rangos de parámetros si no son necesarias (ya que, en teoría, todos van de 0 a 10 en los diales). Hacerlo con linlin y linexp, porque acotan los resultados. Se pueden eliminar los métodos de conversión de parámetros.
+* crear un archivo de configuración, donde afinar el Synthi en la medida de lo posible
 
-* Crear un pequeño prototipo en TouchOSC con dos osciladores, cuatro salidas y algunos nodos para experimentar...
+
+
+
+AFINACIÓN DEL SYNTHI
+
+cuando el programa en SC empiece a funcionar razonablemente bien, hay que tomar muestras del Synthi para ajustar todos los parámetros. Puede que las mismas nuestras puedan usarse a modo de samples (especialmente los generadores)
+
+Oscillators:
+=========
+* tomar muestras de cada valor de frecuencia, formas de onda e intensidades. estos valores se añaden a un archivo de configuración y se interpolan.
+

@@ -4,6 +4,31 @@ Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Art
 o = Synthi100(s, stereoBuses: [0,1]);
 o.play
 o.stop
+
+(
+o.setParameterOSC("/patchA/91/36", 1); // salida de osc1 a output1
+o.setParameterOSC("/patchA/92/37", 1); // salida de osc1 a output2
+
+o.setParameterOSC("/osc/1/triangle/level",2);
+o.setParameterOSC("/osc/1/sawtooth/level", 2);
+)
+
+(
+o.setParameterOSC("/patchA/91/36", 0); // salida de osc1 a output1
+o.setParameterOSC("/patchA/92/37", 0); // salida de osc1 a output2
+)
+
+(
+o.setParameterOSC("/osc/1/triangle/level",2);
+o.setParameterOSC("/osc/1/sawtooth/level", 2);
+)
+(
+o.setParameterOSC("/osc/1/pulse/shape", 9);
+o.setParameterOSC("/osc/1/triangle/level", 3);
+)
+
+
+//////////////////////////
 (
 o.setParameterOSC("/patchA/91/38", 0); // salida de osc1 a output3
 o.setParameterOSC("/patchA/92/39", 0); // salida de osc1 a output4
@@ -29,28 +54,14 @@ o.setParameterOSC("/patchA/78/37", 0); // salida de output4 a output2
 )
 
 o.getState
-(
-o.setParameterOSC("/patchA/91/36", 1); // salida de osc1 a output1
-o.setParameterOSC("/patchA/92/37", 1); // salida de osc1 a output2
-)
+
 (
 o.setParameterOSC("/out/1/filter", 7);
 o.setParameterOSC("/out/2/filter", 4);
 
 )
-(
-o.setParameterOSC("/patchA/91/36", 0); // salida de osc1 a output1
-o.setParameterOSC("/patchA/92/37", 0); // salida de osc1 a output2
-)
 
-(
-o.setParameterOSC("/osc/1/triangle/level",2);
-o.setParameterOSC("/osc/1/sawtooth/level", 2);
-)
-(
-o.setParameterOSC("/osc/1/pulse/shape", 9);
-o.setParameterOSC("/osc/1/triangle/level", 3);
-)
+
 
 o.setParameterOSC("/osc/1/sine/level", 1);
 o.setParameterOSC("/osc/1/sine/symmetry", 5);
@@ -109,3 +120,46 @@ a =  Dictionary.newFrom(List[\a, 1, \b, 2, \c, 4]);
 a.findKeyForValue(1)
 
 
+// EXPERIMENTOS CON OSC ////////////////////////////////////////////////////////////////////////////////
+// this example is basically like OSCFunc.trace but filters out
+// /status.reply messages
+(
+f = { |msg, time, addr|
+    if(msg[0] != '/status.reply') {
+        "time: % sender: %\nmessage: %\n".postf(time, addr, msg);
+    }
+};
+thisProcess.addOSCRecvFunc(f);
+);
+
+// stop posting.
+thisProcess.removeOSCRecvFunc();
+
+
+
+
+
+
+
+// Este código hace broadcasting!!!
+NetAddr.broadcastFlag = true
+
+b =  NetAddr("255.255.255.255", 9000); // el puerto debe ser el mismo que recibe la aplicación
+
+b.sendMsg("/osc/1/pulse/level", 5);
+
+// Recoge cualquier mensaje OSC de cualquier origen y ejecuta la función que lleva como parámetro.
+// Perfecto para nuestra aplicación!!!
+(
+thisProcess.addOSCRecvFunc({ arg msg, time, addr, recvPort;
+	if(msg[0] != '/status.reply') {
+		[msg, time, addr, recvPort].postln;
+		b.sendMsg(msg[0],msg[1]); // reenvía en broadcasting el mensaje recibifo
+	}
+});
+)
+
+OSCFunc.trace(true)
+
+
+"/osc".matchRegexp("/osc/1/pulse/level", 0, 4);
