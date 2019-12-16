@@ -18,8 +18,8 @@ S100_OutputChannel {
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
 	var <filter = 5; // Filtro pasabajos y pasaaltos.
 	var <pan = 5; // Entre -1 y 1. Para salida stereo (comprobar en el Synthi).
-	var <on = 1; // 1 o 0. Activa y desactiva el canal.
-	var <level = 5; // Entre 0 y 1. Nivel de volumen de salida.
+	var <on = 0; // 1 o 0. Activa y desactiva el canal.
+	var <level = 0; // Entre 0 y 1. Nivel de volumen de salida.
 
 
 	// Otros atributos de instancia
@@ -51,7 +51,7 @@ S100_OutputChannel {
 
 			// Se realiza el filtrado
 			sig = HPF.ar(sigIn, freqHP, 0.5);
-			sig = sig + LPF.ar(sigIn, freqLP, 0.5);
+			sig = LPF.ar(sig, freqLP, 0.5);
 
 			// Se aplica el nivel (level)
 			sig = sig * level;
@@ -138,12 +138,12 @@ S100_OutputChannel {
 			inMin: 5, // valor mínimo del dial
 			inMax: 10, // valor máximo del dial
 			outMin: 10, // frecuencia mínima (valor del dial: 1)
-			outMax: 16000 //frecuencia máxima (valor del dial: 10)
+			outMax: 4000 //frecuencia máxima (valor del dial: 10)
 		);
 		filterLP = filter.linexp(
 			inMin: 0, // valor mínimo del dial
 			inMax: 5, // valor máximo del dial
-			outMin: 10, // frecuencia mínima (valor del dial: 1)
+			outMin: 200, // frecuencia mínima (valor del dial: 1)
 			outMax: 20000 //frecuencia máxima (valor del dial: 10)
 		);
 		^[filterHP, filterLP];

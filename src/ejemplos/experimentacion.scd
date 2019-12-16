@@ -22,7 +22,6 @@ o.stop
 
 
 
-
 o.setParameterOSC("/osc/1/triangle/level",2);
 o.setParameterOSC("/osc/1/sawtooth/level", 2);
 
@@ -189,3 +188,5 @@ OSCFunc.trace(true)
 
 
 "/osc".matchRegexp("/osc/1/pulse/level", 0, 4);
+
+thisProcess.removeOSCRecvFunc(~functionOSC);

@@ -14,9 +14,6 @@ Synthi100 {
 	// Buses externos de entrada y salida:
 	var <stereoOutBuses;
 
-	// Función para tratamiento de mensajes de entrada de OSC desde otros dispositivos.
-	// Está en variable para poder pasarse como parámetro
-	var functionOSC;
 	// Dirección a la que enviar los mensajes OSC
 	var netAddr;
 
@@ -113,16 +110,19 @@ Synthi100 {
 		modulOutputChannels.do({|i| i.freeSynth});
 		modulPatchbayAudio.freeSynths;
 		*/
-		thisProcess.removeOSCRecvFunc(functionOSC);
+		thisProcess.removeOSCRecvFunc(~s100functionOSC);
 	}
 
 
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	prepareOSC {
+		// ~s100functionOSC es una función para tratamiento de mensajes de entrada de OSC desde otros dispositivos.
+		// Está en variable para poder pasarse como parámetro, y es global para poder remover la función al crear una nueva instancia.
+		thisProcess.removeOSCRecvFunc(~s100functionOSC);
 		NetAddr.broadcastFlag = true;
 		netAddr = NetAddr("255.255.255.255", 9000); // el puerto 9000 es por el que se enviarán los mensajes OSC
-		functionOSC = {|msg, time, addr, recvPort|
+		~s100functionOSC = {|msg, time, addr, recvPort|
 			if(
 				"/osc".matchRegexp(msg[0].asString).or({
 					"/out".matchRegexp(msg[0].asString).or({
@@ -135,7 +135,7 @@ Synthi100 {
 					this.setParameterOSC(msg[0].asString, msg[1]);
 			});
 		};
-		thisProcess.addOSCRecvFunc(functionOSC);
+		thisProcess.addOSCRecvFunc(~s100functionOSC);
 	}
 
 
