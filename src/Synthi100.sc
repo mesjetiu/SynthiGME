@@ -145,7 +145,7 @@ Synthi100 {
 		var b =  NetAddr("255.255.255.255", 9000);
 		Routine({
 			this.getState.do({|msg|
-				wait(0.01);
+				wait(0.02);
 				b.sendMsg(msg[0], msg[1]);
 			})
 		}).play;
@@ -179,14 +179,14 @@ Synthi100 {
 				2.do({splitted.removeAt(0)});
 				modulPatchbayAudio.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
 			},
-	/*		// Mensaje DE PRUEBAS para TouchOSC con 3 osciladores
+			// Mensaje DE PRUEBAS para TouchOSC con 3 osciladores
 			"patchATouchOSC", { // Patchbay de Audio desde TouchOSC, cuyo origen de coordenadas es izquierda abajo. Orden: horizontal y vertical (como un sistema normal de coordenadas)
 				var x, y;
 				2.do({splitted.removeAt(0)});
 				y = 7 - splitted[0].asInt + 90;
 				x = splitted[1].asInt + 35;
-				modulPatchbayAudio.administrateNode(x, y, value);
-			},*/
+				modulPatchbayAudio.administrateNode(y, x, value);
+			},
 			"out", { // Ejemplo "/out/1/level"
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
@@ -232,6 +232,13 @@ Synthi100 {
 			var ver = node[\coordenates][0];
 			var hor = node[\coordenates][1];
 			data.add("/patchA/" ++ ver ++ "/" ++ hor);
+		});
+
+		// Patchbay Audio (Para pruebas con TouchOSC:
+		modulPatchbayAudio.nodeSynths.do({|node|
+			var ver = node[\coordenates][0];
+			var hor = node[\coordenates][1];
+			data.add("/patchATouchOSC/" ++ 7-ver-90 ++ "/" ++ hor-35);
 		});
 
 		^data;

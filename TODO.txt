@@ -1,8 +1,7 @@
 Lista "To Do"
 
 
-
-* Módulo StereoMix para recoger los 8 canales del Synthi panearlo en dos canales con el parámetro "pan" de cada canal.
+* Mejorar el filtro de Output Channel
 * Crear un pequeño prototipo en TouchOSC con dos osciladores, cuatro salidas y algunos nodos para experimentar...
 * Parámetro "on-off" de Output channel
 * parámetro "hi-lo" de Oscillators
