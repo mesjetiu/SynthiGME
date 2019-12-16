@@ -1,6 +1,7 @@
 (
 name: "Synthi100",
 summary: "Clase Synthi100, emulando el EMS Synthi 100 del GME de Cuenca",
+version: "0.0.0",
 license: "GPL",
 copyright: "Carlos Arturo Guerra Parra, 2019"
 )

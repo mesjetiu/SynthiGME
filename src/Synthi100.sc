@@ -145,7 +145,7 @@ Synthi100 {
 		var b =  NetAddr("255.255.255.255", 9000);
 		Routine({
 			this.getState.do({|msg|
-				wait(0.02);
+				wait(0.03);
 				b.sendMsg(msg[0], msg[1]);
 			})
 		}).play;
