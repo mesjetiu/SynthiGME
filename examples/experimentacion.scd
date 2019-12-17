@@ -1,6 +1,7 @@
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Arte_Sonoro_Supercollider")
-Quarks.uninstall("https://github.com/mesjetiu/TFM_Arte_Sonoro_Supercollider")
 Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Arte_Sonoro_Supercollider")
+
+Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
 
 Quarks.clear
 
@@ -186,3 +187,7 @@ OSCFunc.trace(true)
 "/osc".matchRegexp("/osc/1/pulse/level", 0, 4);
 
 thisProcess.removeOSCRecvFunc(~functionOSC);
+
+
+
+Quarks.uninstall("https://github.com/mesjetiu/Synthi100")
