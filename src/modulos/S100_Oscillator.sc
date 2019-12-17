@@ -134,27 +134,27 @@ S100_Oscillator {
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
 
 	convertPulseLevel {|level|
-		^(level/10);
+		^level.linlin(0, 10, 0, 1);
 	}
 
 	convertPulseShape {|shape|
-		^(shape/10);
+		^shape.linlin(0, 10, 0, 1);
 	}
 
 	convertSineLevel {|level|
-		^(level/10);
+		^level.linlin(0, 10, 0, 1);
 	}
 
 	convertSineSymmetry {|symmetry|
-		^((symmetry/5)-1);
+		^symmetry.linlin(0, 10, -1, 1);
 	}
 
 	convertSawtoothLevel {|level|
-		^(level/10);
+		^level.linlin(0, 10, 0, 1);
 	}
 
 	convertTriangleLevel {|level|
-		^(level/10);
+		^level.linlin(0, 10, 0, 1);
 	}
 
 	convertFrequency {|freq|
@@ -165,6 +165,7 @@ S100_Oscillator {
 			outMax: 16000 //frecuencia máxima (valor del dial: 10)
 		);
 	}
+
 
 
 	// Setters Oscillators////////////////////////////////////////////////////////////////////////

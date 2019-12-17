@@ -129,7 +129,7 @@ S100_OutputChannel {
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
 
 	convertLevel {|level|
-		^(level/10);
+		^level.linlin(0, 10, 0, 1);
 	}
 
 	convertFilter {|filter| // Retorna las frecuencias de corte de ambos filtros: pasabajos y pasaaltos
@@ -150,7 +150,7 @@ S100_OutputChannel {
 	}
 
 	convertPan {|p|
-		^((p/5)-1);
+		^p.linlin(0, 10, -1, 1);
 	}
 
 	// Setters de los parámetros

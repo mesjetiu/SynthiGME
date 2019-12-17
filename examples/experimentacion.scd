@@ -8,7 +8,7 @@ Quarks.clear
 
 o = Synthi100();
 o.run
-o.searchOSC
+o.connectOSC
 
 // Unimos los tres primeros osciladores a los tres primeros canales de salida:
 (
