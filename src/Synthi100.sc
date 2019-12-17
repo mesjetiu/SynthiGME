@@ -14,17 +14,18 @@ Synthi100 {
 	// Buses externos de entrada y salida:
 	var <stereoOutBuses;
 
-	// Dirección a la que enviar los mensajes OSC
+	// Array de direcciones a la que enviar los mensajes OSC
 	var netAddr;
 
-
-	// functionOSC es una función para tratamiento de mensajes de entrada de OSC desde otros dispositivos.
-	// Está en variable para poder pasarse como parámetro
-	classvar functionOSC = nil;
+	// Diccionario que almacena los dispositivos OSC con los que se comunica Synthi100
+	var oscDevices = nil;
 
 	// Opciones:
-	const numAudioInBuses = 8;
-	const numAudioOutBuses = 8;
+	classvar numAudioInBuses = 8;
+	classvar numAudioOutBuses = 8;
+
+	// Estado del Synthi
+	var play = false;
 
 
 
@@ -46,12 +47,12 @@ Synthi100 {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init {|serv, stereoBuses|
-		this.prepareOSC;
 		// Se añaden al servidor las declaracines SynthDefs
 		S100_Oscillator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
 		server = serv;
+		NetAddr.broadcastFlag = true;
 		// Buses de audio de entrada y salida
 		audioInBuses = numAudioInBuses.collect({Bus.audio(server, 1)});
 		audioOutBuses = numAudioOutBuses.collect({Bus.audio(server, 1)});
@@ -66,78 +67,101 @@ Synthi100 {
 
 	// Métodos de instancia /////////////////////////////////////////////////////////////////////////
 
-	play {
-		server.waitForBoot({
-			// TODO: Crear alguna rutina para colocar en orden todos los Synths en el servidor. Ahora están colocados mezclados los osciladores y los conectores.
+	run {
+		if (play == true, {("Create a new instance of " ++ this.class).postln; ^0}, {
+			server.waitForBoot({
+				// TODO: Crear alguna rutina para colocar en orden todos los Synths en el servidor. Ahora están colocados mezclados los osciladores y los conectores.
 
-			// Rutina para espaciar temporalmente la creacion de cada Synth, de forma que queden ordenados.
-			Routine({
-				var waitTime = 0.01; // Tiempo de espera entre la creación de cada Synth
+				// Rutina para espaciar temporalmente la creacion de cada Synth, de forma que queden ordenados.
+				Routine({
+					var waitTime = 0.01; // Tiempo de espera entre la creación de cada Synth
 
-				// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
-				conectionOut = modulOutputChannels.collect({|i|
-					SynthDef(\conection, {
-						Out.ar(stereoOutBuses[0], In.ar(i.outBusL, 1));
-						Out.ar(stereoOutBuses[1], In.ar(i.outBusR, 1));
-					}).play(server);
+					// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
+					conectionOut = modulOutputChannels.collect({|i|
+						SynthDef(\conection, {
+							Out.ar(stereoOutBuses[0], In.ar(i.outBusL, 1));
+							Out.ar(stereoOutBuses[1], In.ar(i.outBusR, 1));
+						}).play(server);
+						wait(waitTime);
+					});
 					wait(waitTime);
-				});
-				wait(waitTime);
 
-				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
+					// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
 
-				// Output Channels
-				modulOutputChannels.do({|i|
-					i.createSynth;
+					// Output Channels
+					modulOutputChannels.do({|i|
+						i.createSynth;
+						wait(waitTime);
+					});
 					wait(waitTime);
-				});
-				wait(waitTime);
-				//		modulOutputChannels = modulOutputChannels.reverse; // para tenerlos en orden de arriba a abajo según la visibilidad entre synths en el mismo sentido
 
-				// Oscillators
-				modulOscillators.do({|i|
-					i.createSynth;
+					// Oscillators
+					modulOscillators.do({|i|
+						i.createSynth;
+						wait(waitTime);
+					});
 					wait(waitTime);
-				});
-				wait(waitTime);
-				modulPatchbayAudio.connect(modulOscillators, modulOutputChannels);
-				wait(waitTime);
-				this.sendStateOSC;
-			}).play;
+					modulPatchbayAudio.connect(modulOscillators, modulOutputChannels);
+					wait(waitTime);
+				}).play;
+				play = true;
+				"Synthi100 running!!".postln;
+			})
 		});
 	}
 
-	stop {
-		// Por ahora no hace nada. Lo que debe hacer es apagar todos los synths de todos los módulos manteniendo todos los valores de los parámetros
-
-	/*	conectionOut.do({|i| i.free}); // provisional
-		modulOscillators.do({|i| i.freeSynth});
-		modulOutputChannels.do({|i| i.freeSynth});
-		modulPatchbayAudio.freeSynths;
-		*/
-		thisProcess.removeOSCRecvFunc(functionOSC);
+	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
+	connectOSC {
+		var routineSearchOSC = Routine({
+			var functionOSC = {|msg, time, addr, recvPort|
+				if("/S100/sync".matchRegexp(msg[0].asString), {
+					if(oscDevices.trueAt(addr.ip) == false, {
+						oscDevices.put(addr.ip, addr.ip);
+						("Found device at " ++ addr.ip).postln;
+					})
+				})
+			};
+			"Searching OSC devices...".postln;
+			oscDevices = Dictionary.new;
+			thisProcess.addOSCRecvFunc(functionOSC);
+			wait(5);
+			thisProcess.removeOSCRecvFunc(functionOSC);
+			("Found " ++ oscDevices.size ++ " devices:").postln;
+			oscDevices.do({|i| i.postln});
+			if (oscDevices.size > 0, {
+				this.prepareOSC;
+				netAddr = List.new;
+				oscDevices.do({|i|
+					netAddr.add(NetAddr(i, 9000));
+				});
+				this.sendStateOSC
+			});
+		});
+		routineSearchOSC.play;
 	}
 
 
-
-	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	prepareOSC {
-		thisProcess.removeOSCRecvFunc(functionOSC);
-		NetAddr.broadcastFlag = true;
-		netAddr = NetAddr("255.255.255.255", 9000); // el puerto 9000 es por el que se enviarán los mensajes OSC
-		functionOSC = {|msg, time, addr, recvPort|
+		var functionOSC = {|msg, time, addr, recvPort|
 			if(
 				"/osc".matchRegexp(msg[0].asString).or({
 					"/out".matchRegexp(msg[0].asString).or({
 						"/patchATouchOSC".matchRegexp(msg[0].asString)
 					})
 				}), {
-				//	[msg, time, addr, recvPort].postln;
-				//	netAddr.sendMsg(msg[0],msg[1]); // reenvía en broadcasting el mensaje recibido para que otros dispositivos se puedan sicronizar con los cambios realizados en cualquiera de ellos.
+					// reenvía en broadcasting el mensaje recibido para que otros dispositivos se puedan sicronizar con los cambios realizados en cualquiera de ellos.
 					//	this.setParameterOSC(msg[0], msg[1]);
 					this.setParameterOSC(msg[0].asString, msg[1]);
+					// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+					netAddr.do({|i|
+						if(addr.ip != i.ip, {
+							i.sendMsg(msg[0], msg[1])
+						})
+					})
 			});
 		};
+		thisProcess.removeOSCRecvFunc(functionOSC);
+		netAddr = NetAddr("255.255.255.255", 9000); // el puerto 9000 es por el que se enviarán los mensajes OSC
 		thisProcess.addOSCRecvFunc(functionOSC);
 	}
 
@@ -145,11 +169,10 @@ Synthi100 {
 	// Envía el estado de todo el Synthi por OSC
 	// Para mejorarlo sería bueno mandar un bundle.
 	sendStateOSC {
-		var b =  NetAddr("255.255.255.255", 9000);
 		Routine({
 			this.getState.do({|msg|
 				wait(0.03);
-				b.sendMsg(msg[0], msg[1]);
+				netAddr.do({|i| i.sendMsg(msg[0], msg[1])})
 			})
 		}).play;
 	}
@@ -201,7 +224,7 @@ Synthi100 {
 				)
 			},
 		);
-		netAddr.sendMsg(string, value);
+		//netAddr.sendMsg(string, value);
 	}
 
 	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de todos los módulos

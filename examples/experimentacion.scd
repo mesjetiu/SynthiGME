@@ -1,5 +1,5 @@
-Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Arte_Sonoro_Supercollider")
-Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Arte_Sonoro_Supercollider")
+Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
+Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
 
 Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
 
@@ -7,8 +7,8 @@ Quarks.clear
 
 
 o = Synthi100();
-o.play
-
+o.run
+o.searchOSC
 
 // Unimos los tres primeros osciladores a los tres primeros canales de salida:
 (
@@ -25,7 +25,12 @@ o.setParameterOSC("/patchA/96/41", 1); // salida de osc3 a output6
 o.stop
 
 
+a = NetAddr("192.168.1.133", 9000)
+a.sendMsg("/osc/1/pulse/level", 4)
+a.ip
+a.port
 
+OSC
 
 o.setParameterOSC("/osc/1/triangle/level",2);
 o.setParameterOSC("/osc/1/sawtooth/level", 2);
@@ -181,13 +186,36 @@ thisProcess.addOSCRecvFunc({ arg msg, time, addr, recvPort;
 });
 )
 
-OSCFunc.trace(true)
+OSCFunc.trace(false)
 
 
 "/osc".matchRegexp("/osc/1/pulse/level", 0, 4);
 
 thisProcess.removeOSCRecvFunc(~functionOSC);
 
-
+a = List.new
+a.add([1,2])
+a.
 
 Quarks.uninstall("https://github.com/mesjetiu/Synthi100")
+
+a = false
+a =jijij
+b = Dictionary.new
+b.put("a", 3)
+b.put("b", 4)
+b.do({|i| i.postln})
+b["a"]
+b.trueAt("a").postln
+
+OSCdef
+
+
+
+(
+n = NetAddr.new("192.168.1.33", 40175);    // create the NetAddr
+// create the OSCFunc
+o = OSCFunc({ arg msg, time, addr, recvPort; [msg, time, addr, recvPort].postln; }, '/goodbye', n);
+o.free;    // remove the OSCFunc when you are done.
+
+)
