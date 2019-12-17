@@ -170,6 +170,14 @@ Synthi100 {
 	// Para mejorarlo sería bueno mandar un bundle.
 	sendStateOSC {
 		Routine({
+			// ponemos los pines de Pathbay de audio a 0
+			6.do({|i|
+				6.do({|j|
+					var string = "/patchATouchOSC/" ++ (i + 1) ++ "/" ++ (j + 1);
+					netAddr.do({|i| i.sendMsg(string, 0)});
+					wait(0.03);
+				})
+			});
 			this.getState.do({|msg|
 				wait(0.03);
 				netAddr.do({|i| i.sendMsg(msg[0], msg[1])})
