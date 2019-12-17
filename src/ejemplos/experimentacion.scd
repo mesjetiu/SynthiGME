@@ -1,4 +1,8 @@
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Arte_Sonoro_Supercollider")
+Quarks.uninstall("https://github.com/mesjetiu/TFM_Arte_Sonoro_Supercollider")
+Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Arte_Sonoro_Supercollider")
+
+Quarks.clear
 
 
 o = Synthi100();
@@ -113,9 +117,6 @@ String
 
 Synth
 
-Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/TFM_Arte_Sonoro_Supercollider")
-
-Quarks.clear
 
 // no sé por qué no funciona tras instalarse desde Github...
 Quarks.install("https://github.com/mesjetiu/TFM_Arte_Sonoro_Supercollider.git")
@@ -157,11 +158,6 @@ thisProcess.addOSCRecvFunc(f);
 // stop posting.
 thisProcess.removeOSCRecvFunc();
 
-
-
-126-66
-
-66 y 60
 
 
 

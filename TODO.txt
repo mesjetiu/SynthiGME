@@ -1,8 +1,9 @@
 Lista "To Do"
 
 
-* Mejorar el filtro de Output Channel
-* Crear un pequeño prototipo en TouchOSC con dos osciladores, cuatro salidas y algunos nodos para experimentar...
+
+* cambiar ~s100FunctionOSC a variable de clase.
+* cambiar el sistema de recepción y envío de OSC. Hay demasiado feedback (eco) móvil-->pc-->móvil.
 * Parámetro "on-off" de Output channel
 * parámetro "hi-lo" de Oscillators
 * escribir a centros con Synthi 100 o técnicos que lo conozcan para pedir información.
