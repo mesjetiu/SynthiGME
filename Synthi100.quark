@@ -1,7 +1,8 @@
 (
-name: "Synthi100",
-summary: "Clase Synthi100, emulando el EMS Synthi 100 del GME de Cuenca",
-version: 0.0.1,
-license: "GPL",
-copyright: "Carlos Arturo Guerra Parra, 2019"
+	\name:	"Synthi100",
+	\path:	"Synthi100",
+	\summary:	"Clase Synthi100, emulando el EMS Synthi 100 del GME de Cuenca",
+	\version:	0.0.1,
+	\license:	"GPL",
+	\copyright:	"Carlos Arturo Guerra Parra, 2019"
 )
