@@ -33,6 +33,10 @@ e.use {
 }
 )
 
+#a, b, c = [1,2,3,]
+#
+
+
 a = NetAddr("192.168.1.133", 9000)
 a.sendMsg("/osc/1/pulse/level", 4)
 a.ip

@@ -1,6 +1,8 @@
 Lista "To Do"
 
 
+* hacer textos feedback de lo que ocurre (éxitos, errores...)
+* limpiar y ordenar código.
 * Hacer que los canales se pausen cuando el nivel es 0 sin dejar de emitir la señal recibida cruda (input)
 * Enviar el estado del Synthi por OSC en un "bundle" en lugar de la rutina actual
 * Parámetro "on-off" de Output channel
