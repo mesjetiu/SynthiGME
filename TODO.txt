@@ -1,8 +1,8 @@
 Lista "To Do"
 
 
-* Quark instalable desde Github (quizás el nombre del repo tiene que ser igual que el del quark...)
-* cambiar el sistema de recepción y envío de OSC. Hay demasiado feedback (eco). Crear detección automática de dispositivos. Evitar eco móvil-->pc-->móvil.
+* Hacer que los canales se pausen cuando el nivel es 0 sin dejar de emitir la señal recibida cruda (input)
+* Enviar el estado del Synthi por OSC en un "bundle" en lugar de la rutina actual
 * Parámetro "on-off" de Output channel
 * parámetro "hi-lo" de Oscillators
 * escribir a centros con Synthi 100 o técnicos que lo conozcan para pedir información.
@@ -11,7 +11,6 @@ Lista "To Do"
 * Archivo de ayuda de Supercollider
 * Módulo de ruido
 * Módulo de Ring modulator
-* Eliminar por eficiencia las comprobaciones de rangos de parámetros si no son necesarias (ya que, en teoría, todos van de 0 a 10 en los diales). Hacerlo con linlin y linexp, porque acotan los resultados. Se pueden eliminar los métodos de conversión de parámetros.
 * crear un archivo de configuración, donde afinar el Synthi en la medida de lo posible
 
 
