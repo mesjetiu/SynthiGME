@@ -22,15 +22,23 @@ o.setParameterOSC("/patchA/95/40", 1); // salida de osc3 a output5
 o.setParameterOSC("/patchA/96/41", 1); // salida de osc3 a output6
 )
 
+Array
+
 o.stop
 
+e = (freq: 340, amp: 0.001, strangeness: 0.85);
+(
+e.use {
+    [\amp, \taste, \strangeness].envirPairs;
+}
+)
 
 a = NetAddr("192.168.1.133", 9000)
 a.sendMsg("/osc/1/pulse/level", 4)
 a.ip
 a.port
 
-OSC
+[
 
 o.setParameterOSC("/osc/1/triangle/level",2);
 o.setParameterOSC("/osc/1/sawtooth/level", 2);
@@ -212,7 +220,8 @@ b.trueAt("a").postln
 
 OSCdef
 
-
+a = List[1,2,3]
+a.asArray
 
 (
 n = NetAddr.new("192.168.1.33", 40175);    // create the NetAddr
@@ -221,3 +230,5 @@ o = OSCFunc({ arg msg, time, addr, recvPort; [msg, time, addr, recvPort].postln;
 o.free;    // remove the OSCFunc when you are done.
 
 )
+
+OSCBundle

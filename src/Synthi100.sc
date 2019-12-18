@@ -169,6 +169,26 @@ Synthi100 {
 	// Envía el estado de todo el Synthi por OSC
 	// Para mejorarlo sería bueno mandar un bundle.
 	sendStateOSC {
+/*		// Buscando cómo enviar un bundle con todos los mensajes OSC juntos...
+
+		var bundle = List.new;
+		14.do({|i|
+			6.do({|j|
+				var string = "/patchATouchOSC/" ++ (i + 1) ++ "/" ++ (j + 1);
+				bundle.add(string);
+				bundle.add(0);
+			})
+		});
+
+		this.getState.do({|msg|
+			bundle.add(msg[0]);
+			bundle.add(msg[1]);
+		});
+
+		netAddr.do({|i| i.sendBundle(nil, bundle.asArray).postln});
+
+*/
+
 		Routine({
 			// ponemos los pines de Pathbay de audio a 0
 			14.do({|i|
@@ -183,6 +203,8 @@ Synthi100 {
 				netAddr.do({|i| i.sendMsg(msg[0], msg[1])})
 			})
 		}).play;
+
+
 	}
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC
