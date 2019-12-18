@@ -147,6 +147,7 @@ b = a.asInt
 
 a =  Dictionary.newFrom(List[\a, 1, \b, 2, \c, 4]);
 a.findKeyForValue(1)
+a.put(3,2)
 
 
 // EXPERIMENTOS CON OSC ////////////////////////////////////////////////////////////////////////////////
@@ -204,6 +205,7 @@ a =jijij
 b = Dictionary.new
 b.put("a", 3)
 b.put("b", 4)
+b.put(4, 5)
 b.do({|i| i.postln})
 b["a"]
 b.trueAt("a").postln

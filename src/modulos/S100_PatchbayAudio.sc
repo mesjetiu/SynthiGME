@@ -113,7 +113,7 @@ S100_PatchbayAudio {
 		if(numFromSynth > numToSynth, { // Si el synth de destino se ejecuta después que el de origen
 			toBus = inputsOutputs[hor-1].at(\inBus);
 		}, { // Si el synth de destino se ejecuta antes que el de origen
-			inputsOutputs[hor-1].at(\inFeedbackBus);
+			toBus = inputsOutputs[hor-1].at(\inFeedbackBus);
 		});
 
 		if(ganancy > 0, {

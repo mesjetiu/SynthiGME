@@ -101,7 +101,7 @@ S100_OutputChannel {
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
-		this.synthRun;
+	//	this.synthRun;
 	}
 
 	// Libera el Synth del servidor
@@ -157,7 +157,7 @@ S100_OutputChannel {
 	setLevel {|lev|
 		if((lev>=0).and(lev<=10), {
 			level = lev;
-			this.synthRun();
+	//		this.synthRun();
 			synth.set(\level, this.convertLevel(lev))
 		}, {
 			("S100_OutputChannel/setLevel: " + lev + " no es un valor entre 0 y 1").postln});
@@ -177,7 +177,7 @@ S100_OutputChannel {
 	setOn {|value|
 		if((value == 0).or(value == 1), {
 			on = value;
-			this.synthRun();
+	//		this.synthRun();
 			synth.set(\on, value)
 		}, {
 			("S100_OutputChannel/setOn: " + value + " no es un valor de 0 o 1").postln});
@@ -186,7 +186,7 @@ S100_OutputChannel {
 	setPan {|p|
 		if((p>=0).and(p<=10), {
 			pan = p;
-			this.synthRun();
+	//		this.synthRun();
 			synth.set(\pan, this.convertPan(p))
 		}, {
 			("S100_OutputChannel/setPan: " + p + " no es un valor entre -1 y 1").postln});

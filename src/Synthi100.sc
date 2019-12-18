@@ -171,7 +171,7 @@ Synthi100 {
 	sendStateOSC {
 		Routine({
 			// ponemos los pines de Pathbay de audio a 0
-			6.do({|i|
+			14.do({|i|
 				6.do({|j|
 					var string = "/patchATouchOSC/" ++ (i + 1) ++ "/" ++ (j + 1);
 					netAddr.do({|i| i.sendMsg(string, 0)});
@@ -216,9 +216,28 @@ Synthi100 {
 			// Mensaje DE PRUEBAS para TouchOSC con 3 osciladores
 			"patchATouchOSC", { // Patchbay de Audio desde TouchOSC, cuyo origen de coordenadas es izquierda abajo. Orden: horizontal y vertical (como un sistema normal de coordenadas)
 				var x, y;
+				var translation = Dictionary.new;
+				// Los tres primeros osciladores:
+				translation.put(1, 96);
+				translation.put(2, 95);
+				translation.put(3, 94);
+				translation.put(4, 93);
+				translation.put(5, 92);
+				translation.put(6, 91);
+				// Los cuatro primeros outputs channels:
+				translation.put(7, 78);
+				translation.put(8, 77);
+				translation.put(9, 76);
+				translation.put(10, 75);
+				// Los cuatro primeros inputs de los amplificadores (outputs channels):
+				translation.put(11, 70);
+				translation.put(12, 69);
+				translation.put(13, 68);
+				translation.put(14, 67);
 				2.do({splitted.removeAt(0)});
-				y = 7 - splitted[0].asInt + 90;
+				y = translation[splitted[0].asInt];
 				x = splitted[1].asInt + 35;
+
 				modulPatchbayAudio.administrateNode(y, x, value);
 			},
 			"out", { // Ejemplo "/out/1/level"
@@ -232,7 +251,6 @@ Synthi100 {
 				)
 			},
 		);
-		//netAddr.sendMsg(string, value);
 	}
 
 	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de todos los módulos
@@ -268,11 +286,29 @@ Synthi100 {
 			data.add("/patchA/" ++ ver ++ "/" ++ hor);
 		});
 
-		// Patchbay Audio (Para pruebas con TouchOSC:
+		// Patchbay Audio (Para pruebas con TouchOSC):
 		modulPatchbayAudio.nodeSynths.do({|node|
 			var ver = node[\coordenates][0];
 			var hor = node[\coordenates][1];
-			data.add("/patchATouchOSC/" ++ 7-ver-90 ++ "/" ++ hor-35);
+			var translation = Dictionary.new;
+			// Los tres primeros osciladores:
+			translation.put(96, 1);
+			translation.put(95, 2);
+			translation.put(94, 3);
+			translation.put(93, 4);
+			translation.put(92, 5);
+			translation.put(91, 6);
+			// Los cuatro primeros outputs channels:
+			translation.put(78, 7);
+			translation.put(77, 8);
+			translation.put(76, 9);
+			translation.put(75, 10);
+			// Los cuatro primeros inputs de los amplificadores (outputs channels):
+			translation.put(70, 11);
+			translation.put(69, 12);
+			translation.put(68, 13);
+			translation.put(67, 14);
+			data.add("/patchATouchOSC/" ++ translation[ver] ++ "/" ++ hor-35);
 		});
 
 		^data;
