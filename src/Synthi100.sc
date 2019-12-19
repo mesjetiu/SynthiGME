@@ -24,7 +24,7 @@ Synthi100 {
 	classvar numAudioInBuses = 8;
 	classvar numAudioOutBuses = 8;
 
-	// Estado del Synthi
+	// Estado del Synthi100
 	var play = false;
 
 

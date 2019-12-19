@@ -22,28 +22,6 @@ o.setParameterOSC("/patchA/95/40", 1); // salida de osc3 a output5
 o.setParameterOSC("/patchA/96/41", 1); // salida de osc3 a output6
 )
 
-Array
-
-o.stop
-
-e = (freq: 340, amp: 0.001, strangeness: 0.85);
-(
-e.use {
-    [\amp, \taste, \strangeness].envirPairs;
-}
-)
-
-#a, b, c = [1,2,3,]
-#
-
-
-a = NetAddr("192.168.1.133", 9000)
-a.sendMsg("/osc/1/pulse/level", 4)
-a.ip
-a.port
-
-[
-
 o.setParameterOSC("/osc/1/triangle/level",2);
 o.setParameterOSC("/osc/1/sawtooth/level", 2);
 
@@ -113,6 +91,82 @@ o.setParameterOSC("/osc/1/triangle/level", 0);
 o.setParameterOSC("/osc/1/frequency", 7);
 o.setParameterOSC("/out/1/level", 1);
 o.setParameterOSC("/out/2/level", 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{PinkNoise.ar}.play
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Array
+
+o.stop
+
+e = (freq: 340, amp: 0.001, strangeness: 0.85);
+(
+e.use {
+    [\amp, \taste, \strangeness].envirPairs;
+}
+)
+
+#a, b, c = [1,2,3,]
+#
+
+
+a = NetAddr("192.168.1.133", 9000)
+a.sendMsg("/osc/1/pulse/level", 4)
+a.ip
+a.port
+
+[
+
+
 o.modulOutputChannels[0].synth
 
 5.linexp(0, 10, 1, 16000)

@@ -1,7 +1,7 @@
 S100_Oscillator {
 
 	// Variables de la clase
-	classvar lag = 0.2; // Tiempo que dura la transición en los cambios de parámetros en el Synth
+	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar outVol = 1; // Entre 0 y 1;
 
 	// Synth de la instancia
