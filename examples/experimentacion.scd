@@ -37,7 +37,7 @@ o.setParameterOSC("/out/1/on", 1);
 o.setParameterOSC("/out/2/on", 1);
 )
 
-o.setParameterOSC("/osc/1/range", 0)
+o.setParameterOSC("/osc/1/range", 1)
 o.setParameterOSC("/osc/1/frequency", 5)
 (
 o.setParameterOSC("/out/1/filter", 5);

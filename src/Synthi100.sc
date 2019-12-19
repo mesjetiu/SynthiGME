@@ -63,7 +63,7 @@ Synthi100 {
 		stereoOutBuses = stereoBuses;
 
 		// Módulos
-		modulOscillators = 12.collect({S100_Oscillator(serv)});
+		modulOscillators = 9.collect({S100_Oscillator(serv)}); // 9 osciladores generadores de señal de audio
 		modulInputAmplifiers = 8.collect({S100_InputAmplifier(serv)});
 		modulOutputChannels = 8.collect({|i| S100_OutputChannel(serv, modulInputAmplifiers[i].outputBus)});
 		modulPatchbayAudio = S100_PatchbayAudio(server);
@@ -203,8 +203,10 @@ Synthi100 {
 
 		Routine({
 			// ponemos los pines de Pathbay de audio a 0
-			14.do({|i|
-				6.do({|j|
+			var numVer = 14;
+			var numHor = 6;
+			numVer.do({|i|
+				numHor.do({|j|
 					var string = "/patchATouchOSC/" ++ (i + 1) ++ "/" ++ (j + 1);
 					netAddr.do({|i| i.sendMsg(string, 0)});
 					wait(0.03);

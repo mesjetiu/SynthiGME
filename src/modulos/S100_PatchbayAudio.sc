@@ -79,7 +79,7 @@ S100_PatchbayAudio {
 			]);
 			index = index + 1;
 		});
-		index = 91; // Oscillators ocupan los números 91-108
+		index = 91; // Oscillators ocupan los números 91-108 (9 osciladores)
 		oscillators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[ // Sine y Saw
 				\synth, i.synth,
