@@ -9,7 +9,7 @@ S100_Oscillator {
 
 	// Valores de los parámetros del Synthi 100
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
-	var <range = "hi"; // Valores: "hi" y "lo". Por ahora no tiene ningún efecto
+	var <range = 1; // Valores: 1 = "hi" y 0 = "lo". Por ahora no tiene ningún efecto
 	var <pulseLevel = 0; // Todos los valores son entre 0 y 10, como los diales del Synthi 100.
 	var <pulseShape = 5;
 	var <sineLevel = 0;
@@ -42,27 +42,30 @@ S100_Oscillator {
 			sineSymmetry, // de -1 a 1. 0 = sinusoide
 			triangleLevel, // de 0 a 1
 			sawtoothLevel, // de 0 a 1
-			freq, // de 1 a 10000 (aproximadamente)
+			freq, // de 0 a 10 (tal cual desde el dial)
+			freqMin, freqMax, // frecuencia mínima y máxima a la que convertir los valores del dial.
 
 			// Parámetros de SC
 			outVol, // de 0 a 1
 			outputBus1,
 			outputBus2;
 
+			var scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
+
 			// Pulse
-			var sigPulse = LFPulse.ar(freq: freq, width: pulseShape, mul: pulseLevel);
+			var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
 			//var sigPulse=Pulse.ar(freq: freq,width: 1-pulseShape,mul: pulseLevel*outVol); //sin alias.
 
 			// Sine
-			var sigSym = SinOsc.ar(freq).abs * sineSymmetry * sineLevel;
+			var sigSym = SinOsc.ar(scaledFreq).abs * sineSymmetry * sineLevel;
 			var sigSine =
-			(sigSym + SinOsc.ar(freq, 0, (1-sineSymmetry.abs) * sineLevel));
+			(sigSym + SinOsc.ar(scaledFreq, 0, (1-sineSymmetry.abs) * sineLevel));
 
 			// Triangle
-			var sigTriangle = LFTri.ar(freq, 0, triangleLevel);
+			var sigTriangle = LFTri.ar(scaledFreq, 0, triangleLevel);
 
 			// Sawtooth
-			var sigSawtooth = Saw.ar(freq, sawtoothLevel);
+			var sigSawtooth = Saw.ar(scaledFreq, sawtoothLevel);
 
 			// Suma de señales
 			var sig1 = sigSine + sigSawtooth;
@@ -71,7 +74,7 @@ S100_Oscillator {
 			Out.ar(outputBus1, sig1 * outVol);
 			Out.ar(outputBus2, sig2 * outVol);
 
-		},[lag, lag, lag, lag, lag, lag, lag, lag, nil, nil]
+		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil]
 		).add
 	}
 
@@ -99,7 +102,9 @@ S100_Oscillator {
 				\sineSymmetry, this.convertSineSymmetry(sineSymmetry),
 				\triangleLevel, this.convertTriangleLevel(triangleLevel),
 				\sawtoothLevel, this.convertSawtoothLevel(sawtoothLevel),
-				\freq, this.convertFrequency(frequency),
+				\freq, frequency, //this.convertFrequency(frequency),
+				\freqMin, this.freqMinMax("min"),
+				\freqMax, this.freqMinMax("max"),
 				\outputBus1, outputBus1,
 				\outputBus2, outputBus2,
 				\outVol, 1,
@@ -166,11 +171,25 @@ S100_Oscillator {
 		);
 	}
 
+	freqMinMax {|option| // "min" o "max"
+		var hi = [1, 16000]; // frecuencia mínima y máxima de oscilador en modo alta frecuencia
+		var lo = [0.015, 500]; // frecuencia mínima y máxima de oscilador en modo baja frecuencia (LFO)
+		var freq = case {range == 1} {hi}
+		{range == 0} {lo};
+		switch (option,
+			"min", {^freq[0]},
+			"max", {^freq[1]},
+		);
+	}
 
 
 	// Setters Oscillators////////////////////////////////////////////////////////////////////////
 	setRange {| rang |
-		if((rang=="hi").and(rang=="lo"), {range = rang}, {
+		if((rang==1).or(rang==0), {
+			range = rang;
+			synth.set(\freqMin, this.freqMinMax("min"));
+			synth.set(\freqMax, this.freqMinMax("max"));
+		}, {
 			("S100_Oscillator/setRange: " + rang + " debe contener los valores hi o lo").postln})
 	}
 
@@ -222,9 +241,9 @@ S100_Oscillator {
 
 	setFrequency {| freq |
 		if((freq>=0).and(freq<=10), {
-			// frecuencias entre 1 y 10000 Hz
 			frequency = freq;
-			synth.set(\freq, this.convertFrequency(freq))}, {
+			//synth.set(\freq, this.convertFrequency(freq))}, {
+			synth.set(\freq, freq)}, {
 			("S100_Oscillator/setfrequency: " + freq + " no es un valor entre 0 y 10000").postln});
 	}
 
