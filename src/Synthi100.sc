@@ -3,6 +3,7 @@ Synthi100 {
 
 	// Módulos que incluye:
 	var <modulOscillators;
+	var <modulInputAmplifiers;
 	var <modulOutputChannels;
 	var <modulPatchbayAudio;
 	var <conectionOut;
@@ -35,6 +36,7 @@ Synthi100 {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(S100_Oscillator);
 		Class.initClassTree(S100_OutputChannel);
+		Class.initClassTree(S100_InputAmplifier);
 		Class.initClassTree(S100_PatchbayAudio);
 	}
 
@@ -49,10 +51,12 @@ Synthi100 {
 	init {|serv, stereoBuses|
 		// Se añaden al servidor las declaracines SynthDefs
 		S100_Oscillator.addSynthDef;
+		S100_InputAmplifier.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
 		server = serv;
 		NetAddr.broadcastFlag = true;
+
 		// Buses de audio de entrada y salida
 		audioInBuses = numAudioInBuses.collect({Bus.audio(server, 1)});
 		audioOutBuses = numAudioOutBuses.collect({Bus.audio(server, 1)});
@@ -60,7 +64,8 @@ Synthi100 {
 
 		// Módulos
 		modulOscillators = 12.collect({S100_Oscillator(serv)});
-		modulOutputChannels = 8.collect({S100_OutputChannel(serv)});
+		modulInputAmplifiers = 8.collect({S100_InputAmplifier(serv)});
+		modulOutputChannels = 8.collect({|i| S100_OutputChannel(serv, modulInputAmplifiers[i].outputBus)});
 		modulPatchbayAudio = S100_PatchbayAudio(server);
 	}
 
@@ -76,7 +81,7 @@ Synthi100 {
 				Routine({
 					var waitTime = 0.01; // Tiempo de espera entre la creación de cada Synth
 
-					// Se conectan provisionalmente las salidas de todos los módulos a los dos primeros buses de salida especificados en externAudioBuses
+					// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
 					conectionOut = modulOutputChannels.collect({|i|
 						SynthDef(\conection, {
 							Out.ar(stereoOutBuses[0], In.ar(i.outBusL, 1));
@@ -95,13 +100,20 @@ Synthi100 {
 					});
 					wait(waitTime);
 
+					// Input Amplifier
+					modulInputAmplifiers.do({|i|
+						i.createSynth;
+						wait(waitTime);
+					});
+					wait(waitTime);
+
 					// Oscillators
 					modulOscillators.do({|i|
 						i.createSynth;
 						wait(waitTime);
 					});
 					wait(waitTime);
-					modulPatchbayAudio.connect(modulOscillators, modulOutputChannels);
+					modulPatchbayAudio.connect(modulOscillators, modulInputAmplifiers, modulOutputChannels);
 					wait(waitTime);
 				}).play;
 				play = true;
@@ -169,25 +181,25 @@ Synthi100 {
 	// Envía el estado de todo el Synthi por OSC
 	// Para mejorarlo sería bueno mandar un bundle.
 	sendStateOSC {
-/*		// Buscando cómo enviar un bundle con todos los mensajes OSC juntos...
+		/*		// Buscando cómo enviar un bundle con todos los mensajes OSC juntos...
 
 		var bundle = List.new;
 		14.do({|i|
-			6.do({|j|
-				var string = "/patchATouchOSC/" ++ (i + 1) ++ "/" ++ (j + 1);
-				bundle.add(string);
-				bundle.add(0);
-			})
+		6.do({|j|
+		var string = "/patchATouchOSC/" ++ (i + 1) ++ "/" ++ (j + 1);
+		bundle.add(string);
+		bundle.add(0);
+		})
 		});
 
 		this.getState.do({|msg|
-			bundle.add(msg[0]);
-			bundle.add(msg[1]);
+		bundle.add(msg[0]);
+		bundle.add(msg[1]);
 		});
 
 		netAddr.do({|i| i.sendBundle(nil, bundle.asArray).postln});
 
-*/
+		*/
 
 		Routine({
 			// ponemos los pines de Pathbay de audio a 0
@@ -268,7 +280,10 @@ Synthi100 {
 				switch (splitted[0],
 					"level", {modulOutputChannels[index].setLevel(value)},
 					"filter", {modulOutputChannels[index].setFilter(value)},
-					"on", {modulOutputChannels[index].setOn(value)},
+					"on", {
+						modulInputAmplifiers[index].setOn(value);
+						modulOutputChannels[index].setOn(value)
+					},
 					"pan", {modulOutputChannels[index].setPan(value)},
 				)
 			},

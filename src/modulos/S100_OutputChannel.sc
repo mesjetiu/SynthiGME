@@ -10,7 +10,6 @@ S100_OutputChannel {
 	var <server;
 	var <inputBus; // Entrada del amplificador.
 	var <outputBus; // Salida del amplificador.
-	var <outputBusNotProcessed; // equivale a la entrada del canal. Señal sin procesar.
 	var <inFeedbackBus; // Entrada de feedback: admite audio del ciclo anterior.
 	var <outBusL; // Canal izquierdo de la salida stereo.
 	var <outBusR; // Canal derecho de la salida stereo.
@@ -29,53 +28,50 @@ S100_OutputChannel {
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
-	*new { |server|
-		^super.new.init(server);
+	*new { |server, inBus|
+		^super.new.init(server, inBus);
 	}
 
 	*addSynthDef {
 		SynthDef(\S100_outputChannel, {
 			arg inputBus,
-			inFeedbackBus,
 			outputBus,
-			outputBusNotProcessed,
 			outBusL,
 			outBusR,
 			freqHP,
 			freqLP,
 			pan, // entre -1 y 1
-			level; // entre 0 y 1
+			level, // entre 0 y 1
+			outVol; // entre 0 y 1
+
 			var sigIn, sig, sigPannedR, sigPannedL;
 
-			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
+			sigIn = In.ar(inputBus);
 
 			// Se realiza el filtrado
 			sig = HPF.ar(sigIn, freqHP, 0.5);
 			sig = LPF.ar(sig, freqLP, 0.5);
 
 			// Se aplica el nivel (level)
-			sig = sig * level;
+			sig = sig * level * outVol;
 
 			// Se aplica el paneo
 			#sigPannedL,sigPannedR = Pan2.ar(sig, pan);
 
 			Out.ar(outputBus, sig);
-			Out.ar(outputBusNotProcessed, sigIn);
 			Out.ar(outBusL, sigPannedL);
 			Out.ar(outBusR, sigPannedR);
-		}, [nil, nil, nil, nil, nil, nil, lag, lag, lag, lag]
+		}, [nil, nil, nil, nil, lag, lag, lag, lag, nil]
 		).add
 	}
 
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init { arg serv = Server.local;
+	init { arg serv = Server.local, inBus;
 		server = serv;
-		inputBus = Bus.audio(server);
-		inFeedbackBus = Bus.audio(server);
+		inputBus = inBus;
 		outputBus = Bus.audio(server);
-		outputBusNotProcessed = Bus.audio(server);
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
 		pauseRoutine = Routine({
@@ -89,9 +85,7 @@ S100_OutputChannel {
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_outputChannel, [
 				\inputBus, inputBus,
-				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
-				\outputBusNotProcessed, outputBusNotProcessed,
 				\outBusL, outBusL,
 				\outBusR, outBusR,
 				\freqHP, this.convertFilter(filter)[0],
@@ -170,7 +164,6 @@ S100_OutputChannel {
 		if((value == 0).or(value == 1), {
 			on = value;
 			this.synthRun();
-			synth.set(\on, value)
 		}, {
 			("S100_OutputChannel/setOn: " + value + " no es un valor de 0 o 1").postln});
 	}
