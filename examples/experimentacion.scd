@@ -5,7 +5,8 @@ Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
 
 Quarks.clear
 
-
+o = Synthi100()
+o.run
 o = Synthi100().run.pairDevice;
 
 
@@ -104,6 +105,15 @@ o.setParameterOSC("/osc/1/frequency", 7);
 o.setParameterOSC("/out/1/level", 1);
 o.setParameterOSC("/out/2/level", 1);
 
+r = nil
+
+(
+r = nil;
+r = Synth(\default);
+while({r.isRunning==false}, {"not running".postln});
+"RUNNING!!!!"
+
+)
 
 
 
@@ -111,12 +121,8 @@ o.setParameterOSC("/out/2/level", 1);
 
 
 
+Synth
 
 
 
 
-
-
-
-
-Sync

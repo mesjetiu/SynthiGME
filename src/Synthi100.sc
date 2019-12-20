@@ -44,11 +44,18 @@ Synthi100 {
 	}
 
 
+	*addSynthDef {
+		SynthDef(\connection, {|outBusL, outBusR, inBusL, inBusR|
+			Out.ar(outBusL, In.ar(inBusL, 1));
+			Out.ar(outBusR, In.ar(inBusR, 1));
+		}).add;
+	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init {|serv, stereoBuses|
 		// Se añaden al servidor las declaracines SynthDefs
+		Synthi100.addSynthDef;
 		S100_Oscillator.addSynthDef;
 		S100_InputAmplifier.addSynthDef;
 		S100_OutputChannel.addSynthDef;
@@ -74,54 +81,52 @@ Synthi100 {
 		if (play == true,
 			{("Create a new instance of " ++ this.class).postln; ^this}, // si true...
 			{server.waitForBoot({ // si false...
-				// TODO: Crear alguna rutina para colocar en orden todos los Synths en el servidor. Ahora están colocados mezclados los osciladores y los conectores.
+				var waitTime = 0.001;
 
-				// Rutina para espaciar temporalmente la creacion de cada Synth, de forma que queden ordenados.
-				Routine({
-					var waitTime = 0.01; // Tiempo de espera entre la creación de cada Synth
+				// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
+				conectionOut = modulOutputChannels.collect({|i|
+					var result = nil;
+					result = Synth(\connection, [
+						\inBusL, i.outBusL,
+						\inBusR, i.outBusR,
+						\outBusL, stereoOutBuses[0],
+						\outBusR, stereoOutBuses[1],
+					], server).register;
+					Routine({while({result.isPlaying == false}, {wait(waitTime)})}).play;
+					result.postln;
+					result;
+				});
+				// Out.ar(stereoOutBuses[0], In.ar(i.outBusL, 1));
+				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
 
-					// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
-					conectionOut = modulOutputChannels.collect({|i|
-						SynthDef(\conection, {
-							Out.ar(stereoOutBuses[0], In.ar(i.outBusL, 1));
-							Out.ar(stereoOutBuses[1], In.ar(i.outBusR, 1));
-						}).play(server);
-						wait(waitTime);
-					});
-					wait(waitTime);
+				// Output Channels
+				modulOutputChannels.do({|i|
+					i.createSynth;
+					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
+					i.synth.postln;
+				});
 
-					// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
+				// Input Amplifier
+				modulInputAmplifiers.do({|i|
+					i.createSynth;
+					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
+					i.synth.postln;
+				});
 
-					// Output Channels
-					modulOutputChannels.do({|i|
-						i.createSynth;
-						wait(waitTime);
-					});
-					wait(waitTime);
+				// Oscillators
+				modulOscillators.do({|i|
+					i.createSynth;
+					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
+					i.synth.postln;
+				});
 
-					// Input Amplifier
-					modulInputAmplifiers.do({|i|
-						i.createSynth;
-						wait(waitTime);
-					});
-					wait(waitTime);
+				// conecta cada entrada y salida de cada módulo en el patchbay de audio
+				modulPatchbayAudio.connect(modulOscillators, modulInputAmplifiers, modulOutputChannels);
 
-					// Oscillators
-					modulOscillators.do({|i|
-						i.createSynth;
-						wait(waitTime);
-					});
-					wait(waitTime);
-
-					// conecta cada entrada y salida de cada módulo en el patchbay de audio
-					modulPatchbayAudio.connect(modulOscillators, modulInputAmplifiers, modulOutputChannels);
-					wait(waitTime);
-
-					play = true;
-					"Synthi100 running!!".postln;
-				}).play;
+				play = true;
+				"Synthi100 running!!".postln;
 			})
-		});
+		})
 	}
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.

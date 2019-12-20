@@ -59,7 +59,7 @@ S100_InputAmplifier {
 				\outVol, outVol,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
-		this.synthRun;
+	//	this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
