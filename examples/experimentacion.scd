@@ -8,7 +8,7 @@ Quarks.clear
 o = Synthi100()
 o.run
 o = Synthi100().run.pairDevice;
-
+o.pairDevice
 
 // Unimos los tres primeros osciladores a los tres primeros canales de salida:
 (
@@ -119,10 +119,10 @@ while({r.isRunning==false}, {"not running".postln});
 
 
 
-
+NetAddr.new
 
 Synth
 
 
-
+OSCFunc.trace(true, true)
 

@@ -110,7 +110,7 @@ S100_Oscillator {
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
-	//	this.synthRun;
+		this.synthRun;
 	}
 
 	// Libera el Synth del servidor
