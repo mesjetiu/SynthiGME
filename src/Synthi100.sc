@@ -131,19 +131,21 @@ Synthi100 {
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	pairDevice {
-		var oscDevices = nil;
+		var oscDevices = Dictionary.new;
 		NetAddr.broadcastFlag = true;
 		Routine({
 			var functionOSC = {|msg, time, addr, recvPort|
-				if("/S100/sync".matchRegexp(msg[0].asString), {
-					if(oscDevices.trueAt(addr.ip) == false, {
-						oscDevices.put(addr.ip, addr.ip);
-						("Found device at " ++ addr.ip).postln;
-					})
+				if(
+					"/S100/sync".matchRegexp(msg[0].asString).or( // si se pulsa el botón de sincronización
+						"/ping".matchRegexp(msg[0].asString) // ...o si está activado el /ping en TouchOSC en menos de 4s
+					), {
+						if(oscDevices.trueAt(addr.ip) == false, {
+							oscDevices.put(addr.ip, addr.ip);
+							("Found device at " ++ addr.ip).postln;
+						})
 				})
 			};
 			"Searching OSC devices...".postln;
-			oscDevices = Dictionary.new;
 			thisProcess.addOSCRecvFunc(functionOSC);
 			wait(5);
 			thisProcess.removeOSCRecvFunc(functionOSC);
@@ -153,9 +155,9 @@ Synthi100 {
 				this.prepareOSC;
 				netAddr = List.new;
 				oscDevices.do({|i|
-					netAddr.add(NetAddr(i, 9000));
+					netAddr.add(NetAddr(i, devicePort));
 				});
-				this.sendStateOSC
+				this.sendStateOSC;
 			});
 		}).play;
 	}
