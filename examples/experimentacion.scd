@@ -6,11 +6,8 @@ Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
 Quarks.clear
 
 
-o = Synthi100();
-o.run
-o.pairDevice()
+o = Synthi100().run.pairDevice;
 
-o = Synthi100().run.connectOSC
 
 // Unimos los tres primeros osciladores a los tres primeros canales de salida:
 (
