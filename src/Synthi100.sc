@@ -123,7 +123,7 @@ Synthi100 {
 	}
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
-	connectOSC {
+	pairDevice {
 		var routineSearchOSC = Routine({
 			var functionOSC = {|msg, time, addr, recvPort|
 				if("/S100/sync".matchRegexp(msg[0].asString), {

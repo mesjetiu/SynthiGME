@@ -8,7 +8,7 @@ Quarks.clear
 
 o = Synthi100();
 o.run
-o.connectOSC
+o.pairDevice()
 
 o = Synthi100().run.connectOSC
 
@@ -108,3 +108,18 @@ o.setParameterOSC("/out/1/level", 1);
 o.setParameterOSC("/out/2/level", 1);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sync

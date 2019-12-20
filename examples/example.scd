@@ -3,7 +3,7 @@
 
 o = Synthi100()
 o.run
-o.connectOSC
+o.pairDevice
 
 
-Synthi100().run.connectOSC
+Synthi100().run.pairDevice
