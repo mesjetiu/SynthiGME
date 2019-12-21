@@ -1,5 +1,6 @@
 S100_PatchbayAudio {
 
+	classvar lag = 0.1;
 	var <server = nil;
 
 	// Array que almacena todas las conexiones. Dos dimensiones [from] [to]. Almacena el Synth Node.
@@ -26,9 +27,9 @@ S100_PatchbayAudio {
 			toBus,
 			ganancy; // Entre 0 y 1;
 
-			var sig = (In.ar(fromBus) * ganancy);
+			var sig = In.ar(fromBus) * ganancy;
 			Out.ar(toBus, sig);
-		}
+		}, [nil, nil, lag]
 		).add
 	}
 
@@ -115,30 +116,40 @@ S100_PatchbayAudio {
 
 		if(ganancy > 0, {
 			if(nodeSynths[[hor,ver].asString] == nil, {
-				nodeSynths.put(
-					[ver,hor].asString,
-					Dictionary.newFrom(List[
-						\synth, Synth(
-							\S100_patchNode, [
-								\fromBus, fromBus,
-								\toBus, toBus,
-								\ganancy, ganancy
-							],
-							fromSynth,
-							\addAfter
-						),
-						\ganancy, ganancy,
-						\coordenates, [ver, hor]
-					])
-				)
+				Routine({
+					nodeSynths.put(
+						[ver,hor].asString,
+						Dictionary.newFrom(List[
+							\synth, Synth(
+								\S100_patchNode, [
+									\fromBus, fromBus,
+									\toBus, toBus,
+									\ganancy, 0
+								],
+								fromSynth,
+								\addAfter
+							),
+							\ganancy, ganancy,
+							\coordenates, [ver, hor]
+						])
+					);
+					wait(0.05);
+					nodeSynths[[ver,hor].asString][\synth].set(\ganancy, ganancy);
+
+				}).play;
+
 			}, {
 				nodeSynths[[ver,hor].asString][\synth].set(\ganancy, ganancy);
 				nodeSynths[[ver,hor].asString][\ganancy] = ganancy;
 			})
 		},{
 			if(nodeSynths[[ver,hor].asString] != nil, {
-				nodeSynths[[ver,hor].asString][\synth].free;
-				nodeSynths[[ver,hor].asString] = nil;
+				Routine({
+					nodeSynths[[ver,hor].asString][\synth].set(\ganancy, 0);
+					wait(lag); // espera un tiempo para que el synt baje su ganancia a 0;
+					nodeSynths[[ver,hor].asString][\synth].free;
+					nodeSynths[[ver,hor].asString] = nil;
+				}).play;
 			})
 		})
 	}

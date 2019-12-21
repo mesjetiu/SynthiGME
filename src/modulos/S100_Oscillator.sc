@@ -113,13 +113,6 @@ S100_Oscillator {
 		this.synthRun;
 	}
 
-	// Libera el Synth del servidor
-	freeSynth {
-		if(synth.isPlaying, {
-			synth.free;
-		});
-		synth = nil;
-	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
