@@ -26,8 +26,7 @@ S100_PatchbayAudio {
 			toBus,
 			ganancy; // Entre 0 y 1;
 
-			var sig = (In.ar(fromBus) + In.ar(toBus)) * ganancy; // Se suman los contenidos de ambos buses. De otro modo se pierde lo que ya hubiera en el bus de salida.
-
+			var sig = (In.ar(fromBus) * ganancy);
 			Out.ar(toBus, sig);
 		}
 		).add

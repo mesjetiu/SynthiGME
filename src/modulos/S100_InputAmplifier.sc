@@ -31,7 +31,6 @@ S100_InputAmplifier {
 			outVol;
 
 			var sig;
-
 			sig = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 			sig = sig * outVol;
 
