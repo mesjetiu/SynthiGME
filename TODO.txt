@@ -13,7 +13,7 @@ Lista "To Do"
 * Archivo de ayuda de Supercollider
 * Módulo de ruido
 * Módulo de Ring modulator
-* crear un archivo de configuración, donde afinar el Synthi en la medida de lo posible
+* crear un archivo de configuración, donde afinar el Synthi en la medida de lo posible: añadir archivo de configuración con "archivo.scd".loadrelative
 
 
 

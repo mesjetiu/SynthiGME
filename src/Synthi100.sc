@@ -93,7 +93,6 @@ Synthi100 {
 						\outBusR, stereoOutBuses[1],
 					], server).register;
 					Routine({while({result.isPlaying == false}, {wait(waitTime)})}).play;
-					result.postln;
 					result;
 				});
 				// Out.ar(stereoOutBuses[0], In.ar(i.outBusL, 1));
@@ -103,21 +102,18 @@ Synthi100 {
 				modulOutputChannels.do({|i|
 					i.createSynth;
 					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
-					i.synth.postln;
 				});
 
 				// Input Amplifier
 				modulInputAmplifiers.do({|i|
 					i.createSynth;
 					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
-					i.synth.postln;
 				});
 
 				// Oscillators
 				modulOscillators.do({|i|
 					i.createSynth;
 					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
-					i.synth.postln;
 				});
 
 				// conecta cada entrada y salida de cada módulo en el patchbay de audio
@@ -184,7 +180,7 @@ Synthi100 {
 					})
 			});
 		};
-		netAddr = NetAddr("255.255.255.255", devicePort); // el puerto 9000 es por el que se enviarán los mensajes OSC
+		netAddr = NetAddr("255.255.255.255", devicePort);
 		thisProcess.addOSCRecvFunc(functionOSC);
 	}
 
