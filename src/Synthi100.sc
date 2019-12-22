@@ -6,7 +6,7 @@ Synthi100 {
 	var <modulInputAmplifiers;
 	var <modulOutputChannels;
 	var <modulPatchbayAudio;
-	var <conectionOut;
+	var <connectionOut = nil;
 
 	// Buses internos de entrada y salida:
 	var <audioInBuses;
@@ -20,10 +20,12 @@ Synthi100 {
 	// Función que se utiliza para escuchar todos los puertos OSC. Es variable de clase para poder añadirla y suprimirla desde cualquier instancia.
 	classvar functionOSC = nil;
 	// Puerto por defecto de envío de mensajes OSC (por defecto en TouchOSC)
-	var devicePort = 9000;
+	var devicePort;
 
 	// Estado del Synthi100. Para evitar volver a crear Synths una vez en ejecución
 	var play = false;
+
+	var generalVol;
 
 
 
@@ -45,9 +47,9 @@ Synthi100 {
 
 
 	*addSynthDef {
-		SynthDef(\connection, {|outBusL, outBusR, inBusL, inBusR|
-			Out.ar(outBusL, In.ar(inBusL, 1));
-			Out.ar(outBusR, In.ar(inBusR, 1));
+		SynthDef(\connection, {|outBusL, outBusR, inBusL, inBusR, vol|
+			Out.ar(outBusL, In.ar(inBusL, 1) * vol);
+			Out.ar(outBusR, In.ar(inBusR, 1) * vol);
 		}).add;
 	}
 
@@ -72,6 +74,9 @@ Synthi100 {
 		modulInputAmplifiers = 8.collect({S100_InputAmplifier(serv)});
 		modulOutputChannels = 8.collect({|i| S100_OutputChannel(serv, modulInputAmplifiers[i].outputBus)});
 		modulPatchbayAudio = S100_PatchbayAudio(server);
+
+		// Carga la configuración de todos los módulos desde el archivo "settings.sc"
+		this.getSettings;
 	}
 
 
@@ -84,13 +89,14 @@ Synthi100 {
 				var waitTime = 0.001;
 
 				// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
-				conectionOut = modulOutputChannels.collect({|i|
+				connectionOut = modulOutputChannels.collect({|i|
 					var result = nil;
 					result = Synth(\connection, [
 						\inBusL, i.outBusL,
 						\inBusR, i.outBusR,
 						\outBusL, stereoOutBuses[0],
 						\outBusR, stereoOutBuses[1],
+						\vol, generalVol,
 					], server).register;
 					Routine({while({result.isPlaying == false}, {wait(waitTime)})}).play;
 					result;
@@ -228,6 +234,16 @@ Synthi100 {
 
 	}
 
+	// Setters de la clase
+	setGeneralVol {|vol|
+		generalVol = vol;
+		connectionOut.do({|i|
+			if(i != nil, {
+				i.set(\vol, vol);
+			})
+		})
+	}
+
 	// Setter de los diferentes parámetros de los módulos en formato OSC
 	setParameterOSC {|string, value|
 		var splitted = string.split($/);
@@ -359,4 +375,16 @@ Synthi100 {
 
 		^data;
 	}
+
+
+	// Carga la configuración del archivo "settings.sc"
+	getSettings {
+		var set = Dictionary.newFrom(this.settings);
+		generalVol = set[\generalVol];
+		devicePort = set[\OSCDevicePort];
+
+
+	}
 }
+
+

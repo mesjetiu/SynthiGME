@@ -5,7 +5,8 @@ Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
 
 Quarks.clear
 
-o = Synthi100()
+o = Synthi100().run
+o.setGeneralVol(0.7)
 o.run
 o = Synthi100().run.pairDevice;
 o.pairDevice
@@ -20,20 +21,20 @@ o.setParameterOSC("/patchA/94/39", 1); // salida de osc2 a output4
 
 o.setParameterOSC("/patchA/95/40", 1); // salida de osc3 a output5
 o.setParameterOSC("/patchA/96/41", 1); // salida de osc3 a output6
-)
-(
+
 o.setParameterOSC("/osc/1/triangle/level",5);
 o.setParameterOSC("/osc/1/sawtooth/level", 4);
-)
-(
+
 o.setParameterOSC("/out/1/level", 5);
 o.setParameterOSC("/out/2/level", 5);
-)
 
-(
 o.setParameterOSC("/out/1/on", 1);
 o.setParameterOSC("/out/2/on", 1);
 )
+
+
+
+
 
 o.setParameterOSC("/osc/1/range", 1)
 o.setParameterOSC("/osc/1/frequency", 5)
@@ -126,3 +127,10 @@ Synth
 
 OSCFunc.trace(true, true)
 
+
+a = Dictionary.newFrom([\a, 1, \b, 3])
+a[\a]
+a['a']
+
+
+LanguageConfig.includePaths

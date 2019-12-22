@@ -11,9 +11,13 @@
 
 		// CONFIGURACIÓN GENERAL********************************************************************
 
+		\generalVol, 0.5,
+		\OSCDevicePort, 9000,
 
+		// CONFIGURACIÓN DE OSCILADORES*************************************************************
 
-
+	//	\oscPulseLevel, 1,
+	//	\oscPulseShape
 
 
 
