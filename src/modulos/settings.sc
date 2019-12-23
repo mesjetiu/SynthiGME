@@ -1,5 +1,5 @@
-+ Synthi100 {
-	settings {^[
++ S100_Settings {
+	* settings {^[
 
 		//******************************************************************************************
 		// Archivo de configuración de Synthi100. Todos los límites y valores "afinables"

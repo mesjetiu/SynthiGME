@@ -75,6 +75,54 @@ S100_Oscillator {
 			Out.ar(outputBus2, sig2 * outVol);
 
 		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil]
+		).add;
+
+		// experimentando con un oscilador en el que todos sus UGens estén en fase
+		SynthDef(\S100_oscillator2, {
+			// Parámetros manuales del S100 convertidos a unidades manejables (niveles de 0 a 1, hercios, etc.)
+			arg pulseLevel, // de 0 a 1
+			pulseShape, // de 0 a 1
+			sineLevel, // de 0 a 1
+			sineSymmetry, // de -1 a 1. 0 = sinusoide
+			triangleLevel, // de 0 a 1
+			sawtoothLevel, // de 0 a 1
+			freq, // de 0 a 10 (tal cual desde el dial)
+			freqMin, freqMax, // frecuencia mínima y máxima a la que convertir los valores del dial.
+
+			// Parámetros de SC
+			outVol, // de 0 a 1
+			outputBus1,
+			outputBus2;
+
+			var scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
+
+			// Pulse
+			var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
+			//var sigPulse=Pulse.ar(freq: freq,width: 1-pulseShape,mul: pulseLevel*outVol); //sin alias.
+
+
+			// Phasor director
+			var phasor = Phasor.ar(trig: sigPulse, rate: 2pi * scaledFreq / 48000);
+
+			// Sine
+			var sigSym = SinOsc.ar(0, phasor).abs * sineSymmetry * sineLevel;
+			var sigSine =
+			(sigSym + SinOsc.ar(0, phasor, (1-sineSymmetry.abs) * sineLevel));
+
+			// Triangle
+			var sigTriangle = LFTri.ar(0, phasor, triangleLevel);
+
+			// Sawtooth
+		//	var sigSawtooth = Saw.ar(scaledFreq, sawtoothLevel);
+
+			// Suma de señales
+			var sig1 = sigSine;// + sigSawtooth;
+			var sig2 = sigPulse + sigTriangle;
+
+			Out.ar(outputBus1, sig1 * outVol);
+			Out.ar(outputBus2, sig2 * outVol);
+
+		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil]
 		).add
 	}
 

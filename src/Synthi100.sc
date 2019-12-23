@@ -33,6 +33,7 @@ Synthi100 {
 
 	*initClass {
 		// Inicializa otras clases antes de esta
+		Class.initClassTree(S100_Settings);
 		Class.initClassTree(S100_Oscillator);
 		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_InputAmplifier);
@@ -379,7 +380,7 @@ Synthi100 {
 
 	// Carga la configuración del archivo "settings.sc"
 	getSettings {
-		var set = Dictionary.newFrom(this.settings);
+		var set = S100_Settings.get;
 		generalVol = set[\generalVol];
 		devicePort = set[\OSCDevicePort];
 
