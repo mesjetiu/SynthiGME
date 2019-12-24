@@ -24,6 +24,7 @@ S100_Oscillator {
 	var <server;
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
+	var settings = nil;
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -78,52 +79,53 @@ S100_Oscillator {
 		).add;
 
 		// experimentando con un oscilador en el que todos sus UGens estén en fase
-		SynthDef(\S100_oscillator2, {
-			// Parámetros manuales del S100 convertidos a unidades manejables (niveles de 0 a 1, hercios, etc.)
-			arg pulseLevel, // de 0 a 1
-			pulseShape, // de 0 a 1
-			sineLevel, // de 0 a 1
-			sineSymmetry, // de -1 a 1. 0 = sinusoide
-			triangleLevel, // de 0 a 1
-			sawtoothLevel, // de 0 a 1
-			freq, // de 0 a 10 (tal cual desde el dial)
-			freqMin, freqMax, // frecuencia mínima y máxima a la que convertir los valores del dial.
+		// Funciona con Phasor.ar. Para que funcionara perfectamente es necesario encontrar UGens que tengan parámetro de audio "phase". No todos lo tienen...
+		/*		SynthDef(\S100_oscillator2, {
+		// Parámetros manuales del S100 convertidos a unidades manejables (niveles de 0 a 1, hercios, etc.)
+		arg pulseLevel, // de 0 a 1
+		pulseShape, // de 0 a 1
+		sineLevel, // de 0 a 1
+		sineSymmetry, // de -1 a 1. 0 = sinusoide
+		triangleLevel, // de 0 a 1
+		sawtoothLevel, // de 0 a 1
+		freq, // de 0 a 10 (tal cual desde el dial)
+		freqMin, freqMax, // frecuencia mínima y máxima a la que convertir los valores del dial.
 
-			// Parámetros de SC
-			outVol, // de 0 a 1
-			outputBus1,
-			outputBus2;
+		// Parámetros de SC
+		outVol, // de 0 a 1
+		outputBus1,
+		outputBus2;
 
-			var scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
+		var scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
 
-			// Pulse
-			var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
-			//var sigPulse=Pulse.ar(freq: freq,width: 1-pulseShape,mul: pulseLevel*outVol); //sin alias.
+		// Phasor director
+		var phasor = Phasor.ar(trig: sigPulse, rate: 2pi * scaledFreq / 48000);
 
+		// Pulse
+		var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
+		//var sigPulse=Pulse.ar(freq: freq,width: 1-pulseShape,mul: pulseLevel*outVol); //sin alias.
 
-			// Phasor director
-			var phasor = Phasor.ar(trig: sigPulse, rate: 2pi * scaledFreq / 48000);
+		// Sine
+		var sigSym = SinOsc.ar(0, phasor).abs * sineSymmetry * sineLevel;
+		var sigSine =
+		(sigSym + SinOsc.ar(0, phasor, (1-sineSymmetry.abs) * sineLevel));
 
-			// Sine
-			var sigSym = SinOsc.ar(0, phasor).abs * sineSymmetry * sineLevel;
-			var sigSine =
-			(sigSym + SinOsc.ar(0, phasor, (1-sineSymmetry.abs) * sineLevel));
+		// Triangle
+		var sigTriangle = LFTri.ar(0, phasor, triangleLevel);
 
-			// Triangle
-			var sigTriangle = LFTri.ar(0, phasor, triangleLevel);
-
-			// Sawtooth
+		// Sawtooth
 		//	var sigSawtooth = Saw.ar(scaledFreq, sawtoothLevel);
 
-			// Suma de señales
-			var sig1 = sigSine;// + sigSawtooth;
-			var sig2 = sigPulse + sigTriangle;
+		// Suma de señales
+		var sig1 = sigSine;// + sigSawtooth;
+		var sig2 = sigPulse + sigTriangle;
 
-			Out.ar(outputBus1, sig1 * outVol);
-			Out.ar(outputBus2, sig2 * outVol);
+		Out.ar(outputBus1, sig1 * outVol);
+		Out.ar(outputBus2, sig2 * outVol);
 
 		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil]
 		).add
+		*/
 	}
 
 
@@ -131,6 +133,8 @@ S100_Oscillator {
 	// Métodos de instancia ////////////////////////////////////////////
 
 	init { arg serv = Server.local;
+		settings = S100_Settings.get;
+		this.setSettings;
 		server = serv;
 		outputBus1 = Bus.audio(server);
 		outputBus2 = Bus.audio(server);
@@ -151,8 +155,8 @@ S100_Oscillator {
 				\triangleLevel, this.convertTriangleLevel(triangleLevel),
 				\sawtoothLevel, this.convertSawtoothLevel(sawtoothLevel),
 				\freq, frequency, //this.convertFrequency(frequency),
-				\freqMin, this.freqMinMax("min"),
-				\freqMax, this.freqMinMax("max"),
+				\freqMin, this.freqMinMax(range, \min),
+				\freqMax, this.freqMinMax(range, \max),
 				\outputBus1, outputBus1,
 				\outputBus2, outputBus2,
 				\outVol, 1,
@@ -212,15 +216,20 @@ S100_Oscillator {
 		);
 	}
 
-	freqMinMax {|option| // "min" o "max"
-		var hi = [1, 16000]; // frecuencia mínima y máxima de oscilador en modo alta frecuencia
-		var lo = [0.015, 500]; // frecuencia mínima y máxima de oscilador en modo baja frecuencia (LFO)
-		var freq = case {range == 1} {hi}
-		{range == 0} {lo};
+	freqMinMax {|rang, option| // "min" o "max"
 		switch (option,
-			"min", {^freq[0]},
-			"max", {^freq[1]},
-		);
+			\min, {
+				switch (rang,
+					1, {^settings[\oscFreqHiMin]},
+					0, {^settings[\oscFreqLoMin]}
+				)
+			},
+			\max, {
+				switch (rang,
+					1, {^settings[\oscFreqHiMax]},
+					0, {^settings[\oscFreqLoMax]}
+				)},
+		)
 	}
 
 
@@ -228,8 +237,8 @@ S100_Oscillator {
 	setRange {| rang |
 		if((rang==1).or(rang==0), {
 			range = rang;
-			synth.set(\freqMin, this.freqMinMax("min"));
-			synth.set(\freqMax, this.freqMinMax("max"));
+			synth.set(\freqMin, this.freqMinMax(rang, \min));
+			synth.set(\freqMax, this.freqMinMax(rang, \max));
 		}, {
 			("S100_Oscillator/setRange: " + rang + " debe contener los valores hi o lo").postln})
 	}
@@ -296,4 +305,11 @@ S100_Oscillator {
 			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
 	}
 	//End Setters Oscillators//////////////////////////////////////////////////////////////////////
+
+
+	// Carga la configuración
+	setSettings {
+		outVol = settings[\oscOutVol];
+		lag = settings[\oscLag];
+	}
 }

@@ -16,8 +16,12 @@
 
 		// CONFIGURACIÓN DE OSCILADORES*************************************************************
 
-	//	\oscPulseLevel, 1,
-	//	\oscPulseShape
+		\oscOutVol, 1,
+		\oscLag, 0.5,
+		\oscFreqHiMax, 16000,
+		\oscFreqHiMin, 1,
+		\oscFreqLoMax, 500,
+		\oscFreqLoMin, 0.015,
 
 
 

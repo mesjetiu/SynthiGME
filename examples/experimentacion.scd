@@ -22,7 +22,7 @@ o.setParameterOSC("/patchA/94/39", 1); // salida de osc2 a output4
 o.setParameterOSC("/patchA/95/40", 1); // salida de osc3 a output5
 o.setParameterOSC("/patchA/96/41", 1); // salida de osc3 a output6
 
-o.setParameterOSC("/osc/1/triangle/level",5);
+o.setParameterOSC("/osc/1/triangle/level", 5);
 o.setParameterOSC("/osc/1/sawtooth/level", 4);
 
 o.setParameterOSC("/out/1/level", 5);
@@ -134,3 +134,10 @@ a['a']
 
 
 LanguageConfig.includePaths
+
+
+{Phasor.ar(rate: 1*1000/48000)}.plot
+
+Phaser
+
+Synthi100

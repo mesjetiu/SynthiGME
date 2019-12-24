@@ -25,7 +25,7 @@ Synthi100 {
 	// Estado del Synthi100. Para evitar volver a crear Synths una vez en ejecución
 	var play = false;
 
-	var generalVol;
+	var <generalVol;
 
 
 
@@ -57,12 +57,17 @@ Synthi100 {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init {|serv, stereoBuses|
+
+		// Carga la configuración
+		this.setSettings;
+
 		// Se añaden al servidor las declaracines SynthDefs
 		Synthi100.addSynthDef;
 		S100_Oscillator.addSynthDef;
 		S100_InputAmplifier.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
+
 		server = serv;
 
 		// Buses de audio de entrada y salida
@@ -75,9 +80,6 @@ Synthi100 {
 		modulInputAmplifiers = 8.collect({S100_InputAmplifier(serv)});
 		modulOutputChannels = 8.collect({|i| S100_OutputChannel(serv, modulInputAmplifiers[i].outputBus)});
 		modulPatchbayAudio = S100_PatchbayAudio(server);
-
-		// Carga la configuración de todos los módulos desde el archivo "settings.sc"
-		this.getSettings;
 	}
 
 
@@ -378,13 +380,11 @@ Synthi100 {
 	}
 
 
-	// Carga la configuración del archivo "settings.sc"
-	getSettings {
-		var set = S100_Settings.get;
-		generalVol = set[\generalVol];
-		devicePort = set[\OSCDevicePort];
-
-
+	// Carga la configuración
+	setSettings {
+		var settings = S100_Settings.get;
+		generalVol = settings[\generalVol];
+		devicePort = settings[\OSCDevicePort];
 	}
 }
 
