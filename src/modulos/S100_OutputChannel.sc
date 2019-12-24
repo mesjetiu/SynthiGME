@@ -20,16 +20,19 @@ S100_OutputChannel {
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
-	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
+	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
+	classvar settings;
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
 	*new { |server, inBus|
+		settings = S100_Settings.get;
 		^super.new.init(server, inBus);
 	}
 
 	*addSynthDef {
+		lag = S100_Settings.get[\outLag];
 		SynthDef(\S100_outputChannel, {
 			arg inputBus,
 			outputBus,
@@ -110,7 +113,7 @@ S100_OutputChannel {
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
 
 	convertLevel {|level|
-		^level.linlin(0, 10, 0, 1);
+		^level.linlin(0, 10, 0, settings[\outLevelMax]);
 	}
 
 	convertFilter {|filter| // Retorna las frecuencias de corte de ambos filtros: pasabajos y pasaaltos
@@ -118,14 +121,14 @@ S100_OutputChannel {
 		filterHP = filter.linexp(
 			inMin: 5, // valor mínimo del dial
 			inMax: 10, // valor máximo del dial
-			outMin: 10, // frecuencia mínima (valor del dial: 1)
-			outMax: 4000 //frecuencia máxima (valor del dial: 10)
+			outMin: settings[\outHPFreqMin], // frecuencia mínima (valor del dial: 5 o menos)
+			outMax: settings[\outHPFreqMax] //frecuencia máxima (valor del dial: 10)
 		);
 		filterLP = filter.linexp(
 			inMin: 0, // valor mínimo del dial
 			inMax: 5, // valor máximo del dial
-			outMin: 200, // frecuencia mínima (valor del dial: 1)
-			outMax: 20000 //frecuencia máxima (valor del dial: 10)
+			outMin: settings[\outLPFreqMin], // frecuencia mínima (valor del dial: 1)
+			outMax: settings[\outLPFreqMax] //frecuencia máxima (valor del dial: 5 o más)
 		);
 		^[filterHP, filterLP];
 	}

@@ -33,6 +33,12 @@
 
 		// CONFIGURACIÓN DE CANALES DE SALIDA*******************************************************
 
+		\outLag, 0,5,
+		\outLevelMax, 1,
+		\outHPFreqMin, 10,
+		\outHPFreqMax, 1000,
+		\outLPFreqMin, 400,
+		\outLPFreqMax, 2000,
 
 
 
