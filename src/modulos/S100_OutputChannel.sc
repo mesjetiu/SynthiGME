@@ -1,9 +1,5 @@
 S100_OutputChannel {
 
-	// Variables de la clase
-	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
-	classvar outVol = 1; // Entre 0 y 1
-
 	// Synth de la instancia
 	var <synth = nil;
 
@@ -24,6 +20,7 @@ S100_OutputChannel {
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
+	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -41,22 +38,21 @@ S100_OutputChannel {
 			freqHP,
 			freqLP,
 			pan, // entre -1 y 1
-			level, // entre 0 y 1
-			outVol; // entre 0 y 1
+			level; // entre 0 y 1
 
 			var sigIn, sig, sigPannedR, sigPannedL;
 
 			sigIn = In.ar(inputBus);
 
 			// Se realiza el filtrado
-			sig = HPF.ar(sigIn, freqHP, 0.5);
-			sig = LPF.ar(sig, freqLP, 0.5);
+			sig = HPF.ar(sigIn, freqHP);
+			sig = LPF.ar(sig, freqLP);
 
 			// Se aplica el nivel (level)
-			sig = sig * level * outVol;
+			sig = sig * level;
 
 			// Se aplica el paneo
-			#sigPannedL,sigPannedR = Pan2.ar(sig, pan);
+			#sigPannedL, sigPannedR = Pan2.ar(sig, pan);
 
 			Out.ar(outputBus, sig);
 			Out.ar(outBusL, sigPannedL);
@@ -92,7 +88,6 @@ S100_OutputChannel {
 				\freqLP, this.convertFilter(filter)[1],
 				\pan, this.convertPan(pan),
 				\level, this.convertLevel(level),
-				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
 		this.synthRun;
@@ -100,7 +95,7 @@ S100_OutputChannel {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = on * level * outVol;
+		var outputTotal = on * level;
 		if (outputTotal==0, {
 			running = false;
 			pauseRoutine.reset;

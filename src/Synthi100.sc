@@ -61,13 +61,6 @@ Synthi100 {
 		// Carga la configuración
 		this.setSettings;
 
-		// Se añaden al servidor las declaracines SynthDefs
-		Synthi100.addSynthDef;
-		S100_Oscillator.addSynthDef;
-		S100_InputAmplifier.addSynthDef;
-		S100_OutputChannel.addSynthDef;
-		S100_PatchbayAudio.addSynthDef;
-
 		server = serv;
 
 		// Buses de audio de entrada y salida
@@ -80,6 +73,13 @@ Synthi100 {
 		modulInputAmplifiers = 8.collect({S100_InputAmplifier(serv)});
 		modulOutputChannels = 8.collect({|i| S100_OutputChannel(serv, modulInputAmplifiers[i].outputBus)});
 		modulPatchbayAudio = S100_PatchbayAudio(server);
+
+		// Se añaden al servidor las declaracines SynthDefs
+		Synthi100.addSynthDef;
+		S100_Oscillator.addSynthDef;
+		S100_InputAmplifier.addSynthDef;
+		S100_OutputChannel.addSynthDef;
+		S100_PatchbayAudio.addSynthDef;
 	}
 
 

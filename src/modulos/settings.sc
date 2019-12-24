@@ -25,11 +25,14 @@
 		\oscPulseLevelMax, 1,
 		\oscPulseShapeMin, 0,
 		\oscPulseShapeMax, 1,
-		\oscSineLevel, 1,
+		\oscSineLevelMax, 1,
 		\oscSineSymmetryMin, -1,
 		\oscSineSymmetryMax, 1,
 		\oscSawtoothLevelMax, 1,
 		\oscTriangleLevelMax, 1,
+
+		// CONFIGURACIÓN DE CANALES DE SALIDA*******************************************************
+
 
 
 

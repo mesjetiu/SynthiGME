@@ -1,9 +1,5 @@
 S100_Oscillator {
 
-	// Variables de la clase
-	classvar lag = 0.5; // Tiempo que dura la transición en los cambios de parámetros en el Synth
-	classvar outVol = 1; // Entre 0 y 1;
-
 	// Synth de la instancia
 	var <synth = nil;
 
@@ -24,17 +20,21 @@ S100_Oscillator {
 	var <server;
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
-	var settings = nil;
+	classvar settings = nil;
+	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
+	var outVol; // Entre 0 y 1;
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
 
 	*new { |server|
+		settings = S100_Settings.get;
 		^super.new.init(server);
 	}
 
 	*addSynthDef {
+		lag = S100_Settings.get[\oscLag];
 		SynthDef(\S100_oscillator, {
 			// Parámetros manuales del S100 convertidos a unidades manejables (niveles de 0 a 1, hercios, etc.)
 			arg pulseLevel, // de 0 a 1
@@ -133,7 +133,6 @@ S100_Oscillator {
 	// Métodos de instancia ////////////////////////////////////////////
 
 	init { arg serv = Server.local;
-		settings = S100_Settings.get;
 		this.setSettings;
 		server = serv;
 		outputBus1 = Bus.audio(server);
@@ -154,7 +153,7 @@ S100_Oscillator {
 				\sineSymmetry, this.convertSineSymmetry(sineSymmetry),
 				\triangleLevel, this.convertTriangleLevel(triangleLevel),
 				\sawtoothLevel, this.convertSawtoothLevel(sawtoothLevel),
-				\freq, frequency, //this.convertFrequency(frequency),
+				\freq, frequency,
 				\freqMin, this.freqMinMax(range, \min),
 				\freqMax, this.freqMinMax(range, \max),
 				\outputBus1, outputBus1,
@@ -184,27 +183,27 @@ S100_Oscillator {
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
 
 	convertPulseLevel {|level|
-		^level.linlin(0, 10, 0, 1);
+		^level.linlin(0, 10, 0, settings[\oscPulseLevelMax]);
 	}
 
 	convertPulseShape {|shape|
-		^shape.linlin(0, 10, 0, 1);
+		^shape.linlin(0, 10, settings[\oscPulseShapeMin], settings[\oscPulseShapeMax]);
 	}
 
 	convertSineLevel {|level|
-		^level.linlin(0, 10, 0, 1);
+		^level.linlin(0, 10, 0, settings[\oscSineLevelMax]);
 	}
 
 	convertSineSymmetry {|symmetry|
-		^symmetry.linlin(0, 10, -1, 1);
+		^symmetry.linlin(0, 10, settings[\oscSineSymmetryMin], settings[\oscSineSymmetryMax]);
 	}
 
 	convertSawtoothLevel {|level|
-		^level.linlin(0, 10, 0, 1);
+		^level.linlin(0, 10, 0, settings[\oscSawtoothLevelMax]);
 	}
 
 	convertTriangleLevel {|level|
-		^level.linlin(0, 10, 0, 1);
+		^level.linlin(0, 10, 0, settings[\oscTriangleLevelMax]);
 	}
 
 	freqMinMax {|rang, option| // option = \min o \max
@@ -231,7 +230,7 @@ S100_Oscillator {
 			synth.set(\freqMin, this.freqMinMax(rang, \min));
 			synth.set(\freqMax, this.freqMinMax(rang, \max));
 		}, {
-			("S100_Oscillator/setRange: " + rang + " debe contener los valores hi o lo").postln})
+			("S100_Oscillator/setRange: " + rang + " debe contener los valores 1 (hi) o 0 (lo)").postln})
 	}
 
 	setPulseLevel {| level |
@@ -283,7 +282,6 @@ S100_Oscillator {
 	setFrequency {| freq |
 		if((freq>=0).and(freq<=10), {
 			frequency = freq;
-			//synth.set(\freq, this.convertFrequency(freq))}, {
 			synth.set(\freq, freq)}, {
 			("S100_Oscillator/setfrequency: " + freq + " no es un valor entre 0 y 10000").postln});
 	}
@@ -301,6 +299,5 @@ S100_Oscillator {
 	// Carga la configuración
 	setSettings {
 		outVol = settings[\oscOutVol];
-		lag = settings[\oscLag];
 	}
 }
