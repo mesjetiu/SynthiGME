@@ -207,16 +207,7 @@ S100_Oscillator {
 		^level.linlin(0, 10, 0, 1);
 	}
 
-	convertFrequency {|freq|
-		^freq.linexp(
-			inMin: 0, // valor mínimo del dial
-			inMax: 10, // valor máximo del dial
-			outMin: 1, // frecuencia mínima (valor del dial: 1)
-			outMax: 16000 //frecuencia máxima (valor del dial: 10)
-		);
-	}
-
-	freqMinMax {|rang, option| // "min" o "max"
+	freqMinMax {|rang, option| // option = \min o \max
 		switch (option,
 			\min, {
 				switch (rang,

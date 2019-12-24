@@ -22,6 +22,15 @@
 		\oscFreqHiMin, 1,
 		\oscFreqLoMax, 500,
 		\oscFreqLoMin, 0.015,
+		\oscPulseLevelMax, 1,
+		\oscPulseShapeMin, 0,
+		\oscPulseShapeMax, 1,
+		\oscSineLevel, 1,
+		\oscSineSymmetryMin, -1,
+		\oscSineSymmetryMax, 1,
+		\oscSawtoothLevelMax, 1,
+		\oscTriangleLevelMax, 1,
+
 
 
 
