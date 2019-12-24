@@ -218,7 +218,7 @@ S100_Oscillator {
 				switch (rang,
 					1, {^settings[\oscFreqHiMax]},
 					0, {^settings[\oscFreqLoMax]}
-				)},
+			)},
 		)
 	}
 
@@ -226,9 +226,9 @@ S100_Oscillator {
 	// Setters Oscillators////////////////////////////////////////////////////////////////////////
 	setRange {| rang |
 		if((rang==1).or(rang==0), {
-			range = rang;
-			synth.set(\freqMin, this.freqMinMax(rang, \min));
-			synth.set(\freqMax, this.freqMinMax(rang, \max));
+			range = rang.asInt;
+			synth.set(\freqMin, this.freqMinMax(rang.asInt, \min));
+			synth.set(\freqMax, this.freqMinMax(rang.asInt, \max));
 		}, {
 			("S100_Oscillator/setRange: " + rang + " debe contener los valores 1 (hi) o 0 (lo)").postln})
 	}
