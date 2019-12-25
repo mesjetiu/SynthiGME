@@ -1,4 +1,4 @@
-Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
+LQuarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
 Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
 
 Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
@@ -37,7 +37,7 @@ o.setParameterOSC("/out/2/on", 1);
 
 
 o.setParameterOSC("/osc/1/range", 1)
-o.setParameterOSC("/osc/1/frequency", 5)
+o.setParameterOSC("/osc/1/frequency", 3)
 (
 o.setParameterOSC("/out/1/filter", 5);
 o.setParameterOSC("/out/2/filter", 5);
@@ -141,3 +141,10 @@ LanguageConfig.includePaths
 Phaser
 
 Synthi100
+
+DPW3Tri
+
+{ BlitB3Tri.ar(XLine.kr(20, 20000, 10, 1),mul: 0.2)!2 }.play;
+{ LFTri.ar(XLine.kr(20, 20000, 10, 1),mul: 0.2)!2 }.play;
+{ DPW3Tri.ar(XLine.kr(20, 20000, 10, 1),mul: 0.2)!2 }.play; // sin aliasing pero con distorsion en graves...
+

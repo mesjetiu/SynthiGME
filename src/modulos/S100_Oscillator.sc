@@ -54,8 +54,9 @@ S100_Oscillator {
 			var scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
 
 			// Pulse
-			var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
-			//var sigPulse=Pulse.ar(freq: freq,width: 1-pulseShape,mul: pulseLevel*outVol); //sin alias.
+			//var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
+			var sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
+			// PulseDPW
 
 			// Sine
 			var sigSym = SinOsc.ar(scaledFreq).abs * sineSymmetry * sineLevel;

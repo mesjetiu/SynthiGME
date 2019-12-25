@@ -1,19 +1,28 @@
 Lista "To Do"
 
 
+* Creando interfaz completa en TouchOSC.
+* problema aliasing en osciladores (ver abajo)
 * hacer textos feedback de lo que ocurre (éxitos, errores...)
 * limpiar y ordenar código.
-* Hacer que los canales se pausen cuando el nivel es 0 sin dejar de emitir la señal recibida cruda (input)
-* Enviar el estado del Synthi por OSC en un "bundle" en lugar de la rutina actual
 * Parámetro "on-off" de Output channel
-* parámetro "hi-lo" de Oscillators
 * escribir a centros con Synthi 100 o técnicos que lo conozcan para pedir información.
-* Crear una hoja de cálculo con todos los módulos del Synthi indicando lo que está hecho y lo que no en cada momento
-* Método Synthi100.setState
 * Archivo de ayuda de Supercollider
 * Módulo de ruido
 * Módulo de Ring modulator
-* crear un archivo de configuración, donde afinar el Synthi en la medida de lo posible: añadir archivo de configuración con "archivo.scd".loadrelative
+* Módulo Envelope Shaper
+* Método Synthi100.setState
+* Enviar el estado del Synthi por OSC en un "bundle" en lugar de la rutina actual
+* grabación de mensajes OSC cronológicamente, y reproducción.
+
+
+ALIASING EN OSCILADORES
+
+Experimentar con tener dos osciladores, uno para baja frecuencia y otro para alta (no existe un ugen de triángulo que funcione al mismo tiempo bien en baja y alta frecuencia)
+Lo ideal es que a baja frecuencia los osciladores generen una forma clara y sin distorsiones. En altas frecuencias sin aliasing.
+Al cambiar el rango entre Hi y Lo se observa un cambio de fase (y de color y volumen). comprobar por qué cambia la fase. Una posible solución es sustituir el Synth cada vez que el rango cambia, empezando con fase 0.
+
+
 
 
 
