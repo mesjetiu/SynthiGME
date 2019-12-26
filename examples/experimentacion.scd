@@ -106,45 +106,24 @@ o.setParameterOSC("/osc/1/frequency", 7);
 o.setParameterOSC("/out/1/level", 1);
 o.setParameterOSC("/out/2/level", 1);
 
-r = nil
-
-(
-r = nil;
-r = Synth(\default);
-while({r.isRunning==false}, {"not running".postln});
-"RUNNING!!!!"
-
-)
-
-
-
-
-
-NetAddr.new
-
-Synth
-
-
 OSCFunc.trace(true, true)
 
 
-a = Dictionary.newFrom([\a, 1, \b, 3])
-a[\a]
-a['a']
 
 
-LanguageConfig.includePaths
+// Solución de triangulo sin aliasing (para 48000 sample rate)
+// La solucion pasa por covertirse en sinusoide según avanza la frecuencia hacia el agudo. El resultado es similar que el de filtrar la señal.
+(
+{
+	var freq, sig;
+	freq = MouseX.kr(20,20000).poll;
+	//freq = 8000;
+	sig = LFTri.ar(freq, mul: 0.2
+		* lincurve(freq, 2000, 12000,1,0, -10).poll)!2;
+	sig = sig + SinOsc.ar(freq, mul: 0.2
+		* lincurve(freq, 2000, 12000,0,1,-10).poll)!2
+}.play;
+)
 
 
-{Phasor.ar(rate: 1*1000/48000)}.plot
-
-Phaser
-
-Synthi100
-
-DPW3Tri
-
-{ BlitB3Tri.ar(XLine.kr(20, 20000, 10, 1),mul: 0.2)!2 }.play;
-{ LFTri.ar(XLine.kr(20, 20000, 10, 1),mul: 0.2)!2 }.play;
-{ DPW3Tri.ar(XLine.kr(20, 20000, 10, 1),mul: 0.2)!2 }.play; // sin aliasing pero con distorsion en graves...
-
+GUI

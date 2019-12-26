@@ -1,7 +1,8 @@
 Lista "To Do"
 
 
-* Creando interfaz completa en TouchOSC.
+* Crear un grupo común para todos los Synths, para aislarlo del resto de Synths de SC.
+* Creando interfaz completa en TouchOSC. usar diferentes colores según se van implementado características.
 * problema aliasing en osciladores (ver abajo)
 * hacer textos feedback de lo que ocurre (éxitos, errores...)
 * limpiar y ordenar código.
