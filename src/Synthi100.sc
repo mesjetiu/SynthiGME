@@ -90,6 +90,7 @@ Synthi100 {
 			{("Create a new instance of " ++ this.class).postln; ^this}, // si true...
 			{server.waitForBoot({ // si false...
 				var waitTime = 0.001;
+				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
 
 				// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
 				connectionOut = modulOutputChannels.collect({|i|
@@ -104,7 +105,9 @@ Synthi100 {
 					Routine({while({result.isPlaying == false}, {wait(waitTime)})}).play;
 					result;
 				});
-				// Out.ar(stereoOutBuses[0], In.ar(i.outBusL, 1));
+				"Conexión de salida stereo OK".postln;
+
+
 				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
 
 				// Output Channels
@@ -112,23 +115,28 @@ Synthi100 {
 					i.createSynth;
 					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
 				});
+				"Output Channels OK".postln;
 
 				// Input Amplifier
 				modulInputAmplifiers.do({|i|
 					i.createSynth;
 					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
 				});
+				"Input Amplifiers OK".postln;
 
 				// Oscillators
 				modulOscillators.do({|i|
 					i.createSynth;
 					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
 				});
+				"Osciladores OK".postln;
 
 				// conecta cada entrada y salida de cada módulo en el patchbay de audio
 				modulPatchbayAudio.connect(modulOscillators, modulInputAmplifiers, modulOutputChannels);
+				"Patchbay de audio preparado OK".postln;
 
 				play = true;
+
 				"Synthi100 running!!".postln;
 			})
 		})
