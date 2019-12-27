@@ -51,27 +51,34 @@ S100_Oscillator {
 			outputBus1,
 			outputBus2;
 
-			var scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
+			var scaledFreq, sigPulse, sigSym, sigSine, sigTriangle, fadeTriangle, sigSawtooth, sig1, sig2;
+
+			scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
 
 			// Pulse
-			//var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
-			var sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
-			// PulseDPW
+			//sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
+			//sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
+			sigPulse=PulseDPW.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); // sin alias y sin distorsión (forma parte de SC extended)
 
 			// Sine
-			var sigSym = SinOsc.ar(scaledFreq).abs * sineSymmetry * sineLevel;
-			var sigSine =
+			sigSym = SinOsc.ar(scaledFreq).abs * sineSymmetry * sineLevel;
+			sigSine =
 			(sigSym + SinOsc.ar(scaledFreq, 0, (1-sineSymmetry.abs) * sineLevel));
 
 			// Triangle
-			var sigTriangle = LFTri.ar(scaledFreq, 0, triangleLevel);
+			//sigTriangle = LFTri.ar(scaledFreq, 0, triangleLevel);
+			// Truco para evitar aliasing. A partir de 600Hz se convierte el triangulo en seno (sin aliasing)
+			fadeTriangle = linlin(scaledFreq, 6000, 12000, 1, 0);
+			sigTriangle = LFTri.ar(scaledFreq, mul: triangleLevel * fadeTriangle);
+			sigTriangle = sigTriangle + SinOsc.ar(scaledFreq, mul: triangleLevel * (1 - fadeTriangle));
 
 			// Sawtooth
-			var sigSawtooth = Saw.ar(scaledFreq, sawtoothLevel);
+			//sigSawtooth = Saw.ar(scaledFreq, sawtoothLevel);
+			sigSawtooth = SawDPW.ar(scaledFreq, mul: sawtoothLevel); // sin alias y sin distorsión (forma parte de SC extended)
 
 			// Suma de señales
-			var sig1 = sigSine + sigSawtooth;
-			var sig2 = sigPulse + sigTriangle;
+			sig1 = sigSine + sigSawtooth;
+			sig2 = sigPulse + sigTriangle;
 
 			Out.ar(outputBus1, sig1 * outVol);
 			Out.ar(outputBus2, sig2 * outVol);

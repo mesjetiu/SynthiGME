@@ -1,4 +1,4 @@
-LQuarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
+Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
 Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
 
 Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
@@ -31,7 +31,6 @@ o.setParameterOSC("/out/2/level", 5);
 o.setParameterOSC("/out/1/on", 1);
 o.setParameterOSC("/out/2/on", 1);
 )
-
 
 
 
@@ -117,13 +116,88 @@ OSCFunc.trace(true, true)
 {
 	var freq, sig;
 	freq = MouseX.kr(20,20000).poll;
-	//freq = 8000;
+	//freq = 1000;
 	sig = LFTri.ar(freq, mul: 0.2
-		* lincurve(freq, 2000, 12000,1,0, -10).poll)!2;
+		* linlin(freq, 6000, 12000,1,0).poll)!2;
 	sig = sig + SinOsc.ar(freq, mul: 0.2
-		* lincurve(freq, 2000, 12000,0,1,-10).poll)!2
+		* linlin(freq, 6000, 12000,0,1).poll)!2
 }.play;
 )
 
+(
+{
+	var freq, sig;
+	freq = MouseX.kr(20,20000).poll;
+	//freq = 1000;
+	sig = LFTri.ar(freq, mul: 0.2
+		* linlin(freq, 6000, 12000,1,0).poll)!2;
+	sig = sig + DPW3Tri.ar(freq, mul: 0.2
+		* linlin(freq, 6000, 12000,0,1).poll)!2
+}.play;
+)
+DPW3Tri
 
-GUI
+
+// Pulse
+//var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
+var sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
+// PulseDPW
+
+
+(
+{
+	var freq, amp = 0.2, sig = 0;
+	freq = MouseX.kr(20,20000).poll;
+	freq = 1000;
+	//sig = Pulse.ar(freq, mul: 0.2)!2;
+	sig = sig + LFPulse.ar(freq, mul: 0.2, add: -1*(amp/2))!2;
+}.plot;
+)
+
+
+// Muy buen Pulse!!! sin aliasing y sin distorsión en LF
+(
+{
+	var freq, sig;
+	freq = MouseX.kr(2,20000).poll;
+	freq = 1000;
+	sig = PulseDPW.ar(freq, mul: 0.2)!2;
+}.plot;
+)
+
+
+(
+{
+	var freq, sig;
+	freq = MouseX.kr(2,20000).poll;
+	//freq = 10;
+	sig = SawDPW.ar(freq, mul: 0.2)!2;
+}.play //.plot(0.5);
+)
+
+(
+{
+	var freq, sig = 0, amp = 0.2;
+	freq = MouseX.kr(5,5000).poll;
+	//freq = 100.568;
+	sig = (LFPulse.ar(freq, mul: amp, add: (-1*(amp/2))) * linlin(freq, 100, 100.0,1,0).poll)!2;
+	sig = sig + Pulse.ar(freq, mul: amp
+		* linlin(freq, 100, 100.001,0,1).poll)!2;
+	sig = sig/2;
+}.play;
+)
+
+Server.local.options.sampleRate = 192000
+Server.local.options.sampleRate
+
+(
+{
+	var freq, sig;
+	freq = MouseX.kr(20,20000).poll;
+	//freq = 1000;
+	sig = SinOsc.ar(freq, mul: 0.2
+		* linlin(freq, 800, 10000,1,0).poll)!2;
+	sig = sig + SinOsc.ar(freq, mul: 0.1
+		* linlin(freq, 800, 10000,0,1).poll)!2
+}.play;
+)
