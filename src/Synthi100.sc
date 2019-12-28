@@ -205,44 +205,42 @@ Synthi100 {
 	// Envía el estado de todo el Synthi por OSC
 	// Para mejorarlo sería bueno mandar un bundle.
 	sendStateOSC {
-		/*		// Buscando cómo enviar un bundle con todos los mensajes OSC juntos...
-
-		var bundle = List.new;
-		14.do({|i|
-		6.do({|j|
-		var string = "/patchATouchOSC/" ++ (i + 1) ++ "/" ++ (j + 1);
-		bundle.add(string);
-		bundle.add(0);
-		})
-		});
-
-		this.getState.do({|msg|
-		bundle.add(msg[0]);
-		bundle.add(msg[1]);
-		});
-
-		netAddr.do({|i| i.sendBundle(nil, bundle.asArray).postln});
-
-		*/
-
+		var lapTime = 0.0001;
 		Routine({
 			// ponemos los pines de Pathbay de audio a 0
-			var numVer = 14;
-			var numHor = 6;
-			numVer.do({|i|
-				numHor.do({|j|
-					var string = "/patchATouchOSC/" ++ (i + 1) ++ "/" ++ (j + 1);
-					netAddr.do({|i| i.sendMsg(string, 0)});
-					wait(0.03);
+			var numVer = 16;
+			var numHor = 16;
+
+			var strings = [
+				"/patchATouchOSCA1a",
+				"/patchATouchOSCA1b",
+				"/patchATouchOSCA2a",
+				"/patchATouchOSCA2b",
+				"/patchATouchOSCB2a",
+				"/patchATouchOSCB2b",
+				"/patchATouchOSCC2a",
+				"/patchATouchOSCC2b",
+			];
+
+			strings.do({|string|
+				numVer.do({|i|
+					numHor.do({|j|
+						strings.do({|string|
+							string = string ++ "/" ++ (i + 1) ++ "/" ++ (j + 1);
+							netAddr.do({|i| i.sendMsg(string, 0)});
+							wait(lapTime);
+						})
+					});
+				});
+
+				// enviamos valores iniciales por OSC a dispositivos
+				this.getState.do({|msg|
+					wait(lapTime);
+					netAddr.do({|i| i.sendMsg(msg[0], msg[1])})
 				})
 			});
-			this.getState.do({|msg|
-				wait(0.03);
-				netAddr.do({|i| i.sendMsg(msg[0], msg[1])})
-			})
+			"Dispositivos comunicados por OSC preparados OK".postln;
 		}).play;
-
-
 	}
 
 	// Setters de la clase
@@ -311,35 +309,6 @@ Synthi100 {
 				hor = splitted[1].asInt + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 			},
-
-
-			// Mensaje DE PRUEBAS para TouchOSC con 3 osciladores
-			"patchATouchOSC", { // Patchbay de Audio desde TouchOSC, cuyo origen de coordenadas es izquierda abajo. Orden: horizontal y vertical (como un sistema normal de coordenadas)
-				var x, y;
-				var translation = Dictionary.new;
-				// Los tres primeros osciladores:
-				translation.put(1, 96);
-				translation.put(2, 95);
-				translation.put(3, 94);
-				translation.put(4, 93);
-				translation.put(5, 92);
-				translation.put(6, 91);
-				// Los cuatro primeros outputs channels:
-				translation.put(7, 78);
-				translation.put(8, 77);
-				translation.put(9, 76);
-				translation.put(10, 75);
-				// Los cuatro primeros inputs de los amplificadores (outputs channels):
-				translation.put(11, 70);
-				translation.put(12, 69);
-				translation.put(13, 68);
-				translation.put(14, 67);
-				2.do({splitted.removeAt(0)});
-				y = translation[splitted[0].asInt];
-				x = splitted[1].asInt + 35;
-
-				modulPatchbayAudio.administrateNode(y, x, value);
-			},
 			"out", { // Ejemplo "/out/1/level"
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
@@ -389,30 +358,7 @@ Synthi100 {
 			data.add("/patchA/" ++ ver ++ "/" ++ hor);
 		});
 
-		// Patchbay Audio (Para pruebas con TouchOSC):
-		modulPatchbayAudio.nodeSynths.do({|node|
-			var ver = node[\coordenates][0];
-			var hor = node[\coordenates][1];
-			var translation = Dictionary.new;
-			// Los tres primeros osciladores:
-			translation.put(96, 1);
-			translation.put(95, 2);
-			translation.put(94, 3);
-			translation.put(93, 4);
-			translation.put(92, 5);
-			translation.put(91, 6);
-			// Los cuatro primeros outputs channels:
-			translation.put(78, 7);
-			translation.put(77, 8);
-			translation.put(76, 9);
-			translation.put(75, 10);
-			// Los cuatro primeros inputs de los amplificadores (outputs channels):
-			translation.put(70, 11);
-			translation.put(69, 12);
-			translation.put(68, 13);
-			translation.put(67, 14);
-			data.add("/patchATouchOSC/" ++ translation[ver] ++ "/" ++ hor-35);
-		});
+		// Implementar Patchbay Audio (Para TouchOSC)
 
 		^data;
 	}
