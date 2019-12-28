@@ -57,8 +57,8 @@ S100_Oscillator {
 
 			// Pulse
 			//sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
-			//sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
-			sigPulse=PulseDPW.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); // sin alias y sin distorsión (forma parte de SC extended)
+			sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
+			//sigPulse=PulseDPW.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); // sin alias y sin distorsión (forma parte de SC extended)
 
 			// Sine
 			sigSym = SinOsc.ar(scaledFreq).abs * sineSymmetry * sineLevel;
