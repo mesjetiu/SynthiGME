@@ -8,11 +8,7 @@ Synthi100 {
 	var <modulPatchbayAudio;
 	var <connectionOut = nil;
 
-	// Buses internos de entrada y salida:
-	var <audioInBuses;
-	var <audioOutBuses;
-
-	// Buses externos de entrada y salida:
+	// Buses externos de salida de sterio mezclado:
 	var <stereoOutBuses;
 
 	// Array que almacena los dispositivos OSC con los que se comunica Synthi100
@@ -21,9 +17,6 @@ Synthi100 {
 	classvar functionOSC = nil;
 	// Puerto por defecto de envío de mensajes OSC (por defecto en TouchOSC)
 	var devicePort;
-
-	// Estado del Synthi100. Para evitar volver a crear Synths una vez en ejecución
-	var play = false;
 
 	var <generalVol;
 
@@ -41,9 +34,8 @@ Synthi100 {
 	}
 
 	*new {
-		arg server = Server.local,
-		stereoBuses = [0,1]; // por defecto los canales izquierdo y derecho del sistema
-		^super.new.init(server, stereoBuses);
+		arg server = Server.local; // por defecto los canales izquierdo y derecho del sistema
+		^super.new.init(server);
 	}
 
 
@@ -56,17 +48,17 @@ Synthi100 {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, stereoBuses|
+	init {|serv|
 
 		// Carga la configuración
-		this.setSettings;
+		var settings = S100_Settings.get;
+
+		generalVol = settings[\generalVol];
+		devicePort = settings[\OSCDevicePort];
 
 		server = serv;
 
-		// Buses de audio de entrada y salida
-		audioInBuses = 8.collect({Bus.audio(server, 1)});
-		audioOutBuses = 8.collect({Bus.audio(server, 1)});
-		stereoOutBuses = stereoBuses;
+		stereoOutBuses = [0,1]; // mezcla stereo de los 8 canales de salida.
 
 		// Módulos
 		modulOscillators = 9.collect({S100_Oscillator(serv)}); // 9 osciladores generadores de señal de audio
@@ -86,13 +78,41 @@ Synthi100 {
 	// Métodos de instancia /////////////////////////////////////////////////////////////////////////
 
 	run {
-		if (play == true,
-			{("Create a new instance of " ++ this.class).postln; ^this}, // si true...
-			{server.waitForBoot({ // si false...
-				var waitTime = 0.001;
-				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
+		var waitTime = 0.001;
+		2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
+		if (connectionOut != nil, {"Synthi100 en ejecución".error; ^this});
 
+
+		Routine({
+
+			while({server == nil}, {wait(waitTime)});
+			// Nos aseguramos de que el número de canales de entrada y salida son los correctos
+			if (or (server.options.numOutputBusChannels != 18,
+				server.options.numInputBusChannels != 16), {
+				"Número de canales de entrada y salida incorrectos".postln;
+				if (server.serverRunning, {
+					"Apagando servidor...".post;
+					server.quit;
+					wait(waitTime);
+					while({server.serverRunning}, {wait(waitTime)});
+					"OK".post;
+				"".postln;
+				});
+				"Estableciendo número correcto de canales de entrada y salida...".post;
+				server.options.numOutputBusChannels = 18;
+				while({server.options.numOutputBusChannels != 18}, {wait(waitTime)});
+				server.options.numInputBusChannels = 16;
+				while({server.options.numInputBusChannels != 16}, {wait(waitTime)});
+				"OK".post;
+				"".postln;
+			});
+
+			if(server.serverRunning == false, {"Arrancando servidor...".postln});
+			server.waitForBoot({
 				// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
+
+				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
+				"Conexión de salida stereo...".post;
 				connectionOut = modulOutputChannels.collect({|i|
 					var result = nil;
 					result = Synth(\connection, [
@@ -102,44 +122,50 @@ Synthi100 {
 						\outBusR, stereoOutBuses[1],
 						\vol, generalVol,
 					], server).register;
-					Routine({while({result.isPlaying == false}, {wait(waitTime)})}).play;
-					result;
+					while({result.isPlaying == false}, {wait(waitTime)});
 				});
-				"Conexión de salida stereo OK".postln;
+				"OK".post;
+				"".postln;
 
 
 				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
 
 				// Output Channels
+				"Output Channels...".post;
 				modulOutputChannels.do({|i|
 					i.createSynth;
-					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
 				});
-				"Output Channels OK".postln;
+				"OK".post;
+				"".postln;
 
 				// Input Amplifier
+				"Input Amplifiers...".post;
 				modulInputAmplifiers.do({|i|
 					i.createSynth;
-					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
 				});
-				"Input Amplifiers OK".postln;
+				"OK".post;
+				"".postln;
 
 				// Oscillators
+				"Oscillators...".post;
 				modulOscillators.do({|i|
 					i.createSynth;
-					Routine({while({i.isPlaying == false}, {wait(waitTime)})}).play;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
 				});
-				"Osciladores OK".postln;
+				"OK".post;
+				"".postln;
 
 				// conecta cada entrada y salida de cada módulo en el patchbay de audio
+				"Conexiones en Patchbay de audio...".post;
 				modulPatchbayAudio.connect(modulOscillators, modulInputAmplifiers, modulOutputChannels);
-				"Patchbay de audio preparado OK".postln;
+				"OK".post;
+				"".postln;
 
-				play = true;
-
-				"Synthi100 running!!".postln;
+				"Synthi100 en ejecución".postln;
 			})
-		})
+		}).play;
 	}
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
@@ -361,14 +387,6 @@ Synthi100 {
 		// Implementar Patchbay Audio (Para TouchOSC)
 
 		^data;
-	}
-
-
-	// Carga la configuración
-	setSettings {
-		var settings = S100_Settings.get;
-		generalVol = settings[\generalVol];
-		devicePort = settings[\OSCDevicePort];
 	}
 }
 

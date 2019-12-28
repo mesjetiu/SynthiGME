@@ -14,6 +14,17 @@
 		\generalVol, 0.5,
 		\OSCDevicePort, 9000,
 
+		// Output Busses
+		\panOutputs1to4Busses, [2,3],
+		\panOutputs5to8Busses, [4,5],
+		\individualChannelOutputsBusses, [6,7,8,9,10,11,12,13],
+		\sendToDeviceBusses, [14,15,16,17],
+
+		// Input Busses
+		\returnFromDeviceBusses, [2,3,4,5],
+		\inputAmplifiersBusses, [6,7,8,9,1,11,12,13],
+		\micAmpBusses, [14,15],
+
 		// CONFIGURACIÓN DE OSCILADORES*************************************************************
 
 		\oscOutVol, 1,
