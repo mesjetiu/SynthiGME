@@ -283,6 +283,36 @@ Synthi100 {
 				2.do({splitted.removeAt(0)});
 				modulPatchbayAudio.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
 			},
+
+
+			// Patchbay de Audio de TouchOSC: A2
+			"patchATouchOSCA2a", {
+				var hor, ver;
+				2.do({splitted.removeAt(0)});
+				ver = 67 + (16-splitted[0].asInt);
+				hor = splitted[1].asInt + 32;
+				modulPatchbayAudio.administrateNode(ver, hor, value);
+			},
+
+			// Patchbay de Audio de TouchOSC: B2
+			"patchATouchOSCB2a", {
+				var hor, ver;
+				2.do({splitted.removeAt(0)});
+				ver = 83 + (16-splitted[0].asInt);
+				hor = splitted[1].asInt + 32;
+				modulPatchbayAudio.administrateNode(ver, hor, value);
+			},
+
+			// Patchbay de Audio de TouchOSC: C2
+			"patchATouchOSCC2a", {
+				var hor, ver;
+				2.do({splitted.removeAt(0)});
+				ver = 99 + (16-splitted[0].asInt);
+				hor = splitted[1].asInt + 32;
+				modulPatchbayAudio.administrateNode(ver, hor, value);
+			},
+
+
 			// Mensaje DE PRUEBAS para TouchOSC con 3 osciladores
 			"patchATouchOSC", { // Patchbay de Audio desde TouchOSC, cuyo origen de coordenadas es izquierda abajo. Orden: horizontal y vertical (como un sistema normal de coordenadas)
 				var x, y;
