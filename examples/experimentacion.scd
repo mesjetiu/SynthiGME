@@ -32,7 +32,8 @@ o.setParameterOSC("/out/1/on", 1);
 o.setParameterOSC("/out/2/on", 1);
 )
 
-
+o.setParameterOSC("/osc/1/pulse/level", 4);
+o.setParameterOSC("/osc/1/pulse/shape", 10);
 
 
 o.setParameterOSC("/osc/1/range", 1)
@@ -105,7 +106,7 @@ o.setParameterOSC("/osc/1/frequency", 7);
 o.setParameterOSC("/out/1/level", 1);
 o.setParameterOSC("/out/2/level", 1);
 
-OSCFunc.trace(true, true)
+OSCFunc.trace(false, true)
 
 
 
@@ -160,10 +161,26 @@ var sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //s
 {
 	var freq, sig;
 	freq = MouseX.kr(2,20000).poll;
-	freq = 1000;
+	freq = 100;
 	sig = PulseDPW.ar(freq, mul: 0.2)!2;
-}.plot;
+}.play;
 )
+
+
+(
+SynthDef(\pulso, {arg width=0.5, freq = 100;
+	var sig;
+	sig = PulseDPW.ar(freq, mul: 0.2, width: width)!2;
+	Out.ar(0, sig);
+}).add;
+)
+a = Synth(\pulso)
+
+
+a.set(\width, 0.1)
+a.set(\freq, 200)
+
+
 
 
 (
@@ -180,9 +197,9 @@ var sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //s
 	var freq, sig = 0, amp = 0.2;
 	freq = MouseX.kr(5,5000).poll;
 	//freq = 100.568;
-	sig = (LFPulse.ar(freq, mul: amp, add: (-1*(amp/2))) * linlin(freq, 100, 100.0,1,0).poll)!2;
+	sig = (LFPulse.ar(freq, mul: amp, add: (-1*(amp/2))) * linlin(freq, 100, 1000,1,0).poll)!2;
 	sig = sig + Pulse.ar(freq, mul: amp
-		* linlin(freq, 100, 100.001,0,1).poll)!2;
+		* linlin(freq, 100, 1000,0,1).poll)!2;
 	sig = sig/2;
 }.play;
 )
