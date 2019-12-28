@@ -53,7 +53,7 @@ S100_PatchbayAudio {
 
 		// Inputs horizontales (1-66) /////////////////////////////////////////////////////////////
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
-		inputAmplifiers.do({|i|
+		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\synth, i.synth,
 				\inBus, i.inputBus,

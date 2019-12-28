@@ -26,15 +26,16 @@ S100_OutputChannel {
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
-	*new { |server, inBus|
+	*new { |server|
 		settings = S100_Settings.get;
-		^super.new.init(server, inBus);
+		^super.new.init(server);
 	}
 
 	*addSynthDef {
 		lag = S100_Settings.get[\outLag];
 		SynthDef(\S100_outputChannel, {
 			arg inputBus,
+			inFeedbackBus,
 			outputBus,
 			outBusL,
 			outBusR,
@@ -43,9 +44,10 @@ S100_OutputChannel {
 			pan, // entre -1 y 1
 			level; // entre 0 y 1
 
-			var sigIn, sig, sigPannedR, sigPannedL;
+			var sigIn, sigInFeedback, sig, sigPannedR, sigPannedL;
 
 			sigIn = In.ar(inputBus);
+			sigIn = sigIn + InFeedback.ar(inFeedbackBus);
 
 			// Se realiza el filtrado
 			sig = HPF.ar(sigIn, freqHP);
@@ -67,9 +69,9 @@ S100_OutputChannel {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init { arg serv = Server.local, inBus;
+	init { arg serv = Server.local;
 		server = serv;
-		inputBus = inBus;
+		inputBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
@@ -84,6 +86,7 @@ S100_OutputChannel {
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_outputChannel, [
 				\inputBus, inputBus,
+				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
 				\outBusL, outBusL,
 				\outBusR, outBusR,

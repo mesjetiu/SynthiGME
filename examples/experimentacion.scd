@@ -25,12 +25,17 @@ o.setParameterOSC("/patchA/96/41", 1); // salida de osc3 a output6
 o.setParameterOSC("/osc/1/triangle/level", 5);
 o.setParameterOSC("/osc/1/sawtooth/level", 4);
 
+
+)
+
 o.setParameterOSC("/out/1/level", 5);
 o.setParameterOSC("/out/2/level", 5);
 
 o.setParameterOSC("/out/1/on", 1);
 o.setParameterOSC("/out/2/on", 1);
-)
+
+
+
 
 o.setParameterOSC("/osc/1/pulse/level", 4);
 o.setParameterOSC("/osc/1/pulse/shape", 10);
