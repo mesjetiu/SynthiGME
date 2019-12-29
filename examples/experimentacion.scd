@@ -5,10 +5,10 @@ Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
 
 Quarks.clear
 
-
+[1,2].add(3)
 
 s.options.numOutputBusChannels = 10
-o = Synthi100().run(standalone: true)
+o = Synthi100().run(standalone: false).pairDevice
 o.setGeneralVol(0.7)
 o.run
 o = Synthi100().run.pairDevice;
@@ -62,7 +62,7 @@ o.setParameterOSC("/out/2/filter", 5);
 o.setParameterOSC("/out/1/pan", 0);
 o.setParameterOSC("/out/2/pan", 10);
 )
-
+Mix
 
 (
 o.setParameterOSC("/patchA/91/36", 0); // salida de osc1 a output1

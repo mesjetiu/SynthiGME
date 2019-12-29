@@ -42,7 +42,8 @@ S100_OutputChannel {
 			freqHP,
 			freqLP,
 			pan, // entre -1 y 1
-			level; // entre 0 y 1
+			level, // entre 0 y 1
+			on;
 
 			var sigIn, sigInFeedback, sig, sigPannedR, sigPannedL;
 
@@ -54,7 +55,7 @@ S100_OutputChannel {
 			sig = LPF.ar(sig, freqLP);
 
 			// Se aplica el nivel (level)
-			sig = sig * level;
+			sig = sig * level * on;
 
 			// Se aplica el paneo
 			#sigPannedL, sigPannedR = Pan2.ar(sig, pan);
@@ -62,7 +63,7 @@ S100_OutputChannel {
 			Out.ar(outputBus, sig);
 			Out.ar(outBusL, sigPannedL);
 			Out.ar(outBusR, sigPannedR);
-		}, [nil, nil, nil, nil, lag, lag, lag, lag, nil]
+		}, [nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]
 		).add
 	}
 
@@ -94,6 +95,7 @@ S100_OutputChannel {
 				\freqLP, this.convertFilter(filter)[1],
 				\pan, this.convertPan(pan),
 				\level, this.convertLevel(level),
+				\on, on,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
 		this.synthRun;
@@ -164,6 +166,7 @@ S100_OutputChannel {
 	setOn {|value|
 		if((value == 0).or(value == 1), {
 			on = value;
+			synth.set(\on, on);
 			this.synthRun();
 		}, {
 			("S100_OutputChannel/setOn: " + value + " no es un valor de 0 o 1").postln});

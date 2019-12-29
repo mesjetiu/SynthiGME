@@ -44,7 +44,7 @@
 
 		// CONFIGURACIÓN DE CANALES DE SALIDA*******************************************************
 
-		\outLag, 0.5,
+		\outLag, 0.1,
 		\outLevelMax, 1,
 		\outHPFreqMin, 10,
 		\outHPFreqMax, 1000,
