@@ -5,7 +5,10 @@ Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
 
 Quarks.clear
 
-o = Synthi100().run
+
+
+s.options.numOutputBusChannels = 10
+o = Synthi100().run(standalone: true)
 o.setGeneralVol(0.7)
 o.run
 o = Synthi100().run.pairDevice;
@@ -26,16 +29,23 @@ o.setParameterOSC("/osc/1/triangle/level", 5);
 o.setParameterOSC("/osc/1/sawtooth/level", 4);
 
 
-)
-
 o.setParameterOSC("/out/1/level", 5);
 o.setParameterOSC("/out/2/level", 5);
 
 o.setParameterOSC("/out/1/on", 1);
 o.setParameterOSC("/out/2/on", 1);
+)
+"".postln
+b = Server(\myserver)
+b.boot
 
 
+ServerOptions
+s.options.device = nil
 
+s.serverRunning
+Server.local.serverRunning
+s.options.numOutputBusChannels = 10
 
 o.setParameterOSC("/osc/1/pulse/level", 4);
 o.setParameterOSC("/osc/1/pulse/shape", 10);
@@ -173,20 +183,24 @@ var sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //s
 
 
 (
-SynthDef(\pulso, {arg width=0.5, freq = 100;
+SynthDef(\pulso, {arg freq = 100, bus;
 	var sig;
-	sig = PulseDPW.ar(freq, mul: 0.2, width: width)!2;
-	Out.ar(0, sig);
+	sig = SinOsc.ar(freq, mul: 0.2)!2;
+	Out.ar(bus, sig);
 }).add;
 )
 a = Synth(\pulso)
 
 
-a.set(\width, 0.1)
+a.set(\bus, 0)
 a.set(\freq, 200)
 
 
 
+Server.quitAll
+Server.all.do({|i| i.serverRunning.postln})
+
+s.quit
 
 (
 {
@@ -223,3 +237,9 @@ Server.local.options.sampleRate
 		* linlin(freq, 800, 10000,0,1).poll)!2
 }.play;
 )
+
+
+
+
+
+

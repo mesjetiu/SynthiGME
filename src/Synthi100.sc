@@ -8,8 +8,16 @@ Synthi100 {
 	var <modulPatchbayAudio;
 	var <connectionOut = nil;
 
-	// Buses externos de salida de sterio mezclado:
+	// Puertos externos de entrada y salida
 	var <stereoOutBuses;
+	var <panOutputs1to4Busses;
+	var <panOutputs5to8Busses;
+	var <individualChannelOutputsBusses;
+	var <sendToDeviceBusses;
+
+	var <returnFromDeviceBusses;
+	var <inputAmplifiersBusses;
+	var <micAmpBusses;
 
 	// Array que almacena los dispositivos OSC con los que se comunica Synthi100
 	var <netAddr;
@@ -77,34 +85,34 @@ Synthi100 {
 
 	// Métodos de instancia /////////////////////////////////////////////////////////////////////////
 
-	run {
+	run { arg standalone = false;
 		var waitTime = 0.001;
 		2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
 		if (connectionOut != nil, {"Synthi100 en ejecución".error; ^this});
 
-
 		Routine({
-
 			while({server == nil}, {wait(waitTime)});
 			// Nos aseguramos de que el número de canales de entrada y salida son los correctos
-			if (or (server.options.numOutputBusChannels != 18,
-				server.options.numInputBusChannels != 16), {
-				"Número de canales de entrada y salida incorrectos".postln;
-				if (server.serverRunning, {
-					"Apagando servidor...".post;
-					server.quit;
-					wait(waitTime);
-					while({server.serverRunning}, {wait(waitTime)});
+			if (standalone == true, {
+				if (or (server.options.numOutputBusChannels != 18,
+					server.options.numInputBusChannels != 16), {
+					"Número de canales de entrada y salida incorrectos".postln;
+					if (server.serverRunning, {
+						"Apagando servidor...".post;
+						server.quit;
+						wait(waitTime);
+						while({server.serverRunning}, {wait(waitTime)});
+						"OK".post;
+						"".postln;
+					});
+					"Estableciendo número correcto de canales de entrada y salida...".post;
+					server.options.numOutputBusChannels = 18;
+					while({server.options.numOutputBusChannels != 18}, {wait(waitTime)});
+					server.options.numInputBusChannels = 16;
+					while({server.options.numInputBusChannels != 16}, {wait(waitTime)});
 					"OK".post;
-				"".postln;
+					"".postln;
 				});
-				"Estableciendo número correcto de canales de entrada y salida...".post;
-				server.options.numOutputBusChannels = 18;
-				while({server.options.numOutputBusChannels != 18}, {wait(waitTime)});
-				server.options.numInputBusChannels = 16;
-				while({server.options.numInputBusChannels != 16}, {wait(waitTime)});
-				"OK".post;
-				"".postln;
 			});
 
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
