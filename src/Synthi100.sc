@@ -116,63 +116,64 @@ Synthi100 {
 			});
 
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
-			server.waitForBoot({
-				// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
+			server.boot;
+			while({server.serverRunning == false}, {wait(waitTime)});
 
-				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
-				"Conexión de salida stereo...".post;
-				connectionOut = modulOutputChannels.collect({|i|
-					var result = nil;
-					result = Synth(\connection, [
-						\inBusL, i.outBusL,
-						\inBusR, i.outBusR,
-						\outBusL, stereoOutBuses[0],
-						\outBusR, stereoOutBuses[1],
-						\vol, generalVol,
-					], server).register;
-					while({result.isPlaying == false}, {wait(waitTime)});
-				});
-				"OK".post;
-				"".postln;
+			wait(0.3);
+			// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
+			2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
+			"Conexión de salida stereo...".post;
+			connectionOut = modulOutputChannels.collect({|i|
+				var result = nil;
+				result = Synth(\connection, [
+					\inBusL, i.outBusL,
+					\inBusR, i.outBusR,
+					\outBusL, stereoOutBuses[0],
+					\outBusR, stereoOutBuses[1],
+					\vol, generalVol,
+				], server).register;
+				while({result.isPlaying == false}, {wait(waitTime)});
+			});
+			"OK".post;
+			"".postln;
 
 
-				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
+			// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
 
-				// Output Channels
-				"Output Channels...".post;
-				modulOutputChannels.do({|i|
-					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
-				});
-				"OK".post;
-				"".postln;
+			// Output Channels
+			"Output Channels...".post;
+			modulOutputChannels.do({|i|
+				i.createSynth;
+				while({i.synth.isPlaying == false}, {wait(waitTime)});
+			});
+			"OK".post;
+			"".postln;
 
-				// Input Amplifier
-				"Input Amplifiers...".post;
-				modulInputAmplifiers.do({|i|
-					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
-				});
-				"OK".post;
-				"".postln;
+			// Input Amplifier
+			"Input Amplifiers...".post;
+			modulInputAmplifiers.do({|i|
+				i.createSynth;
+				while({i.synth.isPlaying == false}, {wait(waitTime)});
+			});
+			"OK".post;
+			"".postln;
 
-				// Oscillators
-				"Oscillators...".post;
-				modulOscillators.do({|i|
-					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
-				});
-				"OK".post;
-				"".postln;
+			// Oscillators
+			"Oscillators...".post;
+			modulOscillators.do({|i|
+				i.createSynth;
+				while({i.synth.isPlaying == false}, {wait(waitTime)});
+			});
+			"OK".post;
+			"".postln;
 
-				// conecta cada entrada y salida de cada módulo en el patchbay de audio
-				"Conexiones en Patchbay de audio...".post;
-				modulPatchbayAudio.connect(modulOscillators, modulInputAmplifiers, modulOutputChannels);
-				"OK".post;
-				"".postln;
+			// conecta cada entrada y salida de cada módulo en el patchbay de audio
+			"Conexiones en Patchbay de audio...".post;
+			modulPatchbayAudio.connect(modulOscillators, modulInputAmplifiers, modulOutputChannels);
+			"OK".post;
+			"".postln;
 
-				"Synthi100 en ejecución".postln;
-			})
+			"Synthi100 en ejecución".postln;
 		}).play;
 	}
 
