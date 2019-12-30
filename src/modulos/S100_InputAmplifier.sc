@@ -8,7 +8,7 @@ S100_InputAmplifier {
 	var <outputBus; // Salida del amplificador.
 
 	// Parámetros correspondientes a los mandos del Synthi (todos escalados entre 0 y 10)
-	var <level = 0;
+	var <level = 1;
 
 
 	// Otros atributos de instancia
@@ -47,7 +47,7 @@ S100_InputAmplifier {
 
 	init { arg serv = Server.local;
 		server = serv;
-		inputBus = Bus.audio(server);
+		inputBus = 8.collect({Bus.audio(server)});
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
 			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.

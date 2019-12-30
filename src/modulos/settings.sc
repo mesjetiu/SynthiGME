@@ -22,7 +22,7 @@
 
 		// Input Busses (solo si se elige la opción "standalone")
 		\returnFromDeviceBusses, [2,3,4,5],
-		\inputAmplifiersBusses, [6,7,8,9,1,11,12,13],
+		\inputAmplifiersBusses, [6,7,8,9,10,11,12,13],
 		\micAmpBusses, [14,15],
 
 		// CONFIGURACIÓN DE OSCILADORES*************************************************************

@@ -7,15 +7,15 @@ Quarks.clear
 
 [1,2].add(3)
 
-s.options.numOutputBusChannels = 10
+s.options.numOutputBusChannels != 18
 
-
+or(false, true)
 
 
 o = Synthi100(standalone: true).run().pairDevice
 
 
-
+OSCFunc.trace(false)
 
 o.setGeneralVol(0.7)
 o.run
@@ -53,8 +53,9 @@ s.options.device = nil
 
 s.serverRunning
 Server.local.serverRunning
-s.options.numOutputBusChannels = 10
-
+s.options.numOutputBusChannels
+a = Bus.audio
+a
 o.setParameterOSC("/osc/1/pulse/level", 4);
 o.setParameterOSC("/osc/1/pulse/shape", 10);
 
@@ -129,7 +130,7 @@ o.setParameterOSC("/osc/1/frequency", 7);
 o.setParameterOSC("/out/1/level", 1);
 o.setParameterOSC("/out/2/level", 1);
 
-OSCFunc.trace(false, true)
+OSCFunc.trace(true)
 
 
 
