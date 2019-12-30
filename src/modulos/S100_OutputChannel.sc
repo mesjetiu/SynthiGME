@@ -48,7 +48,7 @@ S100_OutputChannel {
 			var sigIn, sigInFeedback, sig, sigPannedR, sigPannedL;
 
 			sigIn = In.ar(inputBus);
-			sigIn = sigIn + InFeedback.ar(inFeedbackBus);
+			sigIn = sigIn;// + InFeedback.ar(inFeedbackBus);
 
 			// Se realiza el filtrado
 			sig = HPF.ar(sigIn, freqHP);
@@ -72,8 +72,9 @@ S100_OutputChannel {
 
 	init { arg serv = Server.local;
 		server = serv;
-		inputBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
+		inputBus = Bus.audio(server);
+		inFeedbackBus = Bus.audio(server);
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
 		pauseRoutine = Routine({

@@ -29,6 +29,8 @@ Synthi100 {
 	var <generalVol;
 	var <standalone = false;
 
+	classvar settings;
+
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -71,23 +73,13 @@ Synthi100 {
 	init {|serv, standal|
 
 		// Carga la configuración
-		var settings = S100_Settings.get;
+		settings = S100_Settings.get;
 
 		generalVol = settings[\generalVol];
 		devicePort = settings[\OSCDevicePort];
 
 		server = serv;
 		standalone = standal;
-
-		stereoOutBuses =  [0,1]; // 2.collect({Bus.audio(server)}); // mezcla stereo de los 8 canales de salida.
-		panOutputs1to4Busses = 2.collect({Bus.audio(server)});
-		panOutputs5to8Busses = 2.collect({Bus.audio(server)});
-
-		// Módulos
-		modulOscillators = 9.collect({S100_Oscillator(serv)}); // 9 osciladores generadores de señal de audio
-		modulInputAmplifiers = 8.collect({S100_InputAmplifier(serv)});
-		modulOutputChannels = 8.collect({|i| S100_OutputChannel(serv, modulInputAmplifiers[i].outputBus)});
-		modulPatchbayAudio = S100_PatchbayAudio(server);
 
 		// Se añaden al servidor las declaracines SynthDefs
 		Synthi100.addSynthDef;
@@ -102,13 +94,13 @@ Synthi100 {
 
 	run {
 		var waitTime = 0.001;
-		2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
 		if (connectionOut != nil, {"Synthi100 en ejecución".error; ^this});
 
 		Routine({
 			while({server == nil}, {wait(waitTime)});
+
 			// Nos aseguramos de que el número de canales de entrada y salida son los correctos
-			if (standalone == true, {
+			if (standalone == true, { // Modo "standalone": los buses de salida se conectan directamente a los puertos de SC.
 				if (or (server.options.numOutputBusChannels != 18,
 					server.options.numInputBusChannels != 16), {
 					"Número de canales de entrada y salida incorrectos".postln;
@@ -127,16 +119,32 @@ Synthi100 {
 					"OK\n".post;
 				});
 			});
+			stereoOutBuses =  [0,1];
 
+			if (standalone == true, {
+				panOutputs1to4Busses = settings[\panOutputs1to4Busses];
+				panOutputs5to8Busses = settings[\panOutputs5to8Busses];
+			}, {
+				panOutputs1to4Busses = 2.collect({Bus.audio(server)});
+				panOutputs5to8Busses = 2.collect({Bus.audio(server)});
+			});
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
 			server.boot;
 			while({server.serverRunning == false}, {wait(waitTime)});
+
+			// Módulos
+			modulOscillators = 9.collect({S100_Oscillator(server)}); // 9 osciladores generadores de señal de audio
+			modulInputAmplifiers = 8.collect({S100_InputAmplifier(server)});
+			modulOutputChannels = 8.collect({|i| S100_OutputChannel(server, modulInputAmplifiers[i].outputBus)});
+			modulPatchbayAudio = S100_PatchbayAudio(server);
+
 
 			wait(0.3);
 			// Se conectan las salidas de los canales de salida a los dos primeros buses de salida especificados en stereoOutBuses
 			2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
 
 			"Conexión de salida stereo canales 1 a 8...".post;
+			connectionOut = [];
 			connectionOut.add({
 				var result = nil;
 				result = Synth(\connection2, [
@@ -144,8 +152,8 @@ Synthi100 {
 					\inBusR1, panOutputs1to4Busses[1],
 					\inBusL2, panOutputs5to8Busses[0],
 					\inBusR2, panOutputs5to8Busses[1],
-					\outBusL, 0, //stereoOutBuses[0],
-					\outBusR, 1, //stereoOutBuses[1],
+					\outBusL, stereoOutBuses[0],
+					\outBusR, stereoOutBuses[1],
 					\vol, 1,
 				], server).register;
 				result
@@ -154,7 +162,6 @@ Synthi100 {
 			"OK\n".post;
 
 			"Conexión de salida stereo canales 1 a 4...".post;
-			connectionOut = [];
 			connectionOut.add({
 				var result = nil;
 				var channels = modulOutputChannels[0..3];
@@ -456,7 +463,6 @@ Synthi100 {
 					"level", {modulOutputChannels[index].setLevel(value)},
 					"filter", {modulOutputChannels[index].setFilter(value)},
 					"on", {
-						modulInputAmplifiers[index].setOn(value);
 						modulOutputChannels[index].setOn(value)
 					},
 					"pan", {modulOutputChannels[index].setPan(value)},

@@ -71,7 +71,7 @@ S100_PatchbayAudio {
 			]);
 			index = index + 1;
 		});
-		index = 75; // Outputs de amplificador (Output channels) del 75-82
+		index = 75; // Output channels del 75-82
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\synth, i.synth,

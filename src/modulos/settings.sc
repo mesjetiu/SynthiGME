@@ -44,12 +44,17 @@
 
 		// CONFIGURACIÓN DE CANALES DE SALIDA*******************************************************
 
-		\outLag, 0.1,
+		\outLag, 0.2,
 		\outLevelMax, 1,
 		\outHPFreqMin, 10,
 		\outHPFreqMax, 1000,
 		\outLPFreqMin, 400,
 		\outLPFreqMax, 2000,
+
+		// CONFIGURACIÓN DE INPUT AMPLIFIERS********************************************************
+
+		\inputLag, 0.2,
+		\inputLevelMax, 1,
 
 
 

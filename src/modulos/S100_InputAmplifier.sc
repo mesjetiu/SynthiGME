@@ -6,15 +6,17 @@ S100_InputAmplifier {
 	var <server;
 	var <inputBus; // Entrada del amplificador.
 	var <outputBus; // Salida del amplificador.
-	var <inFeedbackBus; // Entrada de feedback: admite audio del ciclo anterior.
 
 	// Parámetros correspondientes a los mandos del Synthi (todos escalados entre 0 y 10)
-	var <on = 0; // 1 o 0. Activa y desactiva el canal.
+	var <level = 0;
 
 
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var outVol = 1;
+	var pauseRoutine; // Rutina de pausado del Synth
+	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
+	classvar settings;
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -24,18 +26,20 @@ S100_InputAmplifier {
 	}
 
 	*addSynthDef {
+		lag = S100_Settings.get[\inputLag];
 		SynthDef(\S100_inputAmplifier, {
 			arg inputBus,
-			inFeedbackBus,
 			outputBus,
+			level,
 			outVol;
 
 			var sig;
-			sig = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
-			sig = sig * outVol;
+			sig = In.ar(inputBus);
+			sig = sig * level * outVol;
 
 			Out.ar(outputBus, sig);
-		}).add
+		}, [nil, nil, lag, lag]
+		).add
 	}
 
 
@@ -44,8 +48,11 @@ S100_InputAmplifier {
 	init { arg serv = Server.local;
 		server = serv;
 		inputBus = Bus.audio(server);
-		inFeedbackBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
+		pauseRoutine = Routine({
+			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
+			synth.run(false);
+		});
 	}
 
 	// Crea el Synth en el servidor
@@ -53,8 +60,8 @@ S100_InputAmplifier {
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_inputAmplifier, [
 				\inputBus, inputBus,
-				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
+				\level, level,
 				\outVol, outVol,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
@@ -63,7 +70,7 @@ S100_InputAmplifier {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = on * outVol;
+		var outputTotal = outVol * level;
 		if (outputTotal == 0, {
 			running = false;
 			synth.run(false);
@@ -73,14 +80,21 @@ S100_InputAmplifier {
 		});
 	}
 
+	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
+
+	convertLevel {|level|
+		^level.linlin(0, 10, 0, settings[\inputLevelMax]);
+	}
 
 	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
 
-	setOn {|value|
-		if((value == 0).or(value == 1), {
-			on = value;
+
+	setLevel {|lev|
+		if((lev>=0).and(lev<=10), {
+			level = lev;
 			this.synthRun();
+			synth.set(\level, this.convertLevel(lev))
 		}, {
-			("S100_InputAmplifier/setOn: " + value + " no es un valor de 0 o 1").postln});
+			("S100_InputAmplifier/setLevel: " + lev + " no es un valor entre 0 y 1").postln});
 	}
 }

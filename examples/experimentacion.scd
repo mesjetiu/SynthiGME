@@ -8,7 +8,15 @@ Quarks.clear
 [1,2].add(3)
 
 s.options.numOutputBusChannels = 10
-o = Synthi100().run(standalone: false).pairDevice
+
+
+
+
+o = Synthi100(standalone: true).run().pairDevice
+
+
+
+
 o.setGeneralVol(0.7)
 o.run
 o = Synthi100().run.pairDevice;
@@ -239,7 +247,11 @@ Server.local.options.sampleRate
 )
 
 
+[1,2,3].sum
+
+a = [1,2,3,4]
+a[0..2]
 
 
-
+Mix.new([1,2,3]).postln
 
