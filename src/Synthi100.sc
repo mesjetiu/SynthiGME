@@ -313,18 +313,20 @@ Synthi100 {
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
 			// se ejecuta la orden recibida por mensaje.
-			this.setParameterOSC(msg[0].asString, msg[1]);
-			// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-			netAddr.do({|i|
-				if(addr.ip != i.ip, {
-					i.sendMsg(msg[0], msg[1])
-				})
-			})
+			this.setParameterOSC(msg[0].asString, msg[1], addr);
 		};
 		netAddr = NetAddr("255.255.255.255", devicePort);
 		thisProcess.addOSCRecvFunc(functionOSC);
 	}
 
+	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
+	sendBroadcastMsg{|msg, value, addrForbidden|
+		netAddr.do({|i|
+			if(addrForbidden.ip != i.ip, {
+				i.sendMsg(msg, value)
+			})
+		})
+	}
 
 	// Envía el estado de todo el Synthi por OSC
 	// Para mejorarlo sería bueno mandar un bundle.
@@ -380,7 +382,7 @@ Synthi100 {
 	}
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC
-	setParameterOSC {|string, value|
+	setParameterOSC {|string, value, addrForbidden|
 		var splitted = string.split($/);
 		switch (splitted[1],
 			"osc", { // Ejemplo: "/osc/1/pulse/level"
@@ -400,12 +402,15 @@ Synthi100 {
 					"sinesymmetry", {modulOscillators[index].setSineSymmetry(value)},
 					"trianglelevel", {modulOscillators[index].setTriangleLevel(value)},
 					"sawtoothlevel", {modulOscillators[index].setSawtoothLevel(value)}
-				)
-				//	modulOscillators[index].setParameter(parameter, value);
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 			"patchA", { // Ejemplo "/patchA/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horzontal
 				2.do({splitted.removeAt(0)});
 				modulPatchbayAudio.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
 
@@ -416,6 +421,8 @@ Synthi100 {
 				ver = 67 + (16-splitted[0].asInt);
 				hor = splitted[1].asInt + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
 			// Patchbay de Audio de TouchOSC: B2
@@ -425,6 +432,8 @@ Synthi100 {
 				ver = 83 + (16-splitted[0].asInt);
 				hor = splitted[1].asInt + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
 			// Patchbay de Audio de TouchOSC: C2
@@ -434,6 +443,8 @@ Synthi100 {
 				ver = 99 + (16-splitted[0].asInt);
 				hor = splitted[1].asInt + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
 			"out", { // Ejemplo "/out/1/level"
@@ -446,7 +457,9 @@ Synthi100 {
 						modulOutputChannels[index].setOn(value)
 					},
 					"pan", {modulOutputChannels[index].setPan(value)},
-				)
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
 			"in", { // Ejemplo "/in/1/level"
@@ -454,7 +467,9 @@ Synthi100 {
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0].postln,
 					"level", {modulInputAmplifiers[index].setLevel(value)},
-				)
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 		);
 	}
@@ -494,12 +509,12 @@ Synthi100 {
 		// Patchbay Audio:
 		// Implementar Patchbay Audio (Para TouchOSC)
 		// No funciona por ahora
-/*		modulPatchbayAudio.nodeSynths.do({|node|
-			var ver = node[\coordenates][0];
-			var hor = node[\coordenates][1];
-			data.add("/patchA/" ++ ver ++ "/" ++ hor);
+		/*		modulPatchbayAudio.nodeSynths.do({|node|
+		var ver = node[\coordenates][0];
+		var hor = node[\coordenates][1];
+		data.add("/patchA/" ++ ver ++ "/" ++ hor);
 		});
-*/
+		*/
 
 		^data;
 	}
