@@ -55,7 +55,7 @@ Synthi100 {
 	*addSynthDef {
 		SynthDef(\connectionInputAmplifier, {|outBus, inBus, vol|
 			var sig;
-			sig = AudioIn.ar(inBus);
+			sig = SoundIn.ar(inBus);
 			Out.ar(outBus, sig * vol);
 		}).add;
 
@@ -252,12 +252,10 @@ Synthi100 {
 			"OK\n".post;
 
 
-			// Por alguna extraña razón, no funciona.
-
 			inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
 			if (standalone == true, {
 				"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
-				inputAmplifiersBusses.postln;
+				inputAmplifiersBusses;
 				connectionIn = inputAmplifiersBusses.collect({|item, i|
 					var result = Synth(\connectionInputAmplifier, [
 						\inBus, settings[\inputAmplifiersBusses][i],
@@ -277,6 +275,7 @@ Synthi100 {
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	pairDevice {
 		var oscDevices = Dictionary.new;
+		var searchTime = 3;
 		NetAddr.broadcastFlag = true;
 		Routine({
 			var functionOSC = {|msg, time, addr, recvPort|
@@ -292,7 +291,7 @@ Synthi100 {
 			};
 			"Searching OSC devices...".postln;
 			thisProcess.addOSCRecvFunc(functionOSC);
-			wait(5);
+			wait(searchTime);
 			thisProcess.removeOSCRecvFunc(functionOSC);
 			("Found " ++ oscDevices.size ++ " devices:").postln;
 			oscDevices.do({|i| i.postln});
@@ -313,21 +312,14 @@ Synthi100 {
 		thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
-			if(
-				"/osc".matchRegexp(msg[0].asString).or({ // TODO: crear otro tipo de comprobación distinta de ver si el mensaje comienza por alguna de las palabras clave (pueden ser muchas).
-					"/out".matchRegexp(msg[0].asString).or({
-						"/patchATouchOSC".matchRegexp(msg[0].asString)
-					})
-				}), {
-					// se ejecuta la orden recibida por mensaje.
-					this.setParameterOSC(msg[0].asString, msg[1]);
-					// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-					netAddr.do({|i|
-						if(addr.ip != i.ip, {
-							i.sendMsg(msg[0], msg[1])
-						})
-					})
-			});
+			// se ejecuta la orden recibida por mensaje.
+			this.setParameterOSC(msg[0].asString, msg[1]);
+			// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+			netAddr.do({|i|
+				if(addr.ip != i.ip, {
+					i.sendMsg(msg[0], msg[1])
+				})
+			})
 		};
 		netAddr = NetAddr("255.255.255.255", devicePort);
 		thisProcess.addOSCRecvFunc(functionOSC);
@@ -339,11 +331,12 @@ Synthi100 {
 	sendStateOSC {
 		var lapTime = 0.0001;
 		Routine({
+			var numVer, numHor, strings;
 			// ponemos los pines de Pathbay de audio a 0
-			var numVer = 16;
-			var numHor = 16;
+			numVer = 16;
+			numHor = 16;
 
-			var strings = [
+			strings = [
 				"/patchATouchOSCA1a",
 				"/patchATouchOSCA1b",
 				"/patchATouchOSCA2a",
@@ -370,6 +363,7 @@ Synthi100 {
 					wait(lapTime);
 					netAddr.do({|i| i.sendMsg(msg[0], msg[1])})
 				})
+
 			});
 			"Dispositivos comunicados por OSC preparados OK".postln;
 		}).play;
@@ -441,6 +435,7 @@ Synthi100 {
 				hor = splitted[1].asInt + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 			},
+
 			"out", { // Ejemplo "/out/1/level"
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
@@ -451,6 +446,14 @@ Synthi100 {
 						modulOutputChannels[index].setOn(value)
 					},
 					"pan", {modulOutputChannels[index].setPan(value)},
+				)
+			},
+
+			"in", { // Ejemplo "/in/1/level"
+				var index = splitted[2].asInt - 1;
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0].postln,
+					"level", {modulInputAmplifiers[index].setLevel(value)},
 				)
 			},
 		);
@@ -482,14 +485,21 @@ Synthi100 {
 			data.add([string ++ "level", oc.level]);
 		});
 
+		// Input Amplifiers:
+		modulInputAmplifiers.do({|ia, num|
+			var string = "/in/" ++ (num + 1) ++ "/";
+			data.add([string ++ "level", ia.level]);
+		});
+
 		// Patchbay Audio:
-		modulPatchbayAudio.nodeSynths.do({|node|
+		// Implementar Patchbay Audio (Para TouchOSC)
+		// No funciona por ahora
+/*		modulPatchbayAudio.nodeSynths.do({|node|
 			var ver = node[\coordenates][0];
 			var hor = node[\coordenates][1];
 			data.add("/patchA/" ++ ver ++ "/" ++ hor);
 		});
-
-		// Implementar Patchbay Audio (Para TouchOSC)
+*/
 
 		^data;
 	}

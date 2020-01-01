@@ -15,7 +15,11 @@ or(false, true)
 o = Synthi100(standalone: true).run().pairDevice
 
 
-OSCFunc.trace(false)
+o.modulInputAmplifiers[0].setLevel(5)
+o.modulOutputChannels[0].setLevel(1)
+
+OSCFunc.trace(false, false)
+OSCFunc.trace(true, false)
 
 o.setGeneralVol(0.7)
 o.run

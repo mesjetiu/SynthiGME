@@ -1,6 +1,7 @@
 Lista "To Do"
 
 
+* ver si se puede incluir el UGen de triángulo que se usa. Es una extensión y sería bueno tenerla incluida en el quark.
 * Creando interfaz completa en TouchOSC. usar diferentes colores según se van implementado características.
 * problema aliasing en osciladores (ver abajo)
 * hacer textos feedback de lo que ocurre (éxitos, errores...)

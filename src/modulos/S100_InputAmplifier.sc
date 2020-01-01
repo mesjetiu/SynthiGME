@@ -8,7 +8,7 @@ S100_InputAmplifier {
 	var <outputBus; // Salida del amplificador.
 
 	// Parámetros correspondientes a los mandos del Synthi (todos escalados entre 0 y 10)
-	var <level = 1;
+	var <level = 0;
 
 
 	// Otros atributos de instancia
@@ -22,6 +22,7 @@ S100_InputAmplifier {
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
 	*new { |server|
+		settings = S100_Settings.get;
 		^super.new.init(server);
 	}
 
@@ -61,7 +62,7 @@ S100_InputAmplifier {
 			synth = Synth(\S100_inputAmplifier, [
 				\inputBus, inputBus,
 				\outputBus, outputBus,
-				\level, level,
+				\level, this.convertLevel(level),
 				\outVol, outVol,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
