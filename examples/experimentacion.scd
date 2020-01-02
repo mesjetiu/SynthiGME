@@ -12,7 +12,7 @@ s.options.numOutputBusChannels != 18
 or(false, true)
 
 
-o = Synthi100(standalone: true).run().pairDevice
+o = Synthi100(standalone:true).run().pairDevice
 
 
 o.modulInputAmplifiers[0].setLevel(5)

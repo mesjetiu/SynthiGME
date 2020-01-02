@@ -29,7 +29,6 @@ Synthi100 {
 
 	var <generalVol;
 	var <standalone = false;
-	var readyToRun = false;
 
 	classvar settings;
 
@@ -95,7 +94,14 @@ Synthi100 {
 		S100_InputAmplifier.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
-		readyToRun = true;
+
+		// Módulos
+		modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
+		modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
+		modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
+		modulPatchbayAudio = S100_PatchbayAudio(server);
+
+		//		readyToRun = true;
 	}
 
 
@@ -106,11 +112,10 @@ Synthi100 {
 		if (connectionOut != nil, {"Synthi100 en ejecución".error; ^this});
 
 		Routine({
-			while({readyToRun == false}, {wait(waitTime)});
 			while({server == nil}, {wait(waitTime)});
 
-			// Nos aseguramos de que el número de canales de entrada y salida son los correctos
 			if (standalone == true, { // Modo "standalone": los buses de salida se conectan directamente a los puertos de SC.
+				// Nos aseguramos de que el número de canales de entrada y salida son los correctos
 				if ((server.options.numOutputBusChannels != 18).or(
 					{server.options.numInputBusChannels != 16}), {
 					"Número de canales de entrada y salida incorrectos".postln;
@@ -141,14 +146,15 @@ Synthi100 {
 			server.boot;
 			while({server.serverRunning == false}, {wait(waitTime)});
 
-			// Módulos
+			/*			// Módulos
 			modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
 			modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
 			modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
 			modulPatchbayAudio = S100_PatchbayAudio(server);
 
-
 			wait(0.3);
+
+			*/
 
 			2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
 
@@ -230,17 +236,19 @@ Synthi100 {
 			});
 			"OK\n".post;
 
-			// Input Amplifier
-			"Input Amplifiers...".post;
-			modulInputAmplifiers.do({|i|
+			// Oscillators
+			"Oscillators...".post;
+			modulOscillators.do({|i|
 				i.createSynth;
 				while({i.synth.isPlaying == false}, {wait(waitTime)});
 			});
 			"OK\n".post;
 
-			// Oscillators
-			"Oscillators...".post;
-			modulOscillators.do({|i|
+
+			// Input Amplifier
+			inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
+			"Input Amplifiers...".post;
+			modulInputAmplifiers.do({|i|
 				i.createSynth;
 				while({i.synth.isPlaying == false}, {wait(waitTime)});
 			});
@@ -252,7 +260,6 @@ Synthi100 {
 			"OK\n".post;
 
 
-			inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
 			if (standalone == true, {
 				"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
 				inputAmplifiersBusses;
@@ -275,7 +282,7 @@ Synthi100 {
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	pairDevice {
 		var oscDevices = Dictionary.new;
-		var searchTime = 3;
+		var searchTime = 4;
 		NetAddr.broadcastFlag = true;
 		Routine({
 			var functionOSC = {|msg, time, addr, recvPort|
@@ -465,7 +472,7 @@ Synthi100 {
 			"in", { // Ejemplo "/in/1/level"
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
-				switch (splitted[0].postln,
+				switch (splitted[0],
 					"level", {modulInputAmplifiers[index].setLevel(value)},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente

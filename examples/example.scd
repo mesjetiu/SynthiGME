@@ -1,9 +1,9 @@
 
 // Uso del Synthi100
 
-o = Synthi100()
+o = Synthi100(standalone: true)
 o.run
 o.pairDevice
 
 
-Synthi100().run.pairDevice
+o = Synthi100(standalone: true).run.pairDevice
