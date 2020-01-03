@@ -56,6 +56,12 @@
 		\inputLag, 0.2,
 		\inputLevelMax, 1,
 
+		// CONFIGURACIÓN DE RING MODULATOR**********************************************************
+
+		\ringLag, 0.2,
+		\ringLevelMax, 1,
+
+
 
 
 
