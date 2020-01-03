@@ -2,18 +2,18 @@ S100_InputAmplifier {
 
 	// Synth de la instancia
 	var <synth = nil;
-
 	var <server;
+
+	// Buses de entrada y salida
 	var <inputBus; // Entrada del amplificador.
 	var <outputBus; // Salida del amplificador.
 
-	// Parámetros correspondientes a los mandos del Synthi (todos escalados entre 0 y 10)
+	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
 	var <level = 0;
-
 
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
-	var outVol = 1;
+	var <outVol = 1;
 	var pauseRoutine; // Rutina de pausado del Synth
 	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar settings;

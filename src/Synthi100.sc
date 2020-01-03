@@ -10,12 +10,11 @@ Synthi100 {
 	var <connectionIn = nil;
 
 	// Puertos externos de entrada y salida
-	var <stereoOutBuses;
+	var <stereoOutBuses; // Puerto no existente en Synthi 100 pero conveniente. Mezcla los 8 canales paneados.
 	var <panOutputs1to4Busses;
 	var <panOutputs5to8Busses;
 	var <individualChannelOutputsBusses;
 	var <sendToDeviceBusses;
-
 	var <returnFromDeviceBusses;
 	var <inputAmplifiersBusses;
 	var <micAmpBusses;
@@ -262,7 +261,6 @@ Synthi100 {
 
 			if (standalone == true, {
 				"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
-				inputAmplifiersBusses;
 				connectionIn = inputAmplifiersBusses.collect({|item, i|
 					var result = Synth(\connectionInputAmplifier, [
 						\inBus, settings[\inputAmplifiersBusses][i],
@@ -287,9 +285,8 @@ Synthi100 {
 		Routine({
 			var functionOSC = {|msg, time, addr, recvPort|
 				if(
-					"/S100/sync".matchRegexp(msg[0].asString).or( // si se pulsa el botón de sincronización
-						"/ping".matchRegexp(msg[0].asString) // ...o si está activado el /ping en TouchOSC en menos de 4s
-					), {
+					"/ping".matchRegexp(msg[0].asString), // ...o si está activado el /ping en TouchOSC en menos de 4s
+					{
 						if(oscDevices.trueAt(addr.ip) == false, {
 							oscDevices.put(addr.ip, addr.ip);
 							("Found device at " ++ addr.ip).postln;
