@@ -48,7 +48,7 @@ S100_InputAmplifier {
 
 	init { arg serv = Server.local;
 		server = serv;
-		inputBus = 8.collect({Bus.audio(server)});
+		inputBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
 			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
