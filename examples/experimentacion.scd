@@ -15,6 +15,9 @@ or(false, true)
 o = Synthi100(standalone:true).run().pairDevice
 
 
+o.modulRingModulators[0].setLevel(10)
+
+
 o.modulInputAmplifiers[0].setLevel(5)
 o.modulOutputChannels[0].setLevel(1)
 

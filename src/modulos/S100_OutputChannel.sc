@@ -5,8 +5,8 @@ S100_OutputChannel {
 
 	var <server;
 	var <inputBus; // Entrada del amplificador.
-	var <outputBus; // Salida del amplificador.
 	var <inFeedbackBus; // Entrada de feedback: admite audio del ciclo anterior.
+	var <outputBus; // Salida del amplificador.
 	var <outBusL; // Canal izquierdo de la salida stereo.
 	var <outBusR; // Canal derecho de la salida stereo.
 
@@ -48,7 +48,7 @@ S100_OutputChannel {
 			var sigIn, sigInFeedback, sig, sigPannedR, sigPannedL;
 
 			sigIn = In.ar(inputBus);
-			sigIn = sigIn;// + InFeedback.ar(inFeedbackBus);
+			sigIn = sigIn + InFeedback.ar(inFeedbackBus);
 
 			// Se realiza el filtrado
 			sig = HPF.ar(sigIn, freqHP);

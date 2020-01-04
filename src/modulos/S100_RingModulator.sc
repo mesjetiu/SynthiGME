@@ -5,7 +5,9 @@ S100_RingModulator {
 
 	// Buses de entrada y salida
 	var <inputBusA; // Entrada A
+	var <inFeedbackBusA; // Entrada A en feedback
 	var <inputBusB; // Entrada B
+	var <inFeedbackBusB; // Entrada B en feedback
 	var <outputBus; // Salida
 
 	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
@@ -31,18 +33,20 @@ S100_RingModulator {
 		SynthDef(\S100_ringModulator, {
 			arg inputBusA,
 			inputBusB,
+			inFeedbackBusA,
+			inFeedbackBusB,
 			outputBus,
 			level,
 			outVol;
 
 			var sigA, sigB, sig;
-			sigA= In.ar(inputBusA);
-			sigB= In.ar(inputBusB);
+			sigA= In.ar(inputBusA) + InFeedback.ar(inFeedbackBusA);
+			sigB= In.ar(inputBusB) + InFeedback.ar(inFeedbackBusB);
 			sig = sigA * sigB;
 			sig = sig * level * outVol;
 
 			Out.ar(outputBus, sig);
-		}, [nil, nil, nil, lag, lag]
+		}, [nil, nil, nil, nil, nil, lag, lag]
 		).add
 	}
 
@@ -52,6 +56,8 @@ S100_RingModulator {
 		server = serv;
 		inputBusA = Bus.audio(server);
 		inputBusB = Bus.audio(server);
+		inFeedbackBusA = Bus.audio(server);
+		inFeedbackBusB = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
 			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
@@ -64,6 +70,8 @@ S100_RingModulator {
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_ringModulator, [
 				\inputBusA, inputBusA,
+				\inFeedbackBusA, inFeedbackBusA,
+				\inFeedbackBusB, inFeedbackBusB,
 				\inputBusB, inputBusB,
 				\outputBus, outputBus,
 				\level, this.convertLevel(level),

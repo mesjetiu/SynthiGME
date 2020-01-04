@@ -4,8 +4,11 @@ Synthi100 {
 	// Módulos que incluye:
 	var <modulOscillators;
 	var <modulInputAmplifiers;
+	var <modulRingModulators;
 	var <modulOutputChannels;
 	var <modulPatchbayAudio;
+
+	// Almacena los Synths que conectan los canales de salida de SC con los de los módulos
 	var <connectionOut = nil;
 	var <connectionIn = nil;
 
@@ -41,6 +44,7 @@ Synthi100 {
 		Class.initClassTree(S100_Oscillator);
 		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_InputAmplifier);
+		Class.initClassTree(S100_RingModulator);
 		Class.initClassTree(S100_PatchbayAudio);
 	}
 
@@ -89,18 +93,11 @@ Synthi100 {
 
 		// Se añaden al servidor las declaracines SynthDefs
 		Synthi100.addSynthDef;
-		S100_Oscillator.addSynthDef;
 		S100_InputAmplifier.addSynthDef;
+		S100_Oscillator.addSynthDef;
+		S100_RingModulator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
-
-		// Módulos
-		modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
-		modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
-		modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
-		modulPatchbayAudio = S100_PatchbayAudio(server);
-
-		//		readyToRun = true;
 	}
 
 
@@ -141,146 +138,153 @@ Synthi100 {
 				panOutputs1to4Busses = 2.collect({Bus.audio(server)});
 				panOutputs5to8Busses = 2.collect({Bus.audio(server)});
 			});
+
+
+			// Se arranca el servidor (si no lo está)
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
-			server.boot;
-			while({server.serverRunning == false}, {wait(waitTime)});
+			server.waitForBoot({
+				// Módulos (han de crearse tras arrancar el servidor, ya que se crean buses)
+				modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
+				modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
+				modulRingModulators = 3.collect({|i| S100_RingModulator(server)});
+				modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
+				modulPatchbayAudio = S100_PatchbayAudio(server);
 
-			/*			// Módulos
-			modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
-			modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
-			modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
-			modulPatchbayAudio = S100_PatchbayAudio(server);
-
-			wait(0.3);
-
-			*/
-
-			2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes.
-
-
-			"Conexión de salida stereo canales 1 a 8...".post;
-			connectionOut = [];
-			connectionOut.add({
-				var result = nil;
-				result = Synth(\connection2, [
-					\inBusL1, panOutputs1to4Busses[0],
-					\inBusR1, panOutputs1to4Busses[1],
-					\inBusL2, panOutputs5to8Busses[0],
-					\inBusR2, panOutputs5to8Busses[1],
-					\outBusL, stereoOutBuses[0],
-					\outBusR, stereoOutBuses[1],
-					\vol, 1,
-				], server).register;
-				while({result.isPlaying == false}, {wait(waitTime)});
-				result
-			}.value
-			);
-			"OK\n".post;
-
-			"Conexión de salida stereo canales 1 a 4...".post;
-			connectionOut.add({
-				var result = nil;
-				var channels = modulOutputChannels[0..3];
-				result = Synth(\connection4, [
-					\inBusL1, channels[0].outBusL,
-					\inBusR1, channels[0].outBusR,
-					\inBusL2, channels[1].outBusL,
-					\inBusR2, channels[1].outBusR,
-					\inBusL3, channels[2].outBusL,
-					\inBusR3, channels[2].outBusR,
-					\inBusL4, channels[3].outBusL,
-					\inBusR4, channels[3].outBusR,
-					\outBusL, panOutputs1to4Busses[0],
-					\outBusR, panOutputs1to4Busses[1],
-					\vol, generalVol,
-				], server).register;
-				while({result.isPlaying == false}, {wait(waitTime)});
-				result
-			}.value
-			);
-			"OK\n".post;
-
-			"Conexión de salida stereo canales 4 a 8...".post;
-			connectionOut.add({
-				var result = nil;
-				var channels = modulOutputChannels[4..7];
-				result = Synth(\connection4, [
-					\inBusL1, channels[0].outBusL,
-					\inBusR1, channels[0].outBusR,
-					\inBusL2, channels[1].outBusL,
-					\inBusR2, channels[1].outBusR,
-					\inBusL3, channels[2].outBusL,
-					\inBusR3, channels[2].outBusR,
-					\inBusL4, channels[3].outBusL,
-					\inBusR4, channels[3].outBusR,
-					\outBusL, panOutputs5to8Busses[0],
-					\outBusR, panOutputs5to8Busses[1],
-					\vol, generalVol,
-				], server).register;
-				while({result.isPlaying == false}, {wait(waitTime)});
-				result
-			}.value
-			);
-			"OK\n".post;
-
-
-
-			// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
-
-			// Output Channels
-			"Output Channels...".post;
-			modulOutputChannels.do({|i|
-				i.createSynth;
-				while({i.synth.isPlaying == false}, {wait(waitTime)});
-			});
-			"OK\n".post;
-
-			// Oscillators
-			"Oscillators...".post;
-			modulOscillators.do({|i|
-				i.createSynth;
-				while({i.synth.isPlaying == false}, {wait(waitTime)});
-			});
-			"OK\n".post;
-
-
-			// Input Amplifier
-			inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
-			"Input Amplifiers...".post;
-			modulInputAmplifiers.do({|i|
-				i.createSynth;
-				while({i.synth.isPlaying == false}, {wait(waitTime)});
-			});
-			"OK\n".post;
-
-			// conecta cada entrada y salida de cada módulo en el patchbay de audio
-			"Conexiones en Patchbay de audio...".post;
-			modulPatchbayAudio.connect(modulOscillators, modulInputAmplifiers, modulOutputChannels);
-			"OK\n".post;
-
-
-			if (standalone == true, {
-				"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
-				connectionIn = inputAmplifiersBusses.collect({|item, i|
-					var result = Synth(\connectionInputAmplifier, [
-						\inBus, settings[\inputAmplifiersBusses][i],
-						\outBus, item,
+				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
+				"Conexión de salida stereo canales 1 a 8...".post;
+				connectionOut = [];
+				connectionOut.add({
+					var result = nil;
+					result = Synth(\connection2, [
+						\inBusL1, panOutputs1to4Busses[0],
+						\inBusR1, panOutputs1to4Busses[1],
+						\inBusL2, panOutputs5to8Busses[0],
+						\inBusR2, panOutputs5to8Busses[1],
+						\outBusL, stereoOutBuses[0],
+						\outBusR, stereoOutBuses[1],
 						\vol, 1,
 					], server).register;
 					while({result.isPlaying == false}, {wait(waitTime)});
 					result
+				}.value
+				);
+				"OK\n".post;
+
+				"Conexión de salida stereo canales 1 a 4...".post;
+				connectionOut.add({
+					var result = nil;
+					var channels = modulOutputChannels[0..3];
+					result = Synth(\connection4, [
+						\inBusL1, channels[0].outBusL,
+						\inBusR1, channels[0].outBusR,
+						\inBusL2, channels[1].outBusL,
+						\inBusR2, channels[1].outBusR,
+						\inBusL3, channels[2].outBusL,
+						\inBusR3, channels[2].outBusR,
+						\inBusL4, channels[3].outBusL,
+						\inBusR4, channels[3].outBusR,
+						\outBusL, panOutputs1to4Busses[0],
+						\outBusR, panOutputs1to4Busses[1],
+						\vol, generalVol,
+					], server).register;
+					while({result.isPlaying == false}, {wait(waitTime)});
+					result
+				}.value);
+				"OK\n".post;
+
+				"Conexión de salida stereo canales 4 a 8...".post;
+				connectionOut.add({
+					var result = nil;
+					var channels = modulOutputChannels[4..7];
+					result = Synth(\connection4, [
+						\inBusL1, channels[0].outBusL,
+						\inBusR1, channels[0].outBusR,
+						\inBusL2, channels[1].outBusL,
+						\inBusR2, channels[1].outBusR,
+						\inBusL3, channels[2].outBusL,
+						\inBusR3, channels[2].outBusR,
+						\inBusL4, channels[3].outBusL,
+						\inBusR4, channels[3].outBusR,
+						\outBusL, panOutputs5to8Busses[0],
+						\outBusR, panOutputs5to8Busses[1],
+						\vol, generalVol,
+					], server).register;
+					while({result.isPlaying == false}, {wait(waitTime)});
+					result
+				}.value);
+				"OK\n".post;
+
+
+
+				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
+
+				// Output Channels
+				"Output Channels...".post;
+				modulOutputChannels.do({|i|
+					i.createSynth;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
 				});
 				"OK\n".post;
-			});
 
-			"Synthi100 en ejecución".postln;
+				// Ring Modulators
+				"Ring Modulators...".post;
+				modulRingModulators.do({|i|
+					i.createSynth;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
+				// Oscillators
+				"Oscillators...".post;
+				modulOscillators.do({|i|
+					i.createSynth;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
+
+				// Input Amplifier
+				inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
+				"Input Amplifiers...".post;
+				modulInputAmplifiers.do({|i|
+					i.createSynth;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
+				// conecta cada entrada y salida de cada módulo en el patchbay de audio
+				"Conexiones en Patchbay de audio...".post;
+				modulPatchbayAudio.connect(
+					inputAmplifiers: modulInputAmplifiers,
+					oscillators: modulOscillators,
+					ringModulators: modulRingModulators,
+					outputChannels: modulOutputChannels,
+				);
+				"OK\n".post;
+
+
+				if (standalone == true, {
+					"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
+					connectionIn = inputAmplifiersBusses.collect({|item, i|
+						var result = Synth(\connectionInputAmplifier, [
+							\inBus, settings[\inputAmplifiersBusses][i],
+							\outBus, item,
+							\vol, 1,
+						], server).register;
+						while({result.isPlaying == false}, {wait(waitTime)});
+						result
+					});
+					"OK\n".post;
+				});
+				"Synthi100 en ejecución".postln;
+			});
 		}).play;
 	}
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	pairDevice {
 		var oscDevices = Dictionary.new;
-		var searchTime = 4;
+		var searchTime = 5;
 		NetAddr.broadcastFlag = true;
 		Routine({
 			var functionOSC = {|msg, time, addr, recvPort|
@@ -347,10 +351,18 @@ Synthi100 {
 				"/patchATouchOSCA1b",
 				"/patchATouchOSCA2a",
 				"/patchATouchOSCA2b",
+				"/patchATouchOSCB1a",
+				"/patchATouchOSCB1b",
 				"/patchATouchOSCB2a",
 				"/patchATouchOSCB2b",
+				"/patchATouchOSCC1a",
+				"/patchATouchOSCC1b",
 				"/patchATouchOSCC2a",
 				"/patchATouchOSCC2b",
+				"/patchATouchOSCD1a",
+				"/patchATouchOSCD1b",
+				"/patchATouchOSCD2a",
+				"/patchATouchOSCD2b",
 			];
 
 			strings.do({|string|
@@ -418,12 +430,34 @@ Synthi100 {
 			},
 
 
+			// Patchbay de Audio de TouchOSC: A1
+			"patchATouchOSCA1a", {
+				var hor, ver;
+				2.do({splitted.removeAt(0)});
+				ver = 67 + (16-splitted[0].asInt);
+				hor = splitted[1].asInt;
+				modulPatchbayAudio.administrateNode(ver, hor, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
 			// Patchbay de Audio de TouchOSC: A2
 			"patchATouchOSCA2a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
 				ver = 67 + (16-splitted[0].asInt);
 				hor = splitted[1].asInt + 32;
+				modulPatchbayAudio.administrateNode(ver, hor, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
+			// Patchbay de Audio de TouchOSC: B1
+			"patchATouchOSCB1a", {
+				var hor, ver;
+				2.do({splitted.removeAt(0)});
+				ver = 83 + (16-splitted[0].asInt);
+				hor = splitted[1].asInt;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -440,6 +474,17 @@ Synthi100 {
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
+			// Patchbay de Audio de TouchOSC: C1
+			"patchATouchOSCC1a", {
+				var hor, ver;
+				2.do({splitted.removeAt(0)});
+				ver = 99 + (16-splitted[0].asInt);
+				hor = splitted[1].asInt;
+				modulPatchbayAudio.administrateNode(ver, hor, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
 			// Patchbay de Audio de TouchOSC: C2
 			"patchATouchOSCC2a", {
 				var hor, ver;
@@ -450,6 +495,29 @@ Synthi100 {
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
+
+			// Patchbay de Audio de TouchOSC: D1
+			"patchATouchOSCD1a", {
+				var hor, ver;
+				2.do({splitted.removeAt(0)});
+				ver = 115 + (12-splitted[0].asInt);
+				hor = splitted[1].asInt;
+				modulPatchbayAudio.administrateNode(ver, hor, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
+			// Patchbay de Audio de TouchOSC: D2
+			"patchATouchOSCD2a", {
+				var hor, ver;
+				2.do({splitted.removeAt(0)});
+				ver = 115 + (12-splitted[0].asInt);
+				hor = splitted[1].asInt + 32;
+				modulPatchbayAudio.administrateNode(ver, hor, value);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
 
 			"out", { // Ejemplo "/out/1/level"
 				var index = splitted[2].asInt - 1;
@@ -471,6 +539,16 @@ Synthi100 {
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"level", {modulInputAmplifiers[index].setLevel(value)},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
+			"ring", { // Ejemplo "/ring/1/level"
+				var index = splitted[2].asInt - 1;
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0],
+					"level", {modulRingModulators[index].setLevel(value)},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -508,6 +586,12 @@ Synthi100 {
 		modulInputAmplifiers.do({|ia, num|
 			var string = "/in/" ++ (num + 1) ++ "/";
 			data.add([string ++ "level", ia.level]);
+		});
+
+		// Ring Modulators:
+		modulRingModulators.do({|ring, num|
+			var string = "/ring/" ++ (num + 1) ++ "/";
+			data.add([string ++ "level", ring.level]);
 		});
 
 		// Patchbay Audio:

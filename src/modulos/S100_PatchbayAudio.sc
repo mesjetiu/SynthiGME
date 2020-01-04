@@ -41,17 +41,38 @@ S100_PatchbayAudio {
 	}
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|oscillators, inputAmplifiers, outputChannels|
-		inputsOutputs = this.ordenateInputsOutputs(oscillators, inputAmplifiers, outputChannels);
+	connect {|inputAmplifiers, oscillators, ringModulators, outputChannels|
+		inputsOutputs = this.ordenateInputsOutputs(
+			inputAmplifiers: inputAmplifiers,
+			oscillators: oscillators,
+			ringModulators: ringModulators,
+			outputChannels: outputChannels,
+		);
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|oscillators, inputAmplifiers, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, oscillators, ringModulators, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
 
 		// Inputs horizontales (1-66) /////////////////////////////////////////////////////////////
+		index = 3; // Ring Modulators ocupan los números 3-8 horizontales
+		ringModulators.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\inBus, i.inputBusA,
+				\inFeedbackBus, i.inFeedbackBusA,
+			]);
+			index = index + 1;
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\inBus, i.inputBusB,
+				\inFeedbackBus, i.inFeedbackBusB,
+			]);
+			index = index + 1;
+		});
+
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -71,6 +92,7 @@ S100_PatchbayAudio {
 			]);
 			index = index + 1;
 		});
+
 		index = 75; // Output channels del 75-82
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -79,6 +101,7 @@ S100_PatchbayAudio {
 			]);
 			index = index + 1;
 		});
+
 		index = 91; // Oscillators ocupan los números 91-108 (9 osciladores)
 		oscillators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[ // Sine y Saw
@@ -89,6 +112,15 @@ S100_PatchbayAudio {
 			array[index-1] = Dictionary.newFrom(List[ // Pulse y Triangle
 				\synth, i.synth,
 				\outBus, i.outputBus2,
+			]);
+			index = index + 1;
+		});
+
+		index = 121; // Ring Modulators del 121-123
+		ringModulators.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\outBus, i.outputBus,
 			]);
 			index = index + 1;
 		});
