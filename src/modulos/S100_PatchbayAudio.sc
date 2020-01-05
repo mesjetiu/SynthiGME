@@ -41,17 +41,18 @@ S100_PatchbayAudio {
 	}
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, oscillators, ringModulators, outputChannels|
+	connect {|inputAmplifiers, oscillators, noiseGenerators, ringModulators, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			inputAmplifiers: inputAmplifiers,
 			oscillators: oscillators,
+			noiseGenerators: noiseGenerators,
 			ringModulators: ringModulators,
 			outputChannels: outputChannels,
 		);
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, oscillators, ringModulators, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, oscillators, noiseGenerators, ringModulators, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -95,6 +96,15 @@ S100_PatchbayAudio {
 
 		index = 75; // Output channels del 75-82
 		outputChannels.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\outBus, i.outputBus,
+			]);
+			index = index + 1;
+		});
+
+		index = 89; // Noise Generators 89 y 90
+		noiseGenerators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\synth, i.synth,
 				\outBus, i.outputBus,

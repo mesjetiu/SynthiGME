@@ -4,6 +4,7 @@ Synthi100 {
 	// Módulos que incluye:
 	var <modulOscillators;
 	var <modulInputAmplifiers;
+	var <modulNoiseGenerators;
 	var <modulRingModulators;
 	var <modulOutputChannels;
 	var <modulPatchbayAudio;
@@ -42,9 +43,10 @@ Synthi100 {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(S100_Settings);
 		Class.initClassTree(S100_Oscillator);
-		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_InputAmplifier);
+		Class.initClassTree(S100_NoiseGenerator);
 		Class.initClassTree(S100_RingModulator);
+		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_PatchbayAudio);
 	}
 
@@ -95,6 +97,7 @@ Synthi100 {
 		Synthi100.addSynthDef;
 		S100_InputAmplifier.addSynthDef;
 		S100_Oscillator.addSynthDef;
+		S100_NoiseGenerator.addSynthDef;
 		S100_RingModulator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
@@ -146,6 +149,7 @@ Synthi100 {
 				// Módulos (han de crearse tras arrancar el servidor, ya que se crean buses)
 				modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
 				modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
+				modulNoiseGenerators = 2.collect({|i| S100_NoiseGenerator(server)});
 				modulRingModulators = 3.collect({|i| S100_RingModulator(server)});
 				modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
 				modulPatchbayAudio = S100_PatchbayAudio(server);
@@ -234,6 +238,14 @@ Synthi100 {
 				});
 				"OK\n".post;
 
+				// Noise Generators
+				"Noise Generators...".post;
+				modulNoiseGenerators.do({|i|
+					i.createSynth;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
 				// Oscillators
 				"Oscillators...".post;
 				modulOscillators.do({|i|
@@ -241,7 +253,6 @@ Synthi100 {
 					while({i.synth.isPlaying == false}, {wait(waitTime)});
 				});
 				"OK\n".post;
-
 
 				// Input Amplifier
 				inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
@@ -257,6 +268,7 @@ Synthi100 {
 				modulPatchbayAudio.connect(
 					inputAmplifiers: modulInputAmplifiers,
 					oscillators: modulOscillators,
+					noiseGenerators: modulNoiseGenerators,
 					ringModulators: modulRingModulators,
 					outputChannels: modulOutputChannels,
 				);
@@ -341,11 +353,10 @@ Synthi100 {
 	sendStateOSC {
 		var lapTime = 0.0001;
 		Routine({
-			var numVer, numHor, strings;
 			// ponemos los pines de Pathbay de audio a 0
+			var numVer, numHor, strings;
 			numVer = 16;
 			numHor = 16;
-
 			strings = [
 				"/patchATouchOSCA1a",
 				"/patchATouchOSCA1b",
@@ -387,7 +398,7 @@ Synthi100 {
 		}).play;
 	}
 
-	// Setters de la clase
+	// Setters de la clase /////////////////////////////////////////////////////////////
 	setGeneralVol {|vol|
 		generalVol = vol;
 		connectionOut.do({|i|
@@ -553,6 +564,17 @@ Synthi100 {
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
+
+			"noise", { // Ejemplo "/ring/1/level"
+				var index = splitted[2].asInt - 1;
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0],
+					"colour", {modulNoiseGenerators[index].setColour(value)},
+					"level", {modulNoiseGenerators[index].setLevel(value)},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
 		);
 	}
 
@@ -571,6 +593,13 @@ Synthi100 {
 			data.add([string ++ "triangle/level", osc.triangleLevel]);
 			data.add([string ++ "sawtooth/level", osc.sawtoothLevel]);
 			data.add([string ++ "frequency", osc.frequency]);
+		});
+
+		// Noise Generators:
+		modulNoiseGenerators.do({|ng, num|
+			var string = "/noise/" ++ (num + 1) ++ "/";
+			data.add([string ++ "colour", ng.colour]);
+			data.add([string ++ "level", ng.level]);
 		});
 
 		// Output channels:
@@ -593,16 +622,6 @@ Synthi100 {
 			var string = "/ring/" ++ (num + 1) ++ "/";
 			data.add([string ++ "level", ring.level]);
 		});
-
-		// Patchbay Audio:
-		// Implementar Patchbay Audio (Para TouchOSC)
-		// No funciona por ahora
-		/*		modulPatchbayAudio.nodeSynths.do({|node|
-		var ver = node[\coordenates][0];
-		var hor = node[\coordenates][1];
-		data.add("/patchA/" ++ ver ++ "/" ++ hor);
-		});
-		*/
 
 		^data;
 	}

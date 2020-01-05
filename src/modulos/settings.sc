@@ -51,6 +51,15 @@
 		\outLPFreqMin, 400,
 		\outLPFreqMax, 2000,
 
+		// CONFIGURACIÓN DE NOISE GENERATORS********************************************************
+
+		\noiseLag, 0.2,
+		\noiseLevelMax, 2,
+		\noiseHPFreqMin, 10,
+		\noiseHPFreqMax, 1000,
+		\noiseLPFreqMin, 400,
+		\noiseLPFreqMax, 2000,
+
 		// CONFIGURACIÓN DE INPUT AMPLIFIERS********************************************************
 
 		\inputLag, 0.2,
@@ -59,7 +68,7 @@
 		// CONFIGURACIÓN DE RING MODULATOR**********************************************************
 
 		\ringLag, 0.2,
-		\ringLevelMax, 1,
+		\ringLevelMax, 2,
 
 
 

@@ -8,14 +8,14 @@ Quarks.clear
 [1,2].add(3)
 
 s.options.numOutputBusChannels != 18
-
-or(false, true)
+{WhiteNoise.ar}.play
 
 
 o = Synthi100(standalone:true).run().pairDevice
 
 
 o.modulRingModulators[0].setLevel(10)
+o.modulNoiseGenerators[0].setLevel(3)
 
 
 o.modulInputAmplifiers[0].setLevel(5)
