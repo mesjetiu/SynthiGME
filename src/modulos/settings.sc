@@ -70,6 +70,15 @@
 		\ringLag, 0.2,
 		\ringLevelMax, 2,
 
+		// CONFIGURACIÓN DE ENVELOPE SHAPER*********************************************************
+
+		\envLag, 0.2,
+		\envSignalLevelMax, 1,
+		\envTimeMin, 0.002, // 2 ms como valor mínimo en todas las duraciones del módulo.
+		\envTimeMax, 20,  // 20 s como valor máximo.
+		\envPeakLevel, 1,
+		\envSustainLevelMax, 1,
+
 
 
 

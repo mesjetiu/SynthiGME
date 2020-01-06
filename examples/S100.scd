@@ -1,0 +1,1 @@
+Synthi100(standalone:true).run().pairDevice
