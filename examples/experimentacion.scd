@@ -1,7 +1,7 @@
+Quarks.install("https://github.com/mesjetiu/Synthi100.git")
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
-Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
 
-Quarks.uninstall("https://github.com/supercollider-quarks/Generators")
+Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
 
 Quarks.clear
 
@@ -28,6 +28,8 @@ o.setGeneralVol(0.7)
 o.run
 o = Synthi100().run.pairDevice;
 o.pairDevice
+
+SinOsc
 
 // Unimos los tres primeros osciladores a los tres primeros canales de salida:
 (
@@ -142,124 +144,88 @@ OSCFunc.trace(true)
 
 
 
-// Solución de triangulo sin aliasing (para 48000 sample rate)
-// La solucion pasa por covertirse en sinusoide según avanza la frecuencia hacia el agudo. El resultado es similar que el de filtrar la señal.
 (
-{
-	var freq, sig;
-	freq = MouseX.kr(20,20000).poll;
-	//freq = 1000;
-	sig = LFTri.ar(freq, mul: 0.2
-		* linlin(freq, 6000, 12000,1,0).poll)!2;
-	sig = sig + SinOsc.ar(freq, mul: 0.2
-		* linlin(freq, 6000, 12000,0,1).poll)!2
-}.play;
+SynthDef(\gated, {
+	arg gate = 0, t_gate = 0;
+	var sig = SinOsc.ar!2;
+	//	var env = Env.adsr(0.5, 0.5, 0.5, 5).ar(0, gate);
+	var env2 = Env.new.ar(0, t_gate);
+	Out.ar(0, sig*env2);
+}).add
 )
 
-(
-{
-	var freq, sig;
-	freq = MouseX.kr(20,20000).poll;
-	//freq = 1000;
-	sig = LFTri.ar(freq, mul: 0.2
-		* linlin(freq, 6000, 12000,1,0).poll)!2;
-	sig = sig + DPW3Tri.ar(freq, mul: 0.2
-		* linlin(freq, 6000, 12000,0,1).poll)!2
-}.play;
-)
-DPW3Tri
+a = Synth(\gated);
+
+a.set(\gate, 1);
+a.set(\gate, 0);
+a.set(\gate, -1);
+
+a.set(\t_gate, 1);
+a.set(\t_gate, 0)
+a.set(\t_gate, -1)
 
 
-// Pulse
-//var sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
-var sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
-// PulseDPW
+g = Group.new(s)
+
+b = Synth(\gated, target: g);
 
 
-(
-{
-	var freq, amp = 0.2, sig = 0;
-	freq = MouseX.kr(20,20000).poll;
-	freq = 1000;
-	//sig = Pulse.ar(freq, mul: 0.2)!2;
-	sig = sig + LFPulse.ar(freq, mul: 0.2, add: -1*(amp/2))!2;
-}.plot;
-)
 
 
-// Muy buen Pulse!!! sin aliasing y sin distorsión en LF
-(
-{
-	var freq, sig;
-	freq = MouseX.kr(2,20000).poll;
-	freq = 100;
-	sig = PulseDPW.ar(freq, mul: 0.2)!2;
-}.play;
-)
+
+
+
+
+
+
+
+
+
+// FREE RUN. Funciona. Implementar en S100_EnvelopeShaper.
 
 
 (
-SynthDef(\pulso, {arg freq = 100, bus;
-	var sig;
-	sig = SinOsc.ar(freq, mul: 0.2)!2;
-	Out.ar(bus, sig);
-}).add;
-)
-a = Synth(\pulso)
+SynthDef(\S100_FreeRun, {
+
+	arg gate = 0,
+	outputBus = 0,
+	delayTime=1,
+	attackTime=1,
+	decayTime=1,
+	sustainLevel=1,
+	releaseTime=1,
+	signalLevel=1;
+
+	var sig, env;
+	sig = SinOsc.ar!2;
+
+	env = Env(
+		levels: [
+			0, // loopNode (ver Help de "Env")
+			0,
+			1,
+			sustainLevel,
+			0,
+			0, // releaseNode (añadido con valor igual al inicial y con tiempo 0, para que funcione el loop)
+		],
+		times: [delayTime, attackTime, decayTime, releaseTime, 0],
+		releaseNode: 4,
+		loopNode: 0,
+	).ar(0, gate);
 
 
-a.set(\bus, 0)
-a.set(\freq, 200)
+	// Se aplica la envolvente y el nivel (level) a la señal
+	sig = sig * env * signalLevel * gate; // gate tiene lag, para que cuando se envíe valor 0, no se corte bruscamente.
 
+	Out.ar(outputBus, sig);
 
-
-Server.quitAll
-Server.all.do({|i| i.serverRunning.postln})
-
-s.quit
-
-(
-{
-	var freq, sig;
-	freq = MouseX.kr(2,20000).poll;
-	//freq = 10;
-	sig = SawDPW.ar(freq, mul: 0.2)!2;
-}.play //.plot(0.5);
-)
-
-(
-{
-	var freq, sig = 0, amp = 0.2;
-	freq = MouseX.kr(5,5000).poll;
-	//freq = 100.568;
-	sig = (LFPulse.ar(freq, mul: amp, add: (-1*(amp/2))) * linlin(freq, 100, 1000,1,0).poll)!2;
-	sig = sig + Pulse.ar(freq, mul: amp
-		* linlin(freq, 100, 1000,0,1).poll)!2;
-	sig = sig/2;
-}.play;
-)
-
-Server.local.options.sampleRate = 192000
-Server.local.options.sampleRate
-
-(
-{
-	var freq, sig;
-	freq = MouseX.kr(20,20000).poll;
-	//freq = 1000;
-	sig = SinOsc.ar(freq, mul: 0.2
-		* linlin(freq, 800, 10000,1,0).poll)!2;
-	sig = sig + SinOsc.ar(freq, mul: 0.1
-		* linlin(freq, 800, 10000,0,1).poll)!2
-}.play;
+}, [0.5]
+).add
 )
 
 
-[1,2,3].sum
-
-a = [1,2,3,4]
-a[0..2]
 
 
-Mix.new([1,2,3]).postln
-
+a = Synth(\S100_FreeRun)
+a.set(\gate, 1)
+a.set(\gate, 0) // No se corta bruscamente porque tiene un lag y "gate" se usa también como valor de amplitud.
