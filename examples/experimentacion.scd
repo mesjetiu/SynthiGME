@@ -223,9 +223,53 @@ SynthDef(\S100_FreeRun, {
 ).add
 )
 
-
-
-
 a = Synth(\S100_FreeRun)
 a.set(\gate, 1)
 a.set(\gate, 0) // No se corta bruscamente porque tiene un lag y "gate" se usa también como valor de amplitud.
+
+
+
+
+
+
+
+// Forma de redimensionar una interfaz gráfica
+
+(
+w = Window("my name is... panel", Rect(128, 600, 200, 100), scroll: true, resizable: false);
+
+b = Button(w,Rect(10, 20, 75, 24));
+w.front;
+)
+
+(
+~amplifica = {|rect, factor|
+	var left, top, width, height;
+
+	left = rect.left * factor;
+	top = rect.top * factor;
+	width = rect.width * factor;
+	height = rect.height * factor;
+
+	Rect(left, top, width, height);
+}
+)
+
+(
+var factor = 1.5;
+b.bounds = ~amplifica.value(b.bounds, factor);
+w.bounds = ~amplifica.value(w.bounds, factor);
+w.bounds = w.bounds.left_(128).top_(600);
+)
+(
+~amplifica = {|rect, factor|
+	var left, top, width, height;
+
+	left = rect.left * factor;
+	top = rect.top * factor;
+	width = rect.width * factor;
+	height = rect.height * factor;
+
+	Rect(left, top, width, height);
+}
+)
