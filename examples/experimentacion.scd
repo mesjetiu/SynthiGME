@@ -299,3 +299,21 @@ w.bounds.left
 
 c.bounds_(Rect(100, 0, 300, 300)); // contents adjust since coords are relative
 c.resize_(6); // contents adjust since coords are relative
+
+
+
+
+
+
+// Experimentos con imágenes de fondo en Window
+
+(
+    ~alpha = 1.0;
+    ~image = Image.new("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/S100 Cuenca fotografías/2019.12.18/IMG_20191218_191627.jpg");
+    ~bounds = Rect(200, 300, 10000, 10000);
+    ~window = Window.new("Image background");
+    ~window.view.background_(Color.gray);
+    ~window.view.setBackgroundImage(~image, 11, ~alpha, ~bounds);
+    ~window.front;
+//~image.plot;
+)

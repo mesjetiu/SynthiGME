@@ -33,15 +33,9 @@ S100_GUI {
 		windowSize = window.bounds;
 
 		// Todos los paneles de arriba (pruebas)
-		pannelsUp = 4.collect({
-			var pannel = this.makePannel1(
-				parent: window,
-				width: rectWindow.width/4,
-				height: rectWindow.width/4,
-			);
-		//	allViews.add(pannel);
-			pannel;
-		});
+		pannelsUp = [
+			this.makePannel, this.makePannel, this.makePannel, this.makePannel
+		];
 
 		// Todos los paneles de abajo (pruebas)
 		pannelsDown = 4.collect({
@@ -53,7 +47,6 @@ S100_GUI {
 		//	allViews.add(pannel);
 			pannel;
 		});
-
 
 		// Layout horizontal superior
 		hUpLayout = HLayout(*pannelsUp);
@@ -70,6 +63,11 @@ S100_GUI {
 		vLayout.setStretch(0, 4);
 		vLayout.setStretch(1, 5);
 
+		hUpLayout.setStretch(0, 4);
+		hUpLayout.setStretch(1, 4);
+		hUpLayout.setStretch(2, 4);
+		hUpLayout.setStretch(3, 4);
+
 		hDownLayout.setStretch(0, 5);
 		hDownLayout.setStretch(1, 1);
 		hDownLayout.setStretch(2, 5);
@@ -79,7 +77,7 @@ S100_GUI {
 
 
 		// Se almacenan todos los Rect de todos los Views para saber el tamaño por defecto y poder resetear.
-	//	allSizeViews = allViews.collect({|v| v.bounds});
+		allSizeViews = allViews.collect({|v| v.bounds});
 		window.front;
 	}
 
@@ -88,6 +86,26 @@ S100_GUI {
 		height = width; // en principio, un cuadrado perfecto
 		compositeView = CompositeView(parent: parent, bounds: Rect(0, 0, width, height)).background_(Color.rand);
 		^compositeView;
+	}
+
+	makePannel {
+		^VLayout(
+			this.makeOscillator(window),
+			this.makeOscillator(window),
+			this.makeOscillator(window),
+			this.makeOscillator(window),
+		);
+	}
+
+	makeOscillator {|parent|
+		var arrayKnobs = 7.collect({
+			var knob = Knob(parent, Rect(0,0,10,10));
+			allViews.add(knob);
+			knob;
+		});
+
+		// antes de devolver el HLayout, se pueden almacenar los knobs con nombres propios para poder acceder a sus propiedades y modificarlas desde fuera.
+		^HLayout(*arrayKnobs);
 	}
 
 	resize {|factor|
