@@ -1,19 +1,11 @@
 Lista "To Do"
 
-
-* ver si se puede incluir el UGen de triángulo que se usa. Es una extensión y sería bueno tenerla incluida en el quark.
-* Creando interfaz completa en TouchOSC. usar diferentes colores según se van implementado características.
-* problema aliasing en osciladores (ver abajo)
+* Crear interfaz GUI de SC con posibilidad de uso como terminal.
+* crear script (python?) para uso standalone.
+* ver si se puede incluir el UGen de triángulo que se usa. Es una extensión y sería bueno tenerla incluida en el quark. Si no, no usar esta extensión.
 * hacer textos feedback de lo que ocurre (éxitos, errores...)
-* limpiar y ordenar código.
-* Parámetro "on-off" de Output channel
-* escribir a centros con Synthi 100 o técnicos que lo conozcan para pedir información.
 * Archivo de ayuda de Supercollider
-* Módulo de ruido
-* Módulo de Ring modulator
-* Módulo Envelope Shaper
-* Método Synthi100.setState
-* Enviar el estado del Synthi por OSC en un "bundle" en lugar de la rutina actual
+* Módulo Envelope Shaper (requiere varias clases, una por modo del selector)
 * grabación de mensajes OSC cronológicamente, y reproducción.
 
 

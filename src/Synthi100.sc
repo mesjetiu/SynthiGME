@@ -30,6 +30,9 @@ Synthi100 {
 	// Puerto por defecto de envío de mensajes OSC (por defecto en TouchOSC)
 	var devicePort;
 
+	// Interfáz gráfica de SuperCollider (GUI)
+	var <guiSC;
+
 	var <generalVol;
 	var <standalone = false;
 
@@ -48,11 +51,14 @@ Synthi100 {
 		Class.initClassTree(S100_RingModulator);
 		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_PatchbayAudio);
+		Class.initClassTree(S100_GUI);
 	}
 
 	*new {
-		arg server = Server.local, standalone = false; // por defecto los canales izquierdo y derecho del sistema
-		^super.new.init(server, standalone);
+		arg server = Server.local,
+		standalone = false, // por defecto los canales izquierdo y derecho del sistema
+		gui = false;
+		^super.new.init(server, standalone, gui);
 	}
 
 
@@ -82,10 +88,13 @@ Synthi100 {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, standal|
+	init {|serv, standal, gui|
 
 		// Carga la configuración
 		settings = S100_Settings.get;
+
+		guiSC = S100_GUI();
+		if(gui == true, {guiSC.makeWindow});
 
 		generalVol = settings[\generalVol];
 		devicePort = settings[\OSCDevicePort];

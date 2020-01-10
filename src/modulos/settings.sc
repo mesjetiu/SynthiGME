@@ -25,6 +25,9 @@
 		\inputAmplifiersBusses, [6,7,8,9,10,11,12,13],
 		\micAmpBusses, [14,15],
 
+		// GUI (Graphical User Interface de SuperCollider)
+
+
 		// CONFIGURACIÓN DE OSCILADORES*************************************************************
 
 		\oscOutVol, 1,
