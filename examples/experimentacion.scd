@@ -1,17 +1,17 @@
-Quarks.install("https://github.com/mesjetiu/Synthi100.git")
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
+//Quarks.install("https://github.com/mesjetiu/Synthi100.git")
 
 Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
 
 Quarks.clear
 
-[1,2].add(3)
 
-s.options.numOutputBusChannels != 18
-{WhiteNoise.ar}.play
+o = Synthi100(gui:true)
 
-
-o = Synthi100(standalone:true).run().pairDevice
+o.guiSC.resize(1.3)
+o.guiSC.resetSize
+o.guiSC.window.fullScreen
+Window
 
 
 o.modulRingModulators[0].setLevel(10)
@@ -273,3 +273,29 @@ w.bounds = w.bounds.left_(128).top_(600);
 	Rect(left, top, width, height);
 }
 )
+(
+w = Window().front;
+a = { Button(w) } ! 10;
+w.layout = HLayout(*a);
+);
+
+
+
+
+
+
+(
+w = Window.new;
+
+c = CompositeView(w, Rect(50, 0, 300, 300));
+a = Slider2D(c, Rect(0, 0, 100, 100)); // actually displays at (50, 0)
+b = Slider2D(c, Rect(100, 100, 100, 100));
+
+c.background = Color.rand;
+
+w.front;
+)
+w.bounds.left
+
+c.bounds_(Rect(100, 0, 300, 300)); // contents adjust since coords are relative
+c.resize_(6); // contents adjust since coords are relative
