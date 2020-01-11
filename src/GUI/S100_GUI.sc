@@ -29,51 +29,22 @@ S100_GUI {
 		var vLayout, hUpLayout, hDownLayout, pannelsUp, pannelsDown;
 
 		// Lo primero de todo, se crea la ventana que será padre de todos los "views"
-		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: true);
+		var image = Image.new("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/imágenes del Synthi 100 montadas/vista general.jpg");
+		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: false);
+		window.view.setBackgroundImage(image, 10);
+		window.view.mouseDownAction = {|view, x, y, modifiers, buttonNumber, clickCount| [x,y].postln};
+		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
+			char.postln;
+			keycode.postln;
+			if(keycode==65451, {this.resize(1.3)}); // '+'
+			if(keycode==65453, {this.resize(0.7)}); // '-'
+			if(keycode==65450, {this.resetSize}); // '*'
+		};
 		windowSize = window.bounds;
 
-		// Todos los paneles de arriba (pruebas)
-		pannelsUp = [
-			this.makePannel, this.makePannel, this.makePannel, this.makePannel
-		];
 
-		// Todos los paneles de abajo (pruebas)
-		pannelsDown = 4.collect({
-			var pannel = this.makePannel1(
-				parent: window,
-				width: rectWindow.width/4,
-				height: rectWindow.width/4,
-			);
-		//	allViews.add(pannel);
-			pannel;
-		});
 
-		// Layout horizontal superior
-		hUpLayout = HLayout(*pannelsUp);
-	//	allViews.add(hUpLayout);
 
-		// Layout horizontal inferior
-		hDownLayout = HLayout(*pannelsDown);
-	//	allViews.add(hDownLayout);
-
-		// Layout vertical (contiene ambas filas horizontales)
-		vLayout = VLayout(hUpLayout, hDownLayout);
-	//	allViews.add(vLayout);
-
-		vLayout.setStretch(0, 4);
-		vLayout.setStretch(1, 5);
-
-		hUpLayout.setStretch(0, 4);
-		hUpLayout.setStretch(1, 4);
-		hUpLayout.setStretch(2, 4);
-		hUpLayout.setStretch(3, 4);
-
-		hDownLayout.setStretch(0, 5);
-		hDownLayout.setStretch(1, 1);
-		hDownLayout.setStretch(2, 5);
-		hDownLayout.setStretch(3, 5);
-
-		window.layout_(vLayout);
 
 
 		// Se almacenan todos los Rect de todos los Views para saber el tamaño por defecto y poder resetear.
@@ -82,30 +53,13 @@ S100_GUI {
 	}
 
 	makePannel1 {arg parent, width, height;
-		var compositeView;
-		height = width; // en principio, un cuadrado perfecto
-		compositeView = CompositeView(parent: parent, bounds: Rect(0, 0, width, height)).background_(Color.rand);
-		^compositeView;
+
 	}
 
-	makePannel {
-		^VLayout(
-			this.makeOscillator(window),
-			this.makeOscillator(window),
-			this.makeOscillator(window),
-			this.makeOscillator(window),
-		);
+	makePannel {|parent|
 	}
 
-	makeOscillator {|parent|
-		var arrayKnobs = 7.collect({
-			var knob = Knob(parent, Rect(0,0,10,10));
-			allViews.add(knob);
-			knob;
-		});
-
-		// antes de devolver el HLayout, se pueden almacenar los knobs con nombres propios para poder acceder a sus propiedades y modificarlas desde fuera.
-		^HLayout(*arrayKnobs);
+	makeOscillator {
 	}
 
 	resize {|factor|
