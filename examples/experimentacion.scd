@@ -16,7 +16,7 @@ Window
 
 o.modulRingModulators[0].setLevel(10)
 o.modulNoiseGenerators[0].setLevel(3)
-
+s
 
 o.modulInputAmplifiers[0].setLevel(5)
 o.modulOutputChannels[0].setLevel(1)

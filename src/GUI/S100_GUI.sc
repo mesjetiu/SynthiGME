@@ -40,6 +40,11 @@ S100_GUI {
 			if(keycode==65453, {this.resize(0.7)}); // '-'
 			if(keycode==65450, {this.resetSize}); // '*'
 		};
+		window.view.mouseWheelAction = {|view, x, y, modifiers, xDelta, yDelta|
+			[x,y,xDelta,yDelta].postln;
+			if(yDelta == 15, {this.resize(1.1)});
+			if(yDelta == -15, {this.resize(0.9)});
+		};
 		windowSize = window.bounds;
 
 
