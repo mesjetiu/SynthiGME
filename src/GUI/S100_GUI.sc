@@ -66,7 +66,7 @@ S100_GUI {
 		var left = (rectWindow.width/4) * 2;
 		var top = 0;
 		var rect = Rect(left, top, width, width);
-		var compositeView = CompositeView(parent, rect).background_(Color.rand);
+		var compositeView = CompositeView(parent, rect); //.background_(Color.rand);
 
 		compositeView.layout = VLayout(
 			HLayout(
@@ -97,23 +97,30 @@ S100_GUI {
 		allViews.add(compositeView);
 	}
 
-	makeOscillator {|parent|
-		var knobs = 7.collect({
-			VLayout(
-				Button(bounds: Rect(0,0,30,30)).background_(Color.rand),
-				Knob(parent),
-			)
-		});
+	makeOscillator {
+		var imageOTLL = Image(installedPath ++ "/src/GUI/images/osc_triangle_level_label.png");
+		var imageOSLL = Image(installedPath ++ "/src/GUI/images/osc_sawtooth_level_label.png");
+		var knobs = 7.collect({this.makeKnob(imageOSLL)});
 		^HLayout(*knobs);
 	}
 
-	makeNoiseGenerator {|parent|
-		var knobs = 2.collect({Knob(parent)});
+	makeKnob {|image|
+		^VLayout( // Cada uno de los Knobs del oscilador
+			CompositeView(),
+			CompositeView().setBackgroundImage(image, 11),
+			Knob(),
+		).setStretch(0,1).setStretch(1,2).setStretch(2,3);
+	}
+
+	makeNoiseGenerator {
+		var imageOTLL = Image("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100/src/GUI/images/osc_triangle_level_label.png");
+		var knobs = 2.collect({this.makeKnob(imageOTLL)});
 		^HLayout(*knobs);
 	}
 
-	makeRandomControlVoltageGenerator {|parent|
-		var knobs = 5.collect({Knob(parent)});
+	makeRandomControlVoltageGenerator {
+		var imageOTLL = Image("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100/src/GUI/images/osc_triangle_level_label.png");
+		var knobs = 5.collect({this.makeKnob(imageOTLL)});
 		^HLayout(*knobs);
 	}
 
