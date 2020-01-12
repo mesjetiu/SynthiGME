@@ -8,7 +8,8 @@ S100_GUI {
 	var allSizeViews; // Array que almacenará todos los Rect de todos los Views de la ventana. Serán los tamaños por defecto, para reiniciar.
 	var rectWindow; // Posición y tamaño de la ventana.
 	var proportion; // Proporción de la ventana
-	var widthScreen; // Anchura de la pantalla del ordenador
+	var widthRealScreen; // Anchura de la pantalla del ordenador
+	var widthScreen; // Anchura de la pantalla virtual sobre la que se trabaja en esta clase.
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
 
@@ -35,7 +36,9 @@ S100_GUI {
 		green = Color.new255(68.6, 107.2, 82.6);
 		white = Color.new255(172.7, 166.6, 160.3);
 		black = Color.new255(34.4, 36.3, 38.7);
-		widthScreen = Window.screenBounds.width; // tamaño de la pantalla del ordenador
+	//	widthRealScreen = Window.screenBounds.width; // tamaño de la pantalla del ordenador
+		widthRealScreen = 720;
+		widthScreen = 1920; // Anchura de la pantalla virtual (cada pantalla real tendrá un ancho distinto)
 		//widthScreen = 700; // solo para pruebas, por comodidad.
 		proportion = [16,9]; // Proporciones de la ventana
 		rectWindow = Rect(0, 0, widthScreen, (widthScreen * proportion[1]) / proportion[0]);
@@ -60,9 +63,9 @@ S100_GUI {
 		};
 		/*
 		window.view.mouseWheelAction = {|view, x, y, modifiers, xDelta, yDelta|
-			[x,y,xDelta,yDelta].postln;
-			if(yDelta > 0, {this.resize(1.1 * (yDelta/15))});
-			if(yDelta < 0, {this.resize(0.9 * (yDelta/15))});
+		[x,y,xDelta,yDelta].postln;
+		if(yDelta > 0, {this.resize(1.1 * (yDelta/15))});
+		if(yDelta < 0, {this.resize(0.9 * (yDelta/15))});
 		};
 		*/
 		windowSize = window.bounds;
@@ -74,6 +77,8 @@ S100_GUI {
 
 		// Se almacenan todos los Rect de todos los Views para saber el tamaño por defecto y poder resetear.
 		allSizeViews = allViews.collect({|v| v.bounds});
+
+		this.resize(widthRealScreen/widthScreen);
 		window.front;
 	}
 
@@ -182,11 +187,22 @@ S100_GUI {
 	}
 
 	resetSize {
-		window.bounds = windowSize;
-		allViews.do({|view, i|
-			view.bounds = allSizeViews[i];
+		var factor = (widthRealScreen/widthScreen) * (widthRealScreen / window.bounds.width);
+		window.bounds = Rect(
+			left: 0,
+			top: 0,
+			width: window.bounds.width * factor,
+			height: window.bounds.height * factor,
+		);
+		allViews.do({|view|
+			view.bounds = Rect(
+				left: view.bounds.left * factor,
+				top: view.bounds.top * factor,
+				width: view.bounds.width * factor,
+				height: view.bounds.height * factor,
+			);
 		});
-		step = stepDefault;
+		step = step * factor;
 	}
 }
 
