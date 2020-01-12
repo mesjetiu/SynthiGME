@@ -12,6 +12,16 @@ S100_GUI {
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
 
+	// Colores de la intefaz
+	var blue;
+	var green;
+	var white;
+	var black;
+
+	// Cantidad que varían los valores de incremento y decremento usando el ratón
+	var stepDefault = 0.001;
+	var step = 0.001;
+
 	*new {arg create = false;
 		^super.new.init(create);
 	}
@@ -21,6 +31,10 @@ S100_GUI {
 
 	init {
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
+		blue = Color.new255(61.8, 86.7, 118.4);
+		green = Color.new255(68.6, 107.2, 82.6);
+		white = Color.new255(172.7, 166.6, 160.3);
+		black = Color.new255(34.4, 36.3, 38.7);
 		widthScreen = Window.screenBounds.width; // tamaño de la pantalla del ordenador
 		//widthScreen = 700; // solo para pruebas, por comodidad.
 		proportion = [16,9]; // Proporciones de la ventana
@@ -62,85 +76,63 @@ S100_GUI {
 	}
 
 	makePannel3 {|parent|
-		var width = rectWindow.width/4;
-		var left = (rectWindow.width/4) * 2;
-		var top = 0;
-		var rect = Rect(left, top, width, width);
+		var rect = Rect(
+			(rectWindow.width/4) * 2,
+			0,
+			rectWindow.width/4,
+			rectWindow.width/4,
+		);
 
 		var imageOTLL = Image(installedPath ++ "/src/GUI/images/panel_3.png");
-		var compositeView = CompositeView(parent, rect).setBackgroundImage(imageOTLL,11); //.background_(Color.rand);
+		var compositeView = CompositeView(parent, rect).setBackgroundImage(imageOTLL,11);
 
+		// Los 6 osciladores de la izquierda
+		var left, top, spacing;
+		left = 28;
+		top = 75.5;
+		spacing = 58;
 
+		6.do({
+			this.makeOscillator(compositeView, left, top);
+			top = top + spacing;
+		});
 
-		compositeView.layout = VLayout(
-			CompositeView(),
-			HLayout(
-				CompositeView(),
-				VLayout(
-					this.makeOscillator(),
-					this.makeOscillator(),
-					this.makeOscillator(),
-					this.makeOscillator(),
-					this.makeOscillator(),
-					this.makeOscillator(),
-				),
-				VLayout(
-					this.makeOscillator(),
-					this.makeOscillator(),
-					this.makeOscillator(),
-					this.makeOscillator(),
-					this.makeOscillator(),
-					this.makeOscillator(),
-				),
-				CompositeView(),
-			).setStretch(0, 15).setStretch(1, 100).setStretch(2, 100).setStretch(3, 14).spacing_(20),
-			HLayout(
-				this.makeNoiseGenerator(),
-				this.makeNoiseGenerator(),
-				this.makeRandomControlVoltageGenerator(),
-			).setStretch(0, 2).setStretch(1, 2).setStretch(2, 5),
-			CompositeView(),
-		).setStretch(0, 60).setStretch(1, 600).setStretch(2, 100).setStretch(3, 24).spacing_(0);
-
-
-
-
-		allViews.add(compositeView);
+		allViews = allViews.add(compositeView);
 	}
 
-	makeOscillator {
-//		var imageOTLL = Image(installedPath ++ "/src/GUI/images/osc_triangle_level_label.png");
-//		var imageOSLL = Image(installedPath ++ "/src/GUI/images/osc_sawtooth_level_label.png");
-		var knobs = 7.collect({this.makeKnob()});
-		^HLayout(*knobs);
+	makeOscillator {|parent, left, top|
+		var size = 27;
+		var spacing = 30.4;
+		var knob1, knob2, knob3, knob4, knob5, knob6, knob7;
+		knob1 = Knob(parent, Rect(left, top, size, size))
+		.color_([blue, black, white, nil]).mode_(\horiz).step_(step);
+		left = left + spacing;
+		knob2 = Knob(parent, Rect(left, top, size, size))
+		.color_([green, black, white, nil]).mode_(\horiz).step_(step).centered_(true).value_(0.5);
+		left = left + spacing;
+		knob3 = Knob(parent, Rect(left, top, size, size))
+		.color_([white, black, white, nil]).mode_(\horiz).step_(step);
+		left = left + spacing;
+		knob4 = Knob(parent, Rect(left, top, size, size))
+		.color_([green, black, white, nil]).mode_(\horiz).step_(step).centered_(true).value_(0.5);
+		left = left + spacing;
+		knob5 = Knob(parent, Rect(left, top, size, size))
+		.color_([blue, black, white, nil]).mode_(\horiz).step_(step);
+		left = left + spacing;
+		knob6 = Knob(parent, Rect(left, top, size, size))
+		.color_([white, black, white, nil]).mode_(\horiz).step_(step);
+		left = left + 26.4;
+		knob7 = Knob(parent, Rect(left, top-17, size, size))
+		.color_([black, black, white, nil]).mode_(\horiz).step_(step);
+		allViews = allViews ++ [knob1, knob2, knob3, knob4, knob5, knob6, knob7];
 	}
 
-	makeKnob {|image|
-		^VLayout( // Cada uno de los Knobs del oscilador
-			CompositeView(),
-			Knob(),
-		).setStretch(0, 20).setStretch(1, 30);
-	}
+
 
 	makeNoiseGenerator {
-//		var imageOTLL = Image("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100/src/GUI/images/osc_triangle_level_label.png");
-		var knobs = [
-			VLayout( // Cada uno de los Knobs del oscilador
-			CompositeView(),
-			Knob(),
-		).setStretch(0, 5).setStretch(1, 30),
-			VLayout( // Cada uno de los Knobs del oscilador
-			CompositeView(),
-			Knob(),
-		).setStretch(0, 5).setStretch(1, 30),
-		];
-		^HLayout(*knobs);
 	}
 
 	makeRandomControlVoltageGenerator {
-//		var imageOTLL = Image("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100/src/GUI/images/osc_triangle_level_label.png");
-		var knobs = 5.collect({this.makeKnob()});
-		^HLayout(*knobs);
 	}
 
 
@@ -158,14 +150,16 @@ S100_GUI {
 				width: view.bounds.width * factor,
 				height: view.bounds.height * factor,
 			);
-		})
+		});
+		step = step * factor;
 	}
 
 	resetSize {
 		window.bounds = windowSize;
 		allViews.do({|view, i|
 			view.bounds = allSizeViews[i];
-		})
+		});
+		step = stepDefault;
 	}
 }
 
