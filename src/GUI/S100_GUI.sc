@@ -66,10 +66,16 @@ S100_GUI {
 		var left = (rectWindow.width/4) * 2;
 		var top = 0;
 		var rect = Rect(left, top, width, width);
-		var compositeView = CompositeView(parent, rect); //.background_(Color.rand);
+
+		var imageOTLL = Image(installedPath ++ "/src/GUI/images/panel_3.png");
+		var compositeView = CompositeView(parent, rect).setBackgroundImage(imageOTLL,11); //.background_(Color.rand);
+
+
 
 		compositeView.layout = VLayout(
+			CompositeView(),
 			HLayout(
+				CompositeView(),
 				VLayout(
 					this.makeOscillator(),
 					this.makeOscillator(),
@@ -86,41 +92,54 @@ S100_GUI {
 					this.makeOscillator(),
 					this.makeOscillator(),
 				),
-			),
+				CompositeView(),
+			).setStretch(0, 15).setStretch(1, 100).setStretch(2, 100).setStretch(3, 14).spacing_(20),
 			HLayout(
 				this.makeNoiseGenerator(),
 				this.makeNoiseGenerator(),
 				this.makeRandomControlVoltageGenerator(),
 			).setStretch(0, 2).setStretch(1, 2).setStretch(2, 5),
-		).setStretch(0, 6).setStretch(1, 1);
+			CompositeView(),
+		).setStretch(0, 60).setStretch(1, 600).setStretch(2, 100).setStretch(3, 24).spacing_(0);
+
+
+
 
 		allViews.add(compositeView);
 	}
 
 	makeOscillator {
-		var imageOTLL = Image(installedPath ++ "/src/GUI/images/osc_triangle_level_label.png");
-		var imageOSLL = Image(installedPath ++ "/src/GUI/images/osc_sawtooth_level_label.png");
-		var knobs = 7.collect({this.makeKnob(imageOSLL)});
+//		var imageOTLL = Image(installedPath ++ "/src/GUI/images/osc_triangle_level_label.png");
+//		var imageOSLL = Image(installedPath ++ "/src/GUI/images/osc_sawtooth_level_label.png");
+		var knobs = 7.collect({this.makeKnob()});
 		^HLayout(*knobs);
 	}
 
 	makeKnob {|image|
 		^VLayout( // Cada uno de los Knobs del oscilador
 			CompositeView(),
-			CompositeView().setBackgroundImage(image, 11),
 			Knob(),
-		).setStretch(0,1).setStretch(1,2).setStretch(2,3);
+		).setStretch(0, 20).setStretch(1, 30);
 	}
 
 	makeNoiseGenerator {
-		var imageOTLL = Image("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100/src/GUI/images/osc_triangle_level_label.png");
-		var knobs = 2.collect({this.makeKnob(imageOTLL)});
+//		var imageOTLL = Image("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100/src/GUI/images/osc_triangle_level_label.png");
+		var knobs = [
+			VLayout( // Cada uno de los Knobs del oscilador
+			CompositeView(),
+			Knob(),
+		).setStretch(0, 5).setStretch(1, 30),
+			VLayout( // Cada uno de los Knobs del oscilador
+			CompositeView(),
+			Knob(),
+		).setStretch(0, 5).setStretch(1, 30),
+		];
 		^HLayout(*knobs);
 	}
 
 	makeRandomControlVoltageGenerator {
-		var imageOTLL = Image("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100/src/GUI/images/osc_triangle_level_label.png");
-		var knobs = 5.collect({this.makeKnob(imageOTLL)});
+//		var imageOTLL = Image("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100/src/GUI/images/osc_triangle_level_label.png");
+		var knobs = 5.collect({this.makeKnob()});
 		^HLayout(*knobs);
 	}
 

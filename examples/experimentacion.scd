@@ -1,4 +1,5 @@
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
+o = Synthi100(gui:true)
 //Quarks.install("https://github.com/mesjetiu/Synthi100.git")
 
 Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
@@ -317,3 +318,13 @@ c.resize_(6); // contents adjust since coords are relative
     ~window.front;
 //~image.plot;
 )
+
+
+
+// Esta expresión devuelve el path donde está instalado el Quark. Útil para abrir archivos como imágenes.
+Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0]
+
+
+
+
+HLayout(Knob(), Knob()).setStretch(0,2);
