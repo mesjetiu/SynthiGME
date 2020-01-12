@@ -10,6 +10,8 @@ S100_GUI {
 	var proportion; // Proporción de la ventana
 	var widthScreen; // Anchura de la pantalla del ordenador
 
+	var installedPath; // Dirección absoluta de instalación del Quark.
+
 	*new {arg create = false;
 		^super.new.init(create);
 	}
@@ -18,8 +20,9 @@ S100_GUI {
 	// Métodos de instancia ******************************************************************
 
 	init {
-		//	widthScreen = Window.screenBounds.width; // tamaño de la pantalla del ordenador
-		widthScreen = 700; // solo para pruebas, por comodidad.
+		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
+		widthScreen = Window.screenBounds.width; // tamaño de la pantalla del ordenador
+		//widthScreen = 700; // solo para pruebas, por comodidad.
 		proportion = [16,9]; // Proporciones de la ventana
 		rectWindow = Rect(0, 0, widthScreen, (widthScreen * proportion[1]) / proportion[0]);
 		allViews = [];
@@ -29,9 +32,10 @@ S100_GUI {
 		var vLayout, hUpLayout, hDownLayout, pannelsUp, pannelsDown;
 
 		// Lo primero de todo, se crea la ventana que será padre de todos los "views"
-		var image = Image.new("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/imágenes del Synthi 100 montadas/vista general.jpg");
+		//	var image = Image.new("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/imágenes del Synthi 100 montadas/vista general.jpg");
 		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: false);
-		window.view.setBackgroundImage(image, 10);
+		//	window.view.setBackgroundImage(image, 10);
+		window.background = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		window.view.mouseDownAction = {|view, x, y, modifiers, buttonNumber, clickCount| [x,y].postln};
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			char.postln;
@@ -49,7 +53,7 @@ S100_GUI {
 
 
 
-
+		this.makePannel3(window);
 
 
 		// Se almacenan todos los Rect de todos los Views para saber el tamaño por defecto y poder resetear.
@@ -57,17 +61,64 @@ S100_GUI {
 		window.front;
 	}
 
-	makePannel1 {arg parent, width, height;
+	makePannel3 {|parent|
+		var width = rectWindow.width/4;
+		var left = (rectWindow.width/4) * 2;
+		var top = 0;
+		var rect = Rect(left, top, width, width);
+		var compositeView = CompositeView(parent, rect).background_(Color.rand);
 
+		compositeView.layout = VLayout(
+			HLayout(
+				VLayout(
+					this.makeOscillator(),
+					this.makeOscillator(),
+					this.makeOscillator(),
+					this.makeOscillator(),
+					this.makeOscillator(),
+					this.makeOscillator(),
+				),
+				VLayout(
+					this.makeOscillator(),
+					this.makeOscillator(),
+					this.makeOscillator(),
+					this.makeOscillator(),
+					this.makeOscillator(),
+					this.makeOscillator(),
+				),
+			),
+			HLayout(
+				this.makeNoiseGenerator(),
+				this.makeNoiseGenerator(),
+				this.makeRandomControlVoltageGenerator(),
+			).setStretch(0, 2).setStretch(1, 2).setStretch(2, 5),
+		).setStretch(0, 6).setStretch(1, 1);
+
+		allViews.add(compositeView);
 	}
 
-	makePannel {|parent|
+	makeOscillator {|parent|
+		var knobs = 7.collect({
+			VLayout(
+				Button(bounds: Rect(0,0,30,30)).background_(Color.rand),
+				Knob(parent),
+			)
+		});
+		^HLayout(*knobs);
 	}
 
-	makeOscillator {
+	makeNoiseGenerator {|parent|
+		var knobs = 2.collect({Knob(parent)});
+		^HLayout(*knobs);
 	}
 
-	resize {|factor|
+	makeRandomControlVoltageGenerator {|parent|
+		var knobs = 5.collect({Knob(parent)});
+		^HLayout(*knobs);
+	}
+
+
+	resize {arg factor;
 		window.bounds = Rect(
 			left: window.bounds.left,
 			top: window.bounds.top,

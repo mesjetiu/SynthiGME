@@ -33,6 +33,7 @@ Synthi100 {
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC;
 
+	// Otras opciones.
 	var <generalVol;
 	var <standalone = false;
 
@@ -92,6 +93,7 @@ Synthi100 {
 
 		// Carga la configuración
 		settings = S100_Settings.get;
+
 
 		guiSC = S100_GUI();
 		if(gui == true, {guiSC.makeWindow});

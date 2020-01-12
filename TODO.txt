@@ -1,6 +1,7 @@
 Lista "To Do"
 
-* Crear interfaz GUI de SC con posibilidad de uso como terminal.
+* crear los paneles en GUI con CompositeView? usar imágenes del Synthi 100 original. Los patchbays pueden dibujarse?
+* zoom con centro en el puntero del ratón
 * crear script (python?) para uso standalone.
 * ver si se puede incluir el UGen de triángulo que se usa. Es una extensión y sería bueno tenerla incluida en el quark. Si no, no usar esta extensión.
 * hacer textos feedback de lo que ocurre (éxitos, errores...)
