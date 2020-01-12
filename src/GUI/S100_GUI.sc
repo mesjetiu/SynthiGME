@@ -58,11 +58,13 @@ S100_GUI {
 			if(keycode==65453, {this.resize(0.7)}); // '-'
 			if(keycode==65450, {this.resetSize}); // '*'
 		};
+		/*
 		window.view.mouseWheelAction = {|view, x, y, modifiers, xDelta, yDelta|
 			[x,y,xDelta,yDelta].postln;
-			if(yDelta == 15, {this.resize(1.1)});
-			if(yDelta == -15, {this.resize(0.9)});
+			if(yDelta > 0, {this.resize(1.1 * (yDelta/15))});
+			if(yDelta < 0, {this.resize(0.9 * (yDelta/15))});
 		};
+		*/
 		windowSize = window.bounds;
 
 
@@ -83,8 +85,8 @@ S100_GUI {
 			rectWindow.width/4,
 		);
 
-		var imageOTLL = Image(installedPath ++ "/src/GUI/images/panel_3.png");
-		var compositeView = CompositeView(parent, rect).setBackgroundImage(imageOTLL,11);
+		var imagePannel3 = Image(installedPath ++ "/src/GUI/images/panel_3.png");
+		var compositeView = CompositeView(parent, rect).setBackgroundImage(imagePannel3,11);
 
 		// Los 6 osciladores de la izquierda
 		var left, top, spacing;
@@ -92,6 +94,14 @@ S100_GUI {
 		top = 75.5;
 		spacing = 58;
 
+		6.do({
+			this.makeOscillator(compositeView, left, top);
+			top = top + spacing;
+		});
+
+		// Los 6 osciladores de la derecha
+		left = 239;
+		top = 75.5;
 		6.do({
 			this.makeOscillator(compositeView, left, top);
 			top = top + spacing;
@@ -105,25 +115,42 @@ S100_GUI {
 		var spacing = 30.4;
 		var knob1, knob2, knob3, knob4, knob5, knob6, knob7;
 		knob1 = Knob(parent, Rect(left, top, size, size))
-		.color_([blue, black, white, nil]).mode_(\horiz).step_(step);
+		.color_([blue, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
 		left = left + spacing;
 		knob2 = Knob(parent, Rect(left, top, size, size))
-		.color_([green, black, white, nil]).mode_(\horiz).step_(step).centered_(true).value_(0.5);
+		.color_([green, black, white, nil])
+		.mode_(\horiz).step_(step)
+		.centered_(true)
+		.value_(0.5);
 		left = left + spacing;
 		knob3 = Knob(parent, Rect(left, top, size, size))
-		.color_([white, black, white, nil]).mode_(\horiz).step_(step);
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
 		left = left + spacing;
 		knob4 = Knob(parent, Rect(left, top, size, size))
-		.color_([green, black, white, nil]).mode_(\horiz).step_(step).centered_(true).value_(0.5);
+		.color_([green, black, white, nil])
+		.mode_(\horiz)
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
 		left = left + spacing;
 		knob5 = Knob(parent, Rect(left, top, size, size))
-		.color_([blue, black, white, nil]).mode_(\horiz).step_(step);
+		.color_([blue, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
 		left = left + spacing;
 		knob6 = Knob(parent, Rect(left, top, size, size))
-		.color_([white, black, white, nil]).mode_(\horiz).step_(step);
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
 		left = left + 26.4;
 		knob7 = Knob(parent, Rect(left, top-17, size, size))
-		.color_([black, black, white, nil]).mode_(\horiz).step_(step);
+		.color_([black, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
 		allViews = allViews ++ [knob1, knob2, knob3, knob4, knob5, knob6, knob7];
 	}
 
