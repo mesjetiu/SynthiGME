@@ -1,5 +1,5 @@
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
-o = Synthi100(gui:true)
+Synthi100(gui:true)
 //Quarks.install("https://github.com/mesjetiu/Synthi100.git")
 
 Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
@@ -7,7 +7,19 @@ Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
 Quarks.clear
 
 
+
+
+
+Knob
+
 o = Synthi100(gui:true)
+(
+o.guiSC.routineDoubleClick.reset;
+o.guiSC.routineDoubleClick
+)
+o.guiSC.routineDoubleClick.play
+o.guiSC.zoomPannel3;
+o.guiSC.window.bounds
 
 o.guiSC.resize(1.3)
 o.guiSC.resetSize
@@ -325,6 +337,17 @@ c.resize_(6); // contents adjust since coords are relative
 Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0]
 
 
-
-
-HLayout(Knob(), Knob()).setStretch(0,2);
+// Rutina para ser ejecutada cada vez que se hace click en una view y se quiere que reaccione al doble click.
+(
+Routine({ // Cuando se hace un click...
+	if (~click == true, {
+		"doble click!!".postln;
+		// añadir lo que ha de hacer al doble click
+	}, {
+		"click!".postln;
+		~click = true;
+		wait(0.5); // tiempo de espera del segundo click
+	});
+	~click = false; // una vez transcurrida la espera, se vuelve false
+}).play;
+)

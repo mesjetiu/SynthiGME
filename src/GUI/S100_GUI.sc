@@ -20,6 +20,9 @@ S100_GUI {
 	var stepDefault = 0.001;
 	var step = 0.001;
 
+	// Al hacer click sobre determinadas views se activa la rutina esperando un segundo click.
+	var click;
+
 	*new {arg create = false;
 		^super.new.init(create);
 	}
@@ -37,6 +40,8 @@ S100_GUI {
 		widthScreen = 1920; // Anchura de la pantalla virtual (cada pantalla real tendrá un ancho distinto)
 		proportion = [16,9]; // Proporciones de la ventana
 		rectWindow = Rect(0, 0, widthScreen, (widthScreen * proportion[1]) / proportion[0]);
+
+		click = false;
 	}
 
 	makeWindow {
@@ -44,20 +49,21 @@ S100_GUI {
 		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: false);
 		window.background = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		window.view.mouseDownAction = {|view, x, y, modifiers, buttonNumber, clickCount| [x,y].postln};
-		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
-			char.postln;
-			keycode.postln;
-			if(keycode==65451, {this.resize(1.3)}); // '+'
-			if(keycode==65453, {this.resize(0.7)}); // '-'
-			if(keycode==65450, {this.resetSize}); // '*'
+
+		/*		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
+		char.postln;
+		keycode.postln;
+		if(keycode==65451, {this.resize(1.3)}); // '+'
+		if(keycode==65453, {this.resize(0.7)}); // '-'
+		if(keycode==65450, {this.resetSize}); // '*'
 		};
 
 		window.view.mouseWheelAction = {|view, x, y, modifiers, xDelta, yDelta|
-			[x,y,xDelta,yDelta].postln;
-			if(yDelta > 0, {this.resize(1.05 ** (yDelta/15))});
-			if(yDelta < 0, {this.resize(0.95 ** ((yDelta).abs/15))});
+		[x,y,xDelta,yDelta].postln;
+		if(yDelta > 0, {this.resize(1.05 ** (yDelta/15))});
+		if(yDelta < 0, {this.resize(0.95 ** ((yDelta).abs/15))});
 		};
-
+		*/
 
 
 		this.makePannel3(window);
