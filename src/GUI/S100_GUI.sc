@@ -40,8 +40,6 @@ S100_GUI {
 	}
 
 	makeWindow {
-		var vLayout, hUpLayout, hDownLayout, pannelsUp, pannelsDown;
-
 		// Lo primero de todo, se crea la ventana que será padre de todos los "views"
 		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: false);
 		window.background = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
@@ -59,6 +57,7 @@ S100_GUI {
 			if(yDelta > 0, {this.resize(1.05 ** (yDelta/15))});
 			if(yDelta < 0, {this.resize(0.95 ** ((yDelta).abs/15))});
 		};
+
 
 
 		this.makePannel3(window);
@@ -177,6 +176,20 @@ S100_GUI {
 		);
 		this.resize(factor, window.view);
 		step = step * factor;
+	}
+
+	zoomPannel3 {
+		var factor, left, top;
+		factor = 9/4;
+		top = ((9/16) * widthRealScreen) - (((9/16) * widthRealScreen) * factor);
+		left = -1 * (((((widthRealScreen * factor)  -  widthRealScreen))/2) + (widthRealScreen/8 * factor));
+		this.resize(factor);
+		window.bounds = Rect(
+			left: left,
+			top: top,
+			width: window.bounds.width,
+			height: window.bounds.height,
+		);
 	}
 }
 
