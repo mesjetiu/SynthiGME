@@ -22,6 +22,7 @@ S100_GUI {
 
 	// Al hacer click sobre determinadas views se activa la rutina esperando un segundo click.
 	var click;
+	var timeDoubleClick = 0.5;
 
 	*new {arg create = false;
 		^super.new.init(create);
@@ -36,7 +37,7 @@ S100_GUI {
 		green = Color.new255(68.6, 107.2, 82.6);
 		white = Color.new255(172.7, 166.6, 160.3);
 		black = Color.new255(34.4, 36.3, 38.7);
-		widthRealScreen = Window.screenBounds.width; // tamaño de la pantalla del ordenador
+		widthRealScreen = Window.screenBounds.width - 1; // tamaño de la pantalla del ordenador
 		widthScreen = 1920; // Anchura de la pantalla virtual (cada pantalla real tendrá un ancho distinto)
 		proportion = [16,9]; // Proporciones de la ventana
 		rectWindow = Rect(0, 0, widthScreen, (widthScreen * proportion[1]) / proportion[0]);
@@ -48,7 +49,6 @@ S100_GUI {
 		// Lo primero de todo, se crea la ventana que será padre de todos los "views"
 		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: false);
 		window.background = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
-		window.view.mouseDownAction = {|view, x, y, modifiers, buttonNumber, clickCount| [x,y].postln};
 
 		/*		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 		char.postln;
@@ -101,6 +101,23 @@ S100_GUI {
 			this.makeOscillator(compositeView, left, top);
 			top = top + spacing;
 		});
+
+		compositeView.mouseDownAction_({
+			Routine({ // Cuando se hace un click...
+				if (click == true, {
+					// Cuando se hace doble click...
+					if(window.bounds.width == widthRealScreen, {
+						this.zoomPannel3;
+					},{
+						this.resetSize;
+					})
+				}, {
+					click = true;
+					wait(timeDoubleClick); // tiempo de espera del segundo click
+				});
+				click = false; // una vez transcurrida la espera, se vuelve false
+			}).play(AppClock);
+		})
 	}
 
 	makeOscillator {|parent, left, top|
@@ -155,15 +172,18 @@ S100_GUI {
 	}
 
 
-	resize {arg factor, view = window;
+	resize {arg factor, view = window, left, top;
 		var v = view;
+		var l, t;
+		if (left != nil, {l = left}, {l = view.bounds.left * factor});
+		if (top != nil, {t = top}, {t = view.bounds.top * factor});
 		if(view.asString == "a Window", {
 			v = view.view;
 			step = step * factor; // solo se ejecuta una vez (cuando el argumento es "window")
 		});
 		view.bounds = Rect(
-			left: view.bounds.left * factor,
-			top: view.bounds.top * factor,
+			left: l,
+			top: t,
 			width: view.bounds.width * factor,
 			height: view.bounds.height * factor,
 		);
@@ -189,14 +209,6 @@ S100_GUI {
 		factor = 9/4;
 		top = ((9/16) * widthRealScreen) - (((9/16) * widthRealScreen) * factor);
 		left = -1 * (((((widthRealScreen * factor)  -  widthRealScreen))/2) + (widthRealScreen/8 * factor));
-		this.resize(factor);
-		window.bounds = Rect(
-			left: left,
-			top: top,
-			width: window.bounds.width,
-			height: window.bounds.height,
-		);
+		this.resize(factor, left: left, top: top);
 	}
 }
-
-
