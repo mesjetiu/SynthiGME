@@ -3,9 +3,6 @@ S100_GUI {
 	classvar settings;
 
 	var <window;
-	var windowSize; // Rect, tamaño y coordenadas por defecto (para reiniciar)
-	var <allViews; // Array con todos los views que componen la ventana (excepto la ventana misma, de la variable "window"). Se usará para cambiar el tamaño de todos los elementos al mismo tiempo.
-	var allSizeViews; // Array que almacenará todos los Rect de todos los Views de la ventana. Serán los tamaños por defecto, para reiniciar.
 	var rectWindow; // Posición y tamaño de la ventana.
 	var proportion; // Proporción de la ventana
 	var widthRealScreen; // Anchura de la pantalla del ordenador
@@ -36,22 +33,17 @@ S100_GUI {
 		green = Color.new255(68.6, 107.2, 82.6);
 		white = Color.new255(172.7, 166.6, 160.3);
 		black = Color.new255(34.4, 36.3, 38.7);
-	//	widthRealScreen = Window.screenBounds.width; // tamaño de la pantalla del ordenador
-		widthRealScreen = 720;
+		widthRealScreen = Window.screenBounds.width; // tamaño de la pantalla del ordenador
 		widthScreen = 1920; // Anchura de la pantalla virtual (cada pantalla real tendrá un ancho distinto)
-		//widthScreen = 700; // solo para pruebas, por comodidad.
 		proportion = [16,9]; // Proporciones de la ventana
 		rectWindow = Rect(0, 0, widthScreen, (widthScreen * proportion[1]) / proportion[0]);
-		allViews = [];
 	}
 
 	makeWindow {
 		var vLayout, hUpLayout, hDownLayout, pannelsUp, pannelsDown;
 
 		// Lo primero de todo, se crea la ventana que será padre de todos los "views"
-		//	var image = Image.new("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/imágenes del Synthi 100 montadas/vista general.jpg");
 		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: false);
-		//	window.view.setBackgroundImage(image, 10);
 		window.background = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		window.view.mouseDownAction = {|view, x, y, modifiers, buttonNumber, clickCount| [x,y].postln};
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
@@ -61,22 +53,15 @@ S100_GUI {
 			if(keycode==65453, {this.resize(0.7)}); // '-'
 			if(keycode==65450, {this.resetSize}); // '*'
 		};
-		/*
-		window.view.mouseWheelAction = {|view, x, y, modifiers, xDelta, yDelta|
-		[x,y,xDelta,yDelta].postln;
-		if(yDelta > 0, {this.resize(1.1 * (yDelta/15))});
-		if(yDelta < 0, {this.resize(0.9 * (yDelta/15))});
-		};
-		*/
-		windowSize = window.bounds;
 
+		window.view.mouseWheelAction = {|view, x, y, modifiers, xDelta, yDelta|
+			[x,y,xDelta,yDelta].postln;
+			if(yDelta > 0, {this.resize(1.05 ** (yDelta/15))});
+			if(yDelta < 0, {this.resize(0.95 ** ((yDelta).abs/15))});
+		};
 
 
 		this.makePannel3(window);
-
-
-		// Se almacenan todos los Rect de todos los Views para saber el tamaño por defecto y poder resetear.
-		allSizeViews = allViews.collect({|v| v.bounds});
 
 		this.resize(widthRealScreen/widthScreen);
 		window.front;
@@ -111,8 +96,6 @@ S100_GUI {
 			this.makeOscillator(compositeView, left, top);
 			top = top + spacing;
 		});
-
-		allViews = allViews.add(compositeView);
 	}
 
 	makeOscillator {|parent, left, top|
@@ -156,7 +139,6 @@ S100_GUI {
 		.color_([black, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
-		allViews = allViews ++ [knob1, knob2, knob3, knob4, knob5, knob6, knob7];
 	}
 
 
@@ -168,40 +150,32 @@ S100_GUI {
 	}
 
 
-	resize {arg factor;
-		window.bounds = Rect(
-			left: window.bounds.left,
-			top: window.bounds.top,
-			width: window.bounds.width * factor,
-			height: window.bounds.height * factor,
-		);
-		allViews.do({|view|
-			view.bounds = Rect(
-				left: view.bounds.left * factor,
-				top: view.bounds.top * factor,
-				width: view.bounds.width * factor,
-				height: view.bounds.height * factor,
-			);
+	resize {arg factor, view = window;
+		var v = view;
+		if(view.asString == "a Window", {
+			v = view.view;
+			step = step * factor; // solo se ejecuta una vez (cuando el argumento es "window")
 		});
-		step = step * factor;
+		view.bounds = Rect(
+			left: view.bounds.left * factor,
+			top: view.bounds.top * factor,
+			width: view.bounds.width * factor,
+			height: view.bounds.height * factor,
+		);
+		v.children.do({|v|
+			this.resize(factor, v);
+		})
 	}
 
 	resetSize {
-		var factor = (widthRealScreen/widthScreen) * (widthRealScreen / window.bounds.width);
+		var factor = (widthRealScreen/window.bounds.width);
 		window.bounds = Rect(
 			left: 0,
 			top: 0,
 			width: window.bounds.width * factor,
 			height: window.bounds.height * factor,
 		);
-		allViews.do({|view|
-			view.bounds = Rect(
-				left: view.bounds.left * factor,
-				top: view.bounds.top * factor,
-				width: view.bounds.width * factor,
-				height: view.bounds.height * factor,
-			);
-		});
+		this.resize(factor, window.view);
 		step = step * factor;
 	}
 }
