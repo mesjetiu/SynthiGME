@@ -13,6 +13,7 @@ Quarks.clear
 Knob
 
 o = Synthi100(gui:true).run.pairDevice
+o.guiSC.asString
 o.pairDevice
 (
 o.guiSC.routineDoubleClick.reset;

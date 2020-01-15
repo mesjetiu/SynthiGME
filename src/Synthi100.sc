@@ -352,17 +352,18 @@ Synthi100 {
 
 	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
 	sendBroadcastMsg{|msg, value, addrForbidden|
-		if(addrForbidden == "a S100_GUI", {
-			addrForbidden = nil;
-		}, {
-			// Poner aquí código de reenvío a GUI de los mensajes recibidos de otros dispositivos
-		});
-
-		netAddr.do({|i|
-			if(addrForbidden.ip != i.ip, {
+		if(addrForbidden == \GUI, {
+			netAddr.do({|i|
 				i.sendMsg(msg, value)
 			})
-		})
+		}, {
+			// Poner aquí código de reenvío a GUI de los mensajes recibidos de otros dispositivos
+			netAddr.do({|i|
+				if(addrForbidden.ip != i.ip, {
+					i.sendMsg(msg, value)
+				})
+			})
+		});
 	}
 
 	// Envía el estado de todo el Synthi por OSC

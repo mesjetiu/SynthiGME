@@ -190,7 +190,7 @@ S100_GUI {
 			synthi100.setParameterOSC(
 				string: "/osc/" ++ num ++ "/frequency",
 				value: knob.value.linlin(0,1,0,10),
-				addrForbidden: this,
+				addrForbidden: \GUI,
 			)
 		};
 
