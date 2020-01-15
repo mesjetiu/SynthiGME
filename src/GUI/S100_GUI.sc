@@ -13,6 +13,7 @@ S100_GUI {
 	var widthScreen; // Anchura de la pantalla virtual sobre la que se trabaja en esta clase.
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
+	var <running = false; // Es true cuando se enciende la GUI. Sirve de semáforo para enviar o no mensajes desde fuera.
 
 	// Colores de la intefaz
 	var blue;
@@ -76,6 +77,8 @@ S100_GUI {
 
 		this.resize(widthRealScreen/widthScreen);
 		window.front;
+
+		running = true;
 	}
 
 	makePannel3 {|parent|
@@ -183,7 +186,42 @@ S100_GUI {
 			synthi100.setParameterOSC(
 				string: "/osc/" ++ num ++ "/pulse/" ++ "level",
 				value: knob.value.linlin(0,1,0,10),
-				addrForbidden: this,
+				addrForbidden: \GUI,
+			)
+		};
+		pulseShape.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/osc/" ++ num ++ "/pulse/" ++ "shape",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		sineLevel.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/osc/" ++ num ++ "/sine/" ++ "level",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		sineSymmetry.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/osc/" ++ num ++ "/sine/" ++ "symmetry",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		triangleLevel.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/osc/" ++ num ++ "/triangle/" ++ "level",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		sawtoothLevel.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/osc/" ++ num ++ "/sawtooth/" ++ "level",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
 			)
 		};
 		frequency.action = {|knob|
@@ -193,9 +231,6 @@ S100_GUI {
 				addrForbidden: \GUI,
 			)
 		};
-
-
-
 	}
 
 

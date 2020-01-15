@@ -112,6 +112,14 @@ Synthi100 {
 		S100_RingModulator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
+
+		// Módulos.
+		modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
+		modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
+		modulNoiseGenerators = 2.collect({|i| S100_NoiseGenerator(server)});
+		modulRingModulators = 3.collect({|i| S100_RingModulator(server)});
+		modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
+		modulPatchbayAudio = S100_PatchbayAudio(server);
 	}
 
 
@@ -123,6 +131,8 @@ Synthi100 {
 
 		Routine({
 			while({server == nil}, {wait(waitTime)});
+
+			wait(0.1); // Tiempo de seguridad para estar seguros que se han creado correctamente los módulos y sus buses. De otro modo puede que se oiga sonido sin conectar nada. Quizás se pueda encontrar otra solución más elegante...
 
 			if (standalone == true, { // Modo "standalone": los buses de salida se conectan directamente a los puertos de SC.
 				// Nos aseguramos de que el número de canales de entrada y salida son los correctos
@@ -157,13 +167,7 @@ Synthi100 {
 			// Se arranca el servidor (si no lo está)
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
 			server.waitForBoot({
-				// Módulos (han de crearse tras arrancar el servidor, ya que se crean buses)
-				modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
-				modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
-				modulNoiseGenerators = 2.collect({|i| S100_NoiseGenerator(server)});
-				modulRingModulators = 3.collect({|i| S100_RingModulator(server)});
-				modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
-				modulPatchbayAudio = S100_PatchbayAudio(server);
+
 
 				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
 				"Conexión de salida stereo canales 1 a 8...".post;
@@ -440,10 +444,7 @@ Synthi100 {
 				);
 				switch (parameter,
 					"range", {modulOscillators[index].setRange(value)},
-					"frequency", {
-						modulOscillators[index].setFrequency(value);
-						guiSC.parameterViews[string].value = value.linlin(0, 10, 0, 1);
-					},
+					"frequency", {modulOscillators[index].setFrequency(value);},
 					"pulselevel", {modulOscillators[index].setPulseLevel(value)},
 					"pulseshape", {modulOscillators[index].setPulseShape(value)},
 					"sinelevel", {modulOscillators[index].setSineLevel(value)},
@@ -451,6 +452,8 @@ Synthi100 {
 					"trianglelevel", {modulOscillators[index].setTriangleLevel(value)},
 					"sawtoothlevel", {modulOscillators[index].setSawtoothLevel(value)}
 				);
+				// Se envía el mismo mensaje a GUI si está abierta
+				if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1);});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
