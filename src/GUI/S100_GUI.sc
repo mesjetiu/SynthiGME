@@ -2,7 +2,11 @@ S100_GUI {
 
 	classvar settings;
 
+	var synthi100;
+
 	var <window;
+	var <parameterViews;
+	var <synthi100; // instancia de Synthi100 para callback
 	var rectWindow; // Posición y tamaño de la ventana.
 	var proportion; // Proporción de la ventana
 	var widthRealScreen; // Anchura de la pantalla del ordenador
@@ -24,14 +28,16 @@ S100_GUI {
 	var click;
 	var timeDoubleClick = 0.5;
 
-	*new {arg create = false;
-		^super.new.init(create);
+	*new {arg synthi;
+		^super.new.init(synthi);
 	}
 
 
 	// Métodos de instancia ******************************************************************
 
-	init {
+	init {|synthi|
+		parameterViews = Dictionary.new;
+		synthi100 = synthi;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
 		blue = Color.new255(61.8, 86.7, 118.4);
 		green = Color.new255(68.6, 107.2, 82.6);
@@ -89,16 +95,16 @@ S100_GUI {
 		top = 75.5;
 		spacing = 58;
 
-		6.do({
-			this.makeOscillator(compositeView, left, top);
+		6.do({|num|
+			this.makeOscillator(compositeView, left, top, num + 1);
 			top = top + spacing;
 		});
 
 		// Los 6 osciladores de la derecha
 		left = 239;
 		top = 75.5;
-		6.do({
-			this.makeOscillator(compositeView, left, top);
+		6.do({|num|
+			this.makeOscillator(compositeView, left, top, num + 7);
 			top = top + spacing;
 		});
 
@@ -120,47 +126,76 @@ S100_GUI {
 		})
 	}
 
-	makeOscillator {|parent, left, top|
+	makeOscillator {|parent, left, top, num|
 		var size = 27;
 		var spacing = 30.4;
-		var knob1, knob2, knob3, knob4, knob5, knob6, knob7;
-		knob1 = Knob(parent, Rect(left, top, size, size))
+		var pulseLevel, pulseShape, sineLevel, sineSymmetry, triangleLevel, sawtoothLevel, frequency;
+		pulseLevel = Knob(parent, Rect(left, top, size, size))
 		.color_([blue, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
 		left = left + spacing;
-		knob2 = Knob(parent, Rect(left, top, size, size))
+		pulseShape = Knob(parent, Rect(left, top, size, size))
 		.color_([green, black, white, nil])
 		.mode_(\horiz).step_(step)
 		.centered_(true)
 		.value_(0.5);
 		left = left + spacing;
-		knob3 = Knob(parent, Rect(left, top, size, size))
+		sineLevel = Knob(parent, Rect(left, top, size, size))
 		.color_([white, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
 		left = left + spacing;
-		knob4 = Knob(parent, Rect(left, top, size, size))
+		sineSymmetry = Knob(parent, Rect(left, top, size, size))
 		.color_([green, black, white, nil])
 		.mode_(\horiz)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
 		left = left + spacing;
-		knob5 = Knob(parent, Rect(left, top, size, size))
+		triangleLevel = Knob(parent, Rect(left, top, size, size))
 		.color_([blue, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
 		left = left + spacing;
-		knob6 = Knob(parent, Rect(left, top, size, size))
+		sawtoothLevel = Knob(parent, Rect(left, top, size, size))
 		.color_([white, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
 		left = left + 26.4;
-		knob7 = Knob(parent, Rect(left, top-17, size, size))
+		frequency = Knob(parent, Rect(left, top-17, size, size))
 		.color_([black, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
+
+		// Se añaden al diccionario todos los mandos del oscilador para poder cambiar su valor.
+		parameterViews
+		.put("/osc/" ++ num ++ "/pulse/" ++ "level", pulseLevel)
+		.put("/osc/" ++ num ++ "/pulse/" ++ "shape", pulseShape)
+		.put("/osc/" ++ num ++ "/sine/" ++ "level", sineLevel)
+		.put("/osc/" ++ num ++ "/sine/" ++ "symmetry", sineSymmetry)
+		.put("/osc/" ++ num ++ "/triangle/" ++ "level", triangleLevel)
+		.put("/osc/" ++ num ++ "/sawtooth/" ++ "level", sawtoothLevel)
+		.put("/osc/" ++ num ++ "/frequency", frequency);
+
+		// Acciones a realizar al cambiar manualmente el valor de cada mando
+		pulseLevel.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/osc/" ++ num ++ "/pulse/" ++ "level",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: this,
+			)
+		};
+		frequency.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/osc/" ++ num ++ "/frequency",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: this,
+			)
+		};
+
+
+
 	}
 
 

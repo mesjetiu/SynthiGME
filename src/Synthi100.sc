@@ -95,7 +95,7 @@ Synthi100 {
 		settings = S100_Settings.get;
 
 
-		guiSC = S100_GUI();
+		guiSC = S100_GUI(this);
 		if(gui == true, {guiSC.makeWindow});
 
 		generalVol = settings[\generalVol];
@@ -301,7 +301,7 @@ Synthi100 {
 				});
 				"Synthi100 en ejecución".postln;
 			});
-		}).play;
+		}).play(AppClock);
 	}
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
@@ -334,7 +334,7 @@ Synthi100 {
 				});
 				this.sendStateOSC;
 			});
-		}).play;
+		}).play(AppClock);
 	}
 
 
@@ -344,7 +344,7 @@ Synthi100 {
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
 			// se ejecuta la orden recibida por mensaje.
-			this.setParameterOSC(msg[0].asString, msg[1], addr);
+			{this.setParameterOSC(msg[0].asString, msg[1], addr)}.defer(0);
 		};
 		netAddr = NetAddr("255.255.255.255", devicePort);
 		thisProcess.addOSCRecvFunc(functionOSC);
@@ -352,6 +352,12 @@ Synthi100 {
 
 	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
 	sendBroadcastMsg{|msg, value, addrForbidden|
+		if(addrForbidden == "a S100_GUI", {
+			addrForbidden = nil;
+		}, {
+			// Poner aquí código de reenvío a GUI de los mensajes recibidos de otros dispositivos
+		});
+
 		netAddr.do({|i|
 			if(addrForbidden.ip != i.ip, {
 				i.sendMsg(msg, value)
@@ -406,7 +412,7 @@ Synthi100 {
 
 			});
 			"Dispositivos comunicados por OSC preparados OK".postln;
-		}).play;
+		}).play(AppClock);
 	}
 
 	// Setters de la clase /////////////////////////////////////////////////////////////
@@ -433,7 +439,10 @@ Synthi100 {
 				);
 				switch (parameter,
 					"range", {modulOscillators[index].setRange(value)},
-					"frequency", {modulOscillators[index].setFrequency(value)},
+					"frequency", {
+						modulOscillators[index].setFrequency(value);
+						guiSC.parameterViews[string].value = value.linlin(0, 10, 0, 1);
+					},
 					"pulselevel", {modulOscillators[index].setPulseLevel(value)},
 					"pulseshape", {modulOscillators[index].setPulseShape(value)},
 					"sinelevel", {modulOscillators[index].setSineLevel(value)},
