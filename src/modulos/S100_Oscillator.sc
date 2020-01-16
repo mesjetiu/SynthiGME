@@ -7,9 +7,9 @@ S100_Oscillator {
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
 	var <range = 1; // Valores: 1 = "hi" y 0 = "lo". Por ahora no tiene ningún efecto
 	var <pulseLevel = 0; // Todos los valores son entre 0 y 10, como los diales del Synthi 100.
-	var <pulseShape = 5;
+	var <pulseShape = 0; // entre -5 y 5
 	var <sineLevel = 0;
-	var <sineSymmetry = 5;
+	var <sineSymmetry = 0; // entre -5 y 5
 	var <triangleLevel = 0;
 	var <sawtoothLevel = 0;
 	var <frequency = 5;
@@ -153,7 +153,7 @@ S100_Oscillator {
 	}
 
 	convertPulseShape {|shape|
-		^shape.linlin(0, 10, settings[\oscPulseShapeMin], settings[\oscPulseShapeMax]);
+		^shape.linlin(-5, 5, settings[\oscPulseShapeMin], settings[\oscPulseShapeMax]);
 	}
 
 	convertSineLevel {|level|
@@ -161,7 +161,7 @@ S100_Oscillator {
 	}
 
 	convertSineSymmetry {|symmetry|
-		^symmetry.linlin(0, 10, settings[\oscSineSymmetryMin], settings[\oscSineSymmetryMax]);
+		^symmetry.linlin(-5, 5, settings[\oscSineSymmetryMin], settings[\oscSineSymmetryMax]);
 	}
 
 	convertSawtoothLevel {|level|
@@ -208,7 +208,7 @@ S100_Oscillator {
 	}
 
 	setPulseShape {| shape |
-		if((shape>=0).and(shape<=10), {
+		if((shape>=-5).and(shape<=5), {
 			pulseShape = shape;
 			synth.set(\pulseShape, this.convertPulseShape(shape))}, {
 			("S100_Oscillator/setPulseShape: " + shape + " no es un valor entre 0 y 1").postln});
@@ -223,7 +223,7 @@ S100_Oscillator {
 	}
 
 	setSineSymmetry {| symmetry |
-		if((symmetry>=0).and(symmetry<=10), {
+		if((symmetry>=-5).and(symmetry<=5), {
 			sineSymmetry = symmetry;
 			synth.set(\sineSymmetry, this.convertSineSymmetry(symmetry))}, {
 			("S100_Oscillator/setSineSymmetry: " + symmetry + " no es un valor entre -1 y 1").postln});

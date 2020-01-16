@@ -192,7 +192,7 @@ S100_GUI {
 		pulseShape.action = {|knob|
 			synthi100.setParameterOSC(
 				string: "/osc/" ++ num ++ "/pulse/" ++ "shape",
-				value: knob.value.linlin(0,1,0,10),
+				value: knob.value.linlin(0,1,-5,5),
 				addrForbidden: \GUI,
 			)
 		};
@@ -206,7 +206,7 @@ S100_GUI {
 		sineSymmetry.action = {|knob|
 			synthi100.setParameterOSC(
 				string: "/osc/" ++ num ++ "/sine/" ++ "symmetry",
-				value: knob.value.linlin(0,1,0,10),
+				value: knob.value.linlin(0,1,-5,5),
 				addrForbidden: \GUI,
 			)
 		};

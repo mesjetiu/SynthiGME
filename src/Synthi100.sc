@@ -444,13 +444,34 @@ Synthi100 {
 				);
 				switch (parameter,
 					"range", {modulOscillators[index].setRange(value)},
-					"frequency", {modulOscillators[index].setFrequency(value);},
-					"pulselevel", {modulOscillators[index].setPulseLevel(value)},
-					"pulseshape", {modulOscillators[index].setPulseShape(value)},
-					"sinelevel", {modulOscillators[index].setSineLevel(value)},
-					"sinesymmetry", {modulOscillators[index].setSineSymmetry(value)},
-					"trianglelevel", {modulOscillators[index].setTriangleLevel(value)},
-					"sawtoothlevel", {modulOscillators[index].setSawtoothLevel(value)}
+					"frequency", {
+						modulOscillators[index].setFrequency(value);
+						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+					},
+					"pulselevel", {
+						modulOscillators[index].setPulseLevel(value);
+						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+					},
+					"pulseshape", {
+						modulOscillators[index].setPulseShape(value);
+						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)});
+					},
+					"sinelevel", {
+						modulOscillators[index].setSineLevel(value);
+						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+					},
+					"sinesymmetry", {
+						modulOscillators[index].setSineSymmetry(value);
+						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)});
+					},
+					"trianglelevel", {
+						modulOscillators[index].setTriangleLevel(value);
+						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+					},
+					"sawtoothlevel", {
+						modulOscillators[index].setSawtoothLevel(value);
+						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+					}
 				);
 				// Se envía el mismo mensaje a GUI si está abierta
 				if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1);});
