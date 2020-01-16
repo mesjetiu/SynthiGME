@@ -89,7 +89,7 @@ S100_GUI {
 			rectWindow.width/4,
 		);
 
-		var imagePannel3 = Image(installedPath ++ "/src/GUI/images/panel_3.png");
+		var imagePannel3 = Image(installedPath ++ "/src/GUI/images/pannel_3.png");
 		var compositeView = CompositeView(parent, rect).setBackgroundImage(imagePannel3,11);
 
 		// Los 6 osciladores de la izquierda
