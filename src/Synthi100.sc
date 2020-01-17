@@ -2,8 +2,9 @@ Synthi100 {
 	var <server; // Servidor por defecto
 
 	// Módulos que incluye:
-	var <modulOscillators;
 	var <modulInputAmplifiers;
+	var <modulEnvelopeSharpers;
+	var <modulOscillators;
 	var <modulNoiseGenerators;
 	var <modulRingModulators;
 	var <modulOutputChannels;
@@ -107,6 +108,7 @@ Synthi100 {
 		// Se añaden al servidor las declaracines SynthDefs
 		Synthi100.addSynthDef;
 		S100_InputAmplifier.addSynthDef;
+		S100_EnvelopeSharper.addSynthDef;
 		S100_Oscillator.addSynthDef;
 		S100_NoiseGenerator.addSynthDef;
 		S100_RingModulator.addSynthDef;
@@ -114,8 +116,9 @@ Synthi100 {
 		S100_PatchbayAudio.addSynthDef;
 
 		// Módulos.
-		modulOscillators = 12.collect({S100_Oscillator(server)}); // 12 osciladores generadores de señal de audio
 		modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
+		modulEnvelopeSharpers = 3.collect({|i| S100_EnvelopeSharper(server)});
+		modulOscillators = 12.collect({S100_Oscillator(server)});
 		modulNoiseGenerators = 2.collect({|i| S100_NoiseGenerator(server)});
 		modulRingModulators = 3.collect({|i| S100_RingModulator(server)});
 		modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
@@ -266,6 +269,14 @@ Synthi100 {
 				modulOscillators.do({|i|
 					i.createSynth;
 					while({i.synth.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
+				// Envelope Sharpers
+				"Envelope Sharpers...".post;
+				modulEnvelopeSharpers.do({|i|
+					i.createSynth;
+					while({i.group.isPlaying == false}, {wait(waitTime)});
 				});
 				"OK\n".post;
 

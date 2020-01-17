@@ -10,17 +10,19 @@ S100_EnvelopeSharper {
 	Release: Tiempo de vuelta al nivel 0 inicial
 
 	Opciones del selector:
-	    Gated F/R: Un voltage mayor que 0 activa Free Run hasta que vuelve a 0.
-	    Free Run: El ciclo se repite una vez tras otra sin detenerse ningún tiempo en "sustain". El tiempo total de duración del ciclo será: delay + attack + decay + release.
-	    Triggered: Un voltage mayor que 0 activa un único ciclo.
-	    Gated y Hold: Aparentemente es lo mismo. En las descripciones de S100, que no tienen "sustain", solo tiene "hold", y su comportamiento consiste en pararse en el nivel tras el attack (una vez iniciado el ciclo con un valor mayor que 0), y se mantiene en el hasta que el nivel desciende a 0. Ya que este es el comportamiento esperable, por otra parte, de "gated", doy por supuesto que "hold" significa lo mismo que en los sintetizadores clásicos, y que es "gated" el que es un concepto nuevo, como lo es también el de "sustain", y que el ciclo se para precisamente en el valor de "sustain", algo, por otra parte, que es lo que suelen hacer todas las implementaciones modernas de ADSR.
+	Gated F/R: Un voltage mayor que 0 activa Free Run hasta que vuelve a 0.
+	Free Run: El ciclo se repite una vez tras otra sin detenerse ningún tiempo en "sustain". El tiempo total de duración del ciclo será: delay + attack + decay + release.
+	Triggered: Un voltage mayor que 0 activa un único ciclo.
+	Gated y Hold: Aparentemente es lo mismo. En las descripciones de S100, que no tienen "sustain", solo tiene "hold", y su comportamiento consiste en pararse en el nivel tras el attack (una vez iniciado el ciclo con un valor mayor que 0), y se mantiene en el hasta que el nivel desciende a 0. Ya que este es el comportamiento esperable, por otra parte, de "gated", doy por supuesto que "hold" significa lo mismo que en los sintetizadores clásicos, y que es "gated" el que es un concepto nuevo, como lo es también el de "sustain", y que el ciclo se para precisamente en el valor de "sustain", algo, por otra parte, que es lo que suelen hacer todas las implementaciones modernas de ADSR.
 
 	"Envelope level" lo voy a dejar por ahora sin implementar. No es claro si se refiere solo al nivel de salida del control de voltage, equivalente al dial "trapezoid" de los S100 antiguos, ya que no lo trae el de Cuenca (es muy probable).
 
 	*/
 
-	// Synth de la instancia
-	var <synth = nil;
+	// Group de la instancia. Esta clase no contiene y Synth como el resto, sino un grupo. En el grupo estarán varios synths, uno por cada opción del selector. Esta clase maneja el selector, y activa y desactiva otras clases implementadas para las diferentes opciones del selector.
+	var <group = nil;
+
+	var envFreeRun; // Clase para la opción del selector "FREE RUN"
 
 	var <server;
 	var <inputBus; // Entrada de audio.
@@ -37,10 +39,6 @@ S100_EnvelopeSharper {
 	var <signalLevel = 0;
 
 
-	// Otros atributos de instancia y clase
-	var <running; // true o false: Si el sintetizador está activo o pausado
-	var pauseRoutine; // Rutina de pausado del Synth
-	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar settings;
 
 
@@ -51,46 +49,14 @@ S100_EnvelopeSharper {
 		^super.new.init(server);
 	}
 
+	*initClass {
+		// Inicializa otras clases antes de esta
+		//Class.initClassTree(S100_Settings);
+		Class.initClassTree(S100_EnvFreeRun);
+	}
+
 	*addSynthDef {
-
-		// Habrá un Synth distinto por cada modo del selector: Free Run, Gated, Triggered y Hold. Todos ellos estarán en un grupo en el servidor para facilitar el orden entre todos los synths de Synthi100, tratándose este grupo como una sola unidad. Siempre estará funcionando aquel que corresponda con el selector ya que podría ser conectado en cualquier momento y la fase no se reiniciaría. El resto de synths estarán en pausa.
-		lag = S100_Settings.get[\envLag];
-
-
-		SynthDef(\S100_FreeRun, {
-			arg outputBus,
-			inputBus,
-			delayTime,
-			attackTime,
-			decayTime,
-			sustainLevel,
-			releaseTime,
-			signalLevel,
-			gate = 0;
-
-			var sig, env;
-
-			env = Env(
-				levels: [
-					0, // loopNode (ver Help de "Env")
-					0,
-					1,
-					sustainLevel,
-					0, // releaseNode
-				],
-				times: [delayTime, attackTime, decayTime, releaseTime],
-				releaseNode: 3,
-				loopNode: 0,
-			);
-
-
-			// Se aplica la envolvente y el nivel (level) a la señal
-			sig = sig * env * signalLevel;
-
-			Out.ar(outputBus, sig);
-
-		}, [nil, nil, lag, lag, lag, lag, lag, lag]
-		).add
+		S100_EnvFreeRun.addSynthDef;
 	}
 
 
@@ -100,45 +66,17 @@ S100_EnvelopeSharper {
 		server = serv;
 		inputBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
-
-
-		pauseRoutine = Routine({
-			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
-			synth.run(false);
-		});
 	}
 
-	// Crea el Synth en el servidor
 	createSynth {
-		if(synth.isPlaying==false, {
-			synth = Synth(\S100_freeRun, [
-				\inputBus, inputBus,
-				\outputBus, outputBus,
-				\delayTime, this.convertTime(delayTime),
-				\attackTime, this.convertTime(attackTime),
-				\delayTime, this.convertTime(delayTime),
-				\sustainLevel, (sustainLevel),
-				\relaseTime, this.convertTime(releaseTime),
-				\envelopeLevel, this.convertEnvelopeLevel(envelopeLevel);
-				\signalLevel, this.convertLevel(signalLevel),
-			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
-		});
-		this.synthRun;
+		Routine({
+			var waitTime = 0.001;
+			group = Group(server).register;
+			while({group.isPlaying == false}, {wait(waitTime)});
+		}).play(AppClock);
 	}
 
-	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
-	synthRun {
-		var outputTotal = signalLevel;
-		if (outputTotal==0, {
-			running = false;
-			pauseRoutine.reset;
-			pauseRoutine.play;
-		}, {
-			pauseRoutine.stop;
-			running = true;
-			synth.run(true);
-		});
-	}
+
 
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
 
@@ -177,7 +115,7 @@ S100_EnvelopeSharper {
 		if((lev>=0).and(lev<=10), {
 			signalLevel = lev;
 			this.synthRun();
-			synth.set(\level, this.convertSignalLevel(lev))
+			group.set(\level, this.convertSignalLevel(lev))
 		}, {
 			("S100_EnvelopeShaper/setSignalLevel: " + lev + " no es un valor entre 0 y 1").postln});
 	}
@@ -186,7 +124,7 @@ S100_EnvelopeSharper {
 		if((time>=0).and(time<=10), {
 			delayTime = time;
 			this.synthRun();
-			synth.set(\delayTime, this.convertTime(time))
+			group.set(\delayTime, this.convertTime(time))
 		}, {
 			("S100_EnvelopeShaper/setDelayTime: " + time + " no es un valor entre 0 y 10").postln});
 	}
@@ -195,7 +133,7 @@ S100_EnvelopeSharper {
 		if((time>=0).and(time<=10), {
 			attackTime = time;
 			this.synthRun();
-			synth.set(\attackTime, this.convertTime(time))
+			group.set(\attackTime, this.convertTime(time))
 		}, {
 			("S100_EnvelopeShaper/setAttackTime: " + time + " no es un valor entre 0 y 10").postln});
 	}
@@ -204,7 +142,7 @@ S100_EnvelopeSharper {
 		if((time>=0).and(time<=10), {
 			releaseTime = time;
 			this.synthRun();
-			synth.set(\releaseTime, this.convertTime(time))
+			group.set(\releaseTime, this.convertTime(time))
 		}, {
 			("S100_EnvelopeShaper/setReleaseTime: " + time + " no es un valor entre 0 y 10").postln});
 	}
