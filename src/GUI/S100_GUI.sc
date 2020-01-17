@@ -5,7 +5,8 @@ S100_GUI {
 	var synthi100;
 
 	var <window;
-	var <parameterViews;
+	var <parameterViews; // Dictionary con todas las views y claves para OSC
+	var <defaultSizes; // Array con todos los tamaños por defecto
 	var <synthi100; // instancia de Synthi100 para callback
 	var rectWindow; // Posición y tamaño de la ventana.
 	var proportion; // Proporción de la ventana
@@ -38,13 +39,14 @@ S100_GUI {
 
 	init {|synthi|
 		parameterViews = Dictionary.new;
+		defaultSizes =  [];
 		synthi100 = synthi;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
 		blue = Color.new255(61.8, 86.7, 118.4);
 		green = Color.new255(68.6, 107.2, 82.6);
 		white = Color.new255(172.7, 166.6, 160.3);
 		black = Color.new255(34.4, 36.3, 38.7);
-		widthRealScreen = Window.screenBounds.width - 1; // tamaño de la pantalla del ordenador
+		widthRealScreen = Window.availableBounds.width * (95/100); // tamaño de la pantalla del ordenador
 		widthScreen = 1920; // Anchura de la pantalla virtual (cada pantalla real tendrá un ancho distinto)
 		proportion = [16,9]; // Proporciones de la ventana
 		rectWindow = Rect(0, 0, widthScreen, (widthScreen * proportion[1]) / proportion[0]);
@@ -77,6 +79,7 @@ S100_GUI {
 
 		this.resize(widthRealScreen/widthScreen);
 		window.front;
+		defaultSizes = defaultSizes.add([window, window.bounds]);
 
 		running = true;
 	}
@@ -126,7 +129,8 @@ S100_GUI {
 				});
 				click = false; // una vez transcurrida la espera, se vuelve false
 			}).play(AppClock);
-		})
+		});
+		defaultSizes = defaultSizes.add([compositeView, compositeView.bounds]);
 	}
 
 	makeOscillator {|parent, left, top, num|
@@ -170,6 +174,18 @@ S100_GUI {
 		.color_([black, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
+
+		// Se añaden las views y sus bounds por defecto para resize
+		defaultSizes = defaultSizes ++ [
+			[pulseLevel, pulseLevel.bounds],
+			[pulseShape, pulseShape.bounds],
+			[sineLevel, sineLevel.bounds],
+			[sineSymmetry, sineSymmetry.bounds],
+			[triangleLevel, triangleLevel.bounds],
+			[sawtoothLevel, sawtoothLevel.bounds],
+			[frequency, frequency.bounds]
+		];
+
 
 		// Se añaden al diccionario todos los mandos del oscilador para poder cambiar su valor.
 		parameterViews
@@ -259,19 +275,25 @@ S100_GUI {
 		);
 		v.children.do({|v|
 			this.resize(factor, v);
-		})
+		});
 	}
 
 	resetSize {
-		var factor = (widthRealScreen/window.bounds.width);
+/*		var factor = (widthRealScreen/window.bounds.width);
 		window.bounds = Rect(
 			left: 0,
 			top: 0,
 			width: window.bounds.width * factor,
 			height: window.bounds.height * factor,
 		);
-		this.resize(factor, window.view);
-		step = step * factor;
+		this.resize(factor, window.view);*/
+		defaultSizes.do({|par|
+			var view, bounds;
+			view = par[0];
+			bounds = par[1];
+			view.bounds = bounds;
+		});
+		step = stepDefault;
 	}
 
 	zoomPannel3 {
