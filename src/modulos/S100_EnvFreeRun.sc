@@ -14,25 +14,28 @@ S100_EnvFreeRun {
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
-	*new { |server, group|
+	*new { |server|
 		settings = S100_Settings.get;
-		^super.new.init(server, group);
+		^super.new.init(server);
 	}
 
 	*addSynthDef {
 		(
 			SynthDef(\S100_envFreeRun, {
-				arg gate = 0,
+				arg gate,
+				inputBus,
+				inFeedbackBus,
 				outputBus = 0,
 				delayTime=1,
 				attackTime=1,
 				decayTime=1,
 				sustainLevel=1,
 				releaseTime=1,
+				envelopeLevel,
 				signalLevel=1;
 
 				var sig, env;
-				sig = SinOsc.ar!2;
+				sig = SinOsc.ar; // pruebas
 
 				env = Env(
 					levels: [
@@ -63,18 +66,41 @@ S100_EnvFreeRun {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init { arg serv = Server.local, grp;
-		group = grp;
 		server = serv;
 		inputBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
 	}
 
 	createSynth {
+		arg
+		group,
+		gate,
+		inputBus,
+		inFeedbackBus,
+		outputBus,
+		delayTime,
+		attackTime,
+		decayTime,
+		sustainLevel,
+		releaseTime,
+		envelopeLevel,
+		signalLevel;
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_envFreeRun, [
-
-			], server).register;
+				\gate, gate,
+	/*			\inputBus, inputBus,
+				\inFeedbackBus, inFeedbackBus,
+				\outputBus, outputBus,
+				\delayTime, delayTime,
+				\attackTime, attackTime,
+				\decayTime, decayTime,
+				\sustainLevel, sustainLevel,
+				\releaseTime, releaseTime,
+				\envelopeLevel, envelopeLevel,
+				\signalLevel, signalLevel, */
+			], group).register;
 		});
-		this.synthRun;
+		^synth;
+		//	this.synthRun;
 	}
 }

@@ -15,7 +15,7 @@ S100_EnvelopeSharper {
 	Triggered: Un voltage mayor que 0 activa un único ciclo.
 	Gated y Hold: Aparentemente es lo mismo. En las descripciones de S100, que no tienen "sustain", solo tiene "hold", y su comportamiento consiste en pararse en el nivel tras el attack (una vez iniciado el ciclo con un valor mayor que 0), y se mantiene en el hasta que el nivel desciende a 0. Ya que este es el comportamiento esperable, por otra parte, de "gated", doy por supuesto que "hold" significa lo mismo que en los sintetizadores clásicos, y que es "gated" el que es un concepto nuevo, como lo es también el de "sustain", y que el ciclo se para precisamente en el valor de "sustain", algo, por otra parte, que es lo que suelen hacer todas las implementaciones modernas de ADSR.
 
-	"Envelope level" lo voy a dejar por ahora sin implementar. No es claro si se refiere solo al nivel de salida del control de voltage, equivalente al dial "trapezoid" de los S100 antiguos, ya que no lo trae el de Cuenca (es muy probable).
+	Envelope level: tiene su nivel entre -5 y 5. Lo interpretaré como el nivel (con polaridad) de la envolvente, pudiendo ser negativo, algo interesante especialmente para salida de control de voltaje.
 
 	*/
 
@@ -26,6 +26,7 @@ S100_EnvelopeSharper {
 
 	var <server;
 	var <inputBus; // Entrada de audio.
+	var <inFeedbackBus;
 	var <outputBus; // Salida de audio.
 
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
@@ -35,7 +36,7 @@ S100_EnvelopeSharper {
 	var <decayTime = 0;
 	var <sustainLevel = 0;
 	var <releaseTime = 0;
-	var <envelopeLevel = 5; //Valores entre -5 y 5. Por comodidad y uniformidad, lo guardaremos entre 0 y 10
+	var <envelopeLevel = 0; //Valores entre -5 y 5.
 	var <signalLevel = 0;
 
 
@@ -66,27 +67,38 @@ S100_EnvelopeSharper {
 		server = serv;
 		inputBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
+		envFreeRun = S100_EnvFreeRun(server);
 	}
 
 	createSynth {
 		Routine({
 			var waitTime = 0.001;
+			var synth;
+			 // se crea el grupo
 			group = Group(server).register;
 			while({group.isPlaying == false}, {wait(waitTime)});
+			// se crea el synth de FREE RUN
+			synth = envFreeRun.createSynth(
+				group: group,
+				gate: 1, // lo dejo abierto para pruebas
+				inputBus: inputBus,
+				inFeedbackBus: inFeedbackBus,
+				outputBus: outputBus,
+				delayTime: delayTime,
+				attackTime: attackTime,
+				decayTime: decayTime,
+				sustainLevel: sustainLevel,
+				releaseTime: releaseTime,
+				envelopeLevel: envelopeLevel,
+				signalLevel: signalLevel,
+			);
+			while({synth.isPlaying == false}, {wait(waitTime)});
 		}).play(AppClock);
 	}
 
 
 
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
-
-	convertSignalLevel {|level|
-		^level.linlin(
-			inMin: 0,
-			inMax: 10,
-			outMin: 0,
-			outMax: settings[\envSignalLevelMax]);
-	}
 
 	convertTime {|time|
 		^time.linlin(
@@ -105,8 +117,17 @@ S100_EnvelopeSharper {
 	}
 
 	convertEnvelopeLevel {|level|
-		^level.linlin(0, 10, -1, 1); // el nivel 5 del dial (en realidad 0 porque va de -5 a 5) corresponde con nivel 0.
+		^level.linlin(-5, 5, -1, 1);
 	}
+
+	convertSignalLevel {|level|
+		^level.linlin(
+			inMin: 0,
+			inMax: 10,
+			outMin: 0,
+			outMax: settings[\envSignalLevelMax]);
+	}
+
 
 
 	// Setters de los parámetros /////////////////////////////////////////////////////////////////

@@ -9,11 +9,12 @@ Quarks.clear
 
 
 
+o =  Synthi100(gui:false, standalone:false).run
 
-Knob
+o = Synthi100(gui:true, standalone:false).run.pairDevice
 
-o = Synthi100(gui:true).run.pairDevice
-o.guiSC.asString
+
+
 o.pairDevice
 (
 o.guiSC.routineDoubleClick.reset;
@@ -353,3 +354,28 @@ Routine({ // Cuando se hace un click...
 	~click = false; // una vez transcurrida la espera, se vuelve false
 }).play;
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+(
+s.boot;
+g = Group.new.register; // add a Group at the head of the default Server's default group
+h = Group.new(g, \addAfter);
+s.queryAllNodes; // note the Group within the default group (ID 1)
+g.free; h.free;
+)
+g.isPlaying
+g.query
+
+
+Group
