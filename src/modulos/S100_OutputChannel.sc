@@ -55,10 +55,10 @@ S100_OutputChannel {
 			sig = LPF.ar(sig, freqLP);
 
 			// Se aplica el nivel (level)
-			sig = sig * level * on;
+			sig = sig * level;
 
 			// Se aplica el paneo
-			#sigPannedL, sigPannedR = Pan2.ar(sig, pan);
+			#sigPannedL, sigPannedR = Pan2.ar(sig, pan) * on;
 
 			Out.ar(outputBus, sig);
 			Out.ar(outBusL, sigPannedL);
@@ -104,7 +104,7 @@ S100_OutputChannel {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = on * level;
+		var outputTotal = level;
 		if (outputTotal==0, {
 			running = false;
 			pauseRoutine.reset;
