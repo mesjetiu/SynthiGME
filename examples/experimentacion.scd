@@ -14,6 +14,7 @@ o =  Synthi100(gui:false, standalone:false).run
 o =  Synthi100(gui:true, standalone:false)
 
 o = Synthi100(gui:false, standalone:true).run.pairDevice
+o.guiSC.makeWindow
 o.pairDevice
 
 g = Group()

@@ -76,7 +76,7 @@ S100_EnvelopeSharper {
 		Routine({
 			var waitTime = 0.001;
 			var synth;
-			 // se crea el grupo
+			// se crea el grupo
 			group = Group(server).register;
 			while({group.isPlaying == false}, {wait(waitTime)});
 			// se crea el synth de FREE RUN

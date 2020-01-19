@@ -426,7 +426,7 @@ Synthi100 {
 				// enviamos valores iniciales por OSC a dispositivos
 				this.getState.do({|msg|
 					wait(lapTime);
-					netAddr.do({|i| i.sendMsg(msg[0], msg[1])})
+					netAddr.do({|i| i.sendMsg(msg[0], msg[1])});
 				})
 
 			});
@@ -460,31 +460,31 @@ Synthi100 {
 					"range", {modulOscillators[index].setRange(value)},
 					"frequency", {
 						modulOscillators[index].setFrequency(value);
-						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"pulselevel", {
 						modulOscillators[index].setPulseLevel(value);
-						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"pulseshape", {
 						modulOscillators[index].setPulseShape(value);
-						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
 					},
 					"sinelevel", {
 						modulOscillators[index].setSineLevel(value);
-						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"sinesymmetry", {
 						modulOscillators[index].setSineSymmetry(value);
-						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
 					},
 					"trianglelevel", {
 						modulOscillators[index].setTriangleLevel(value);
-						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"sawtoothlevel", {
 						modulOscillators[index].setSawtoothLevel(value);
-						if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					}
 				);
 				// Se envía el mismo mensaje a GUI si está abierta
@@ -713,5 +713,3 @@ Synthi100 {
 		^data;
 	}
 }
-
-
