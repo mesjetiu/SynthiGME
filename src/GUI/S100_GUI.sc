@@ -21,6 +21,8 @@ S100_GUI {
 	var green;
 	var white;
 	var black;
+	var whiteBackground;
+	var blackForniture;
 
 	// Cantidad que varían los valores de incremento y decremento usando el ratón
 	var stepDefault = 0.001;
@@ -46,6 +48,9 @@ S100_GUI {
 		green = Color.new255(68.6, 107.2, 82.6);
 		white = Color.new255(172.7, 166.6, 160.3);
 		black = Color.new255(34.4, 36.3, 38.7);
+		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
+		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
+
 		widthRealScreen = Window.availableBounds.width * (95/100); // tamaño de la pantalla del ordenador
 		widthScreen = 1920; // Anchura de la pantalla virtual (cada pantalla real tendrá un ancho distinto)
 		proportion = [16,9]; // Proporciones de la ventana
@@ -58,7 +63,7 @@ S100_GUI {
 	makeWindow {
 		// Lo primero de todo, se crea la ventana que será padre de todos los "views"
 		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: false);
-		window.background = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
+		window.background = blackForniture;
 		defaultSizes = defaultSizes.add([window, window.bounds]);
 
 		/*		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
@@ -76,14 +81,117 @@ S100_GUI {
 		};
 		*/
 
-
+		this.makePannel1(window);
+		this.makePannel2(window);
 		this.makePannel3(window);
+		this.makePannel4(window);
 
 		this.resize(widthRealScreen/widthScreen);
 		window.front;
 
 		running = true;
 	}
+
+		makePannel1 {|parent|
+		var rect = Rect(
+			0,
+			0,
+			rectWindow.width/4,
+			rectWindow.width/4,
+		);
+
+		var imagePannel1 = Image(installedPath ++ "/src/GUI/images/pannel_1.png");
+		var compositeView = CompositeView(parent, rect).setBackgroundImage(imagePannel1,10);
+/*
+		// Los 6 osciladores de la izquierda
+		var left, top, spacing;
+		left = 28;
+		top = 75.5;
+		spacing = 58;
+
+		6.do({|num|
+			this.makeOscillator(compositeView, left, top, num + 1);
+			top = top + spacing;
+		});
+
+		// Los 6 osciladores de la derecha
+		left = 239;
+		top = 75.5;
+		6.do({|num|
+			this.makeOscillator(compositeView, left, top, num + 7);
+			top = top + spacing;
+		});
+
+		compositeView.mouseDownAction_({
+			Routine({ // Cuando se hace un click...
+				if (click == true, {
+					// Cuando se hace doble click...
+					if(window.bounds.width == widthRealScreen, {
+						this.zoomPannel3;
+					},{
+						this.resetSize;
+					})
+				}, {
+					click = true;
+					wait(timeDoubleClick); // tiempo de espera del segundo click
+				});
+				click = false; // una vez transcurrida la espera, se vuelve false
+			}).play(AppClock);
+		});
+		*/
+		defaultSizes = defaultSizes.add([compositeView, compositeView.bounds]);
+	}
+
+	makePannel2 {|parent|
+		var rect = Rect(
+			(rectWindow.width/4),
+			0,
+			rectWindow.width/4,
+			rectWindow.width/4,
+		);
+
+		var imagePannel2 = Image(installedPath ++ "/src/GUI/images/pannel_2.png");
+		var compositeView = CompositeView(parent, rect).setBackgroundImage(imagePannel2,10);
+/*
+		// Los 6 osciladores de la izquierda
+		var left, top, spacing;
+		left = 28;
+		top = 75.5;
+		spacing = 58;
+
+		6.do({|num|
+			this.makeOscillator(compositeView, left, top, num + 1);
+			top = top + spacing;
+		});
+
+		// Los 6 osciladores de la derecha
+		left = 239;
+		top = 75.5;
+		6.do({|num|
+			this.makeOscillator(compositeView, left, top, num + 7);
+			top = top + spacing;
+		});
+
+		compositeView.mouseDownAction_({
+			Routine({ // Cuando se hace un click...
+				if (click == true, {
+					// Cuando se hace doble click...
+					if(window.bounds.width == widthRealScreen, {
+						this.zoomPannel3;
+					},{
+						this.resetSize;
+					})
+				}, {
+					click = true;
+					wait(timeDoubleClick); // tiempo de espera del segundo click
+				});
+				click = false; // una vez transcurrida la espera, se vuelve false
+			}).play(AppClock);
+		});
+		*/
+		defaultSizes = defaultSizes.add([compositeView, compositeView.bounds]);
+	}
+
 
 	makePannel3 {|parent|
 		var rect = Rect(
@@ -94,7 +202,7 @@ S100_GUI {
 		);
 
 		var imagePannel3 = Image(installedPath ++ "/src/GUI/images/pannel_3.png");
-		var compositeView = CompositeView(parent, rect).setBackgroundImage(imagePannel3,11);
+		var compositeView = CompositeView(parent, rect).setBackgroundImage(imagePannel3,10);
 
 		// Los 6 osciladores de la izquierda
 		var left, top, spacing;
@@ -256,6 +364,56 @@ S100_GUI {
 	}
 
 	makeRandomControlVoltageGenerator {
+	}
+
+	makePannel4 {|parent|
+		var rect = Rect(
+			(rectWindow.width/4) * 3,
+			0,
+			rectWindow.width/4,
+			rectWindow.width/4,
+		);
+
+		var imagePannel4 = Image(installedPath ++ "/src/GUI/images/pannel_4.png");
+		var compositeView = CompositeView(parent, rect).setBackgroundImage(imagePannel4,10);
+/*
+		// Los 6 osciladores de la izquierda
+		var left, top, spacing;
+		left = 28;
+		top = 75.5;
+		spacing = 58;
+
+		6.do({|num|
+			this.makeOscillator(compositeView, left, top, num + 1);
+			top = top + spacing;
+		});
+
+		// Los 6 osciladores de la derecha
+		left = 239;
+		top = 75.5;
+		6.do({|num|
+			this.makeOscillator(compositeView, left, top, num + 7);
+			top = top + spacing;
+		});
+
+		compositeView.mouseDownAction_({
+			Routine({ // Cuando se hace un click...
+				if (click == true, {
+					// Cuando se hace doble click...
+					if(window.bounds.width == widthRealScreen, {
+						this.zoomPannel3;
+					},{
+						this.resetSize;
+					})
+				}, {
+					click = true;
+					wait(timeDoubleClick); // tiempo de espera del segundo click
+				});
+				click = false; // una vez transcurrida la espera, se vuelve false
+			}).play(AppClock);
+		});
+		*/
+		defaultSizes = defaultSizes.add([compositeView, compositeView.bounds]);
 	}
 
 
