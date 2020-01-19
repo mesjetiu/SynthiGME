@@ -14,7 +14,7 @@ S100_GUI {
 	var widthScreen; // Anchura de la pantalla virtual sobre la que se trabaja en esta clase.
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
-	var <running = false; // Es true cuando se enciende la GUI. Sirve de semáforo para enviar o no mensajes desde fuera.
+	var <running; // Es true cuando se enciende la GUI. Sirve de semáforo para enviar o no mensajes desde fuera.
 
 	// Colores de la intefaz
 	var blue;
@@ -52,6 +52,7 @@ S100_GUI {
 		rectWindow = Rect(0, 0, widthScreen, (widthScreen * proportion[1]) / proportion[0]);
 
 		click = false;
+		running = false;
 	}
 
 	makeWindow {

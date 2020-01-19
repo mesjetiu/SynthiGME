@@ -208,7 +208,7 @@ S100_Oscillator {
 	}
 
 	setPulseShape {| shape |
-		if((shape>=-5).and(shape<=5), {
+		if((shape>=(-5)).and(shape<=5), {
 			pulseShape = shape;
 			synth.set(\pulseShape, this.convertPulseShape(shape))}, {
 			("S100_Oscillator/setPulseShape: " + shape + " no es un valor entre 0 y 1").postln});
@@ -223,7 +223,7 @@ S100_Oscillator {
 	}
 
 	setSineSymmetry {| symmetry |
-		if((symmetry>=-5).and(symmetry<=5), {
+		if((symmetry>=(-5)).and(symmetry<=5), {
 			sineSymmetry = symmetry;
 			synth.set(\sineSymmetry, this.convertSineSymmetry(symmetry))}, {
 			("S100_Oscillator/setSineSymmetry: " + symmetry + " no es un valor entre -1 y 1").postln});

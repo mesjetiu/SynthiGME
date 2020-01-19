@@ -22,12 +22,13 @@ S100_EnvelopeSharper {
 	// Group de la instancia. Esta clase no contiene y Synth como el resto, sino un grupo. En el grupo estarán varios synths, uno por cada opción del selector. Esta clase maneja el selector, y activa y desactiva otras clases implementadas para las diferentes opciones del selector.
 	var <group = nil;
 
-	var envFreeRun; // Clase para la opción del selector "FREE RUN"
+	var <envFreeRun; // Clase para la opción del selector "FREE RUN"
 
 	var <server;
 	var <inputBus; // Entrada de audio.
 	var <inFeedbackBus;
 	var <outputBus; // Salida de audio.
+	var <signalTrigger; // entrada trigger y gate.
 
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
 	var <selector; // Trigger selector. Los valores del dial se almacenarán como números enteros: 1 = GATED F/N, 2 = FREE RUN, 3 = HOLD, 4 = TRIGGERED, 5 = HOLD.
@@ -66,6 +67,7 @@ S100_EnvelopeSharper {
 	init { arg serv = Server.local;
 		server = serv;
 		inputBus = Bus.audio(server);
+		inFeedbackBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		envFreeRun = S100_EnvFreeRun(server);
 	}
@@ -80,20 +82,18 @@ S100_EnvelopeSharper {
 			// se crea el synth de FREE RUN
 			synth = envFreeRun.createSynth(
 				group: group,
-				gate: 1, // lo dejo abierto para pruebas
+				signalTrigger: signalTrigger,
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
-				delayTime: delayTime,
-				attackTime: attackTime,
-				decayTime: decayTime,
-				sustainLevel: sustainLevel,
-				releaseTime: releaseTime,
-				envelopeLevel: envelopeLevel,
-				signalLevel: signalLevel,
+				delayTime: this.convertTime(delayTime),
+				attackTime: this.convertTime(attackTime),
+				decayTime: this.convertTime(decayTime),
+				sustainLevel: this.convertSustainLevel(sustainLevel),
+				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
+				signalLevel: this.convertSignalLevel(signalLevel),
 			);
-			while({synth.isPlaying == false}, {wait(waitTime)});
-		}).play(AppClock);
+		}).play();
 	}
 
 
@@ -101,14 +101,14 @@ S100_EnvelopeSharper {
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
 
 	convertTime {|time|
-		^time.linlin(
+		^time.linexp(
 			inMin: 0,
 			inMax: 10,
-			outMin: settings[\envTimeMin]
+			outMin: settings[\envTimeMin],
 			outMax: settings[\envTimeMax]);
 	}
 
-	convertSustainlLevel {|level|
+	convertSustainLevel {|level|
 		^level.linlin(
 			inMin: 0,
 			inMax: 10,
@@ -122,8 +122,8 @@ S100_EnvelopeSharper {
 
 	convertSignalLevel {|level|
 		^level.linlin(
-			inMin: 0,
-			inMax: 10,
+			inMin: -5,
+			inMax: 5,
 			outMin: 0,
 			outMax: settings[\envSignalLevelMax]);
 	}
@@ -132,19 +132,11 @@ S100_EnvelopeSharper {
 
 	// Setters de los parámetros /////////////////////////////////////////////////////////////////
 
-	setSignalLevel {|lev|
-		if((lev>=0).and(lev<=10), {
-			signalLevel = lev;
-			this.synthRun();
-			group.set(\level, this.convertSignalLevel(lev))
-		}, {
-			("S100_EnvelopeShaper/setSignalLevel: " + lev + " no es un valor entre 0 y 1").postln});
-	}
 
 	setDelayTime {|time|
 		if((time>=0).and(time<=10), {
 			delayTime = time;
-			this.synthRun();
+			//this.synthRun();
 			group.set(\delayTime, this.convertTime(time))
 		}, {
 			("S100_EnvelopeShaper/setDelayTime: " + time + " no es un valor entre 0 y 10").postln});
@@ -153,18 +145,54 @@ S100_EnvelopeSharper {
 	setAttackTime {|time|
 		if((time>=0).and(time<=10), {
 			attackTime = time;
-			this.synthRun();
+			//this.synthRun();
 			group.set(\attackTime, this.convertTime(time))
 		}, {
 			("S100_EnvelopeShaper/setAttackTime: " + time + " no es un valor entre 0 y 10").postln});
 	}
 
+	setDecayTime {|time|
+		if((time>=0).and(time<=10), {
+			decayTime = time;
+			//this.synthRun();
+			group.set(\decayTime, this.convertTime(time))
+		}, {
+			("S100_EnvelopeShaper/setDecayTime: " + time + " no es un valor entre 0 y 10").postln});
+	}
+
+	setSustain {|level|
+		if((level>=0).and(level<=10), {
+			sustainLevel = level;
+			//this.synthRun();
+			group.set(\sustain, this.convertSustainLevel(level))
+		}, {
+			("S100_EnvelopeShaper/setSustain: " + level + " no es un valor entre 0 y 10").postln});
+	}
+
 	setReleaseTime {|time|
 		if((time>=0).and(time<=10), {
 			releaseTime = time;
-			this.synthRun();
+			//this.synthRun();
 			group.set(\releaseTime, this.convertTime(time))
 		}, {
 			("S100_EnvelopeShaper/setReleaseTime: " + time + " no es un valor entre 0 y 10").postln});
+	}
+
+	setEnvelopeLevel{|level|
+		if((level>=(-5)).and(level<=5), {
+			envelopeLevel = level;
+			//this.synthRun();
+			group.set(\envelopeLevel, this.convertEnvelopeLevel(level))
+		}, {
+			("S100_EnvelopeShaper/setEnvelopeLevel: " + level + " no es un valor entre -5 y 5").postln});
+	}
+
+	setSignalLevel{|level|
+		if((level>=(-5)).and(level<=5), {
+			signalLevel = level;
+			//this.synthRun();
+			group.set(\signalLevel, this.convertEnvelopeLevel(level))
+		}, {
+			("S100_EnvelopeShaper/setSignalLevel: " + level + " no es un valor entre -5 y 5").postln});
 	}
 }

@@ -114,15 +114,6 @@ Synthi100 {
 		S100_RingModulator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
-
-		// Módulos.
-		modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
-		modulEnvelopeSharpers = 3.collect({|i| S100_EnvelopeSharper(server)});
-		modulOscillators = 12.collect({S100_Oscillator(server)});
-		modulNoiseGenerators = 2.collect({|i| S100_NoiseGenerator(server)});
-		modulRingModulators = 3.collect({|i| S100_RingModulator(server)});
-		modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
-		modulPatchbayAudio = S100_PatchbayAudio(server);
 	}
 
 
@@ -135,7 +126,6 @@ Synthi100 {
 		Routine({
 			while({server == nil}, {wait(waitTime)});
 
-			wait(0.1); // Tiempo de seguridad para estar seguros que se han creado correctamente los módulos y sus buses. De otro modo puede que se oiga sonido sin conectar nada. Quizás se pueda encontrar otra solución más elegante...
 
 			if (standalone == true, { // Modo "standalone": los buses de salida se conectan directamente a los puertos de SC.
 				// Nos aseguramos de que el número de canales de entrada y salida son los correctos
@@ -158,19 +148,29 @@ Synthi100 {
 				});
 			});
 			stereoOutBuses =  [0,1];
-			if (standalone == true, {
-				panOutputs1to4Busses = settings[\panOutputs1to4Busses];
-				panOutputs5to8Busses = settings[\panOutputs5to8Busses];
-			}, {
-				panOutputs1to4Busses = 2.collect({Bus.audio(server)});
-				panOutputs5to8Busses = 2.collect({Bus.audio(server)});
-			});
-
 
 			// Se arranca el servidor (si no lo está)
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
 			server.waitForBoot({
+				if (standalone == true, {
+					panOutputs1to4Busses = settings[\panOutputs1to4Busses];
+					panOutputs5to8Busses = settings[\panOutputs5to8Busses];
+				}, {
+					panOutputs1to4Busses = 2.collect({Bus.audio(server)});
+					panOutputs5to8Busses = 2.collect({Bus.audio(server)});
+				});
 
+
+				// Módulos.
+				modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
+				modulEnvelopeSharpers = 3.collect({|i| S100_EnvelopeSharper(server)});
+				modulOscillators = 12.collect({S100_Oscillator(server)});
+				modulNoiseGenerators = 2.collect({|i| S100_NoiseGenerator(server)});
+				modulRingModulators = 3.collect({|i| S100_RingModulator(server)});
+				modulOutputChannels = 8.collect({|i| S100_OutputChannel(server)});
+				modulPatchbayAudio = S100_PatchbayAudio(server);
+
+				wait(0.2); // Tiempo de seguridad para estar seguros que se han creado correctamente los módulos y sus buses. De otro modo puede que se oiga sonido sin conectar nada. Quizás se pueda encontrar otra solución más elegante...
 
 				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
 				"Conexión de salida stereo canales 1 a 8...".post;
@@ -277,6 +277,7 @@ Synthi100 {
 				modulEnvelopeSharpers.do({|i|
 					i.createSynth;
 					while({i.group.isPlaying == false}, {wait(waitTime)});
+					while({i.envFreeRun.synth.isPlaying == false}, {wait(waitTime)});
 				});
 				"OK\n".post;
 
@@ -293,6 +294,7 @@ Synthi100 {
 				"Conexiones en Patchbay de audio...".post;
 				modulPatchbayAudio.connect(
 					inputAmplifiers: modulInputAmplifiers,
+					envelopeSharpers: modulEnvelopeSharpers,
 					oscillators: modulOscillators,
 					noiseGenerators: modulNoiseGenerators,
 					ringModulators: modulRingModulators,
@@ -316,7 +318,7 @@ Synthi100 {
 				});
 				"Synthi100 en ejecución".postln;
 			});
-		}).play(AppClock);
+		}).play();
 	}
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
@@ -349,7 +351,7 @@ Synthi100 {
 				});
 				this.sendStateOSC;
 			});
-		}).play(AppClock);
+		}).play();
 	}
 
 
@@ -359,7 +361,8 @@ Synthi100 {
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
 			// se ejecuta la orden recibida por mensaje.
-			{this.setParameterOSC(msg[0].asString, msg[1], addr)}.defer(0);
+			//	{this.setParameterOSC(msg[0].asString, msg[1], addr)}.defer(0);
+			this.setParameterOSC(msg[0].asString, msg[1], addr)
 		};
 		netAddr = NetAddr("255.255.255.255", devicePort);
 		thisProcess.addOSCRecvFunc(functionOSC);
@@ -428,7 +431,7 @@ Synthi100 {
 
 			});
 			"Dispositivos comunicados por OSC preparados OK".postln;
-		}).play(AppClock);
+		}).play();
 	}
 
 	// Setters de la clase /////////////////////////////////////////////////////////////
@@ -485,7 +488,7 @@ Synthi100 {
 					}
 				);
 				// Se envía el mismo mensaje a GUI si está abierta
-				if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1);});
+				//if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1);});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
@@ -611,6 +614,22 @@ Synthi100 {
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
+			"env", { // Ejemplo "/env/1/decay"
+				var index = splitted[2].asInt - 1;
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0],
+					"delay", {modulEnvelopeSharpers[index].setDelayTime(value)},
+					"attack", {modulEnvelopeSharpers[index].setAttackTime(value)},
+					"decay", {modulEnvelopeSharpers[index].setDecayTime(value)},
+					"sustain", {modulEnvelopeSharpers[index].setSustain(value)},
+					"release", {modulEnvelopeSharpers[index].setReleaseTime(value)},
+					"envelopeLevel", {modulEnvelopeSharpers[index].setEnvelopeLevel(value)},
+					"signalLevel", {modulEnvelopeSharpers[index].setSignalLevel(value)},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
 			"ring", { // Ejemplo "/ring/1/level"
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
@@ -677,6 +696,18 @@ Synthi100 {
 		modulRingModulators.do({|ring, num|
 			var string = "/ring/" ++ (num + 1) ++ "/";
 			data.add([string ++ "level", ring.level]);
+		});
+
+		// Envelope Sharpers:
+		modulEnvelopeSharpers.do({|env, num|
+			var string = "/env/" ++ (num + 1) ++ "/";
+			data.add([string ++ "delay", env.delayTime]);
+			data.add([string ++ "attack", env.attackTime]);
+			data.add([string ++ "decay", env.decayTime]);
+			data.add([string ++ "sustain", env.sustainLevel]);
+			data.add([string ++ "release", env.releaseTime]);
+			data.add([string ++ "envelopeLevel", env.envelopeLevel]);
+			data.add([string ++ "signalLevel", env.signalLevel]);
 		});
 
 		^data;

@@ -41,9 +41,10 @@ S100_PatchbayAudio {
 	}
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, oscillators, noiseGenerators, ringModulators, outputChannels|
+	connect {|inputAmplifiers, envelopeSharpers, oscillators, noiseGenerators, ringModulators, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			inputAmplifiers: inputAmplifiers,
+			envelopeSharpers: envelopeSharpers,
 			oscillators: oscillators,
 			noiseGenerators: noiseGenerators,
 			ringModulators: ringModulators,
@@ -52,7 +53,7 @@ S100_PatchbayAudio {
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, oscillators, noiseGenerators, ringModulators, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, envelopeSharpers, oscillators, noiseGenerators, ringModulators, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -73,6 +74,17 @@ S100_PatchbayAudio {
 			]);
 			index = index + 1;
 		});
+
+		index = 9; // Envelope Sharpers ocupan los números 9 a 14 horizontales
+		envelopeSharpers.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\inBus, i.inputBus,
+				\inFeedbackBus, i.inFeedbackBus,
+			]);
+			index = index + 1;
+		});
+		// Quedan por conectar los Signal Triggers de Envelope Sharpers (números 12 a 14)
 
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
@@ -126,6 +138,15 @@ S100_PatchbayAudio {
 			index = index + 1;
 		});
 
+		index = 118; // Envelope Sharpers del 118-120
+		envelopeSharpers.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\outBus, i.outputBus,
+			]);
+			index = index + 1;
+		});
+
 		index = 121; // Ring Modulators del 121-123
 		ringModulators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -139,6 +160,13 @@ S100_PatchbayAudio {
 	}
 
 
+	getNumSynth {|synth|
+		if (synth.asString.split($()[0] == "Group", {
+			^synth.asString.split($()[1].split($))[0]; // retorna el número del group
+		}, {
+			^synth.asString.split($:)[1].split($ )[1].split($))[0]; // retorna el número de synth
+		})
+	}
 
 
 	// Crea nodo de conexión entre dos módulos
@@ -147,8 +175,8 @@ S100_PatchbayAudio {
 		var fromBus = inputsOutputs[ver-1].at(\outBus);
 		var toSynth = inputsOutputs[hor-1].at(\synth);
 		var toBus; // su valor dependerá de la relación de orden de ejecución de ambos synths
-		var numFromSynth = fromSynth.asString.split($:)[1].split($ )[1].split($))[0];
-		var numToSynth = toSynth.asString.split($:)[1].split($ )[1].split($))[0];
+		var numFromSynth =  this.getNumSynth(fromSynth);
+		var numToSynth = this.getNumSynth(toSynth);
 
 		if(numFromSynth > numToSynth, { // Si el synth de destino se ejecuta después que el de origen
 			toBus = inputsOutputs[hor-1].at(\inBus);

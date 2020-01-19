@@ -11,8 +11,15 @@ Quarks.clear
 
 o =  Synthi100(gui:false, standalone:false).run
 
-o = Synthi100(gui:true, standalone:false).run.pairDevice
+o =  Synthi100(gui:true, standalone:false)
 
+o = Synthi100(gui:false, standalone:true).run.pairDevice
+o.pairDevice
+
+g = Group()
+g.asString.split($()[1].split($))[0]
+g
+o.modulOscillators[1].synth
 
 
 o.pairDevice
@@ -38,7 +45,7 @@ o.modulInputAmplifiers[0].setLevel(5)
 o.modulOutputChannels[0].setLevel(1)
 
 OSCFunc.trace(false, false)
-OSCFunc.trace(true, false)
+OSCFunc.trace(true, true)
 
 o.setGeneralVol(0.7)
 o.run

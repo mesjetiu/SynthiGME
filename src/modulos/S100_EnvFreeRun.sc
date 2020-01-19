@@ -5,9 +5,7 @@ S100_EnvFreeRun {
 	var <group;
 
 
-	// buses de entrada y salida
-	var <inputBus;
-	var <outputBus;
+
 
 	classvar settings;
 
@@ -25,17 +23,18 @@ S100_EnvFreeRun {
 				arg gate,
 				inputBus,
 				inFeedbackBus,
-				outputBus = 0,
-				delayTime=1,
-				attackTime=1,
-				decayTime=1,
-				sustainLevel=1,
-				releaseTime=1,
+				outputBus,
+				delayTime,
+				attackTime,
+				decayTime,
+				sustainLevel,
 				envelopeLevel,
-				signalLevel=1;
+				signalLevel;
 
 				var sig, env;
-				sig = SinOsc.ar; // pruebas
+				//sig = SinOsc.ar; // pruebas
+				sig = In.ar(inputBus);
+				sig = sig + InFeedback.ar(inFeedbackBus);
 
 				env = Env(
 					levels: [
@@ -46,10 +45,12 @@ S100_EnvFreeRun {
 						0,
 						0, // releaseNode (añadido con valor igual al inicial y con tiempo 0, para que funcione el loop)
 					],
-					times: [delayTime, attackTime, decayTime, releaseTime, 0],
+					times: [delayTime, attackTime, decayTime, 0, 0],
 					releaseNode: 4,
 					loopNode: 0,
 				).ar(0, gate);
+
+				env = env * envelopeLevel;
 
 
 				// Se aplica la envolvente y el nivel (level) a la señal
@@ -67,14 +68,12 @@ S100_EnvFreeRun {
 
 	init { arg serv = Server.local, grp;
 		server = serv;
-		inputBus = Bus.audio(server);
-		outputBus = Bus.audio(server);
 	}
 
 	createSynth {
 		arg
 		group,
-		gate,
+		signalTrigger,
 		inputBus,
 		inFeedbackBus,
 		outputBus,
@@ -82,22 +81,20 @@ S100_EnvFreeRun {
 		attackTime,
 		decayTime,
 		sustainLevel,
-		releaseTime,
 		envelopeLevel,
 		signalLevel;
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_envFreeRun, [
-				\gate, gate,
-	/*			\inputBus, inputBus,
+				\gate, 1, // Lo dejamos abierto permanentemente para pruebas
+				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
 				\delayTime, delayTime,
 				\attackTime, attackTime,
 				\decayTime, decayTime,
 				\sustainLevel, sustainLevel,
-				\releaseTime, releaseTime,
 				\envelopeLevel, envelopeLevel,
-				\signalLevel, signalLevel, */
+				\signalLevel, signalLevel,
 			], group).register;
 		});
 		^synth;
