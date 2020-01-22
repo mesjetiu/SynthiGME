@@ -3,7 +3,7 @@ Synthi100 {
 
 	// Módulos que incluye:
 	var <modulInputAmplifiers;
-	var <modulEnvelopeSharpers;
+	var <modulEnvelopeShapers;
 	var <modulOscillators;
 	var <modulNoiseGenerators;
 	var <modulRingModulators;
@@ -108,7 +108,7 @@ Synthi100 {
 		// Se añaden al servidor las declaracines SynthDefs
 		Synthi100.addSynthDef;
 		S100_InputAmplifier.addSynthDef;
-		S100_EnvelopeSharper.addSynthDef;
+		S100_EnvelopeShaper.addSynthDef;
 		S100_Oscillator.addSynthDef;
 		S100_NoiseGenerator.addSynthDef;
 		S100_RingModulator.addSynthDef;
@@ -163,7 +163,7 @@ Synthi100 {
 
 				// Módulos.
 				modulInputAmplifiers = 8.collect({|i| S100_InputAmplifier(server)});
-				modulEnvelopeSharpers = 3.collect({|i| S100_EnvelopeSharper(server)});
+				modulEnvelopeShapers = 3.collect({|i| S100_EnvelopeShaper(server)});
 				modulOscillators = 12.collect({S100_Oscillator(server)});
 				modulNoiseGenerators = 2.collect({|i| S100_NoiseGenerator(server)});
 				modulRingModulators = 3.collect({|i| S100_RingModulator(server)});
@@ -272,9 +272,9 @@ Synthi100 {
 				});
 				"OK\n".post;
 
-				// Envelope Sharpers
-				"Envelope Sharpers...".post;
-				modulEnvelopeSharpers.do({|i|
+				// Envelope Shapers
+				"Envelope Shapers...".post;
+				modulEnvelopeShapers.do({|i|
 					i.createSynth;
 					while({i.group.isPlaying == false}, {wait(waitTime)});
 					while({i.envFreeRun.synth.isPlaying == false}, {wait(waitTime)});
@@ -294,7 +294,7 @@ Synthi100 {
 				"Conexiones en Patchbay de audio...".post;
 				modulPatchbayAudio.connect(
 					inputAmplifiers: modulInputAmplifiers,
-					envelopeSharpers: modulEnvelopeSharpers,
+					envelopeShapers: modulEnvelopeShapers,
 					oscillators: modulOscillators,
 					noiseGenerators: modulNoiseGenerators,
 					ringModulators: modulRingModulators,
@@ -618,13 +618,13 @@ Synthi100 {
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
-					"delay", {modulEnvelopeSharpers[index].setDelayTime(value)},
-					"attack", {modulEnvelopeSharpers[index].setAttackTime(value)},
-					"decay", {modulEnvelopeSharpers[index].setDecayTime(value)},
-					"sustain", {modulEnvelopeSharpers[index].setSustain(value)},
-					"release", {modulEnvelopeSharpers[index].setReleaseTime(value)},
-					"envelopeLevel", {modulEnvelopeSharpers[index].setEnvelopeLevel(value)},
-					"signalLevel", {modulEnvelopeSharpers[index].setSignalLevel(value)},
+					"delay", {modulEnvelopeShapers[index].setDelayTime(value)},
+					"attack", {modulEnvelopeShapers[index].setAttackTime(value)},
+					"decay", {modulEnvelopeShapers[index].setDecayTime(value)},
+					"sustain", {modulEnvelopeShapers[index].setSustain(value)},
+					"release", {modulEnvelopeShapers[index].setReleaseTime(value)},
+					"envelopeLevel", {modulEnvelopeShapers[index].setEnvelopeLevel(value)},
+					"signalLevel", {modulEnvelopeShapers[index].setSignalLevel(value)},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -698,8 +698,8 @@ Synthi100 {
 			data.add([string ++ "level", ring.level]);
 		});
 
-		// Envelope Sharpers:
-		modulEnvelopeSharpers.do({|env, num|
+		// Envelope Shapers:
+		modulEnvelopeShapers.do({|env, num|
 			var string = "/env/" ++ (num + 1) ++ "/";
 			data.add([string ++ "delay", env.delayTime]);
 			data.add([string ++ "attack", env.attackTime]);

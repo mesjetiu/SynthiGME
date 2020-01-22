@@ -3,10 +3,6 @@ S100_EnvFreeRun {
 	var <synth;
 	var server;
 	var <group;
-
-
-
-
 	classvar settings;
 
 

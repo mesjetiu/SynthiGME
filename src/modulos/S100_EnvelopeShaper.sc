@@ -1,4 +1,4 @@
-S100_EnvelopeSharper {
+S100_EnvelopeShaper {
 
 	/*
 	Interpretación provisional de los diversos diales (a falta de experimentar con el Synthi), ya que la documentación encontrada sobre Synthi 100 incluye el Envelope Shaper antiguo, los parámetros del S100 de Cuenca deben de ser relativamente modernos en esa época (Las descripciones de S100 no tienen "sustain"). Tras leer el funcionamiento de otros sintetizadores, estas son las conclusiones a las que he llegado:
