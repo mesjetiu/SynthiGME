@@ -144,6 +144,8 @@ Synthi100 {
 					while({server.options.numOutputBusChannels != 18}, {wait(waitTime)});
 					server.options.numInputBusChannels = 16;
 					while({server.options.numInputBusChannels != 16}, {wait(waitTime)});
+					server.options.blockSize = 1; // Control rate igualdado a Audio rate (en hardware moderno es posible)
+					while({server.options.blockSize != 1}, {wait(waitTime)});
 
 					"OK\n".post;
 				});
