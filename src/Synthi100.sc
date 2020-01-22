@@ -144,6 +144,7 @@ Synthi100 {
 					while({server.options.numOutputBusChannels != 18}, {wait(waitTime)});
 					server.options.numInputBusChannels = 16;
 					while({server.options.numInputBusChannels != 16}, {wait(waitTime)});
+
 					"OK\n".post;
 				});
 			});
@@ -278,6 +279,8 @@ Synthi100 {
 					i.createSynth;
 					while({i.group.isPlaying == false}, {wait(waitTime)});
 					while({i.envFreeRun.synth.isPlaying == false}, {wait(waitTime)});
+					while({i.envGatedFreeRun.synth.isPlaying == false}, {wait(waitTime)});
+					while({i.gateSynth.isPlaying == false}, {wait(waitTime)});
 				});
 				"OK\n".post;
 
@@ -318,7 +321,7 @@ Synthi100 {
 				});
 				"Synthi100 en ejecución".postln;
 			});
-		}).play();
+		}).play;
 	}
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
@@ -351,7 +354,7 @@ Synthi100 {
 				});
 				this.sendStateOSC;
 			});
-		}).play();
+		}).play;
 	}
 
 
@@ -431,7 +434,7 @@ Synthi100 {
 
 			});
 			"Dispositivos comunicados por OSC preparados OK".postln;
-		}).play();
+		}).play;
 	}
 
 	// Setters de la clase /////////////////////////////////////////////////////////////
@@ -625,6 +628,7 @@ Synthi100 {
 					"release", {modulEnvelopeShapers[index].setReleaseTime(value)},
 					"envelopeLevel", {modulEnvelopeShapers[index].setEnvelopeLevel(value)},
 					"signalLevel", {modulEnvelopeShapers[index].setSignalLevel(value)},
+					"gate", {modulEnvelopeShapers[index].setGateButton(value)},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);

@@ -22,13 +22,16 @@ S100_EnvelopeShaper {
 	// Group de la instancia. Esta clase no contiene y Synth como el resto, sino un grupo. En el grupo estarán varios synths, uno por cada opción del selector. Esta clase maneja el selector, y activa y desactiva otras clases implementadas para las diferentes opciones del selector.
 	var <group = nil;
 
+	// Las clases que definen cada uno de los estados del selector
 	var <envFreeRun; // Clase para la opción del selector "FREE RUN"
+	var <envGatedFreeRun; // Clase para la opción del selector "GATED F/R" (Gated Free Run)
 
 	var <server;
 	var <inputBus; // Entrada de audio.
 	var <inFeedbackBus;
 	var <outputBus; // Salida de audio.
 	var <signalTrigger; // entrada trigger y gate.
+	var <gateSynth; // Synth para abrir o cerrar gate.
 
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
 	var <selector; // Trigger selector. Los valores del dial se almacenarán como números enteros: 1 = GATED F/N, 2 = FREE RUN, 3 = HOLD, 4 = TRIGGERED, 5 = HOLD.
@@ -53,12 +56,24 @@ S100_EnvelopeShaper {
 
 	*initClass {
 		// Inicializa otras clases antes de esta
-		//Class.initClassTree(S100_Settings);
 		Class.initClassTree(S100_EnvFreeRun);
+		Class.initClassTree(S100_EnvGatedFreeRun);
 	}
 
 	*addSynthDef {
 		S100_EnvFreeRun.addSynthDef;
+		S100_EnvGatedFreeRun.addSynthDef;
+		SynthDef(\S100_envGateButton, { // Cuando se presiona o relaja el botón de "gate" se lanza 1 o 0 al bus "signalTrigger"
+			arg gate,
+			signalTrigger;
+			var env;
+			env = Env.asr(
+				attackTime: 0.001,
+				sustainLevel: 1,
+				releaseTime: 0.001,
+			).ar(gate: gate);
+			Out.ar(signalTrigger, env);
+		}).add;
 	}
 
 
@@ -69,7 +84,10 @@ S100_EnvelopeShaper {
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
+		signalTrigger = Bus.audio(server);
+
 		envFreeRun = S100_EnvFreeRun(server);
+		envGatedFreeRun = S100_EnvGatedFreeRun(server);
 	}
 
 	createSynth {
@@ -82,6 +100,20 @@ S100_EnvelopeShaper {
 			// se crea el synth de FREE RUN
 			synth = envFreeRun.createSynth(
 				group: group,
+				inputBus: inputBus,
+				inFeedbackBus: inFeedbackBus,
+				outputBus: outputBus,
+				delayTime: this.convertTime(delayTime),
+				attackTime: this.convertTime(attackTime),
+				decayTime: this.convertTime(decayTime),
+				sustainLevel: this.convertSustainLevel(sustainLevel),
+				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
+				signalLevel: this.convertSignalLevel(signalLevel),
+			);
+			while({synth.isPlaying == false}, {wait(waitTime)});
+			// se crea el synth de GATED FREE RUN
+			synth = envGatedFreeRun.createSynth(
+				group: group,
 				signalTrigger: signalTrigger,
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
@@ -93,7 +125,13 @@ S100_EnvelopeShaper {
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
-		}).play();
+			while({synth.isPlaying == false}, {wait(waitTime)});
+			// se crea el synth del botón "gate"
+			gateSynth = Synth(\S100_envGateButton, [
+				\gate, 0,
+				\signalTrigger, signalTrigger,
+			], group).register;
+		}).play;
 	}
 
 
@@ -194,5 +232,13 @@ S100_EnvelopeShaper {
 			group.set(\signalLevel, this.convertEnvelopeLevel(level))
 		}, {
 			("S100_EnvelopeShaper/setSignalLevel: " + level + " no es un valor entre -5 y 5").postln});
+	}
+
+	setGateButton{|gate|
+		if((gate==0).or(gate==1), {
+			gateSynth.set(\gate, gate);
+		}, {
+			("S100_EnvelopeShaper/setGateButton: " + gate + " no es un valor 0 o 1").postln;
+		});
 	}
 }

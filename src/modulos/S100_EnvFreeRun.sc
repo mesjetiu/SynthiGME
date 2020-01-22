@@ -14,9 +14,8 @@ S100_EnvFreeRun {
 	}
 
 	*addSynthDef {
-		(
 			SynthDef(\S100_envFreeRun, {
-				arg gate,
+				arg gate = 1,
 				inputBus,
 				inFeedbackBus,
 				outputBus,
@@ -54,22 +53,20 @@ S100_EnvFreeRun {
 
 				Out.ar(outputBus, sig);
 
-			}, [0.5]
+			}, [0.1]
 			).add
-		)
 	}
 
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init { arg serv = Server.local, grp;
+	init { arg serv = Server.local;
 		server = serv;
 	}
 
 	createSynth {
 		arg
 		group,
-		signalTrigger,
 		inputBus,
 		inFeedbackBus,
 		outputBus,
@@ -81,7 +78,6 @@ S100_EnvFreeRun {
 		signalLevel;
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_envFreeRun, [
-				\gate, 1, // Lo dejamos abierto permanentemente para pruebas
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,

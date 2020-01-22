@@ -41,10 +41,10 @@ S100_PatchbayAudio {
 	}
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, envelopeSharpers, oscillators, noiseGenerators, ringModulators, outputChannels|
+	connect {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			inputAmplifiers: inputAmplifiers,
-			envelopeSharpers: envelopeSharpers,
+			envelopeShapers: envelopeShapers,
 			oscillators: oscillators,
 			noiseGenerators: noiseGenerators,
 			ringModulators: ringModulators,
@@ -53,7 +53,7 @@ S100_PatchbayAudio {
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, envelopeSharpers, oscillators, noiseGenerators, ringModulators, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -75,8 +75,8 @@ S100_PatchbayAudio {
 			index = index + 1;
 		});
 
-		index = 9; // Envelope Sharpers ocupan los números 9 a 14 horizontales
-		envelopeSharpers.do({|i|
+		index = 9; // Envelope Shapers ocupan los números 9 a 14 horizontales
+		envelopeShapers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\synth, i.group,
 				\inBus, i.inputBus,
@@ -84,7 +84,7 @@ S100_PatchbayAudio {
 			]);
 			index = index + 1;
 		});
-		// Quedan por conectar los Signal Triggers de Envelope Sharpers (números 12 a 14)
+		// Quedan por conectar los Signal Triggers de Envelope Shapers (números 12 a 14)
 
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
@@ -138,8 +138,8 @@ S100_PatchbayAudio {
 			index = index + 1;
 		});
 
-		index = 118; // Envelope Sharpers del 118-120
-		envelopeSharpers.do({|i|
+		index = 118; // Envelope Shapers del 118-120
+		envelopeShapers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\synth, i.group,
 				\outBus, i.outputBus,
