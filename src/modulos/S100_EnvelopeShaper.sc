@@ -88,6 +88,8 @@ S100_EnvelopeShaper {
 
 		envFreeRun = S100_EnvFreeRun(server);
 		envGatedFreeRun = S100_EnvGatedFreeRun(server);
+
+		selector = 3;
 	}
 
 	createSynth {
@@ -204,7 +206,8 @@ S100_EnvelopeShaper {
 			//this.synthRun();
 			group.set(\sustain, this.convertSustainLevel(level))
 		}, {
-			("S100_EnvelopeShaper/setSustain: " + level + " no es un valor entre 0 y 10").postln});
+			("S100_EnvelopeShaper/setSustain: " + level + " no es un valor entre 0 y 10").postln
+		});
 	}
 
 	setReleaseTime {|time|
@@ -213,7 +216,8 @@ S100_EnvelopeShaper {
 			//this.synthRun();
 			group.set(\releaseTime, this.convertTime(time))
 		}, {
-			("S100_EnvelopeShaper/setReleaseTime: " + time + " no es un valor entre 0 y 10").postln});
+			("S100_EnvelopeShaper/setReleaseTime: " + time + " no es un valor entre 0 y 10").postln
+		});
 	}
 
 	setEnvelopeLevel{|level|
@@ -222,7 +226,8 @@ S100_EnvelopeShaper {
 			//this.synthRun();
 			group.set(\envelopeLevel, this.convertEnvelopeLevel(level))
 		}, {
-			("S100_EnvelopeShaper/setEnvelopeLevel: " + level + " no es un valor entre -5 y 5").postln});
+			("S100_EnvelopeShaper/setEnvelopeLevel: " + level + " no es un valor entre -5 y 5").postln
+		});
 	}
 
 	setSignalLevel{|level|
@@ -231,14 +236,36 @@ S100_EnvelopeShaper {
 			//this.synthRun();
 			group.set(\signalLevel, this.convertEnvelopeLevel(level))
 		}, {
-			("S100_EnvelopeShaper/setSignalLevel: " + level + " no es un valor entre -5 y 5").postln});
+			("S100_EnvelopeShaper/setSignalLevel: " + level + " no es un valor entre -5 y 5").postln
+		});
 	}
 
 	setGateButton{|gate|
 		if((gate==0).or(gate==1), {
 			gateSynth.set(\gate, gate);
 		}, {
-			("S100_EnvelopeShaper/setGateButton: " + gate + " no es un valor 0 o 1").postln;
+			("S100_EnvelopeShaper/setGateButton: " + gate + " no es un valor 0 o 1").postln
 		});
+	}
+
+	setSelector{|option, value|
+		switch (option,
+			1, { // Gated Free Run
+				envGatedFreeRun.synthRun(value.asBoolean);
+			},
+			2, { // Free Run
+				envFreeRun.synthRun(value.asBoolean);
+			},
+			3, { // Gated
+			},
+			4, { // Triggered
+			},
+			5, { // Hold
+			},
+			{
+				("S100_EnvelopeShaper/setSelector: " + option + " no es un valor válido").postln
+				^this; // si no es un valor válido la función acaba aquí.
+			}
+		);
 	}
 }

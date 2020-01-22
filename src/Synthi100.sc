@@ -629,6 +629,7 @@ Synthi100 {
 					"envelopeLevel", {modulEnvelopeShapers[index].setEnvelopeLevel(value)},
 					"signalLevel", {modulEnvelopeShapers[index].setSignalLevel(value)},
 					"gate", {modulEnvelopeShapers[index].setGateButton(value)},
+					"selector", {modulEnvelopeShapers[index].setSelector(splitted[2].asInt, value)},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -712,6 +713,7 @@ Synthi100 {
 			data.add([string ++ "release", env.releaseTime]);
 			data.add([string ++ "envelopeLevel", env.envelopeLevel]);
 			data.add([string ++ "signalLevel", env.signalLevel]);
+			data.add([string ++ "selector/1/" ++ env.selector, 1]);
 		});
 
 		^data;

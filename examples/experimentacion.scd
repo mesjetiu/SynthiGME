@@ -1,5 +1,5 @@
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
-Synthi100(gui:true)
+o =Synthi100(gui:false).run
 //Quarks.install("https://github.com/mesjetiu/Synthi100.git")
 
 Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
@@ -14,6 +14,10 @@ o =  Synthi100(gui:false, standalone:false).run
 o =  Synthi100(gui:true, standalone:false)
 
 o = Synthi100(gui:false, standalone:true).run.pairDevice
+
+o.modulEnvelopeShapers[0].setGateButton(1)
+o.modulEnvelopeShapers[0].setGateButton(0)
+
 o.guiSC.makeWindow
 o.pairDevice
 
@@ -366,24 +370,5 @@ Routine({ // Cuando se hace un click...
 
 
 
+s.options.numAudioBusChannels
 
-
-
-
-
-
-
-
-
-(
-s.boot;
-g = Group.new.register; // add a Group at the head of the default Server's default group
-h = Group.new(g, \addAfter);
-s.queryAllNodes; // note the Group within the default group (ID 1)
-g.free; h.free;
-)
-g.isPlaying
-g.query
-
-
-Group

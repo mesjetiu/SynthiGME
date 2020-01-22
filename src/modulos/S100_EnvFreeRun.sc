@@ -6,6 +6,9 @@ S100_EnvFreeRun {
 	classvar settings;
 
 
+	var <running; // true o false: Si el sintetizador está activo o pausado
+
+
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
 	*new { |server|
@@ -91,5 +94,11 @@ S100_EnvFreeRun {
 		});
 		^synth;
 		//	this.synthRun;
+	}
+
+	// Pausa o reanuda el Synth
+	synthRun {|state|
+		synth.run(state);
+		running = state;
 	}
 }
