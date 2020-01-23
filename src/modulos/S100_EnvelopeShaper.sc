@@ -31,6 +31,7 @@ S100_EnvelopeShaper {
 	var <inFeedbackBus;
 	var <outputBus; // Salida de audio.
 	var <signalTrigger; // entrada trigger y gate.
+	var <inFeedbackSignalTrigger;
 	var <gateSynth; // Synth para abrir o cerrar gate.
 
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
@@ -85,6 +86,7 @@ S100_EnvelopeShaper {
 		inFeedbackBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		signalTrigger = Bus.audio(server);
+		inFeedbackSignalTrigger = Bus.audio(server);
 
 		envFreeRun = S100_EnvFreeRun(server);
 		envGatedFreeRun = S100_EnvGatedFreeRun(server);
@@ -118,6 +120,7 @@ S100_EnvelopeShaper {
 			synth = envGatedFreeRun.createSynth(
 				group: group,
 				signalTrigger: signalTrigger,
+				inFeedbackSignalTrigger: inFeedbackSignalTrigger,
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
@@ -169,7 +172,7 @@ S100_EnvelopeShaper {
 		^level.linlin(
 			inMin: -5,
 			inMax: 5,
-			outMin: 0,
+			outMin: -1 * settings[\envSignalLevelMax],
 			outMax: settings[\envSignalLevelMax]);
 	}
 
@@ -239,7 +242,7 @@ S100_EnvelopeShaper {
 		if((level>=(-5)).and(level<=5), {
 			signalLevel = level;
 			//this.synthRun();
-			group.set(\signalLevel, this.convertEnvelopeLevel(level))
+			group.set(\signalLevel, this.convertSignalLevel(level))
 		}, {
 			("S100_EnvelopeShaper/setSignalLevel: " + level + " no es un valor entre -5 y 5").postln
 		});

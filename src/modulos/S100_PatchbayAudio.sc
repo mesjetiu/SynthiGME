@@ -84,7 +84,14 @@ S100_PatchbayAudio {
 			]);
 			index = index + 1;
 		});
-		// Quedan por conectar los Signal Triggers de Envelope Shapers (números 12 a 14)
+		envelopeShapers.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\inBus, i.signalTrigger,
+				\inFeedbackBus, i.inFeedbackSignalTrigger,
+			]);
+			index = index + 1;
+		});
 
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
