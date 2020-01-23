@@ -93,7 +93,6 @@ S100_EnvFreeRun {
 			], group).register;
 		});
 		^synth;
-		//	this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth

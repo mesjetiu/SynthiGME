@@ -113,6 +113,7 @@ S100_EnvelopeShaper {
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
 			while({synth.isPlaying == false}, {wait(waitTime)});
+		//	synth.run(false);
 			// se crea el synth de GATED FREE RUN
 			synth = envGatedFreeRun.createSynth(
 				group: group,
@@ -128,12 +129,16 @@ S100_EnvelopeShaper {
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
 			while({synth.isPlaying == false}, {wait(waitTime)});
+		//	synth.run(false);
 			// se crea el synth del botón "gate"
 			gateSynth = Synth(\S100_envGateButton, [
 				\gate, 0,
 				\signalTrigger, signalTrigger,
 			], group).register;
+		//	gateSynth.run(false);
+			this.setSelector(3);
 		}).play;
+
 	}
 
 
@@ -249,18 +254,27 @@ S100_EnvelopeShaper {
 	}
 
 	setSelector{|option, value|
+		if(value==0,{^this;}); // Ignoramos los valores 0
 		switch (option,
 			1, { // Gated Free Run
-				envGatedFreeRun.synthRun(value.asBoolean);
+				envGatedFreeRun.synthRun(true);
+				envFreeRun.synthRun(false);
 			},
 			2, { // Free Run
-				envFreeRun.synthRun(value.asBoolean);
+				envFreeRun.synthRun(true);
+				envGatedFreeRun.synthRun(false);
 			},
 			3, { // Gated
+				envFreeRun.synthRun(false);
+				envGatedFreeRun.synthRun(false);
 			},
 			4, { // Triggered
+				envFreeRun.synthRun(false);
+				envGatedFreeRun.synthRun(false);
 			},
 			5, { // Hold
+				envFreeRun.synthRun(false);
+				envGatedFreeRun.synthRun(false);
 			},
 			{
 				("S100_EnvelopeShaper/setSelector: " + option + " no es un valor válido").postln

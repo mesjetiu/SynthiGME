@@ -9,11 +9,10 @@ Quarks.clear
 
 
 
-o =  Synthi100(gui:false, standalone:false).run
 
-o =  Synthi100(gui:true, standalone:false)
+o = Synthi100(gui:false).run.pairDevice
 
-o = Synthi100(gui:false, standalone:true).run.pairDevice
+o = Synthi100(gui:false).run
 
 o.modulEnvelopeShapers[0].setGateButton(1)
 o.modulEnvelopeShapers[0].setGateButton(0)
