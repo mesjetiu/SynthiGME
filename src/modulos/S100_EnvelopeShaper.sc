@@ -23,8 +23,9 @@ S100_EnvelopeShaper {
 	var <group = nil;
 
 	// Las clases que definen cada uno de los estados del selector
-	var <envFreeRun; // Clase para la opción del selector "FREE RUN"
 	var <envGatedFreeRun; // Clase para la opción del selector "GATED F/R" (Gated Free Run)
+	var <envFreeRun; // Clase para la opción del selector "FREE RUN"
+	var <envGated; // Clase para la opción del selector "GATED"
 
 	var <server;
 	var <inputBus; // Entrada de audio.
@@ -57,13 +58,15 @@ S100_EnvelopeShaper {
 
 	*initClass {
 		// Inicializa otras clases antes de esta
-		Class.initClassTree(S100_EnvFreeRun);
 		Class.initClassTree(S100_EnvGatedFreeRun);
+		Class.initClassTree(S100_EnvFreeRun);
+		Class.initClassTree(S100_EnvGated);
 	}
 
 	*addSynthDef {
 		S100_EnvFreeRun.addSynthDef;
 		S100_EnvGatedFreeRun.addSynthDef;
+		S100_EnvGated.addSynthDef;
 		SynthDef(\S100_envGateButton, { // Cuando se presiona o relaja el botón de "gate" se lanza 1 o 0 al bus "signalTrigger"
 			arg gate,
 			signalTrigger;
@@ -88,8 +91,9 @@ S100_EnvelopeShaper {
 		signalTrigger = Bus.audio(server);
 		inFeedbackSignalTrigger = Bus.audio(server);
 
-		envFreeRun = S100_EnvFreeRun(server);
 		envGatedFreeRun = S100_EnvGatedFreeRun(server);
+		envFreeRun = S100_EnvFreeRun(server);
+		envGated = S100_EnvGated(server);
 
 		selector = 3;
 	}
@@ -115,7 +119,6 @@ S100_EnvelopeShaper {
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
 			while({synth.isPlaying == false}, {wait(waitTime)});
-		//	synth.run(false);
 			// se crea el synth de GATED FREE RUN
 			synth = envGatedFreeRun.createSynth(
 				group: group,
@@ -132,13 +135,27 @@ S100_EnvelopeShaper {
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
 			while({synth.isPlaying == false}, {wait(waitTime)});
-		//	synth.run(false);
+			// se crea el synth de GATED
+			synth = envGated.createSynth(
+				group: group,
+				signalTrigger: signalTrigger,
+				inFeedbackSignalTrigger: inFeedbackSignalTrigger,
+				inputBus: inputBus,
+				inFeedbackBus: inFeedbackBus,
+				outputBus: outputBus,
+				delayTime: this.convertTime(delayTime),
+				attackTime: this.convertTime(attackTime),
+				decayTime: this.convertTime(decayTime),
+				sustainLevel: this.convertSustainLevel(sustainLevel),
+				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
+				signalLevel: this.convertSignalLevel(signalLevel),
+			);
+			while({synth.isPlaying == false}, {wait(waitTime)});
 			// se crea el synth del botón "gate"
 			gateSynth = Synth(\S100_envGateButton, [
 				\gate, 0,
 				\signalTrigger, signalTrigger,
 			], group).register;
-		//	gateSynth.run(false);
 			this.setSelector(3);
 		}).play;
 
