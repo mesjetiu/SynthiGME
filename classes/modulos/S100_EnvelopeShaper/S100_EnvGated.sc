@@ -28,6 +28,7 @@ S100_EnvGated {
 			attackTime,
 			decayTime,
 			sustainLevel,
+			releaseTime,
 			envelopeLevel,
 			signalLevel;
 
@@ -37,20 +38,17 @@ S100_EnvGated {
 			sig = In.ar(inputBus);
 			sig = sig + InFeedback.ar(inFeedbackBus);
 
-		//	sig = SinOsc.ar(1000); // pruebas
 
 			env = Env(
 				levels: [
-					0, // loopNode (ver Help de "Env")
+					0,
 					0,
 					1,
 					sustainLevel,
 					0,
-					0, // releaseNode (añadido con valor igual al inicial y con tiempo 0, para que funcione el loop)
 				],
-				times: [delayTime, attackTime, decayTime, 0, 0],
-				releaseNode: 4,
-				loopNode: 0,
+				times: [delayTime, attackTime, decayTime, releaseTime],
+				releaseNode: 3,
 			).ar(0, gate: gate);
 
 			env = env * envelopeLevel;
@@ -83,6 +81,7 @@ S100_EnvGated {
 		attackTime,
 		decayTime,
 		sustainLevel,
+		releaseTime,
 		envelopeLevel,
 		signalLevel;
 		if(synth.isPlaying==false, {
@@ -96,6 +95,7 @@ S100_EnvGated {
 				\attackTime, attackTime,
 				\decayTime, decayTime,
 				\sustainLevel, sustainLevel,
+				\releaseTime, releaseTime,
 				\envelopeLevel, envelopeLevel,
 				\signalLevel, signalLevel,
 			], group).register;

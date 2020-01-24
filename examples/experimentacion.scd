@@ -12,197 +12,6 @@ o = Synthi100(gui:false).run.pairDevice
 
 o = Synthi100(gui:true).run
 
-o.modulEnvelopeShapers[0].setGateButton(1)
-o.modulEnvelopeShapers[0].setGateButton(0)
-
-o.guiSC.makeWindow
-o.pairDevice
-
-g = Group()
-g.asString.split($()[1].split($))[0]
-g
-o.modulOscillators[1].synth
-
-
-o.pairDevice
-(
-o.guiSC.routineDoubleClick.reset;
-o.guiSC.routineDoubleClick
-)
-o.guiSC.routineDoubleClick.play
-o.guiSC.zoomPannel3;
-o.guiSC.window.bounds
-
-o.guiSC.resize(1.3)
-o.guiSC.resetSize
-o.guiSC.window.fullScreen
-Window
-
-
-o.modulRingModulators[0].setLevel(10)
-o.modulNoiseGenerators[0].setLevel(3)
-s
-
-o.modulInputAmplifiers[0].setLevel(5)
-o.modulOutputChannels[0].setLevel(1)
-
-OSCFunc.trace(false, false)
-OSCFunc.trace(true, true)
-
-o.setGeneralVol(0.7)
-o.run
-o = Synthi100().run.pairDevice;
-o.pairDevice
-
-SinOsc
-
-// Unimos los tres primeros osciladores a los tres primeros canales de salida:
-(
-o.setParameterOSC("/patchA/91/36", 1); // salida de osc1 a output1
-o.setParameterOSC("/patchA/92/37", 1); // salida de osc1 a output2
-
-o.setParameterOSC("/patchA/93/38", 1); // salida de osc2 a output3
-o.setParameterOSC("/patchA/94/39", 1); // salida de osc2 a output4
-
-o.setParameterOSC("/patchA/95/40", 1); // salida de osc3 a output5
-o.setParameterOSC("/patchA/96/41", 1); // salida de osc3 a output6
-
-o.setParameterOSC("/osc/1/triangle/level", 5);
-o.setParameterOSC("/osc/1/sawtooth/level", 4);
-
-
-o.setParameterOSC("/out/1/level", 5);
-o.setParameterOSC("/out/2/level", 5);
-
-o.setParameterOSC("/out/1/on", 1);
-o.setParameterOSC("/out/2/on", 1);
-)
-"".postln
-b = Server(\myserver)
-b.boot
-
-
-ServerOptions
-s.options.device = nil
-
-s.serverRunning
-Server.local.serverRunning
-s.options.numOutputBusChannels
-a = Bus.audio
-a
-o.setParameterOSC("/osc/1/pulse/level", 4);
-o.setParameterOSC("/osc/1/pulse/shape", 10);
-
-
-o.setParameterOSC("/osc/1/range", 1)
-o.setParameterOSC("/osc/1/frequency", 3)
-(
-o.setParameterOSC("/out/1/filter", 5);
-o.setParameterOSC("/out/2/filter", 5);
-)
-
-(
-o.setParameterOSC("/out/1/pan", 0);
-o.setParameterOSC("/out/2/pan", 10);
-)
-Mix
-
-(
-o.setParameterOSC("/patchA/91/36", 0); // salida de osc1 a output1
-o.setParameterOSC("/patchA/92/37", 0); // salida de osc1 a output2
-)
-
-(
-o.setParameterOSC("/osc/1/triangle/level",2);
-o.setParameterOSC("/osc/1/sawtooth/level", 2);
-)
-(
-o.setParameterOSC("/osc/1/pulse/shape", 9);
-o.setParameterOSC("/osc/1/triangle/level", 3);
-)
-
-
-//////////////////////////
-(
-o.setParameterOSC("/patchA/91/38", 0); // salida de osc1 a output3
-o.setParameterOSC("/patchA/92/39", 0); // salida de osc1 a output4
-o.setParameterOSC("/patchA/77/36", 0); // salida de output3 a output1
-o.setParameterOSC("/patchA/78/37", 0); // salida de output4 a output2
-o.setParameterOSC("/out/3/level", 10);
-o.setParameterOSC("/out/4/level", 10);
-)
-
-(
-o.setParameterOSC("/patchA/91/38", 0); // salida de osc1 a output3
-o.setParameterOSC("/patchA/92/39", 0); // salida de osc1 a output4
-o.setParameterOSC("/patchA/69/36", 0); // salida de output3 a output1
-o.setParameterOSC("/patchA/70/37", 0); // salida de output4 a output2
-)
-
-
-(
-o.setParameterOSC("/patchA/91/38", 0); // salida de osc1 a output3
-o.setParameterOSC("/patchA/92/39", 0); // salida de osc1 a output4
-o.setParameterOSC("/patchA/77/36", 0); // salida de output3 a output1
-o.setParameterOSC("/patchA/78/37", 0); // salida de output4 a output2
-)
-
-o.getState
-
-(
-o.setParameterOSC("/out/1/filter", 7);
-o.setParameterOSC("/out/2/filter", 4);
-
-)
-
-
-
-o.setParameterOSC("/osc/1/sine/level", 1);
-o.setParameterOSC("/osc/1/sine/symmetry", 5);
-o.setParameterOSC("/osc/1/triangle/level", 0);
-o.setParameterOSC("/osc/1/frequency", 7);
-o.setParameterOSC("/out/1/level", 1);
-o.setParameterOSC("/out/2/level", 1);
-
-OSCFunc.trace(true)
-
-
-
-
-(
-SynthDef(\gated, {
-	arg gate = 0, t_gate = 0;
-	var sig = SinOsc.ar!2;
-	//	var env = Env.adsr(0.5, 0.5, 0.5, 5).ar(0, gate);
-	var env2 = Env.new.ar(0, t_gate);
-	Out.ar(0, sig*env2);
-}).add
-)
-
-a = Synth(\gated);
-
-a.set(\gate, 1);
-a.set(\gate, 0);
-a.set(\gate, -1);
-
-a.set(\t_gate, 1);
-a.set(\t_gate, 0)
-a.set(\t_gate, -1)
-
-
-g = Group.new(s)
-
-b = Synth(\gated, target: g);
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -217,7 +26,7 @@ SynthDef(\S100_FreeRun, {
 	delayTime=1,
 	attackTime=1,
 	decayTime=1,
-	sustainLevel=1,
+	sustainLevel=0.5,
 	releaseTime=1,
 	signalLevel=1;
 
@@ -230,12 +39,10 @@ SynthDef(\S100_FreeRun, {
 			0,
 			1,
 			sustainLevel,
-			0,
 			0, // releaseNode (añadido con valor igual al inicial y con tiempo 0, para que funcione el loop)
 		],
-		times: [delayTime, attackTime, decayTime, releaseTime, 0],
-		releaseNode: 4,
-		loopNode: 0,
+		times: [delayTime, attackTime, decayTime, releaseTime],
+		releaseNode: 3,
 	).ar(0, gate);
 
 

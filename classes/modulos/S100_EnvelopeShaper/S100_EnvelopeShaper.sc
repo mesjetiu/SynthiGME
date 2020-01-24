@@ -147,6 +147,7 @@ S100_EnvelopeShaper {
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
 				sustainLevel: this.convertSustainLevel(sustainLevel),
+				releaseTime: this.convertTime(releaseTime),
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
@@ -178,7 +179,7 @@ S100_EnvelopeShaper {
 			inMin: 0,
 			inMax: 10,
 			outMin: 0,
-			outMax: settings[\envSustainLevelMax]);
+			outMax: 1);//settings[\envSustainLevelMax]);
 	}
 
 	convertEnvelopeLevel {|level|
@@ -225,11 +226,11 @@ S100_EnvelopeShaper {
 			("S100_EnvelopeShaper/setDecayTime: " + time + " no es un valor entre 0 y 10").postln});
 	}
 
-	setSustain {|level|
+	setSustainLevel {|level|
 		if((level>=0).and(level<=10), {
 			sustainLevel = level;
 			//this.synthRun();
-			group.set(\sustain, this.convertSustainLevel(level))
+			group.set(\sustainLevel, this.convertSustainLevel(level))
 		}, {
 			("S100_EnvelopeShaper/setSustain: " + level + " no es un valor entre 0 y 10").postln
 		});
