@@ -610,7 +610,7 @@ Synthi100 {
 					"delay", {modulEnvelopeShapers[index].setDelayTime(value)},
 					"attack", {modulEnvelopeShapers[index].setAttackTime(value)},
 					"decay", {modulEnvelopeShapers[index].setDecayTime(value)},
-					"sustain", {modulEnvelopeShapers[index].setSustainLevel(value)},
+					"sustain", {modulEnvelopeShapers[index].setSustain(value)},
 					"release", {modulEnvelopeShapers[index].setReleaseTime(value)},
 					"envelopeLevel", {modulEnvelopeShapers[index].setEnvelopeLevel(value)},
 					"signalLevel", {modulEnvelopeShapers[index].setSignalLevel(value)},
@@ -695,7 +695,7 @@ Synthi100 {
 			data.add([string ++ "delay", env.delayTime]);
 			data.add([string ++ "attack", env.attackTime]);
 			data.add([string ++ "decay", env.decayTime]);
-			data.add([string ++ "sustain", env.sustainLevel]);
+			data.add([string ++ "sustain", env.sustain]);
 			data.add([string ++ "release", env.releaseTime]);
 			data.add([string ++ "envelopeLevel", env.envelopeLevel]);
 			data.add([string ++ "signalLevel", env.signalLevel]);

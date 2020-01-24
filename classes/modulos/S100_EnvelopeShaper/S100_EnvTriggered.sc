@@ -1,4 +1,4 @@
-S100_EnvFreeRun {
+S100_EnvTriggered {
 
 	var <synth;
 	var server;
@@ -7,6 +7,7 @@ S100_EnvFreeRun {
 
 
 	var <running; // true o false: Si el sintetizador está activo o pausado
+	var lag;
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -17,8 +18,10 @@ S100_EnvFreeRun {
 	}
 
 	*addSynthDef {
-		SynthDef(\S100_envFreeRun, {
+		SynthDef(\S100_envTriggered, {
 			arg generalGate,
+			signalTrigger,
+			inFeedbackSignalTrigger,
 			inputBus,
 			inFeedbackBus,
 			outputBus,
@@ -29,10 +32,12 @@ S100_EnvFreeRun {
 			envelopeLevel,
 			signalLevel;
 
-			var sig, env;
-			//sig = SinOsc.ar; // pruebas
+			var sig, env, gate;
+			gate = In.ar(signalTrigger);
+			gate = gate + InFeedback.ar(inFeedbackSignalTrigger);
 			sig = In.ar(inputBus);
 			sig = sig + InFeedback.ar(inFeedbackBus);
+
 
 			env = Env(
 				levels: [
@@ -41,23 +46,18 @@ S100_EnvFreeRun {
 					1,
 					1,
 					0,
-					0,
 				],
-				times: [delayTime, attackTime, sustainTime.linexp(0, 10, 0.002, 20), decayTime, 0],
-				releaseNode: 4,
-				loopNode: 0,
-			).ar(0, gate: generalGate);
+				times: [delayTime, attackTime, sustainTime.linexp(0, 10, 0.002, 20), decayTime],
+			).ar(0, gate: gate * generalGate);
 
 			env = env * envelopeLevel;
 
-
 			// Se aplica la envolvente y el nivel (level) a la señal
-			sig = sig * env * signalLevel; // gate tiene lag, para que cuando se envíe valor 0, no se corte bruscamente.
+			sig = sig * env * signalLevel;
 
 			Out.ar(outputBus, sig);
-
 		},
-		).add
+		).add;
 	}
 
 
@@ -70,6 +70,8 @@ S100_EnvFreeRun {
 	createSynth {
 		arg
 		group,
+		signalTrigger,
+		inFeedbackSignalTrigger,
 		inputBus,
 		inFeedbackBus,
 		outputBus,
@@ -80,8 +82,10 @@ S100_EnvFreeRun {
 		envelopeLevel,
 		signalLevel;
 		if(synth.isPlaying==false, {
-			synth = Synth(\S100_envFreeRun, [
+			synth = Synth(\S100_envTriggered, [
 				\generalGate, 1,
+				\signalTrigger, signalTrigger,
+				\inFeedbackSignalTrigger, inFeedbackSignalTrigger,
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
@@ -94,6 +98,7 @@ S100_EnvFreeRun {
 			], group).register;
 		});
 		^synth;
+		//	this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth
@@ -102,4 +107,5 @@ S100_EnvFreeRun {
 		synth.run(state);
 		running = state;
 	}
+
 }

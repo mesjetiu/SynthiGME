@@ -19,7 +19,8 @@ S100_EnvGatedFreeRun {
 
 	*addSynthDef {
 		SynthDef(\S100_envGatedFreeRun, {
-			arg signalTrigger,
+			arg generalGate,
+			signalTrigger,
 			inFeedbackSignalTrigger,
 			inputBus,
 			inFeedbackBus,
@@ -27,7 +28,7 @@ S100_EnvGatedFreeRun {
 			delayTime,
 			attackTime,
 			decayTime,
-			sustainLevel,
+			sustainTime,
 			envelopeLevel,
 			signalLevel;
 
@@ -37,21 +38,19 @@ S100_EnvGatedFreeRun {
 			sig = In.ar(inputBus);
 			sig = sig + InFeedback.ar(inFeedbackBus);
 
-		//	sig = SinOsc.ar(1000); // pruebas
-
 			env = Env(
 				levels: [
 					0, // loopNode (ver Help de "Env")
 					0,
 					1,
-					sustainLevel,
+					1,
 					0,
-					0, // releaseNode (añadido con valor igual al inicial y con tiempo 0, para que funcione el loop)
+					0,
 				],
-				times: [delayTime, attackTime, decayTime, 0, 0],
+				times: [delayTime, attackTime, sustainTime.linexp(0, 10, 0.002, 20), decayTime, 0],
 				releaseNode: 4,
 				loopNode: 0,
-			).ar(0, gate: gate);
+			).ar(0, gate: gate * generalGate);
 
 			env = env * envelopeLevel;
 
@@ -82,11 +81,12 @@ S100_EnvGatedFreeRun {
 		delayTime,
 		attackTime,
 		decayTime,
-		sustainLevel,
+		sustainTime,
 		envelopeLevel,
 		signalLevel;
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_envGatedFreeRun, [
+				\generalGate, 1,
 				\signalTrigger, signalTrigger,
 				\inFeedbackSignalTrigger, inFeedbackSignalTrigger,
 				\inputBus, inputBus,
@@ -95,7 +95,7 @@ S100_EnvGatedFreeRun {
 				\delayTime, delayTime,
 				\attackTime, attackTime,
 				\decayTime, decayTime,
-				\sustainLevel, sustainLevel,
+				\sustainTime, sustainTime,
 				\envelopeLevel, envelopeLevel,
 				\signalLevel, signalLevel,
 			], group).register;
@@ -106,6 +106,7 @@ S100_EnvGatedFreeRun {
 
 	// Pausa o reanuda el Synth
 	synthRun {|state|
+		if(state==true, {synth.set(\generalGate, 1)}, {synth.set(\generalGate, 0)});
 		synth.run(state);
 		running = state;
 	}

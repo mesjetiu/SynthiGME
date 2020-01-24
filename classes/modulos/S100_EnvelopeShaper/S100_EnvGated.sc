@@ -19,7 +19,8 @@ S100_EnvGated {
 
 	*addSynthDef {
 		SynthDef(\S100_envGated, {
-			arg signalTrigger,
+			arg generalGate,
+			signalTrigger,
 			inFeedbackSignalTrigger,
 			inputBus,
 			inFeedbackBus,
@@ -44,12 +45,12 @@ S100_EnvGated {
 					0,
 					0,
 					1,
-					sustainLevel,
+					sustainLevel.linlin(0, 10, 0, 1),
 					0,
 				],
 				times: [delayTime, attackTime, decayTime, releaseTime],
 				releaseNode: 3,
-			).ar(0, gate: gate);
+			).ar(0, gate: gate * generalGate);
 
 			env = env * envelopeLevel;
 
@@ -58,7 +59,7 @@ S100_EnvGated {
 
 			Out.ar(outputBus, sig);
 
-		},// [0.5]
+		},
 		).add;
 	}
 
@@ -86,6 +87,7 @@ S100_EnvGated {
 		signalLevel;
 		if(synth.isPlaying==false, {
 			synth = Synth(\S100_envGated, [
+				\generalGate, 1,
 				\signalTrigger, signalTrigger,
 				\inFeedbackSignalTrigger, inFeedbackSignalTrigger,
 				\inputBus, inputBus,
@@ -106,6 +108,7 @@ S100_EnvGated {
 
 	// Pausa o reanuda el Synth
 	synthRun {|state|
+		if(state==true, {synth.set(\generalGate, 1)}, {synth.set(\generalGate, 0)});
 		synth.run(state);
 		running = state;
 	}

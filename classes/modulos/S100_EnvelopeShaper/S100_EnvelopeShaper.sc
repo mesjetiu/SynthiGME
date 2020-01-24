@@ -26,6 +26,7 @@ S100_EnvelopeShaper {
 	var <envGatedFreeRun; // Clase para la opción del selector "GATED F/R" (Gated Free Run)
 	var <envFreeRun; // Clase para la opción del selector "FREE RUN"
 	var <envGated; // Clase para la opción del selector "GATED"
+	var <envTriggered; // Clase para la opción del selector "TRIGGERED"
 
 	var <server;
 	var <inputBus; // Entrada de audio.
@@ -40,7 +41,7 @@ S100_EnvelopeShaper {
 	var <delayTime = 0;
 	var <attackTime = 0;
 	var <decayTime = 0;
-	var <sustainLevel = 0;
+	var <sustain = 0;
 	var <releaseTime = 0;
 	var <envelopeLevel = 0; //Valores entre -5 y 5.
 	var <signalLevel = 0;
@@ -61,19 +62,22 @@ S100_EnvelopeShaper {
 		Class.initClassTree(S100_EnvGatedFreeRun);
 		Class.initClassTree(S100_EnvFreeRun);
 		Class.initClassTree(S100_EnvGated);
+		Class.initClassTree(S100_EnvGated);
+		Class.initClassTree(S100_EnvTriggered);
 	}
 
 	*addSynthDef {
 		S100_EnvFreeRun.addSynthDef;
 		S100_EnvGatedFreeRun.addSynthDef;
 		S100_EnvGated.addSynthDef;
+		S100_EnvTriggered.addSynthDef;
 		SynthDef(\S100_envGateButton, { // Cuando se presiona o relaja el botón de "gate" se lanza 1 o 0 al bus "signalTrigger"
 			arg gate,
 			signalTrigger;
 			var env;
 			env = Env.asr(
 				attackTime: 0.001,
-				sustainLevel: 1,
+				sustain: 1,
 				releaseTime: 0.001,
 			).ar(gate: gate);
 			Out.ar(signalTrigger, env);
@@ -94,8 +98,9 @@ S100_EnvelopeShaper {
 		envGatedFreeRun = S100_EnvGatedFreeRun(server);
 		envFreeRun = S100_EnvFreeRun(server);
 		envGated = S100_EnvGated(server);
+		envTriggered = S100_EnvTriggered(server);
 
-		selector = 3;
+		selector = 3; // GATED
 	}
 
 	createSynth {
@@ -114,7 +119,7 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainLevel: this.convertSustainLevel(sustainLevel),
+				sustainTime: sustain,
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
@@ -130,7 +135,7 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainLevel: this.convertSustainLevel(sustainLevel),
+				sustainTime: sustain,
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
@@ -146,8 +151,24 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainLevel: this.convertSustainLevel(sustainLevel),
+				sustainLevel: sustain,
 				releaseTime: this.convertTime(releaseTime),
+				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
+				signalLevel: this.convertSignalLevel(signalLevel),
+			);
+			while({synth.isPlaying == false}, {wait(waitTime)});
+			// se crea el synth de TRIGGERED
+			synth = envTriggered.createSynth(
+				group: group,
+				signalTrigger: signalTrigger,
+				inFeedbackSignalTrigger: inFeedbackSignalTrigger,
+				inputBus: inputBus,
+				inFeedbackBus: inFeedbackBus,
+				outputBus: outputBus,
+				delayTime: this.convertTime(delayTime),
+				attackTime: this.convertTime(attackTime),
+				decayTime: this.convertTime(decayTime),
+				sustainTime: sustain,
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
@@ -174,13 +195,13 @@ S100_EnvelopeShaper {
 			outMax: settings[\envTimeMax]);
 	}
 
-	convertSustainLevel {|level|
+/*	convertsustain {|level|
 		^level.linlin(
 			inMin: 0,
 			inMax: 10,
 			outMin: 0,
-			outMax: 1);//settings[\envSustainLevelMax]);
-	}
+			outMax: 1);//settings[\envsustainMax]);
+	}*/
 
 	convertEnvelopeLevel {|level|
 		^level.linlin(-5, 5, -1, 1);
@@ -226,11 +247,12 @@ S100_EnvelopeShaper {
 			("S100_EnvelopeShaper/setDecayTime: " + time + " no es un valor entre 0 y 10").postln});
 	}
 
-	setSustainLevel {|level|
+	setSustain {|level|
 		if((level>=0).and(level<=10), {
-			sustainLevel = level;
+			sustain = level;
 			//this.synthRun();
-			group.set(\sustainLevel, this.convertSustainLevel(level))
+			group.set(\sustainLevel, level);
+			group.set(\sustainTime, level);
 		}, {
 			("S100_EnvelopeShaper/setSustain: " + level + " no es un valor entre 0 y 10").postln
 		});
@@ -279,23 +301,33 @@ S100_EnvelopeShaper {
 		switch (option,
 			1, { // Gated Free Run
 				envGatedFreeRun.synthRun(true);
+				envGated.synthRun(false);
 				envFreeRun.synthRun(false);
+				envTriggered.synthRun(false);
 			},
 			2, { // Free Run
 				envFreeRun.synthRun(true);
 				envGatedFreeRun.synthRun(false);
+				envGated.synthRun(false);
+				envTriggered.synthRun(false);
 			},
 			3, { // Gated
+				envGated.synthRun(true);
 				envFreeRun.synthRun(false);
 				envGatedFreeRun.synthRun(false);
+				envTriggered.synthRun(false);
 			},
 			4, { // Triggered
+				envTriggered.synthRun(true);
 				envFreeRun.synthRun(false);
+				envGated.synthRun(false);
 				envGatedFreeRun.synthRun(false);
 			},
 			5, { // Hold
 				envFreeRun.synthRun(false);
 				envGatedFreeRun.synthRun(false);
+				envGated.synthRun(false);
+				envTriggered.synthRun(false);
 			},
 			{
 				("S100_EnvelopeShaper/setSelector: " + option + " no es un valor válido").postln
