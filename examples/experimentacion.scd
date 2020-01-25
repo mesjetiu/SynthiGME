@@ -10,7 +10,7 @@ Quarks.clear
 
 o = Synthi100(gui:false).run.pairDevice
 
-o = Synthi100(gui:true).run
+o = Synthi100(gui:true)
 
 
 
@@ -176,3 +176,6 @@ Routine({ // Cuando se hace un click...
 
 s.options.numAudioBusChannels
 
+
+
+Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
