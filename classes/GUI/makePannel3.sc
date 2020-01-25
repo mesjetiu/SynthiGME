@@ -173,4 +173,11 @@
 	makeRandomControlVoltageGenerator {
 	}
 
+	zoomPannel3 {
+		var factor, left, top;
+		factor = 9/4;
+		top = ((9/16) * widthRealScreen) - (((9/16) * widthRealScreen) * factor);
+		left = -1 * (((((widthRealScreen * factor)  -  widthRealScreen))/2) + (widthRealScreen/8 * factor));
+		this.resize(factor, left: left, top: top);
+	}
 }
