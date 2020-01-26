@@ -11,6 +11,7 @@ Quarks.clear
 o = Synthi100(gui:false).run.pairDevice
 
 o = Synthi100(gui:true)
+o.run
 
 
 
