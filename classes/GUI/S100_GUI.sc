@@ -99,7 +99,7 @@ S100_GUI {
 		var l, t;
 		if (left != nil, {l = left}, {l = view.bounds.left * factor});
 		if (top != nil, {t = top}, {t = view.bounds.top * factor});
-		if(view.asString == "a Window", {
+		if (view.class === Window, {
 			v = view.view;
 			step = step * factor; // solo se ejecuta una vez (cuando el argumento es "window")
 		});
@@ -112,6 +112,29 @@ S100_GUI {
 		v.children.do({|v|
 			this.resize(factor, v);
 		});
+	}
+
+	resize2 {arg factor, left, top;
+		step = step * factor;
+		window.view.bounds = Rect(
+			left: left,
+			top: top,
+			width: window.bounds.width * factor,
+			height: window.bounds.height * factor,
+		);
+		defaultSizes.do({|v|
+			var l, t, w, h;
+			l = v[1].bounds.left;
+			t = v[1].bounds.top;
+			w = v[1].bounds.width;
+			h = v[1].bounds.height;
+			v[0].bounds = Rect(
+				left: l * factor,
+				top: t * factor,
+				width: w * factor,
+				height: h * factor,
+			)
+		})
 	}
 
 	resetSize {

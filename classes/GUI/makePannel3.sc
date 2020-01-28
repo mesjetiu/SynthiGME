@@ -178,6 +178,7 @@
 	//	factor = factor * 2; // Para pruebas
 		top = ((9/16) * widthRealScreen) - (((9/16) * widthRealScreen) * factor);
 		left = -1 * (((((widthRealScreen * factor)  -  widthRealScreen))/2) + (widthRealScreen/8 * factor));
-		this.resize(factor, left: left, top: top);
+		//this.resize(factor, left: left, top: top);
+		this.resize2(factor, left: left, top: top);
 	}
 }
