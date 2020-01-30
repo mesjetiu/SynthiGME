@@ -1,17 +1,12 @@
-+ S100_GUI {
-	makePannel3 {|parent|
-/*		var rect = Rect(
-			(rectWindow.width/4) * 2,
-			0,
-			rectWindow.width/4,
-			rectWindow.width/4,
-		);
-
-		var imagePannel3 = Image(installedPath ++ "/classes/GUI/images/pannel_3.png");
-		var compositeView = CompositeView(parent, rect).setBackgroundImage(imagePannel3,10);
+S100_GUIPannel3 : S100_GUIPannel {
+	makeWindow {
+		var image;
+		var left, top, spacing;
+		window.name = "Panel 3";
+		image = Image(installedPath ++ "/classes/GUI/images/pannel_3.png");
+		compositeView.setBackgroundImage(image,10);
 
 		// Los 6 osciladores de la izquierda
-		var left, top, spacing;
 		left = 28;
 		top = 75.5;
 		spacing = 58;
@@ -29,11 +24,18 @@
 			top = top + spacing;
 		});
 
-		compositeView.mouseDownAction_({
-		});
 
-		defaultSizes = defaultSizes.add([compositeView, compositeView.bounds]);
-		*/
+		// Cuando se hace doble click se hace zoom
+		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var factor = 1.5;
+			if(clickCount == 2, {
+				buttonNumber.switch(
+					0, {this.resizePannel(factor)},
+					1, {this.resizePannel(1/factor)},
+				)
+			})
+		});
+		window.front;
 	}
 
 	makeOscillator {|parent, left, top, num|
@@ -79,7 +81,7 @@
 		.step_(step);
 
 		// Se añaden las views y sus bounds por defecto para resize
-		defaultSizes = defaultSizes ++ [
+		viewSizes = viewSizes ++ [
 			[pulseLevel, pulseLevel.bounds],
 			[pulseShape, pulseShape.bounds],
 			[sineLevel, sineLevel.bounds],
@@ -160,10 +162,4 @@
 	makeRandomControlVoltageGenerator {
 	}
 
-	zoomPannel3 {
-
-	}
-
-	openPannel3{
-	}
 }

@@ -13,14 +13,38 @@ S100_GUIPannel {
 	var stepDefault = 0.001;
 	var step = 0.001;
 
+	var synthi100;
+	var parameterViews;
+
 	var installedPath;
 
-	*new {
-		^super.new.init();
+	// Colores de la intefaz
+	var blue;
+	var green;
+	var white;
+	var black;
+	var whiteBackground;
+	var blackForniture;
+
+
+	//*********************************************************************************************
+
+	*new {|synthi, parameters|
+		^super.new.init(synthi, parameters);
 	}
 
-	init {
+	init {|synthi, parameters|
+		synthi100 = synthi;
+		parameterViews = parameters;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
+
+		blue = Color.new255(61.8, 86.7, 118.4);
+		green = Color.new255(68.6, 107.2, 82.6);
+		white = Color.new255(172.7, 166.6, 160.3);
+		black = Color.new255(34.4, 36.3, 38.7);
+		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
+		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
+
 		rectWindow = Rect(0, 0,  virtualWidth/4,  virtualWidth/4);
 		rectCompositeView = Rect(
 			0,
