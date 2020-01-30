@@ -1,6 +1,6 @@
 + S100_GUI {
 	makePannel3 {|parent|
-		var rect = Rect(
+/*		var rect = Rect(
 			(rectWindow.width/4) * 2,
 			0,
 			rectWindow.width/4,
@@ -30,23 +30,10 @@
 		});
 
 		compositeView.mouseDownAction_({
-			Routine({ // Cuando se hace un click...
-				if (click == true, {
-					// Cuando se hace doble click...
-					if(window.bounds.width == widthRealScreen, {
-						// this.zoomPannel3;
-						this.openPannel3;
-					},{
-						this.resetSize;
-					})
-				}, {
-					click = true;
-					wait(timeDoubleClick); // tiempo de espera del segundo click
-				});
-				click = false; // una vez transcurrida la espera, se vuelve false
-			}).play(AppClock);
 		});
+
 		defaultSizes = defaultSizes.add([compositeView, compositeView.bounds]);
+		*/
 	}
 
 	makeOscillator {|parent, left, top, num|
@@ -174,13 +161,7 @@
 	}
 
 	zoomPannel3 {
-		var factor, left, top;
-		factor = 9/4;
-	//	factor = factor * 2; // Para pruebas
-		top = ((9/16) * widthRealScreen) - (((9/16) * widthRealScreen) * factor);
-		left = -1 * (((((widthRealScreen * factor)  -  widthRealScreen))/2) + (widthRealScreen/8 * factor));
-		//this.resize(factor, left: left, top: top);
-		this.resize2(factor, left: left, top: top);
+
 	}
 
 	openPannel3{

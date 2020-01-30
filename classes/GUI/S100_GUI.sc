@@ -4,19 +4,10 @@ S100_GUI {
 
 	var synthi100;
 
-	var <window;
-	var <compositeView;
 	var <parameterViews; // Dictionary con todas las views y claves para OSC
 	var <defaultSizes; // Array con todos los tamaños por defecto
 	var <synthi100; // instancia de Synthi100 para callback
-	var rectWindow; // Posición y tamaño de la ventana.
-	var proportion; // Proporción de la ventana
-	var widthRealScreen; // Anchura de la pantalla del ordenador
-	var widthScreen; // Anchura de la pantalla virtual sobre la que se trabaja en esta clase.
 
-	var windowPannel1;
-	var viewSizesPannel1;
-	var zoomLevelPannel1 = 1;
 	var pannel1;
 
 
@@ -48,7 +39,6 @@ S100_GUI {
 
 	init {|synthi|
 		parameterViews = Dictionary.new;
-		defaultSizes =  [];
 		synthi100 = synthi;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
 		blue = Color.new255(61.8, 86.7, 118.4);
@@ -58,13 +48,8 @@ S100_GUI {
 		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
 
-		widthRealScreen = Window.availableBounds.width ; // tamaño de la pantalla del ordenador
-		widthScreen = 1920; // Anchura de la pantalla virtual (cada pantalla real tendrá un ancho distinto)
-		proportion = [16,9]; // Proporciones de la ventana
-		rectWindow = Rect(0, 0, widthScreen/4, widthScreen/4);
 
-
-		pannel1 = S100_GUIPannel();
+		pannel1 = S100_GUIPannel1();
 
 		click = false;
 		running = false;
@@ -90,8 +75,7 @@ S100_GUI {
 		if(yDelta < 0, {this.resize(0.95 ** ((yDelta).abs/15))});
 		};
 		*/
-		compositeView = CompositeView(window, rectWindow);
-		defaultSizes = defaultSizes.add([compositeView, compositeView.bounds]);
+
 
 		//  this.makePannel1(compositeView);
 		//	this.makePannel2(compositeView);
@@ -109,89 +93,5 @@ S100_GUI {
 		running = true;
 	}
 
-	resize {arg factor, view = window, left, top;
-		var v = view;
-		var l, t;
-		if (left != nil, {l = left}, {l = view.bounds.left * factor});
-		if (top != nil, {t = top}, {t = view.bounds.top * factor});
-		if (view.class === Window, {
-			v = view.view;
-			step = step * factor; // solo se ejecuta una vez (cuando el argumento es "window")
-		});
-		view.bounds = Rect(
-			left: l,
-			top: t,
-			width: view.bounds.width * factor,
-			height: view.bounds.height * factor,
-		);
-		v.children.do({|v|
-			this.resize(factor, v);
-		});
-	}
 
-	resize2 {arg factor, left, top;
-		step = step * factor;
-		window.view.bounds = Rect(
-			left: left,
-			top: top,
-			width: window.bounds.width * factor,
-			height: window.bounds.height * factor,
-		);
-		defaultSizes.do({|v|
-			var l, t, w, h;
-			l = v[1].bounds.left;
-			t = v[1].bounds.top;
-			w = v[1].bounds.width;
-			h = v[1].bounds.height;
-			v[0].bounds = Rect(
-				left: l * factor,
-				top: t * factor,
-				width: w * factor,
-				height: h * factor,
-			)
-		})
-	}
-
-
-	resizePannel {arg viewSizes, factorH, factorW, zoomLevelPannel;
-		var factor = factorW * zoomLevelPannel;
-		step = step * factorW * zoomLevelPannel;
-		viewSizes.do({|v|
-			if (v[0].class === Window, {
-				v[0].bounds = Rect(
-					left: v[0].bounds.left,
-					top: v[0].bounds.top,
-					width: v[1].width * factorW * zoomLevelPannel,
-					height: v[1].height * factorH * zoomLevelPannel,
-				)
-			}, {
-				v[0].bounds = Rect(
-					left: v[1].left * factor,
-					top: v[1].top * factor,
-					width: v[1].width * factor,
-					height: v[1].height * factor,
-				)
-			})
-		});
-		zoomLevelPannel1 = factorW * zoomLevelPannel;
-	}
-
-	resetSize {
-		/*		var factor = (widthRealScreen/window.bounds.width);
-		window.bounds = Rect(
-		left: 0,
-		top: 0,
-		width: window.bounds.width * factor,
-		height: window.bounds.height * factor,
-		);
-		this.resize(factor, window.view);*/
-		defaultSizes.do({|par|
-			var view, bounds;
-			view = par[0];
-			bounds = par[1];
-			view.bounds = bounds;
-		});
-		step = stepDefault;
-		this.resize(widthRealScreen/widthScreen);
-	}
 }
