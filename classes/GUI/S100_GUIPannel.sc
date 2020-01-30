@@ -1,6 +1,6 @@
 S100_GUIPannel {
 
-	var window;
+	var <window;
 	var compositeView;
 	var viewSizes;
 	var zoomHLevel = 1;

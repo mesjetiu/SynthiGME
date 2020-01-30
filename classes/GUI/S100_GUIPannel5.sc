@@ -1,8 +1,15 @@
 S100_GUIPannel5 : S100_GUIPannel {
 	makeWindow {
+		var rect = Rect(
+			left: 0,
+			top: 0,
+			width: window.bounds.width,
+			height: window.bounds.height,
+		);
 		var image;
 		var left, top, spacing;
 		window.name = "Panel 5";
+		window.bounds = rect;
 		image = Image(installedPath ++ "/classes/GUI/images/pannel_5.png");
 		compositeView.setBackgroundImage(image,10).background_(whiteBackground);
 		// Cuando se hace doble click se hace zoom

@@ -8,7 +8,7 @@ S100_GUI {
 	var <defaultSizes; // Array con todos los tamaños por defecto
 	var <synthi100; // instancia de Synthi100 para callback
 
-	var pannels;
+	var <pannels;
 
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
@@ -89,5 +89,9 @@ S100_GUI {
 		running = true;
 	}
 
-
+	closeWindows {
+		pannels.do({|pannel|
+			pannel.window.close;
+		})
+	}
 }
