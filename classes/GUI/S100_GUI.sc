@@ -8,8 +8,7 @@ S100_GUI {
 	var <defaultSizes; // Array con todos los tamaños por defecto
 	var <synthi100; // instancia de Synthi100 para callback
 
-	var pannel1;
-	var pannel3;
+	var pannels;
 
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
@@ -37,9 +36,14 @@ S100_GUI {
 		synthi100 = synthi;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
 
-
-		pannel1 = S100_GUIPannel1(synthi100, parameterViews);
-		pannel3 = S100_GUIPannel3(synthi100, parameterViews);
+		pannels = [];
+		pannels = pannels.add(S100_GUIPannel1(synthi100, parameterViews));
+		pannels = pannels.add(S100_GUIPannel2(synthi100, parameterViews));
+		pannels = pannels.add(S100_GUIPannel3(synthi100, parameterViews));
+		pannels = pannels.add(S100_GUIPannel4(synthi100, parameterViews));
+		pannels = pannels.add(S100_GUIPannel5(synthi100, parameterViews));
+		pannels = pannels.add(S100_GUIPannel6(synthi100, parameterViews));
+		pannels = pannels.add(S100_GUIPannel7(synthi100, parameterViews));
 
 		click = false;
 		running = false;
@@ -78,8 +82,9 @@ S100_GUI {
 		//	this.resize2(0.5);
 		//	window.front;
 
-		pannel1.makeWindow;
-		pannel3.makeWindow;
+		pannels.do({|pannel|
+			pannel.makeWindow
+		});
 
 		running = true;
 	}

@@ -41,55 +41,66 @@ S100_GUIPannel3 : S100_GUIPannel {
 	makeOscillator {|parent, left, top, num|
 		var size = 27;
 		var spacing = 30.4;
+		var rect;
 		var pulseLevel, pulseShape, sineLevel, sineSymmetry, triangleLevel, sawtoothLevel, frequency;
-		pulseLevel = Knob(parent, Rect(left, top, size, size))
+
+		rect = Rect(left, top, size, size);
+		pulseLevel = Knob(parent, rect)
 		.color_([blue, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
+		viewSizes = viewSizes.add([pulseLevel, rect]);
+
 		left = left + spacing;
-		pulseShape = Knob(parent, Rect(left, top, size, size))
+		rect = Rect(left, top, size, size);
+		pulseShape = Knob(parent, rect)
 		.color_([green, black, white, nil])
 		.mode_(\horiz).step_(step)
 		.centered_(true)
 		.value_(0.5);
+		viewSizes = viewSizes.add([pulseShape, rect]);
+
 		left = left + spacing;
-		sineLevel = Knob(parent, Rect(left, top, size, size))
+		rect = Rect(left, top, size, size);
+		sineLevel = Knob(parent, rect)
 		.color_([white, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
+		viewSizes = viewSizes.add([sineLevel, rect]);
+
 		left = left + spacing;
-		sineSymmetry = Knob(parent, Rect(left, top, size, size))
+		rect = Rect(left, top, size, size);
+		sineSymmetry = Knob(parent, rect)
 		.color_([green, black, white, nil])
 		.mode_(\horiz)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
+		viewSizes = viewSizes.add([sineSymmetry, rect]);
+
 		left = left + spacing;
-		triangleLevel = Knob(parent, Rect(left, top, size, size))
+		rect = Rect(left, top, size, size);
+		triangleLevel = Knob(parent, rect)
 		.color_([blue, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
+		viewSizes = viewSizes.add([triangleLevel, rect]);
+
 		left = left + spacing;
-		sawtoothLevel = Knob(parent, Rect(left, top, size, size))
+		rect = Rect(left, top, size, size);
+		sawtoothLevel = Knob(parent, rect)
 		.color_([white, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
+		viewSizes = viewSizes.add([sawtoothLevel, rect]);
+
 		left = left + 26.4;
-		frequency = Knob(parent, Rect(left, top-17, size, size))
+		rect = Rect(left, top-17, size, size);
+		frequency = Knob(parent, rect)
 		.color_([black, black, white, nil])
 		.mode_(\horiz)
 		.step_(step);
-
-		// Se añaden las views y sus bounds por defecto para resize
-		viewSizes = viewSizes ++ [
-			[pulseLevel, pulseLevel.bounds],
-			[pulseShape, pulseShape.bounds],
-			[sineLevel, sineLevel.bounds],
-			[sineSymmetry, sineSymmetry.bounds],
-			[triangleLevel, triangleLevel.bounds],
-			[sawtoothLevel, sawtoothLevel.bounds],
-			[frequency, frequency.bounds]
-		];
+		viewSizes = viewSizes.add([frequency, rect]);
 
 
 		// Se añaden al diccionario todos los mandos del oscilador para poder cambiar su valor.
