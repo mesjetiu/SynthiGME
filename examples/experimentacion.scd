@@ -11,6 +11,7 @@ Quarks.clear
 o = Synthi100(gui:false).run.pairDevice
 
 o = Synthi100(gui:true)
+o.guiSC.resetSize
 o.run
 
 
@@ -180,3 +181,6 @@ s.options.numAudioBusChannels
 
 
 Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
+
+
+Button

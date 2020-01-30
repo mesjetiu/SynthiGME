@@ -34,7 +34,8 @@
 				if (click == true, {
 					// Cuando se hace doble click...
 					if(window.bounds.width == widthRealScreen, {
-						this.zoomPannel3;
+						// this.zoomPannel3;
+						this.openPannel3;
 					},{
 						this.resetSize;
 					})
@@ -180,5 +181,8 @@
 		left = -1 * (((((widthRealScreen * factor)  -  widthRealScreen))/2) + (widthRealScreen/8 * factor));
 		//this.resize(factor, left: left, top: top);
 		this.resize2(factor, left: left, top: top);
+	}
+
+	openPannel3{
 	}
 }

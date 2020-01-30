@@ -5,6 +5,7 @@ S100_GUI {
 	var synthi100;
 
 	var <window;
+	var <compositeView;
 	var <parameterViews; // Dictionary con todas las views y claves para OSC
 	var <defaultSizes; // Array con todos los tamaños por defecto
 	var <synthi100; // instancia de Synthi100 para callback
@@ -12,6 +13,12 @@ S100_GUI {
 	var proportion; // Proporción de la ventana
 	var widthRealScreen; // Anchura de la pantalla del ordenador
 	var widthScreen; // Anchura de la pantalla virtual sobre la que se trabaja en esta clase.
+
+	var windowPannel1;
+	var viewSizesPannel1;
+	var zoomLevelPannel1 = 1;
+	var pannel1;
+
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
 	var <running; // Es true cuando se enciende la GUI. Sirve de semáforo para enviar o no mensajes desde fuera.
@@ -51,10 +58,13 @@ S100_GUI {
 		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
 
-		widthRealScreen = Window.availableBounds.width * (95/100); // tamaño de la pantalla del ordenador
+		widthRealScreen = Window.availableBounds.width ; // tamaño de la pantalla del ordenador
 		widthScreen = 1920; // Anchura de la pantalla virtual (cada pantalla real tendrá un ancho distinto)
 		proportion = [16,9]; // Proporciones de la ventana
-		rectWindow = Rect(0, 0, widthScreen, (widthScreen * proportion[1]) / proportion[0]);
+		rectWindow = Rect(0, 0, widthScreen/4, widthScreen/4);
+
+
+		pannel1 = S100_GUIPannel();
 
 		click = false;
 		running = false;
@@ -62,9 +72,9 @@ S100_GUI {
 
 	makeWindow {
 		// Lo primero de todo, se crea la ventana que será padre de todos los "views"
-		window = Window("EMS Synthi 100", rectWindow, false, true, scroll: false);
-		window.background = blackForniture;
-		defaultSizes = defaultSizes.add([window, window.bounds]);
+		//	window = Window("EMS Synthi 100", rectWindow, false, true, scroll: true);
+		//	window.background = blackForniture;
+		//	defaultSizes = defaultSizes.add([window, window.bounds]);
 
 		/*		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 		char.postln;
@@ -80,16 +90,21 @@ S100_GUI {
 		if(yDelta < 0, {this.resize(0.95 ** ((yDelta).abs/15))});
 		};
 		*/
+		compositeView = CompositeView(window, rectWindow);
+		defaultSizes = defaultSizes.add([compositeView, compositeView.bounds]);
 
-		this.makePannel1(window);
-		this.makePannel2(window);
-		this.makePannel3(window);
-		this.makePannel4(window);
-		this.makePannel5(window);
-		this.makePannel6(window);
+		//  this.makePannel1(compositeView);
+		//	this.makePannel2(compositeView);
+		//	this.makePannel3(compositeView);
+		//	this.makePannel4(compositeView);
+		//	this.makePannel5(compositeView);
+		//	this.makePannel6(compositeView);
 
-		this.resize(widthRealScreen/widthScreen);
-		window.front;
+		//	this.resize(widthRealScreen/widthScreen);
+		//	this.resize2(0.5);
+		//	window.front;
+
+		pannel1.makeWindow;
 
 		running = true;
 	}
@@ -135,6 +150,30 @@ S100_GUI {
 				height: h * factor,
 			)
 		})
+	}
+
+
+	resizePannel {arg viewSizes, factorH, factorW, zoomLevelPannel;
+		var factor = factorW * zoomLevelPannel;
+		step = step * factorW * zoomLevelPannel;
+		viewSizes.do({|v|
+			if (v[0].class === Window, {
+				v[0].bounds = Rect(
+					left: v[0].bounds.left,
+					top: v[0].bounds.top,
+					width: v[1].width * factorW * zoomLevelPannel,
+					height: v[1].height * factorH * zoomLevelPannel,
+				)
+			}, {
+				v[0].bounds = Rect(
+					left: v[1].left * factor,
+					top: v[1].top * factor,
+					width: v[1].width * factor,
+					height: v[1].height * factor,
+				)
+			})
+		});
+		zoomLevelPannel1 = factorW * zoomLevelPannel;
 	}
 
 	resetSize {
