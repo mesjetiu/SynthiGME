@@ -13,7 +13,9 @@ S100_GUIPannel5 : S100_GUIPannel {
 		window.name = "Panel 5";
 		window.bounds = rect;
 		image = Image(installedPath ++ "/classes/GUI/images/pannel_5.png");
-		compositeView.setBackgroundImage(image,10).background_(whiteBackground);
+		compositeView
+		.setBackgroundImage(image,10)
+		.background_(whiteBackground);
 		// Cuando se hace doble click se hace zoom
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var factor = 1.5;
@@ -28,10 +30,12 @@ S100_GUIPannel5 : S100_GUIPannel {
 		// Se crean los nodos (botones)
 		left = 56.2;
 		top = 55;
-		spacing = 6.4;
+		spacing = 6.1;
 
-		60.do({|row|
-			this.makeRow(compositeView, left, top, row);
+		63.do({|row|
+			if((row < 30).or(row > 32), {
+				this.makeRow(compositeView, left, top, row);
+			});
 			top = top + spacing;
 		});
 
@@ -40,9 +44,11 @@ S100_GUIPannel5 : S100_GUIPannel {
 
 
 	makeRow {|parent, left, top, row|
-		var spacing = 5.85;
-		66.do({|column|
-			this.makeNode(parent, left, top, column, row);
+		var spacing = 5.75;
+		67.do({|column|
+			if(column != 33, {
+				this.makeNode(parent, left, top, column, row);
+			});
 			left = left + spacing;
 		})
 	}
