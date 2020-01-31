@@ -1,12 +1,14 @@
 S100_GUIPannel6 : S100_GUIPannel {
 	makeWindow {
-		var rect = Rect(
+		var rect;
+		var image;
+		super.makeWindow;
+		rect = Rect(
 			left: Window.availableBounds.width/2,
 			top: 0,
 			width: window.bounds.width,
 			height: window.bounds.height,
 		);
-		var image;
 		window.name = "Panel 6";
 		window.bounds = rect;
 		image = Image(installedPath ++ "/classes/GUI/images/pannel_5.png");

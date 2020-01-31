@@ -2,14 +2,12 @@ S100_GUI {
 
 	classvar settings;
 
-	var synthi100;
+	var <mainWindow; // Ventana principal para abrir y cerrar los módulos
 
 	var <parameterViews; // Dictionary con todas las views y claves para OSC
 	var <defaultSizes; // Array con todos los tamaños por defecto
-	var <synthi100; // instancia de Synthi100 para callback
 
 	var <pannels;
-
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
 	var <running; // Es true cuando se enciende la GUI. Sirve de semáforo para enviar o no mensajes desde fuera.
@@ -20,9 +18,6 @@ S100_GUI {
 	var stepDefault = 0.001;
 	var step = 0.001;
 
-	// Al hacer click sobre determinadas views se activa la rutina esperando un segundo click.
-	var click;
-	var timeDoubleClick = 0.5;
 
 	*new {arg synthi;
 		^super.new.init(synthi);
@@ -33,19 +28,17 @@ S100_GUI {
 
 	init {|synthi|
 		parameterViews = Dictionary.new;
-		synthi100 = synthi;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
 
 		pannels = [];
-		pannels = pannels.add(S100_GUIPannel1(synthi100, parameterViews));
-		pannels = pannels.add(S100_GUIPannel2(synthi100, parameterViews));
-		pannels = pannels.add(S100_GUIPannel3(synthi100, parameterViews));
-		pannels = pannels.add(S100_GUIPannel4(synthi100, parameterViews));
-		pannels = pannels.add(S100_GUIPannel5(synthi100, parameterViews));
-		pannels = pannels.add(S100_GUIPannel6(synthi100, parameterViews));
-		pannels = pannels.add(S100_GUIPannel7(synthi100, parameterViews));
+		pannels = pannels.add(S100_GUIPannel1(synthi, parameterViews));
+		pannels = pannels.add(S100_GUIPannel2(synthi, parameterViews));
+		pannels = pannels.add(S100_GUIPannel3(synthi, parameterViews));
+		pannels = pannels.add(S100_GUIPannel4(synthi, parameterViews));
+		pannels = pannels.add(S100_GUIPannel5(synthi, parameterViews));
+		pannels = pannels.add(S100_GUIPannel6(synthi, parameterViews));
+		pannels = pannels.add(S100_GUIPannel7(synthi, parameterViews));
 
-		click = false;
 		running = false;
 	}
 
@@ -92,6 +85,12 @@ S100_GUI {
 	closeWindows {
 		pannels.do({|pannel|
 			pannel.window.close;
+		})
+	}
+
+	frontWindows {
+		pannels.do({|pannel|
+			pannel.window.front;
 		})
 	}
 }

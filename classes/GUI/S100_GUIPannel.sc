@@ -44,7 +44,9 @@ S100_GUIPannel {
 		black = Color.new255(34.4, 36.3, 38.7);
 		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
+	}
 
+	makeWindow { // Para sobrescribir desde clases que heredan
 		rectWindow = Rect(0, 0,  virtualWidth/4,  virtualWidth/4);
 		rectCompositeView = Rect(
 			0,
@@ -52,15 +54,12 @@ S100_GUIPannel {
 			rectWindow.width,
 			rectWindow.height,
 		);
-		window =  Window("", rectWindow, false, true, scroll: true);
+		window =  Window("", rectWindow, false, true, scroll: true)
+		.userCanClose_(false);
 		compositeView = CompositeView(window, rectCompositeView);
 		viewSizes = [];
 		viewSizes = viewSizes.add([window, rectWindow]);
 		viewSizes = viewSizes.add([compositeView, rectCompositeView]);
-	}
-
-	makeWindow {
-
 	}
 
 
