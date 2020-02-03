@@ -74,7 +74,8 @@ S100_GUIPannel3 : S100_GUIPannel {
 		.states_([
 			[nil, nil, Color.black], // value 0
 			[nil, nil, Color.red] // value 1
-		]);
+		]).
+		value_(1);
 		viewSizes = viewSizes.add([range, rect]);
 
 		left = left + spacing;

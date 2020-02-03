@@ -11,7 +11,7 @@ S100_GUIPannel7 : S100_GUIPannel {
 		);
 		window.name = "Panel 7";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/pannel_1.png");
+		image = Image(installedPath ++ "/classes/GUI/images/pannel_7.png");
 		compositeView.setBackgroundImage(image,10);
 		// Cuando se hace doble click se hace zoom
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
