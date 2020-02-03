@@ -446,7 +446,10 @@ Synthi100 {
 					{parameter = splitted[0]++splitted[1]}
 				);
 				switch (parameter,
-					"range", {modulOscillators[index].setRange(value)},
+					"range", {
+						modulOscillators[index].setRange(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
+					},
 					"frequency", {
 						modulOscillators[index].setFrequency(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});

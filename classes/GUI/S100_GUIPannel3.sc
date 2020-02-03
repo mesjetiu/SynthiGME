@@ -16,7 +16,7 @@ S100_GUIPannel3 : S100_GUIPannel {
 		compositeView.setBackgroundImage(image,10);
 
 		// Los 6 osciladores de la izquierda
-		left = 28;
+		left = 24.5;
 		top = 75.5;
 		spacing = 58;
 
@@ -49,9 +49,9 @@ S100_GUIPannel3 : S100_GUIPannel {
 
 	makeOscillator {|parent, left, top, num|
 		var size = 27;
-		var spacing = 30.4;
+		var spacing = 31;
 		var rect;
-		var pulseLevel, pulseShape, sineLevel, sineSymmetry, triangleLevel, sawtoothLevel, frequency;
+		var pulseLevel, pulseShape, sineLevel, sineSymmetry, triangleLevel, sawtoothLevel, frequency, range;
 
 		rect = Rect(left, top, size, size);
 		pulseLevel = Knob(parent, rect)
@@ -68,6 +68,14 @@ S100_GUIPannel3 : S100_GUIPannel {
 		.centered_(true)
 		.value_(0.5);
 		viewSizes = viewSizes.add([pulseShape, rect]);
+
+		rect = Rect(left + (spacing-7), top - 27, 10, 15);
+		range = Button(parent, rect)
+		.states_([
+			[nil, nil, Color.black], // value 0
+			[nil, nil, Color.red] // value 1
+		]);
+		viewSizes = viewSizes.add([range, rect]);
 
 		left = left + spacing;
 		rect = Rect(left, top, size, size);
@@ -104,7 +112,7 @@ S100_GUIPannel3 : S100_GUIPannel {
 		viewSizes = viewSizes.add([sawtoothLevel, rect]);
 
 		left = left + 26.4;
-		rect = Rect(left, top-17, size, size);
+		rect = Rect(left, top-15, size, size);
 		frequency = Knob(parent, rect)
 		.color_([black, black, white, nil])
 		.mode_(\horiz)
@@ -120,7 +128,8 @@ S100_GUIPannel3 : S100_GUIPannel {
 		.put("/osc/" ++ num ++ "/sine/" ++ "symmetry", sineSymmetry)
 		.put("/osc/" ++ num ++ "/triangle/" ++ "level", triangleLevel)
 		.put("/osc/" ++ num ++ "/sawtooth/" ++ "level", sawtoothLevel)
-		.put("/osc/" ++ num ++ "/frequency", frequency);
+		.put("/osc/" ++ num ++ "/frequency", frequency)
+		.put("/osc/" ++ num ++ "/range", range);
 
 		// Acciones a realizar al cambiar manualmente el valor de cada mando
 		pulseLevel.action = {|knob|
@@ -169,6 +178,13 @@ S100_GUIPannel3 : S100_GUIPannel {
 			synthi100.setParameterOSC(
 				string: "/osc/" ++ num ++ "/frequency",
 				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		range.action = {|button|
+			synthi100.setParameterOSC(
+				string: "/osc/" ++ num ++ "/range",
+				value: button.value,
 				addrForbidden: \GUI,
 			)
 		};
