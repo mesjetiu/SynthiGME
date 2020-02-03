@@ -484,6 +484,7 @@ Synthi100 {
 			"patchA", { // Ejemplo "/patchA/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horzontal
 				2.do({splitted.removeAt(0)});
 				modulPatchbayAudio.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
+				if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},

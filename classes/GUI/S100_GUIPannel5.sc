@@ -61,6 +61,7 @@ S100_GUIPannel5 : S100_GUIPannel {
 	}
 
 	makeNode {|parent, left, top, column, row, nodeCountHor, nodeCountVer|
+		var stringOSC = "/patchA/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
 		var button = Button(parent, bounds).
@@ -68,9 +69,15 @@ S100_GUIPannel5 : S100_GUIPannel {
 			[nil, nil, Color.black], // value 0
 			[nil, nil, Color.red] // value 1
 		]). action_({ arg butt;
-			//butt.value.postln;
-			[nodeCountHor, nodeCountVer].postln;
+			synthi100.setParameterOSC(
+				string: stringOSC,
+				value: butt.value,
+				addrForbidden: \GUI,
+			)
 		});
+
+		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchA/91/36
+		parameterViews.put(stringOSC, button);
 
 		// Se añaden el view node y sus bound por defecto para resize
 		viewSizes = viewSizes ++ [
