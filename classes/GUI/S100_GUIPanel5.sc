@@ -1,4 +1,4 @@
-S100_GUIPannel5 : S100_GUIPannel {
+S100_GUIPanel5 : S100_GUIPanel {
 	makeWindow {
 		var rect;
 		var image;
@@ -11,7 +11,7 @@ S100_GUIPannel5 : S100_GUIPannel {
 		);
 		window.name = "Panel 5";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/pannel_5.png");
+		image = Image(installedPath ++ "/classes/GUI/images/panel_5.png");
 		compositeView
 		.setBackgroundImage(image,10)
 		.background_(whiteBackground);
@@ -20,8 +20,8 @@ S100_GUIPannel5 : S100_GUIPannel {
 			var factor = 1.5;
 			if(clickCount == 2, {
 				buttonNumber.switch(
-					0, {this.resizePannel(factor)},
-					1, {this.resizePannel(1/factor)},
+					0, {this.resizePanel(factor)},
+					1, {this.resizePanel(1/factor)},
 				)
 			})
 		});

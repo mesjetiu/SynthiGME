@@ -1,4 +1,4 @@
-S100_GUIPannel {
+S100_GUIPanel {
 
 	var <window;
 	var compositeView;
@@ -63,7 +63,7 @@ S100_GUIPannel {
 	}
 
 
-	resizePannel {arg factor;
+	resizePanel {arg factor;
 		var factorH, factorW;
 		if ((factor * zoomWLevel * viewSizes[0][1s].width) > (Window.availableBounds.width * 1), {
 			factorW = (Window.availableBounds.width * 1) /  (viewSizes[0][1].width);

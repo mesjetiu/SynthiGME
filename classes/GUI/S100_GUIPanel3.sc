@@ -1,4 +1,4 @@
-S100_GUIPannel3 : S100_GUIPannel {
+S100_GUIPanel3 : S100_GUIPanel {
 	makeWindow {
 		var rect;
 		var image;
@@ -12,7 +12,7 @@ S100_GUIPannel3 : S100_GUIPannel {
 		);
 		window.name = "Panel 3";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/pannel_3.png");
+		image = Image(installedPath ++ "/classes/GUI/images/panel_3.png");
 		compositeView.setBackgroundImage(image,10);
 
 		// Los 6 osciladores de la izquierda
@@ -39,8 +39,8 @@ S100_GUIPannel3 : S100_GUIPannel {
 			var factor = 1.5;
 			if(clickCount == 2, {
 				buttonNumber.switch(
-					0, {this.resizePannel(factor)},
-					1, {this.resizePannel(1/factor)},
+					0, {this.resizePanel(factor)},
+					1, {this.resizePanel(1/factor)},
 				)
 			})
 		});

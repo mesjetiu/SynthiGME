@@ -7,7 +7,7 @@ S100_GUI {
 	var <parameterViews; // Dictionary con todas las views y claves para OSC
 	var <defaultSizes; // Array con todos los tamaños por defecto
 
-	var <pannels;
+	var <panels;
 
 	var installedPath; // Dirección absoluta de instalación del Quark.
 	var <running; // Es true cuando se enciende la GUI. Sirve de semáforo para enviar o no mensajes desde fuera.
@@ -30,14 +30,14 @@ S100_GUI {
 		parameterViews = Dictionary.new;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
 
-		pannels = [];
-		pannels = pannels.add(S100_GUIPannel1(synthi, parameterViews));
-		pannels = pannels.add(S100_GUIPannel2(synthi, parameterViews));
-		pannels = pannels.add(S100_GUIPannel3(synthi, parameterViews));
-		pannels = pannels.add(S100_GUIPannel4(synthi, parameterViews));
-		pannels = pannels.add(S100_GUIPannel5(synthi, parameterViews));
-		pannels = pannels.add(S100_GUIPannel6(synthi, parameterViews));
-		pannels = pannels.add(S100_GUIPannel7(synthi, parameterViews));
+		panels = [];
+		panels = panels.add(S100_GUIPanel1(synthi, parameterViews));
+		panels = panels.add(S100_GUIPanel2(synthi, parameterViews));
+		panels = panels.add(S100_GUIPanel3(synthi, parameterViews));
+		panels = panels.add(S100_GUIPanel4(synthi, parameterViews));
+		panels = panels.add(S100_GUIPanel5(synthi, parameterViews));
+		panels = panels.add(S100_GUIPanel6(synthi, parameterViews));
+		panels = panels.add(S100_GUIPanel7(synthi, parameterViews));
 
 		running = false;
 	}
@@ -64,33 +64,33 @@ S100_GUI {
 		*/
 
 
-		//  this.makePannel1(compositeView);
-		//	this.makePannel2(compositeView);
-		//	this.makePannel3(compositeView);
-		//	this.makePannel4(compositeView);
-		//	this.makePannel5(compositeView);
-		//	this.makePannel6(compositeView);
+		//  this.makePanel1(compositeView);
+		//	this.makePanel2(compositeView);
+		//	this.makePanel3(compositeView);
+		//	this.makePanel4(compositeView);
+		//	this.makePanel5(compositeView);
+		//	this.makePanel6(compositeView);
 
 		//	this.resize(widthRealScreen/widthScreen);
 		//	this.resize2(0.5);
 		//	window.front;
 
-		pannels.do({|pannel|
-			pannel.makeWindow
+		panels.do({|panel|
+			panel.makeWindow
 		});
 
 		running = true;
 	}
 
 	closeWindows {
-		pannels.do({|pannel|
-			pannel.window.close;
+		panels.do({|panel|
+			panel.window.close;
 		})
 	}
 
 	frontWindows {
-		pannels.do({|pannel|
-			pannel.window.front;
+		panels.do({|panel|
+			panel.window.front;
 		})
 	}
 }

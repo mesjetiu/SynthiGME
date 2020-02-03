@@ -1,4 +1,4 @@
-S100_GUIPannel4 : S100_GUIPannel {
+S100_GUIPanel4 : S100_GUIPanel {
 	makeWindow {
 		var rect;
 		var image;
@@ -11,15 +11,15 @@ S100_GUIPannel4 : S100_GUIPannel {
 		);
 		window.name = "Panel 4";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/pannel_4.png");
+		image = Image(installedPath ++ "/classes/GUI/images/panel_4.png");
 		compositeView.setBackgroundImage(image,10);
 		// Cuando se hace doble click se hace zoom
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var factor = 1.5;
 			if(clickCount == 2, {
 				buttonNumber.switch(
-					0, {this.resizePannel(factor)},
-					1, {this.resizePannel(1/factor)},
+					0, {this.resizePanel(factor)},
+					1, {this.resizePanel(1/factor)},
 				)
 			})
 		});
