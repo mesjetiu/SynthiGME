@@ -2,7 +2,6 @@ S100_GUIPannel5 : S100_GUIPannel {
 	makeWindow {
 		var rect;
 		var image;
-		var left, top, spacing;
 		super.makeWindow;
 		rect = Rect(
 			left: 0,
@@ -27,33 +26,41 @@ S100_GUIPannel5 : S100_GUIPannel {
 			})
 		});
 
-		// Se crean los nodos (botones)
-		left = 56.2;
-		top = 55;
-		spacing = 6.1;
-
-		63.do({|row|
-			if((row < 30).or(row > 32), {
-				this.makeRow(compositeView, left, top, row);
-			});
-			top = top + spacing;
-		});
+		this.makeNodeTable;
 
 		window.front;
 	}
 
+	makeNodeTable {
+		// Se crean los nodos (botones)
+		var left = 56.2;
+		var top = 55;
+		var spacing = 6.1;
+		var nodeCountHor = 67;
 
-	makeRow {|parent, left, top, row|
+		63.do({|row|
+			if((row < 30).or(row > 32), {
+				this.makeRow(compositeView, left, top, row, nodeCountHor);
+				nodeCountHor = nodeCountHor + 1;
+			});
+			top = top + spacing;
+		});
+	}
+
+
+	makeRow {|parent, left, top, row, nodeCountHor|
+		var nodeCountVer = 1;
 		var spacing = 5.75;
 		67.do({|column|
 			if(column != 33, {
-				this.makeNode(parent, left, top, column, row);
+				this.makeNode(parent, left, top, column, row, nodeCountHor, nodeCountVer);
+				nodeCountVer = nodeCountVer + 1;
 			});
 			left = left + spacing;
 		})
 	}
 
-	makeNode {|parent, left, top, column, row|
+	makeNode {|parent, left, top, column, row, nodeCountHor, nodeCountVer|
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
 		var button = Button(parent, bounds).
@@ -61,7 +68,8 @@ S100_GUIPannel5 : S100_GUIPannel {
 			[nil, nil, Color.black], // value 0
 			[nil, nil, Color.red] // value 1
 		]). action_({ arg butt;
-			butt.value.postln;
+			//butt.value.postln;
+			[nodeCountHor, nodeCountVer].postln;
 		});
 
 		// Se añaden el view node y sus bound por defecto para resize

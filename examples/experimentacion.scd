@@ -9,6 +9,8 @@ Quarks.clear
 
 
 o = Synthi100(gui:false).run.pairDevice
+o.guiSC.makeWindow
+
 
 o = Synthi100(gui:true)
 o.guiSC.closeWindows;
