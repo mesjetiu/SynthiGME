@@ -53,7 +53,7 @@ S100_GUIPanel7 : S100_GUIPanel {
 		viewSizes = viewSizes.add([pan, rect]);
 
 		top = top + 43;
-		rect = Rect(left + 13, top, 10, 15);
+		rect = Rect(left + 12.3, top, 10, 15);
 		off = Button(parent, rect)
 		.states_([
 			[nil, nil, Color.black], // value 0
@@ -61,5 +61,10 @@ S100_GUIPanel7 : S100_GUIPanel {
 		]).
 		value_(1);
 		viewSizes = viewSizes.add([off, rect]);
+
+		top = top + 40;
+		rect = Rect(left + 10, top, 15, 85);
+		level = Slider(parent, rect);
+		viewSizes = viewSizes.add([level, rect]);
 	}
 }
