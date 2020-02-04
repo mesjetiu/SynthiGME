@@ -21,6 +21,8 @@ S100_GUIPanel {
 	// Colores de la intefaz
 	var blue;
 	var green;
+	var yellow;
+	var red;
 	var white;
 	var black;
 	var whiteBackground;
@@ -42,6 +44,8 @@ S100_GUIPanel {
 		green = Color.new255(68.6, 107.2, 82.6);
 		white = Color.new255(172.7, 166.6, 160.3);
 		black = Color.new255(34.4, 36.3, 38.7);
+		yellow = Color.new255(224, 186, 69);
+		red = Color.new255(183, 56, 66);
 		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
 	}
