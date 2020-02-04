@@ -1,7 +1,9 @@
 S100_OutputChannel {
 
-	// Synth de la instancia
+	// Group y synths de la instancia
+	var <group = nil;
 	var <synth = nil;
+	var <synthBypass = nil;
 
 	var <server;
 	var <inputBus; // Entrada del amplificador.
@@ -60,11 +62,22 @@ S100_OutputChannel {
 			// Se aplica el paneo
 			#sigPannedL, sigPannedR = Pan2.ar(sig, pan) * on;
 
-			Out.ar(outputBus, sig);
+			Out.ar(outputBus, sigIn); // señal que pasa por el canal sin ser procesada (incluso si está en modo off), a modo de bus
 			Out.ar(outBusL, sigPannedL);
 			Out.ar(outBusR, sigPannedR);
 		}, [nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]
-		).add
+		).add;
+
+		SynthDef(\S100_outputChannelBypass, {
+			arg inputBus,
+			inFeedbackBus,
+			outputBus;
+
+			var sig = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
+
+			Out.ar(outputBus, sig);
+		}
+		).add;
 	}
 
 
@@ -85,26 +98,41 @@ S100_OutputChannel {
 
 	// Crea el Synth en el servidor
 	createSynth {
-		if(synth.isPlaying==false, {
-			synth = Synth(\S100_outputChannel, [
-				\inputBus, inputBus,
-				\inFeedbackBus, inFeedbackBus,
-				\outputBus, outputBus,
-				\outBusL, outBusL,
-				\outBusR, outBusR,
-				\freqHP, this.convertFilter(filter)[0],
-				\freqLP, this.convertFilter(filter)[1],
-				\pan, this.convertPan(pan),
-				\level, this.convertLevel(level),
-				\on, on,
-			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
-		});
-		this.synthRun;
+		Routine({
+			var waitTime = 0.001;
+			// se crea el grupo
+			group = Group(server).register;
+			while({group.isPlaying == false}, {wait(waitTime)});
+			// se crea el synth bypass (hace del canal un bus aunque esté apagado)
+			synthBypass = Synth(\S100_outputChannelBypass, [
+					\inputBus, inputBus,
+					\inFeedbackBus, inFeedbackBus,
+					\outputBus, outputBus,
+			], group).register;
+			while({synthBypass.isPlaying == false}, {wait(waitTime)});
+			// se crea el synth principal
+			if(synth.isPlaying==false, {
+				synth = Synth(\S100_outputChannel, [
+					\inputBus, inputBus,
+					\inFeedbackBus, inFeedbackBus,
+					\outputBus, outputBus,
+					\outBusL, outBusL,
+					\outBusR, outBusR,
+					\freqHP, this.convertFilter(filter)[0],
+					\freqLP, this.convertFilter(filter)[1],
+					\pan, this.convertPan(pan),
+					\level, this.convertLevel(level),
+					\on, on,
+				], group).register; //".register" registra el Synth para poder testear ".isPlaying"
+			});
+			while({synth.isPlaying == false}, {wait(waitTime)});
+			this.synthRun;
+		}).play;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = level;
+		var outputTotal = level * on;
 		if (outputTotal==0, {
 			running = false;
 			pauseRoutine.reset;

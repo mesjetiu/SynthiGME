@@ -96,7 +96,7 @@ S100_PatchbayAudio {
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
-				\synth, i.synth,
+				\synth, i.group,
 				\inBus, i.inputBus,
 				\inFeedbackBus, i.inFeedbackBus,
 			]);
@@ -116,7 +116,7 @@ S100_PatchbayAudio {
 		index = 75; // Output channels del 75-82
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
-				\synth, i.synth,
+				\synth, i.group,
 				\outBus, i.outputBus,
 			]);
 			index = index + 1;
