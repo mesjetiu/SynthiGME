@@ -21,7 +21,7 @@ S100_GUIPanel7 : S100_GUIPanel {
 					0, {this.resizePanel(factor)},
 					1, {this.resizePanel(1/factor)},
 				)
-			}, {[x,y].postln})
+			})
 		});
 
 		this.makeChannels;
