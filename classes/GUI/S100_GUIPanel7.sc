@@ -92,7 +92,7 @@ S100_GUIPanel7 : S100_GUIPanel {
 		filter.action = {|knob|
 			synthi100.setParameterOSC(
 				string: "/out/" ++ num ++ "/filter",
-				value: knob.value.linlin(0,1,1,10),
+				value: knob.value.linlin(0,1,0,10),
 				addrForbidden: \GUI,
 			)
 		};
