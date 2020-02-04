@@ -24,10 +24,22 @@ S100_GUIPanel7 : S100_GUIPanel {
 			}, {[x,y].postln})
 		});
 
-		this.makeChannel(compositeView, 49, 239, nil);
+		this.makeChannels;
+
 		window.front;
 
 		Window
+	}
+
+	makeChannels{
+		var left = 49;
+		var top = 239;
+		var channelNum = 1;
+		8.do({
+			this.makeChannel(compositeView, left, top, channelNum);
+			channelNum = channelNum + 1;
+			left = left + 48.9;
+		});
 	}
 
 	makeChannel{|parent, left, top, num|
