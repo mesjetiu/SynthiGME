@@ -45,13 +45,15 @@ S100_GUIPanel7 : S100_GUIPanel {
 	makeChannel{|parent, left, top, num|
 		var size = 35;
 		var rect;
-		var filter, pan, off, level;
+		var filter, pan, on, level;
 
 		rect = Rect(left, top, size, size);
 		filter = Knob(parent, rect)
 		.color_([blue, black, white, nil])
 		.mode_(\horiz)
-		.step_(step);
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
 		viewSizes = viewSizes.add([filter, rect]);
 
 		top = top + 48;
@@ -66,17 +68,57 @@ S100_GUIPanel7 : S100_GUIPanel {
 
 		top = top + 43;
 		rect = Rect(left + 12.3, top, 10, 15);
-		off = Button(parent, rect)
+		on = Button(parent, rect)
 		.states_([
 			[nil, nil, Color.black], // value 0
 			[nil, nil, Color.red] // value 1
 		]).
-		value_(1);
-		viewSizes = viewSizes.add([off, rect]);
+		value_(0);
+		viewSizes = viewSizes.add([on, rect]);
 
 		top = top + 40;
 		rect = Rect(left + 10, top, 15, 85);
 		level = Slider(parent, rect);
 		viewSizes = viewSizes.add([level, rect]);
+
+		// Se añaden al diccionario todos los mandos del canal para poder cambiar su valor.
+		parameterViews
+		.put("/out/" ++ num ++ "/filter", filter)
+		.put("/out/" ++ num ++ "/pan", pan)
+		.put("/out/" ++ num ++ "/on", on)
+		.put("/out/" ++ num ++ "/level", level);
+
+		// Acciones a realizar al cambiar manualmente el valor de cada mando
+		filter.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/out/" ++ num ++ "/filter",
+				value: knob.value.linlin(0,1,1,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		pan.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/out/" ++ num ++ "/pan",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		on.action = {|button|
+			synthi100.setParameterOSC(
+				string: "/out/" ++ num ++ "/on",
+				value: button.value,
+				addrForbidden: \GUI,
+			)
+		};
+
+		level.action = {|slider|
+			synthi100.setParameterOSC(
+				string: "/out/" ++ num ++ "/level",
+				value: slider.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
 	}
 }
