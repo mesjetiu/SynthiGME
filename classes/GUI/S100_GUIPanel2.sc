@@ -32,7 +32,7 @@ S100_GUIPanel2 : S100_GUIPanel {
 		var size = 35;
 		var spacing = 53.6;
 		var rect;
-		8.do({
+		8.do({|num|
 			var knob;
 			rect = Rect(left, top, size, size);
 			knob = Knob(parent, rect)
@@ -40,10 +40,10 @@ S100_GUIPanel2 : S100_GUIPanel {
 			.mode_(\horiz)
 			.step_(step);
 			viewSizes = viewSizes.add([knob, rect]);
-			parameterViews.put("/in/" ++ "level", knob);
+			parameterViews.put("/in/" ++ (num + 1) ++ "/level", knob);
 			knob.action = {|knob|
 				synthi100.setParameterOSC(
-					string: "/in/" ++ "level",
+					string: "/in/" ++ (num + 1) ++ "/level",
 					value: knob.value.linlin(0,1,0,10),
 					addrForbidden: \GUI,
 				)
