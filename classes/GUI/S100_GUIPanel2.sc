@@ -23,6 +23,32 @@ S100_GUIPanel2 : S100_GUIPanel {
 				)
 			})
 		});
+
+		this.makeInputAmplifiers(compositeView, 31.2, 367);
 		window.front;
+	}
+
+	makeInputAmplifiers {|parent, left, top|
+		var size = 35;
+		var spacing = 53.6;
+		var rect;
+		8.do({
+			var knob;
+			rect = Rect(left, top, size, size);
+			knob = Knob(parent, rect)
+			.color_([white, black, white, nil])
+			.mode_(\horiz)
+			.step_(step);
+			viewSizes = viewSizes.add([knob, rect]);
+			parameterViews.put("/in/" ++ "level", knob);
+			knob.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/in/" ++ "level",
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+			left = left + spacing;
+		});
 	}
 }
