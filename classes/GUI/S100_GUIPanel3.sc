@@ -117,7 +117,8 @@ S100_GUIPanel3 : S100_GUIPanel {
 		frequency = Knob(parent, rect)
 		.color_([black, black, white, nil])
 		.mode_(\horiz)
-		.step_(step);
+		.step_(step).
+		value_(0.5);
 		viewSizes = viewSizes.add([frequency, rect]);
 
 

@@ -649,7 +649,10 @@ Synthi100 {
 						modulEnvelopeShapers[index].setSignalLevel(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
 					},
-					"gate", {modulEnvelopeShapers[index].setGateButton(value)},
+					"gate", {
+						modulEnvelopeShapers[index].setGateButton(value);
+						//if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
+					},
 					"selector", {modulEnvelopeShapers[index].setSelector(splitted[2].asInt, value)},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente

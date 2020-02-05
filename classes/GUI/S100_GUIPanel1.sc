@@ -42,7 +42,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 		var size = 27;
 		var spacing = 53.4;
 		var rect;
-		var selector, delay, attack, decay, sustain, release, envelopeLevel, signalLevel;
+		var selector, gate, delay, attack, decay, sustain, release, envelopeLevel, signalLevel;
 
 		rect = Rect(left, top, size, size);
 		selector = Knob(parent, rect)
@@ -50,6 +50,10 @@ S100_GUIPanel1 : S100_GUIPanel {
 		.mode_(\horiz)
 		.step_(step);
 		viewSizes = viewSizes.add([selector, rect]);
+
+		rect = Rect(left + (spacing/2) + 5, top + 26, 12, 12);
+		gate = Button(parent, rect);
+		viewSizes = viewSizes.add([gate, rect]);
 
 		left = left + spacing;
 		rect = Rect(left, top, size, size);
@@ -122,6 +126,24 @@ S100_GUIPanel1 : S100_GUIPanel {
 		.put("/env/" ++ num ++ "/signalLevel", signalLevel);
 
 		// Acciones a realizar al cambiar manualmente el valor de cada mando
+
+		gate.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/gate",
+				value: 1,
+				addrForbidden: \GUI,
+			)
+		});
+
+		gate.mouseUpAction_({|view, x, y, modifiers|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/gate",
+				value: 0,
+				addrForbidden: \GUI,
+			)
+		});
+
+
 		delay.action = {|knob|
 			synthi100.setParameterOSC(
 				string: "/env/" ++ num ++ "/delay",
