@@ -48,7 +48,8 @@ S100_GUIPanel1 : S100_GUIPanel {
 		selector = Knob(parent, rect)
 		.color_([yellow, black, white, nil])
 		.mode_(\horiz)
-		.step_(step);
+		.step_(step)
+		.enabled_(false);
 		viewSizes = viewSizes.add([selector, rect]);
 
 		rect = Rect(left + (spacing/2) + 5, top + 26, 12, 12);
