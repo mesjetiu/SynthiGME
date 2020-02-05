@@ -96,7 +96,9 @@ S100_GUIPanel1 : S100_GUIPanel {
 		envelopeLevel = Knob(parent, rect)
 		.color_([white, black, white, nil])
 		.mode_(\horiz)
-		.step_(step);
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
 		viewSizes = viewSizes.add([envelopeLevel, rect]);
 
 		left = left + spacing;
@@ -104,7 +106,70 @@ S100_GUIPanel1 : S100_GUIPanel {
 		signalLevel = Knob(parent, rect)
 		.color_([white, black, white, nil])
 		.mode_(\horiz)
-		.step_(step);
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
 		viewSizes = viewSizes.add([signalLevel, rect]);
+
+		// Se añaden al diccionario todos los mandos del Envelope shaper para poder cambiar su valor.
+		parameterViews
+		.put("/env/" ++ num ++ "/delay", delay)
+		.put("/env/" ++ num ++ "/attack", attack)
+		.put("/env/" ++ num ++ "/decay", decay)
+		.put("/env/" ++ num ++ "/sustain", sustain)
+		.put("/env/" ++ num ++ "/release", release)
+		.put("/env/" ++ num ++ "/envelopeLevel", envelopeLevel)
+		.put("/env/" ++ num ++ "/signalLevel", signalLevel);
+
+		// Acciones a realizar al cambiar manualmente el valor de cada mando
+		delay.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/delay",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		attack.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/attack",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		decay.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/decay",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		sustain.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/sustain",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		release.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/release",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		envelopeLevel.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/envelopeLevel",
+				value: knob.value.linlin(0,1,-5,5),
+				addrForbidden: \GUI,
+			)
+		};
+		signalLevel.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/signalLevel",
+				value: knob.value.linlin(0,1,-5,5),
+				addrForbidden: \GUI,
+			)
+		};
 	}
 }

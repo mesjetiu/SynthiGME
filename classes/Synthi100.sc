@@ -621,13 +621,34 @@ Synthi100 {
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
-					"delay", {modulEnvelopeShapers[index].setDelayTime(value)},
-					"attack", {modulEnvelopeShapers[index].setAttackTime(value)},
-					"decay", {modulEnvelopeShapers[index].setDecayTime(value)},
-					"sustain", {modulEnvelopeShapers[index].setSustain(value)},
-					"release", {modulEnvelopeShapers[index].setReleaseTime(value)},
-					"envelopeLevel", {modulEnvelopeShapers[index].setEnvelopeLevel(value)},
-					"signalLevel", {modulEnvelopeShapers[index].setSignalLevel(value)},
+					"delay", {
+						modulEnvelopeShapers[index].setDelayTime(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"attack", {
+						modulEnvelopeShapers[index].setAttackTime(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"decay", {
+						modulEnvelopeShapers[index].setDecayTime(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"sustain", {
+						modulEnvelopeShapers[index].setSustain(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"release", {
+						modulEnvelopeShapers[index].setReleaseTime(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"envelopeLevel", {
+						modulEnvelopeShapers[index].setEnvelopeLevel(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
+					},
+					"signalLevel", {
+						modulEnvelopeShapers[index].setSignalLevel(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
+					},
 					"gate", {modulEnvelopeShapers[index].setGateButton(value)},
 					"selector", {modulEnvelopeShapers[index].setSelector(splitted[2].asInt, value)},
 				);

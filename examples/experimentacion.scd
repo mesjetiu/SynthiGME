@@ -11,9 +11,11 @@ Quarks.clear
 o = Synthi100(gui:false).run.pairDevice
 o = Synthi100(gui:true).run
 o.guiSC.makeWindow
-
+o.pairDevice
 
 o = Synthi100(gui:true)
+
+o.setParameterOSC("\env\1\gate", 1)
 
 o.guiSC.closeWindows;
 o.guiSC.frontWindows;
