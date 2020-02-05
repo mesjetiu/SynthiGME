@@ -24,7 +24,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 			})
 		});
 
-		this.makeEnvelopes(compositeView, 42, 242, 60);
+		this.makeEnvelopes(compositeView, 38, 238, 60);
 
 		window.front;
 	}
@@ -39,7 +39,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 	}
 
 	makeEnvelope {|parent, left, top, num|
-		var size = 27;
+		var size = 35;
 		var spacing = 53.4;
 		var rect;
 		var selector, gate, delay, attack, decay, sustain, release, envelopeLevel, signalLevel;
@@ -52,8 +52,10 @@ S100_GUIPanel1 : S100_GUIPanel {
 		.enabled_(false);
 		viewSizes = viewSizes.add([selector, rect]);
 
-		rect = Rect(left + (spacing/2) + 5, top + 26, 12, 12);
-		gate = Button(parent, rect);
+		rect = Rect(left + (spacing/2) + 9.5, top + 30, 12, 12);
+		gate = Button(parent, rect).states_([
+			[nil, nil, black], // único valor con color negro
+		]);
 		viewSizes = viewSizes.add([gate, rect]);
 
 		left = left + spacing;
