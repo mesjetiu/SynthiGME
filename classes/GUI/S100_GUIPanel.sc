@@ -18,7 +18,7 @@ S100_GUIPanel {
 
 	var installedPath;
 
-	// Colores de la intefaz
+	// Colores de la intefaz (tomados de fotografías del Synthi 100)
 	var blue;
 	var green;
 	var yellow;
@@ -61,6 +61,14 @@ S100_GUIPanel {
 		window =  Window("", rectWindow, false, true, scroll: true)
 		.userCanClose_(false);
 		compositeView = CompositeView(window, rectCompositeView);
+
+		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
+			if(keycode==118, { // 'v' (visibility) Activa y desactiva la visibilidad de los mandos de la ventana en foco.
+				this.commuteVisibility;
+			})
+		};
+
+
 		viewSizes = [];
 		viewSizes = viewSizes.add([window, rectWindow]);
 		viewSizes = viewSizes.add([compositeView, rectCompositeView]);
@@ -95,5 +103,32 @@ S100_GUIPanel {
 		});
 		zoomWLevel = factorW;
 		zoomHLevel = factorH;
+	}
+
+	parameterVisibility {|bool|
+		viewSizes.do({|v|
+			if(
+				(v[0].class === Window)
+				.or(v[0].class === CompositeView),
+				{},
+				{v[0].visible = bool}
+			)
+		})
+	}
+
+	// Hace visible o invisible los mandos de una ventana
+	commuteVisibility {
+		var visible;
+		viewSizes.do({|v|
+			if(
+				(v[0].class === Window)
+				.or(v[0].class === CompositeView),
+				{},
+				{if(v[0].visible == true,
+					{v[0].visible = false},
+					{v[0].visible = true}
+				)}
+			)
+		})
 	}
 }

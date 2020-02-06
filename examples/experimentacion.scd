@@ -19,8 +19,8 @@ o.setParameterOSC("\env\1\gate", 1)
 
 o.guiSC.closeWindows;
 o.guiSC.frontWindows;
-o.guiSC.pannels[0].window.front
-Window
+o.guiSC.panels[0].window.front
+o.guiSC.panels[2].parameterVisibility(true)
 
 o.guiSC.pannels.do({|i| i.window.front})
 
