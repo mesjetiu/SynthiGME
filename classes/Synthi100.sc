@@ -637,7 +637,7 @@ Synthi100 {
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"sustain", {
-						modulEnvelopeShapers[index].setSustain(value);
+						modulEnvelopeShapers[index].setSustainLevel(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"release", {

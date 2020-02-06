@@ -41,7 +41,7 @@ S100_EnvelopeShaper {
 	var <delayTime = 0;
 	var <attackTime = 0;
 	var <decayTime = 0;
-	var <sustain = 0;
+	var <sustainLevel = 0;
 	var <releaseTime = 0;
 	var <envelopeLevel = 0; //Valores entre -5 y 5.
 	var <signalLevel = 0;
@@ -119,7 +119,7 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainTime: sustain,
+				sustainTime: sustainLevel,
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
@@ -135,7 +135,7 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainTime: sustain,
+				sustainTime: sustainLevel,
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
@@ -151,7 +151,7 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainLevel: sustain,
+				sustainLevel: sustainLevel,
 				releaseTime: this.convertTime(releaseTime),
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
@@ -168,7 +168,8 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainTime: sustain,
+				sustainLevel: sustainLevel,
+				releaseTime: this.convertTime(releaseTime),
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
@@ -247,14 +248,13 @@ S100_EnvelopeShaper {
 			("S100_EnvelopeShaper/setDecayTime: " + time + " no es un valor entre 0 y 10").postln});
 	}
 
-	setSustain {|level|
+	setSustainLevel {|level|
 		if((level>=0).and(level<=10), {
-			sustain = level;
+			sustainLevel = level;
 			//this.synthRun();
 			group.set(\sustainLevel, level);
-			group.set(\sustainTime, level);
 		}, {
-			("S100_EnvelopeShaper/setSustain: " + level + " no es un valor entre 0 y 10").postln
+			("S100_EnvelopeShaper/setSustainLevel: " + level + " no es un valor entre 0 y 10").postln
 		});
 	}
 
