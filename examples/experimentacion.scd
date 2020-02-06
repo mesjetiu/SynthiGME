@@ -76,124 +76,31 @@ a.set(\gate, 0) // No se corta bruscamente porque tiene un lag y "gate" se usa t
 
 
 
-
-
-
-
-// Forma de redimensionar una interfaz gráfica
-
+CheckBox
 (
-w = Window("my name is... panel", Rect(128, 600, 200, 100), scroll: true, resizable: false);
-
-b = Button(w,Rect(10, 20, 75, 24));
-w.front;
+var window, size = 32; // try different sizes - from 15 to 200 or more!
+window = Window.new("Knob", Rect(640,630,270,70)).front;
+k = Knob.new(window, Rect(20, 10, size, size));
+k.action_({|v,x,y,m| postf("action func called: %\n", v.value); });
+//k.color[1] = Color.gray(alpha:0);
 )
 
-(
-~amplifica = {|rect, factor|
-	var left, top, width, height;
+k.value
+k.value = 0.25
+k.valueAction = 0.125
+k.keystep = 10
 
-	left = rect.left * factor;
-	top = rect.top * factor;
-	width = rect.width * factor;
-	height = rect.height * factor;
+// modes
+k.mode = \vert;
+k.mode = \horiz;
+k.mode = \round; // default
 
-	Rect(left, top, width, height);
-}
-)
+k.visible
+k.visible = false
+k.visible = true
+k.enabled = false
+k.enabled_(true)
+k.canFocus = false
+k.canFocus = true
 
-(
-var factor = 1.5;
-b.bounds = ~amplifica.value(b.bounds, factor);
-w.bounds = ~amplifica.value(w.bounds, factor);
-w.bounds = w.bounds.left_(128).top_(600);
-)
-(
-~amplifica = {|rect, factor|
-	var left, top, width, height;
-
-	left = rect.left * factor;
-	top = rect.top * factor;
-	width = rect.width * factor;
-	height = rect.height * factor;
-
-	Rect(left, top, width, height);
-}
-)
-(
-w = Window().front;
-a = { Button(w) } ! 10;
-w.layout = HLayout(*a);
-);
-
-
-
-
-
-
-(
-w = Window.new;
-
-c = CompositeView(w, Rect(50, 0, 300, 300));
-a = Slider2D(c, Rect(0, 0, 100, 100)); // actually displays at (50, 0)
-b = Slider2D(c, Rect(100, 100, 100, 100));
-
-c.background = Color.rand;
-
-w.front;
-)
-w.bounds.left
-
-c.bounds_(Rect(100, 0, 300, 300)); // contents adjust since coords are relative
-c.resize_(6); // contents adjust since coords are relative
-
-
-
-
-
-
-// Experimentos con imágenes de fondo en Window
-
-(
-    ~alpha = 1.0;
-    ~image = Image.new("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/S100 Cuenca fotografías/2019.12.18/IMG_20191218_191627.jpg");
-    ~bounds = Rect(200, 300, 10000, 10000);
-    ~window = Window.new("Image background");
-    ~window.view.background_(Color.gray);
-    ~window.view.setBackgroundImage(~image, 11, ~alpha, ~bounds);
-    ~window.front;
-//~image.plot;
-)
-
-
-
-// Esta expresión devuelve el path donde está instalado el Quark. Útil para abrir archivos como imágenes.
-Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0]
-
-
-// Rutina para ser ejecutada cada vez que se hace click en una view y se quiere que reaccione al doble click.
-(
-Routine({ // Cuando se hace un click...
-	if (~click == true, {
-		"doble click!!".postln;
-		// añadir lo que ha de hacer al doble click
-	}, {
-		"click!".postln;
-		~click = true;
-		wait(0.5); // tiempo de espera del segundo click
-	});
-	~click = false; // una vez transcurrida la espera, se vuelve false
-}).play;
-)
-
-
-
-
-s.options.numAudioBusChannels
-
-
-
-Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
-
-
-Button
+Slider
