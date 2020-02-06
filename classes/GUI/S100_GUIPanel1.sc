@@ -47,39 +47,34 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		rect = Rect(left, top, size, size);
 		selector = Knob(parent, rect)
-		.color_([yellow, black, white, nil])
+		.color_([yellow, white, white, nil])
 		.mode_(\horiz)
 		.step_(step)
-		.enabled_(true)
+		.enabled_(false)
 		.action_({|s| s.value.postln});
 		viewSizes = viewSizes.add([selector, rect]);
-		// Valores de las opciones de selector: 1 = 0.317; 2 = 0.405; 3 = 0.5; 4 = 0.59; 5 = 0.691
 
 
 		rect = Rect(left - 7, top + 4, 10, 5);
-		gatedFR = View(parent, rect)
-		.background_(black);
+		gatedFR = View(parent, rect);
 		viewSizes = viewSizes.add([gatedFR, rect]);
 
 		rect = Rect(left - 2, top - 3, 10, 5);
-		freeRun = View(parent, rect)
-		.background_(black);
+		freeRun = View(parent, rect);
 		viewSizes = viewSizes.add([freeRun, rect]);
 
 		rect = Rect(left + 13, top - 5, 10, 5);
-		gated = View(parent, rect)
-		.background_(black);
+		gated = View(parent, rect);
 		viewSizes = viewSizes.add([gated, rect]);
 
 		rect = Rect(left + 27, top - 3, 19, 5);
-		triggered = View(parent, rect)
-		.background_(black);
+		triggered = View(parent, rect);
 		viewSizes = viewSizes.add([triggered, rect]);
 
-		rect = Rect(left + 30, top + 4, 10, 5);
-		hold = View(parent, rect)
-		.background_(black);
+		rect = Rect(left + 30, top + 4, 15, 5);
+		hold = View(parent, rect);
 		viewSizes = viewSizes.add([hold, rect]);
+
 
 		rect = Rect(left + (spacing/2) + 9.5, top + 30, 12, 12);
 		gate = Button(parent, rect).states_([
@@ -159,6 +154,58 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		// Acciones a realizar al cambiar manualmente el valor de cada mando
 
+		gatedFR.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var value = 1;
+			selector.value = this.selectorValuesConvert(value);
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/selector",
+				value: value,
+				addrForbidden: \GUI,
+			);
+		});
+
+		freeRun.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var value = 2;
+			selector.value = this.selectorValuesConvert(value);
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/selector",
+				value: value,
+				addrForbidden: \GUI,
+			);
+		});
+
+		gated.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var value = 3;
+			selector.value = this.selectorValuesConvert(value);
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/selector",
+				value: value,
+				addrForbidden: \GUI,
+			);
+		});
+
+		triggered.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var value = 4;
+			selector.value = this.selectorValuesConvert(value);
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/selector",
+				value: value,
+				addrForbidden: \GUI,
+			);
+		});
+
+		hold.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var value = 5;
+			selector.value = this.selectorValuesConvert(value);
+			synthi100.setParameterOSC(
+				string: "/env/" ++ num ++ "/selector",
+				value: value,
+				addrForbidden: \GUI,
+			);
+		});
+
+		selector.valueAction_({|i| "hola".postln});
+
 		gate.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			synthi100.setParameterOSC(
 				string: "/env/" ++ num ++ "/gate",
@@ -225,5 +272,17 @@ S100_GUIPanel1 : S100_GUIPanel {
 				addrForbidden: \GUI,
 			)
 		};
+	}
+
+
+	// Valores de las opciones de selector: 1 = 0.293; 2 = 0.405; 3 = 0.5; 4 = 0.59; 5 = 0.691
+	selectorValuesConvert {|value|
+		value.switch(
+			1, {^0.293},
+			2, {^0.405},
+			3, {^0.5},
+			4, {^0.59},
+			5, {^ 0.691},
+		);
 	}
 }
