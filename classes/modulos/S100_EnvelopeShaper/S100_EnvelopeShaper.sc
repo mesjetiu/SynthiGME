@@ -27,6 +27,7 @@ S100_EnvelopeShaper {
 	var <envFreeRun; // Clase para la opción del selector "FREE RUN"
 	var <envGated; // Clase para la opción del selector "GATED"
 	var <envTriggered; // Clase para la opción del selector "TRIGGERED"
+	var <envHold; // Clase para la opción del selector "HOLD"
 
 	var <server;
 	var <inputBus; // Entrada de audio.
@@ -64,6 +65,7 @@ S100_EnvelopeShaper {
 		Class.initClassTree(S100_EnvGated);
 		Class.initClassTree(S100_EnvGated);
 		Class.initClassTree(S100_EnvTriggered);
+		Class.initClassTree(S100_EnvHold);
 	}
 
 	*addSynthDef {
@@ -71,6 +73,7 @@ S100_EnvelopeShaper {
 		S100_EnvGatedFreeRun.addSynthDef;
 		S100_EnvGated.addSynthDef;
 		S100_EnvTriggered.addSynthDef;
+		S100_EnvHold.addSynthDef;
 		SynthDef(\S100_envGateButton, { // Cuando se presiona o relaja el botón de "gate" se lanza 1 o 0 al bus "signalTrigger"
 			arg gate,
 			signalTrigger;
@@ -99,6 +102,7 @@ S100_EnvelopeShaper {
 		envFreeRun = S100_EnvFreeRun(server);
 		envGated = S100_EnvGated(server);
 		envTriggered = S100_EnvTriggered(server);
+		envHold = S100_EnvHold(server);
 
 		selector = 3; // GATED
 	}
@@ -161,6 +165,23 @@ S100_EnvelopeShaper {
 			while({synth.isPlaying == false}, {wait(waitTime)});
 			// se crea el synth de TRIGGERED
 			synth = envTriggered.createSynth(
+				group: group,
+				signalTrigger: signalTrigger,
+				inFeedbackSignalTrigger: inFeedbackSignalTrigger,
+				inputBus: inputBus,
+				inFeedbackBus: inFeedbackBus,
+				outputBus: outputBus,
+				delayTime: this.convertTime(delayTime),
+				attackTime: this.convertTime(attackTime),
+				decayTime: this.convertTime(decayTime),
+				sustainLevel: this.convertSustainLevel(sustainLevel),
+				releaseTime: this.convertTime(releaseTime),
+				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
+				signalLevel: this.convertSignalLevel(signalLevel),
+			);
+			while({synth.isPlaying == false}, {wait(waitTime)});
+			// se crea el synth de HOLD
+			synth = envHold.createSynth(
 				group: group,
 				signalTrigger: signalTrigger,
 				inFeedbackSignalTrigger: inFeedbackSignalTrigger,
@@ -305,26 +326,31 @@ S100_EnvelopeShaper {
 				envGated.synthRun(false);
 				envFreeRun.synthRun(false);
 				envTriggered.synthRun(false);
+				envHold.synthRun(false);
 			},
 			2, { // Free Run
 				envFreeRun.synthRun(true);
 				envGatedFreeRun.synthRun(false);
 				envGated.synthRun(false);
 				envTriggered.synthRun(false);
+				envHold.synthRun(false);
 			},
 			3, { // Gated
 				envGated.synthRun(true);
 				envFreeRun.synthRun(false);
 				envGatedFreeRun.synthRun(false);
 				envTriggered.synthRun(false);
+				envHold.synthRun(false);
 			},
 			4, { // Triggered
 				envTriggered.synthRun(true);
 				envFreeRun.synthRun(false);
 				envGated.synthRun(false);
 				envGatedFreeRun.synthRun(false);
+				envHold.synthRun(false);
 			},
 			5, { // Hold
+				envHold.synthRun(true);
 				envFreeRun.synthRun(false);
 				envGatedFreeRun.synthRun(false);
 				envGated.synthRun(false);

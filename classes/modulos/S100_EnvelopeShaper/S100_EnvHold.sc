@@ -1,4 +1,4 @@
-S100_EnvGated {
+S100_EnvHold {
 
 	var <synth;
 	var server;
@@ -18,7 +18,7 @@ S100_EnvGated {
 	}
 
 	*addSynthDef {
-		SynthDef(\S100_envGated, {
+		SynthDef(\S100_envHold, {
 			arg generalGate,
 			signalTrigger,
 			inFeedbackSignalTrigger,
@@ -49,7 +49,7 @@ S100_EnvGated {
 					0,
 				],
 				times: [delayTime, attackTime, decayTime, releaseTime],
-				releaseNode: 3,
+				releaseNode: 2,
 			).ar(0, gate: gate * generalGate);
 
 			env = env * envelopeLevel;
@@ -86,7 +86,7 @@ S100_EnvGated {
 		envelopeLevel,
 		signalLevel;
 		if(synth.isPlaying==false, {
-			synth = Synth(\S100_envGated, [
+			synth = Synth(\S100_envHold, [
 				\generalGate, 1,
 				\signalTrigger, signalTrigger,
 				\inFeedbackSignalTrigger, inFeedbackSignalTrigger,
