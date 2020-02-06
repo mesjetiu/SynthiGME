@@ -119,7 +119,8 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainTime: sustainLevel,
+				sustainLevel: this.convertSustainLevel(sustainLevel),
+				releaseTime: this.convertTime(releaseTime),
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);

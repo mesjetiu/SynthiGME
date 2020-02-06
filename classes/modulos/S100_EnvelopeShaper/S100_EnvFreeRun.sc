@@ -25,7 +25,8 @@ S100_EnvFreeRun {
 			delayTime,
 			attackTime,
 			decayTime,
-			sustainTime,
+			sustainLevel,
+			releaseTime,
 			envelopeLevel,
 			signalLevel;
 
@@ -39,11 +40,11 @@ S100_EnvFreeRun {
 					0, // loopNode (ver Help de "Env")
 					0,
 					1,
-					1,
+					sustainLevel,
 					0,
 					0,
 				],
-				times: [delayTime, attackTime, sustainTime.linexp(0, 10, 0.002, 20), decayTime, 0],
+				times: [delayTime, attackTime, decayTime, releaseTime, 0],
 				releaseNode: 4,
 				loopNode: 0,
 			).ar(0, gate: generalGate);
@@ -76,7 +77,8 @@ S100_EnvFreeRun {
 		delayTime,
 		attackTime,
 		decayTime,
-		sustainTime,
+		sustainLevel,
+		releaseTime,
 		envelopeLevel,
 		signalLevel;
 		if(synth.isPlaying==false, {
@@ -88,7 +90,8 @@ S100_EnvFreeRun {
 				\delayTime, delayTime,
 				\attackTime, attackTime,
 				\decayTime, decayTime,
-				\sustainTime, sustainTime,
+				\sustainLevel, sustainLevel,
+				\releaseTime, releaseTime,
 				\envelopeLevel, envelopeLevel,
 				\signalLevel, signalLevel,
 			], group).register;
