@@ -135,7 +135,8 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainTime: sustainLevel,
+				sustainLevel: this.convertSustainLevel(sustainLevel),
+				releaseTime: this.convertTime(releaseTime),
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
 			);
@@ -151,7 +152,7 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainLevel: sustainLevel,
+				sustainLevel: this.convertSustainLevel(sustainLevel),
 				releaseTime: this.convertTime(releaseTime),
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
@@ -168,7 +169,7 @@ S100_EnvelopeShaper {
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
-				sustainLevel: sustainLevel,
+				sustainLevel: this.convertSustainLevel(sustainLevel),
 				releaseTime: this.convertTime(releaseTime),
 				envelopeLevel: this.convertEnvelopeLevel(envelopeLevel),
 				signalLevel: this.convertSignalLevel(signalLevel),
@@ -196,13 +197,13 @@ S100_EnvelopeShaper {
 			outMax: settings[\envTimeMax]);
 	}
 
-/*	convertsustain {|level|
+	convertSustainLevel {|level|
 		^level.linlin(
 			inMin: 0,
 			inMax: 10,
 			outMin: 0,
-			outMax: 1);//settings[\envsustainMax]);
-	}*/
+			outMax: 1)
+	}
 
 	convertEnvelopeLevel {|level|
 		^level.linlin(-5, 5, -1, 1);
@@ -252,7 +253,7 @@ S100_EnvelopeShaper {
 		if((level>=0).and(level<=10), {
 			sustainLevel = level;
 			//this.synthRun();
-			group.set(\sustainLevel, level);
+			group.set(\sustainLevel, this.convertSustainLevel(level));
 		}, {
 			("S100_EnvelopeShaper/setSustainLevel: " + level + " no es un valor entre 0 y 10").postln
 		});
