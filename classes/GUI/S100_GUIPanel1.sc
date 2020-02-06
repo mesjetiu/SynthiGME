@@ -1,4 +1,17 @@
 S100_GUIPanel1 : S100_GUIPanel {
+
+	// Valores de las opciones de selector: 1 = 0.293; 2 = 0.405; 3 = 0.5; 4 = 0.59; 5 = 0.691
+	*selectorValuesConvert {|value|
+		value.switch(
+			1, {^0.293},
+			2, {^0.405},
+			3, {^0.5},
+			4, {^0.59},
+			5, {^ 0.691},
+		);
+	}
+
+
 	makeWindow {
 		var rect;
 		var image;
@@ -150,13 +163,14 @@ S100_GUIPanel1 : S100_GUIPanel {
 		.put("/env/" ++ num ++ "/sustain", sustain)
 		.put("/env/" ++ num ++ "/release", release)
 		.put("/env/" ++ num ++ "/envelopeLevel", envelopeLevel)
-		.put("/env/" ++ num ++ "/signalLevel", signalLevel);
+		.put("/env/" ++ num ++ "/signalLevel", signalLevel)
+		.put("/env/" ++ num ++ "/selector", selector);
 
 		// Acciones a realizar al cambiar manualmente el valor de cada mando
 
 		gatedFR.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var value = 1;
-			selector.value = this.selectorValuesConvert(value);
+			selector.value = S100_GUIPanel1.selectorValuesConvert(value);
 			synthi100.setParameterOSC(
 				string: "/env/" ++ num ++ "/selector",
 				value: value,
@@ -166,7 +180,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		freeRun.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var value = 2;
-			selector.value = this.selectorValuesConvert(value);
+			selector.value = S100_GUIPanel1.selectorValuesConvert(value);
 			synthi100.setParameterOSC(
 				string: "/env/" ++ num ++ "/selector",
 				value: value,
@@ -176,7 +190,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		gated.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var value = 3;
-			selector.value = this.selectorValuesConvert(value);
+			selector.value = S100_GUIPanel1.selectorValuesConvert(value);
 			synthi100.setParameterOSC(
 				string: "/env/" ++ num ++ "/selector",
 				value: value,
@@ -186,7 +200,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		triggered.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var value = 4;
-			selector.value = this.selectorValuesConvert(value);
+			selector.value = S100_GUIPanel1.selectorValuesConvert(value);
 			synthi100.setParameterOSC(
 				string: "/env/" ++ num ++ "/selector",
 				value: value,
@@ -196,7 +210,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		hold.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var value = 5;
-			selector.value = this.selectorValuesConvert(value);
+			selector.value = S100_GUIPanel1.selectorValuesConvert(value);
 			synthi100.setParameterOSC(
 				string: "/env/" ++ num ++ "/selector",
 				value: value,
@@ -204,7 +218,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 			);
 		});
 
-		selector.valueAction_({|i| "hola".postln});
+
 
 		gate.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			synthi100.setParameterOSC(
@@ -272,17 +286,5 @@ S100_GUIPanel1 : S100_GUIPanel {
 				addrForbidden: \GUI,
 			)
 		};
-	}
-
-
-	// Valores de las opciones de selector: 1 = 0.293; 2 = 0.405; 3 = 0.5; 4 = 0.59; 5 = 0.691
-	selectorValuesConvert {|value|
-		value.switch(
-			1, {^0.293},
-			2, {^0.405},
-			3, {^0.5},
-			4, {^0.59},
-			5, {^ 0.691},
-		);
 	}
 }

@@ -296,9 +296,8 @@ S100_EnvelopeShaper {
 		});
 	}
 
-	setSelector{|option, value|
-		if(value==0,{^this;}); // Ignoramos los valores 0
-		switch (option,
+	setSelector{|value|
+		switch (value,
 			1, { // Gated Free Run
 				envGatedFreeRun.synthRun(true);
 				envGated.synthRun(false);
@@ -330,7 +329,7 @@ S100_EnvelopeShaper {
 				envTriggered.synthRun(false);
 			},
 			{
-				("S100_EnvelopeShaper/setSelector: " + option + " no es un valor válido").postln
+				("S100_EnvelopeShaper/setSelector: " + value + " no es un valor válido").postln
 				^this; // si no es un valor válido la función acaba aquí.
 			}
 		);

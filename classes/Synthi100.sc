@@ -656,7 +656,10 @@ Synthi100 {
 						modulEnvelopeShapers[index].setGateButton(value);
 						//if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
 					},
-					"selector", {modulEnvelopeShapers[index].setSelector(splitted[2].asInt, value)},
+					"selector", {
+						modulEnvelopeShapers[index].setSelector(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = S100_GUIPanel1.selectorValuesConvert(value)}.defer(0)});
+					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);

@@ -195,7 +195,6 @@ S100_Oscillator {
 			range = rang.asInt;
 			synth.set(\freqMin, this.freqMinMax(rang.asInt, \min));
 			synth.set(\freqMax, this.freqMinMax(rang.asInt, \max));
-			("Range " ++ rang).postln;
 		}, {
 			("S100_Oscillator/setRange: " + rang + " debe contener los valores 1 (hi) o 0 (lo)").postln})
 	}
