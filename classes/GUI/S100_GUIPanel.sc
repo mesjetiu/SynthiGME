@@ -65,13 +65,19 @@ S100_GUIPanel {
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 1.5;
 			keycode.switch(
-				keycode.postln;
 				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizePanel(factor)}, // +
 				654353, {this.resizePanel(1/factor)}, // -
 				43, {this.resizePanel(factor)}, // + (en mi portatil Slimbook)
 				45, {this.resizePanel(1/factor)}, // - (en mi portatil Slimbook)
-				102, {synthi100.guiSC.frontWindows} // f (front) Todas las ventanas al frente
+				102, {synthi100.guiSC.frontWindows}, // f (front) Todas las ventanas al frente
+				49, {synthi100.guiSC.panels[0].window.front}, // Tecla 1: Panel 1 al frente
+				50, {synthi100.guiSC.panels[1].window.front}, // Tecla 2: Panel 2 al frente
+				51, {synthi100.guiSC.panels[2].window.front}, // Tecla 3: Panel 3 al frente
+				52, {synthi100.guiSC.panels[3].window.front}, // Tecla 4: Panel 4 al frente
+				53, {synthi100.guiSC.panels[4].window.front}, // Tecla 5: Panel 5 al frente
+				54, {synthi100.guiSC.panels[5].window.front}, // Tecla 6: Panel 6 al frente
+				55, {synthi100.guiSC.panels[6].window.front}, // Tecla 7: Panel 7 al frente
 			);
 		};
 

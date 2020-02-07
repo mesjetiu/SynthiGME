@@ -1,20 +1,9 @@
 Lista "To Do"
 
-* crear los paneles en GUI con CompositeView? usar imágenes del Synthi 100 original. Los patchbays pueden dibujarse?
-* zoom con centro en el puntero del ratón
-* crear script (python?) para uso standalone.
-* ver si se puede incluir el UGen de triángulo que se usa. Es una extensión y sería bueno tenerla incluida en el quark. Si no, no usar esta extensión.
-* hacer textos feedback de lo que ocurre (éxitos, errores...)
-* Archivo de ayuda de Supercollider
-* Módulo Envelope Shaper (requiere varias clases, una por modo del selector)
-* grabación de mensajes OSC cronológicamente, y reproducción.
-
-
-ALIASING EN OSCILADORES
-
-Experimentar con tener dos osciladores, uno para baja frecuencia y otro para alta (no existe un ugen de triángulo que funcione al mismo tiempo bien en baja y alta frecuencia)
-Lo ideal es que a baja frecuencia los osciladores generen una forma clara y sin distorsiones. En altas frecuencias sin aliasing.
-Al cambiar el rango entre Hi y Lo se observa un cambio de fase (y de color y volumen). comprobar por qué cambia la fase. Una posible solución es sustituir el Synth cada vez que el rango cambia, empezando con fase 0.
+* paneles de patchbay con encabezado fijo
+* terminar GUI con los módulos existentes hasta ahora (ring modulator y noise generator).
+* crear el patchbay de control de voltaje.
+* unir más canales a los puertos de SC.
 
 
 
