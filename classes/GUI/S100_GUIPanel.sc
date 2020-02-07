@@ -63,11 +63,17 @@ S100_GUIPanel {
 		compositeView = CompositeView(window, rectCompositeView);
 
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
-			if(keycode==118, { // 'v' (visibility) Activa y desactiva la visibilidad de los mandos de la ventana en foco.
-				this.commuteVisibility;
-			})
+			var factor = 1.5;
+			keycode.switch(
+				keycode.postln;
+				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
+				65451, {this.resizePanel(factor)}, // +
+				654353, {this.resizePanel(1/factor)}, // -
+				43, {this.resizePanel(factor)}, // + (en mi portatil Slimbook)
+				45, {this.resizePanel(1/factor)}, // - (en mi portatil Slimbook)
+				102, {synthi100.guiSC.frontWindows} // f (front) Todas las ventanas al frente
+			);
 		};
-
 
 		viewSizes = [];
 		viewSizes = viewSizes.add([window, rectWindow]);
