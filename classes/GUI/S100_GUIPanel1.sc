@@ -38,6 +38,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 		});
 
 		this.makeEnvelopes(compositeView, 38, 238, 59.7);
+		this.makeRingModulators(compositeView, 41.5, 417);
 
 		window.front;
 	}
@@ -283,6 +284,68 @@ S100_GUIPanel1 : S100_GUIPanel {
 			synthi100.setParameterOSC(
 				string: "/env/" ++ num ++ "/signalLevel",
 				value: knob.value.linlin(0,1,-5,5),
+				addrForbidden: \GUI,
+			)
+		};
+	}
+
+	makeRingModulators {|parent, left, top|
+		var size = 35;
+		var spacing = 61.3;
+		var rect;
+		var ring1, ring2, ring3;
+
+		rect = Rect(left, top, size, size);
+		ring1 = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([ring1, rect]);
+
+		left = left + spacing;
+		rect = Rect(left, top, size, size);
+		ring2 = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([ring2, rect]);
+
+		left = left + spacing;
+		rect = Rect(left, top, size, size);
+		ring3 = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([ring3, rect]);
+
+
+		// Se añaden al diccionario todos los mandos del Ring Modulator para poder cambiar su valor.
+		parameterViews
+		.put("/ring/1/level", ring1)
+		.put("/ring/2/level", ring2)
+		.put("/ring/3/level", ring3);
+
+		// Acciones de los knobs
+		ring1.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/ring/1/level",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		ring2.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/ring/2/level",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		ring3.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/ring/3/level",
+				value: knob.value.linlin(0,1,0,10),
 				addrForbidden: \GUI,
 			)
 		};
