@@ -33,6 +33,11 @@ S100_GUIPanel3 : S100_GUIPanel {
 			top = top + spacing;
 		});
 
+		// Los 3 Noise generators
+		left = 32.2;
+		top = 411.5;
+		this.makeNoiseGenerators(compositeView, left, top);
+
 
 		// Cuando se hace doble click se hace zoom
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
@@ -194,10 +199,55 @@ S100_GUIPanel3 : S100_GUIPanel {
 
 
 
-	makeNoiseGenerator {
-	}
+	makeNoiseGenerators {|parent, left, top|
+		var size = 35;
+		var spacing = 46;
+		var rect;
+		var colour, level;
 
-	makeRandomControlVoltageGenerator {
-	}
+		2.do({|n|
+			var num = n + 1;
 
+			rect = Rect(left, top, size, size);
+			colour = Knob(parent, rect)
+			.color_([blue, black, white, nil])
+			.mode_(\horiz)
+			.step_(step)
+			.value_(0.5);
+			viewSizes = viewSizes.add([colour, rect]);
+
+			left = left + spacing;
+			rect = Rect(left, top, size, size);
+			level = Knob(parent, rect)
+			.color_([white, black, white, nil])
+			.mode_(\horiz)
+			.step_(step);
+			viewSizes = viewSizes.add([level, rect]);
+
+			left = left + spacing + 5.2;
+
+
+			// Se añaden al diccionario todos los mandos del Noise Generator para poder cambiar su valor.
+			parameterViews
+			.put("/noise/" ++ num ++ "/colour", colour)
+			.put("/noise/" ++ num ++ "/level", level);
+
+			// Acciones de los knobs
+			colour.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/noise/" ++ num ++ "/colour",
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+
+			level.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/noise/" ++ num ++ "/level",
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+		})
+	}
 }

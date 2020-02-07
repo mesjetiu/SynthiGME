@@ -10,13 +10,15 @@ Quarks.clear
 
 o = Synthi100(gui:false).run.pairDevice
 o = Synthi100(gui:true).run
+o.run
+o.close
 o.guiSC.makeWindow
 o.pairDevice
 
 o = Synthi100(gui:true)
 
 o.setParameterOSC("\env\1\gate", 1)
-
+o.close
 o.guiSC.closeWindows;
 o.guiSC.frontWindows;
 o.guiSC.panels[0].window.front
@@ -27,9 +29,11 @@ o.guiSC.pannels.do({|i| i.window.front})
 o.guiSC.resetSize
 o.run
 
+View
 
 ScopeView
 Stethoscope
+
 
 // FREE RUN. Funciona. Implementar en S100_EnvelopeShaper.
 

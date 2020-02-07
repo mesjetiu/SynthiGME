@@ -677,12 +677,18 @@ Synthi100 {
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
-			"noise", { // Ejemplo "/ring/1/level"
+			"noise", { // Ejemplo "/noise/1/level"
 				var index = splitted[2].asInt - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
-					"colour", {modulNoiseGenerators[index].setColour(value)},
-					"level", {modulNoiseGenerators[index].setLevel(value)},
+					"colour", {
+						modulNoiseGenerators[index].setColour(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"level", {
+						modulNoiseGenerators[index].setLevel(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);

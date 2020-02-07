@@ -67,7 +67,7 @@ S100_GUIPanel {
 			keycode.switch(
 				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizePanel(factor)}, // +
-				654353, {this.resizePanel(1/factor)}, // -
+				65453, {this.resizePanel(1/factor)}, // -
 				43, {this.resizePanel(factor)}, // + (en mi portatil Slimbook)
 				45, {this.resizePanel(1/factor)}, // - (en mi portatil Slimbook)
 				102, {synthi100.guiSC.frontWindows}, // f (front) Todas las ventanas al frente
