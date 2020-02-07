@@ -28,7 +28,8 @@ o.guiSC.resetSize
 o.run
 
 
-
+ScopeView
+Stethoscope
 
 // FREE RUN. Funciona. Implementar en S100_EnvelopeShaper.
 
@@ -103,4 +104,3 @@ k.enabled_(true)
 k.canFocus = false
 k.canFocus = true
 
-Slider

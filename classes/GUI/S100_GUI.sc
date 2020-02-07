@@ -43,6 +43,7 @@ S100_GUI {
 	}
 
 	makeWindow {
+		Window.closeAll; // Cierra todas las ventanas
 		panels.do({|panel|
 			panel.makeWindow
 		});

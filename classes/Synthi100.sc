@@ -123,7 +123,6 @@ Synthi100 {
 
 		Routine({
 			while({server == nil}, {wait(waitTime)});
-
 			if (server.serverRunning, {
 				"Apagando servidor...".post;
 				server.quit;
@@ -747,5 +746,10 @@ Synthi100 {
 		});
 
 		^data;
+	}
+
+	close {
+		{Window.closeAll}.defer(0);
+		server.freeAll;
 	}
 }

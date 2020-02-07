@@ -9,7 +9,8 @@ sclang ./S100.scd
 
 */
 
-Synthi100(gui:true).run.pairDevice;
+// Synthi100(gui:true).run.pairDevice;
 
 
 
+Synthi100(gui:true).run
