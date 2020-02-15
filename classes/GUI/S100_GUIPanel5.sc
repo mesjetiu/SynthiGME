@@ -65,7 +65,7 @@ S100_GUIPanel5 : S100_GUIPanel {
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
 
-		var node = S100_GUINode(parent, bounds);
+		var node = S100_GUINode(synthi100, parent, bounds, stringOSC);
 
 
 		/*
@@ -99,14 +99,16 @@ S100_GUIPanel5 : S100_GUIPanel {
 S100_GUINode {
 	var view;
 	var value;
+	var image1, image2;
 	var installedPath;
+	var synthi100;
 
-	*new {arg parent, bounds;
-		^super.new.init(parent, bounds);
+	*new {arg synthi, parent, bounds, stringOSC;
+		^super.new.init(synthi, parent, bounds, stringOSC);
 	}
 
-	init {|parent, bounds|
-		var image1, image2;
+	init {|synthi, parent, bounds, stringOSC|
+		synthi100 = synthi;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
 		image1 = Image(installedPath ++ "/classes/GUI/images/patchbay_hole.png");
 		image2 = Image(installedPath ++ "/classes/GUI/images/patchbay_white_pin.png");
@@ -116,8 +118,19 @@ S100_GUINode {
 		.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			buttonNumber.switch(
 				0, {
-					if(value==1, {value=0}, {value=1});
-					value.postln;
+					if(value==1, {
+						value=0;
+						view.setBackgroundImage(image1, 10);
+					}, {
+						value=1;
+						view.setBackgroundImage(image2, 10);
+					});
+					synthi100.setParameterOSC(
+						string: stringOSC,
+						value: value,
+						addrForbidden: \GUI,
+					);
+
 				}, // click izquierdo
 				1, {"der".postln}, // click derecho
 			)
@@ -134,6 +147,16 @@ S100_GUINode {
 
 	bounds_ {|bounds|
 		view.bounds = bounds;
+	}
+
+	value_ {|val|
+		if(value == val, {^this});
+		value = val;
+		if(value==1, {
+			view.setBackgroundImage(image1, 10);
+		}, {
+			view.setBackgroundImage(image2, 10);
+		})
 	}
 }
 
