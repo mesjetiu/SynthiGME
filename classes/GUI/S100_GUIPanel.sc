@@ -98,19 +98,19 @@ S100_GUIPanel {
 
 		viewSizes.do({|v|
 			if (v[0].class === Window, {
-				v[0].bounds = Rect(
+				v[0].bounds_(Rect(
 					left: v[0].bounds.left,
 					top: v[0].bounds.top,
 					width: v[1].width * factorW,
 					height: v[1].height * factorH,
-				)
+				))
 			}, {
-				v[0].bounds = Rect(
+				v[0].bounds_(Rect(
 					left: v[1].left * factorW,
 					top: v[1].top * factorW,
 					width: v[1].width * factorW,
 					height: v[1].height * factorW,
-				)
+				))
 			})
 		});
 		zoomWLevel = factorW;
@@ -123,7 +123,7 @@ S100_GUIPanel {
 				(v[0].class === Window)
 				.or(v[0].class === CompositeView),
 				{},
-				{v[0].visible = bool}
+				{v[0].visible_(bool)}
 			)
 		})
 	}

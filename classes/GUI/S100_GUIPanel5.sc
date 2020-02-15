@@ -64,24 +64,31 @@ S100_GUIPanel5 : S100_GUIPanel {
 		var stringOSC = "/patchA/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
-		var button = Button(parent, bounds).
-		states_([
-			[nil, nil, Color.black], // value 0
-			[nil, nil, Color.red] // value 1
-		]). action_({ arg butt;
-			synthi100.setParameterOSC(
-				string: stringOSC,
-				value: butt.value,
-				addrForbidden: \GUI,
-			)
+
+		var node = S100_GUINode(parent, bounds);
+
+
+		/*
+		var button = Button(parent, bounds)
+		.setBackgroundImage(image, 10)
+		.states_([
+		[nil, nil, Color.black], // value 0
+		[nil, nil, Color.red] // value 1
+		]).action_({ arg butt;
+		synthi100.setParameterOSC(
+		string: stringOSC,
+		value: butt.value,
+		addrForbidden: \GUI,
+		)
 		});
 
+		*/
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchA/91/36
-		parameterViews.put(stringOSC, button);
+		parameterViews.put(stringOSC, node);
 
 		// Se añaden el view node y sus bound por defecto para resize
 		viewSizes = viewSizes ++ [
-			[button, bounds]
+			[node, bounds]
 		];
 	}
 }
@@ -89,7 +96,46 @@ S100_GUIPanel5 : S100_GUIPanel {
 
 
 
+S100_GUINode {
+	var view;
+	var value;
+	var installedPath;
 
+	*new {arg parent, bounds;
+		^super.new.init(parent, bounds);
+	}
+
+	init {|parent, bounds|
+		var image1, image2;
+		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
+		image1 = Image(installedPath ++ "/classes/GUI/images/patchbay_hole.png");
+		image2 = Image(installedPath ++ "/classes/GUI/images/patchbay_white_pin.png");
+		value = 0;
+		view = View(parent, bounds)
+		.setBackgroundImage(image1, 10)
+		.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			buttonNumber.switch(
+				0, {
+					if(value==1, {value=0}, {value=1});
+					value.postln;
+				}, // click izquierdo
+				1, {"der".postln}, // click derecho
+			)
+		});
+	}
+
+	visible_ {|option|
+		view.visible = option;
+	}
+
+	bounds {
+		^view.bounds;
+	}
+
+	bounds_ {|bounds|
+		view.bounds = bounds;
+	}
+}
 
 
 
