@@ -19,6 +19,18 @@ S100_GUI {
 	var step = 0.001;
 
 
+	*initClass {
+		// Inicializa otras clases antes de esta
+		Class.initClassTree(S100_GUIPanel);
+		Class.initClassTree(S100_GUIPanel1);
+		Class.initClassTree(S100_GUIPanel2);
+		Class.initClassTree(S100_GUIPanel3);
+		Class.initClassTree(S100_GUIPanel4);
+		Class.initClassTree(S100_GUIPanel5);
+		Class.initClassTree(S100_GUIPanel6);
+		Class.initClassTree(S100_GUIPanel7);
+	}
+
 	*new {arg synthi;
 		^super.new.init(synthi);
 	}

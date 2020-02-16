@@ -1,4 +1,4 @@
-Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
+Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
 o =Synthi100(gui:false).run
 //Quarks.install("https://github.com/mesjetiu/Synthi100.git")
 

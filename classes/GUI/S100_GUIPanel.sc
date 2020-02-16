@@ -31,6 +31,11 @@ S100_GUIPanel {
 
 	//*********************************************************************************************
 
+	*initClass {
+		// Inicializa otras clases antes de esta
+		Class.initClassTree(S100_GUINode);
+	}
+
 	*new {|synthi, parameters|
 		^super.new.init(synthi, parameters);
 	}
