@@ -60,6 +60,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 		]);
 		index = index + 1;
 		});
+		*/
 
 		// Outputs verticales (67-126) ////////////////////////////////////////////////////////////
 		index = 67; // Inputs de Amplificador del 67-74
@@ -79,17 +80,8 @@ S100_PatchbayVoltage : S100_Patchbay{
 		]);
 		index = index + 1;
 		});
-
-		index = 89; // Noise Generators 89 y 90
-		noiseGenerators.do({|i|
-		array[index-1] = Dictionary.newFrom(List[
-		\synth, i.synth,
-		\outBus, i.outputBus,
-		]);
-		index = index + 1;
-		});
-
-		index = 91; // Oscillators ocupan los números 91-108 (9 osciladores)
+/*
+		index = 83; // Oscillators 10, 11 y 12 ocupan los números 83-88
 		oscillators.do({|i|
 		array[index-1] = Dictionary.newFrom(List[ // Sine y Saw
 		\synth, i.synth,
@@ -120,7 +112,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 		]);
 		index = index + 1;
 		});
-		*/
+*/
 		^array;
 	}
 }
