@@ -153,7 +153,7 @@ Synthi100 {
 				// Módulos.
 				modulInputAmplifiers = 8.collect({S100_InputAmplifier(server)});
 				modulEnvelopeShapers = 3.collect({S100_EnvelopeShaper(server)});
-				modulOscillators = 9.collect({S100_Oscillator(server)});
+				modulOscillators = 12.collect({S100_Oscillator(server)});
 				modulNoiseGenerators = 2.collect({S100_NoiseGenerator(server)});
 				modulRingModulators = 3.collect({S100_RingModulator(server)});
 				modulOutputChannels = 8.collect({S100_OutputChannel(server)});
