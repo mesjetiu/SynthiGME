@@ -40,20 +40,6 @@ S100_Patchbay {
 		nodeSynths = Dictionary.new;
 	}
 
-	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, outputChannels|
-		inputsOutputs = this.ordenateInputsOutputs(
-			inputAmplifiers: inputAmplifiers,
-			envelopeShapers: envelopeShapers,
-			oscillators: oscillators,
-			noiseGenerators: noiseGenerators,
-			ringModulators: ringModulators,
-			outputChannels: outputChannels,
-		);
-	}
-
-
-
 
 	getNumSynth {|synth|
 		if (synth.asString.split($()[0] == "Group", {

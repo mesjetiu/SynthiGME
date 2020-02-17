@@ -61,7 +61,7 @@ S100_GUIPanel6 : S100_GUIPanel {
 	}
 
 	makeNode {|parent, left, top, column, row, nodeCountHor, nodeCountVer|
-		var stringOSC = "/patchC/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
+		var stringOSC = "/patchV/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
 

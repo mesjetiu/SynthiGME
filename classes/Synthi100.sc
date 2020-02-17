@@ -9,6 +9,7 @@ Synthi100 {
 	var <modulRingModulators;
 	var <modulOutputChannels;
 	var <modulPatchbayAudio;
+	var <modulPatchbayVoltage;
 
 	// Almacena los Synths que conectan los canales de salida de SC con los de los módulos
 	var <connectionOut = nil;
@@ -52,6 +53,7 @@ Synthi100 {
 		Class.initClassTree(S100_RingModulator);
 		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_PatchbayAudio);
+		Class.initClassTree(S100_PatchbayVoltage);
 		Class.initClassTree(S100_GUI);
 	}
 
@@ -112,6 +114,7 @@ Synthi100 {
 		S100_RingModulator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
+		S100_PatchbayVoltage.addSynthDef;
 	}
 
 
@@ -155,6 +158,7 @@ Synthi100 {
 				modulRingModulators = 3.collect({S100_RingModulator(server)});
 				modulOutputChannels = 8.collect({S100_OutputChannel(server)});
 				modulPatchbayAudio = S100_PatchbayAudio(server);
+				modulPatchbayVoltage = S100_PatchbayVoltage(server);
 
 
 				wait(0.2); // Tiempo de seguridad para estar seguros que se han creado correctamente los módulos y sus buses. De otro modo puede que se oiga sonido sin conectar nada. Quizás se pueda encontrar otra solución más elegante...
@@ -291,7 +295,15 @@ Synthi100 {
 				);
 				"OK\n".post;
 
-
+				// conecta cada entrada y salida de cada módulo en el patchbay de voltaje
+				"Conexiones en Patchbay de voltage...".post;
+				modulPatchbayVoltage.connect(
+					inputAmplifiers: modulInputAmplifiers,
+					envelopeShapers: modulEnvelopeShapers,
+					oscillators: modulOscillators,
+					outputChannels: modulOutputChannels,
+				);
+				"OK\n".post;
 
 				"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
 				connectionIn = inputAmplifiersBusses.collect({|item, i|
