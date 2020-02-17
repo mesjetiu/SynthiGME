@@ -51,7 +51,7 @@ Synthi100 {
 		Class.initClassTree(S100_NoiseGenerator);
 		Class.initClassTree(S100_RingModulator);
 		Class.initClassTree(S100_OutputChannel);
-		Class.initClassTree(S100_PatchbayAudio);
+		Class.initClassTree(S100_Patchbay);
 		Class.initClassTree(S100_GUI);
 	}
 
@@ -111,7 +111,7 @@ Synthi100 {
 		S100_NoiseGenerator.addSynthDef;
 		S100_RingModulator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
-		S100_PatchbayAudio.addSynthDef;
+		S100_Patchbay.addSynthDef;
 	}
 
 
@@ -154,7 +154,7 @@ Synthi100 {
 				modulNoiseGenerators = 2.collect({S100_NoiseGenerator(server)});
 				modulRingModulators = 3.collect({S100_RingModulator(server)});
 				modulOutputChannels = 8.collect({S100_OutputChannel(server)});
-				modulPatchbayAudio = S100_PatchbayAudio(server);
+				modulPatchbayAudio = S100_Patchbay(server);
 
 
 				wait(0.2); // Tiempo de seguridad para estar seguros que se han creado correctamente los módulos y sus buses. De otro modo puede que se oiga sonido sin conectar nada. Quizás se pueda encontrar otra solución más elegante...

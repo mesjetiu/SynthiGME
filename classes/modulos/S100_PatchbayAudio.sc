@@ -1,4 +1,4 @@
-S100_PatchbayAudio {
+S100_Patchbay {
 
 	classvar lag = 0.1;
 	var <server = nil;
