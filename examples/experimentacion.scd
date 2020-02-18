@@ -6,7 +6,7 @@ Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
 
 Quarks.clear
 
-
+Window
 
 o = Synthi100(gui:false).run.pairDevice
 o = Synthi100(gui:true).run

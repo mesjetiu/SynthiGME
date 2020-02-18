@@ -69,7 +69,7 @@ S100_GUIPanel {
 		compositeView = CompositeView(window, rectCompositeView);
 
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
-			var factor = 1.5;
+			var factor = 2;
 			keycode.switch(
 				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizePanel(factor)}, // +
@@ -119,8 +119,8 @@ S100_GUIPanel {
 		viewSizes.do({|v|
 			if (v[0].class === Window, {
 				v[0].bounds_(Rect(
-					left: v[0].bounds.left,
-					top: v[0].bounds.top,
+					left: origin.left,
+					top: origin.top,
 					width: v[1].width * factorW,
 					height: v[1].height * factorH,
 				))

@@ -15,7 +15,7 @@ S100_GUIPanel2 : S100_GUIPanel {
 		compositeView.setBackgroundImage(image,10);
 		// Cuando se hace doble click se hace zoom
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
-			var factor = 1.5;
+			var factor = 2;
 			if(clickCount == 2, {
 				buttonNumber.switch(
 					0, {this.resizePanel(factor)},

@@ -41,7 +41,7 @@ S100_GUIPanel3 : S100_GUIPanel {
 
 		// Cuando se hace doble click se hace zoom
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
-			var factor = 1.5;
+			var factor = 2;
 			if(clickCount == 2, {
 				buttonNumber.switch(
 					0, {this.resizePanel(factor)},
