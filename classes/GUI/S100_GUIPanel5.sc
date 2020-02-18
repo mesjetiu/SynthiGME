@@ -28,6 +28,8 @@ S100_GUIPanel5 : S100_GUIPanel {
 
 		this.makeNodeTable;
 
+		this.resizePanel(Window.availableBounds.width/virtualWidth);
+		this.saveOrigin;
 		window.front;
 	}
 

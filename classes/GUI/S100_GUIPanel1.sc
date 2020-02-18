@@ -40,6 +40,8 @@ S100_GUIPanel1 : S100_GUIPanel {
 		this.makeEnvelopes(compositeView, 38, 238, 59.7);
 		this.makeRingModulators(compositeView, 41.5, 417);
 
+		this.resizePanel(Window.availableBounds.width/virtualWidth);
+		this.saveOrigin;
 		window.front;
 	}
 

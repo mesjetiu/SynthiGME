@@ -26,9 +26,9 @@ S100_GUIPanel7 : S100_GUIPanel {
 
 		this.makeChannels;
 
+		this.resizePanel(Window.availableBounds.width/virtualWidth);
+		this.saveOrigin;
 		window.front;
-
-		Window
 	}
 
 	makeChannels{

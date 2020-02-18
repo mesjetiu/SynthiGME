@@ -7,7 +7,8 @@ S100_GUIPanel {
 	var zoomWLevel = 1;
 	var rectWindow;
 	var rectCompositeView;
-	var virtualWidth = 1920;
+	var virtualWidth = 1920; // Todos las Views usan unidades de medida en relación a esta anchura.
+	var origin; // El tamaño y posición original de la ventana. Para volver a ella cuando se quiera
 
 	// Cantidad que varían los valores de incremento y decremento usando el ratón
 	var stepDefault = 0.001;
@@ -83,6 +84,11 @@ S100_GUIPanel {
 				53, {synthi100.guiSC.panels[4].window.front}, // Tecla 5: Panel 5 al frente
 				54, {synthi100.guiSC.panels[5].window.front}, // Tecla 6: Panel 6 al frente
 				55, {synthi100.guiSC.panels[6].window.front}, // Tecla 7: Panel 7 al frente
+				111, {// Tecla o: Panel a posición y tamaño original
+					synthi100.guiSC.panels.do({|panel|
+						panel.goToOrigin
+					})
+				},
 			);
 		};
 
@@ -133,6 +139,7 @@ S100_GUIPanel {
 		})
 	}
 
+
 	// Hace visible o invisible los mandos de una ventana
 	commuteVisibility {
 		var visible;
@@ -147,5 +154,24 @@ S100_GUIPanel {
 				)}
 			)
 		})
+	}
+
+	saveOrigin {
+		origin = window.bounds;
+	}
+
+	goToOrigin {
+		Routine ({
+			var factor = origin.width / window.bounds.width;
+			var rect = Rect(
+				left: origin.left,
+				top: origin.top,
+				width: window.bounds.width,
+				height: window.bounds.height,
+			);
+			window.bounds = rect;
+			while({window.bounds != rect}, {wait(0.01)}); // Nos aseguramos que se realiza la primera operación antes de seguir
+			this.resizePanel(factor);
+		}).play(AppClock)
 	}
 }
