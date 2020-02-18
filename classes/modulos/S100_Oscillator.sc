@@ -14,9 +14,12 @@ S100_Oscillator {
 	var <sawtoothLevel = 0;
 	var <frequency = 5;
 
-	// Otros atributos de instancia
 	var <outputBus1; // Sine y Saw
 	var <outputBus2; // Pulse y Triangle
+	var <inputBusVoltage; // entrada de voltage para control de la frecuencia
+	var <inFeedbackBusVoltage;
+
+	// Otros atributos de instancia
 	var <server;
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
@@ -46,14 +49,19 @@ S100_Oscillator {
 			freq, // de 0 a 10 (tal cual desde el dial)
 			freqMin, freqMax, // frecuencia mínima y máxima a la que convertir los valores del dial.
 
-			// Parámetros de SC
 			outVol, // de 0 a 1
+
 			outputBus1,
-			outputBus2;
+			outputBus2,
+			inputBusVoltage,
+			inFeedbackBusVoltage;
 
-			var scaledFreq, sigPulse, sigSym, sigSine, sigTriangle, fadeTriangle, sigSawtooth, sig1, sig2;
+			var scaledFreq, sigPulse, sigSym, sigSine, sigTriangle, fadeTriangle, sigSawtooth, sig1, sig2, voltIn;
 
+			voltIn = In.ar(inputBusVoltage);
+			voltIn = voltIn + In.ar(inFeedbackBusVoltage);
 			scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
+			scaledFreq = scaledFreq * (2**(voltIn * 2)); // Ajustar la influencia del control de voltaje correctamente.
 
 			// Pulse
 			//sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
@@ -90,7 +98,7 @@ S100_Oscillator {
 			Out.ar(outputBus1, sig1 * outVol);
 			Out.ar(outputBus2, sig2 * outVol);
 
-		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil]
+		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil, nil, nil]
 		).add;
 	}
 
@@ -103,6 +111,8 @@ S100_Oscillator {
 		server = serv;
 		outputBus1 = Bus.audio(server);
 		outputBus2 = Bus.audio(server);
+		inputBusVoltage = Bus.audio(server);
+		inFeedbackBusVoltage = Bus.audio(server);
 		pauseRoutine = Routine({
 			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
 			synth.run(false);
@@ -124,6 +134,8 @@ S100_Oscillator {
 				\freqMax, this.freqMinMax(range, \max),
 				\outputBus1, outputBus1,
 				\outputBus2, outputBus2,
+				\inputBusVoltage, inputBusVoltage,
+				\inFeedbackBusVoltage, inFeedbackBusVoltage,
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
