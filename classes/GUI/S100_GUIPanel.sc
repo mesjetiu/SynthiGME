@@ -84,7 +84,8 @@ S100_GUIPanel {
 				53, {synthi100.guiSC.panels[4].window.front}, // Tecla 5: Panel 5 al frente
 				54, {synthi100.guiSC.panels[5].window.front}, // Tecla 6: Panel 6 al frente
 				55, {synthi100.guiSC.panels[6].window.front}, // Tecla 7: Panel 7 al frente
-				111, {// Tecla o: Panel a posición y tamaño original
+				111, {this.goToOrigin}, // Tecla O: Panel a posición y tamaño original
+				79, {// Tecla o: Todos los Paneles a posición y tamaño original
 					synthi100.guiSC.panels.do({|panel|
 						panel.goToOrigin
 					})
@@ -100,12 +101,20 @@ S100_GUIPanel {
 
 	resizePanel {arg factor;
 		var factorH, factorW;
-		if ((factor * zoomWLevel * viewSizes[0][1s].width) > (Window.availableBounds.width * 1), {
+		if ((factor * zoomWLevel * viewSizes[0][1].width) > (Window.availableBounds.width * 1), {
 			factorW = (Window.availableBounds.width * 1) /  (viewSizes[0][1].width);
 		}, {factorW = factor * zoomWLevel});
 		if ((factor * zoomHLevel * viewSizes[0][1].height) > (Window.availableBounds.height * 1), {
 			factorH = (Window.availableBounds.height * 1) / (viewSizes[0][1].height);
 		}, {factorH = factorW});
+
+
+		if ((factor * zoomWLevel * viewSizes[0][1].width) < origin.width, {
+			factorW = origin.width / viewSizes[0][1].width;
+		});
+		if ((factor * zoomHLevel * viewSizes[0][1].height) < origin.height, {
+			factorH = origin.height / viewSizes[0][1].height;
+		});
 
 		viewSizes.do({|v|
 			if (v[0].class === Window, {
@@ -127,6 +136,8 @@ S100_GUIPanel {
 		zoomWLevel = factorW;
 		zoomHLevel = factorH;
 	}
+
+
 
 	parameterVisibility {|bool|
 		viewSizes.do({|v|

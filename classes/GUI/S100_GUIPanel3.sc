@@ -50,8 +50,8 @@ S100_GUIPanel3 : S100_GUIPanel {
 			})
 		});
 
-		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		this.saveOrigin;
+		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		window.front;
 	}
 

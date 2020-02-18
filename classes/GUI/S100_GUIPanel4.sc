@@ -24,8 +24,8 @@ S100_GUIPanel4 : S100_GUIPanel {
 			})
 		});
 
-		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		this.saveOrigin;
+		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		window.front;
 	}
 }

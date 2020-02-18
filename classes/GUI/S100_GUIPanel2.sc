@@ -26,8 +26,8 @@ S100_GUIPanel2 : S100_GUIPanel {
 
 		this.makeInputAmplifiers(compositeView, 31.2, 367);
 
-		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		this.saveOrigin;
+		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		window.front;
 	}
 
