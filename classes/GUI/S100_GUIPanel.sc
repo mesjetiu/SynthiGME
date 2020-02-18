@@ -1,7 +1,7 @@
 S100_GUIPanel {
 
 	var <window;
-	var compositeView;
+	var <compositeView;
 	var viewSizes;
 	var zoomHLevel = 1;
 	var zoomWLevel = 1;
@@ -135,8 +135,21 @@ S100_GUIPanel {
 		});
 		zoomWLevel = factorW;
 		zoomHLevel = factorH;
+
+		this.goInside;
 	}
 
+	// lleva la ventana a un lugar visible (dentro de los límites de la pantalla)
+	goInside {
+		if ((window.bounds.left + window.bounds.width) > Window.availableBounds.width, {
+			window.bounds = Rect (
+				left: Window.availableBounds.width - window.bounds.width,
+				top: window.bounds.top,
+				width: window.bounds.width,
+				height: window.bounds.height,
+			)
+		});
+	}
 
 
 	parameterVisibility {|bool|
