@@ -59,7 +59,7 @@ S100_Oscillator {
 			var scaledFreq, sigPulse, sigSym, sigSine, sigTriangle, fadeTriangle, sigSawtooth, sig1, sig2, voltIn;
 
 			voltIn = In.ar(inputBusVoltage);
-			voltIn = voltIn + In.ar(inFeedbackBusVoltage);
+			voltIn = voltIn + InFeedback.ar(inFeedbackBusVoltage);
 			scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
 			scaledFreq = scaledFreq * (2**(voltIn * 2)); // Ajustar la influencia del control de voltaje correctamente.
 
