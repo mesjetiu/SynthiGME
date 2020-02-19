@@ -18,8 +18,8 @@ S100_PatchbayVoltage : S100_Patchbay{
 
 		// Inputs horizontales (1-66) /////////////////////////////////////////////////////////////
 
-		index = 30; // Ring Modulators ocupan los números 3-8 horizontales
-		9.do({|i|
+		index = 30; // Oscillators ocupan los números 30-41 horizontales
+		12.do({|i|
 			i = oscillators[i];
 			array[index-1] = Dictionary.newFrom(List[
 				\synth, i.synth,
@@ -28,6 +28,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 			]);
 			index = index + 1;
 		});
+
 
 		/*
 		index = 3; // Ring Modulators ocupan los números 3-8 horizontales
