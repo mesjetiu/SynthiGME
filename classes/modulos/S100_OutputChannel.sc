@@ -62,7 +62,7 @@ S100_OutputChannel {
 			// Se aplica el paneo
 			#sigPannedL, sigPannedR = Pan2.ar(sig, pan) * on;
 
-			Out.ar(outputBus, sigIn); // señal que pasa por el canal sin ser procesada (incluso si está en modo off), a modo de bus
+			//Out.ar(outputBus, sigIn); // señal que pasa por el canal sin ser procesada (incluso si está en modo off), a modo de bus
 			Out.ar(outBusL, sigPannedL);
 			Out.ar(outBusR, sigPannedR);
 		}, [nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]
