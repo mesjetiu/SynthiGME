@@ -59,7 +59,7 @@ Synthi100 {
 
 	*new {
 		arg server = Server.local,
-		gui = false;
+		gui = true;
 		^super.new.init(server, gui);
 	}
 
