@@ -32,6 +32,9 @@ Synthi100 {
 	// Puerto por defecto de envío de mensajes OSC (por defecto en TouchOSC)
 	var devicePort;
 
+	// Diccionario que guarda el último valor de cada string recibido de OSC
+	var oscRecievedMessages;
+
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC;
 
@@ -95,6 +98,7 @@ Synthi100 {
 		// Carga la configuración
 		settings = S100_Settings.get;
 
+		oscRecievedMessages = Dictionary.new;
 
 		guiSC = S100_GUI(this);
 		if(gui == true, {guiSC.makeWindow});
@@ -715,7 +719,12 @@ Synthi100 {
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
+
+			// Si el mensaje es distinto a los casos anteriores, se sale de la función
+			{^this}
 		);
+		// Si el mensaje es correcto se guarda el último valor de cada cadena en el diccionario
+		oscRecievedMessages.put(string, value);
 	}
 
 	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de todos los módulos
