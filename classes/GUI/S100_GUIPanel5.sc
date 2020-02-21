@@ -1,4 +1,5 @@
-S100_GUIPanel5 : S100_GUIPanel {
+S100_GUIPanel5 : S100_GUIPanelPatchbay {
+
 	makeWindow {
 		var rect;
 		var image;
@@ -69,24 +70,9 @@ S100_GUIPanel5 : S100_GUIPanel {
 
 		var node = S100_GUINode(synthi100, parent, bounds, stringOSC);
 
-
-		/*
-		var button = Button(parent, bounds)
-		.setBackgroundImage(image, 10)
-		.states_([
-		[nil, nil, Color.black], // value 0
-		[nil, nil, Color.red] // value 1
-		]).action_({ arg butt;
-		synthi100.setParameterOSC(
-		string: stringOSC,
-		value: butt.value,
-		addrForbidden: \GUI,
-		)
-		});
-
-		*/
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchA/91/36
 		parameterViews.put(stringOSC, node);
+		nodes.put([nodeCountHor, nodeCountVer], node);
 
 		// Se añaden el view node y sus bound por defecto para resize
 		viewSizes = viewSizes ++ [

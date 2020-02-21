@@ -1,5 +1,5 @@
 S100_GUINode {
-	var view;
+	var <view;
 	var value;
 	var image1, image2;
 	var installedPath;

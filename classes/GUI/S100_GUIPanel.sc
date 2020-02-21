@@ -15,7 +15,7 @@ S100_GUIPanel {
 	var step = 0.001;
 
 	var synthi100;
-	var parameterViews;
+	var <parameterViews; // Views de los parámetros (widgets)
 
 	var installedPath;
 
@@ -70,6 +70,7 @@ S100_GUIPanel {
 
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
+			keycode.postln;
 			keycode.switch(
 				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizePanel(factor)}, // +
@@ -90,6 +91,9 @@ S100_GUIPanel {
 						panel.goToOrigin
 					})
 				},
+				101, { // Tecla e: Hace visibles o invisibles todos los nodos dependiendo de si son posibles de usar en el Synthi100
+					synthi100.guiSC.panels[4].enableNodes;
+				}
 			);
 		};
 

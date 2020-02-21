@@ -108,3 +108,67 @@ k.enabled_(true)
 k.canFocus = false
 k.canFocus = true
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a = Dictionary.new
+
+a.put("jj", 4)
+a
+
+a = [1,2,3,4]
+
+// more file writing/reading examples:
+
+h = File("~/test.txt".standardizePath, "w");
+h.write("holitaaaaaa")
+h.close
+
+k = File(
+
+h.inspect;
+h.write( );
+h.close;
+
+k = File("~/test.dat".standardizePath, "r");
+
+
+k.readAllString.postln
+(k.length div: 4).do({ k.getFloat.postln; });
+k.close;
+
+
+(k.length div: 4)
+
+(16 div:8)
+
+
+
+File.use("~/test.txt".standardizePath, "w", { |f| f.write("Doesn't this work?\n is this thing really on ?\n"); });
+File.use("~/test.txt".standardizePath, "r", { |f| f.readAllString.postln });
+
