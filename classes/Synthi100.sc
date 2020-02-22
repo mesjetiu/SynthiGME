@@ -36,7 +36,7 @@ Synthi100 {
 	var oscRecievedMessages;
 
 	// Interfáz gráfica de SuperCollider (GUI)
-	var <guiSC;
+	var <guiSC = nil;
 
 	// Otras opciones.
 	var <generalVol;
@@ -322,6 +322,10 @@ Synthi100 {
 				});
 				"OK\n".post;
 				"Synthi100 en ejecución".postln;
+				// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
+				if (guiSC != nil, {
+					guiSC.panels[4].enableNodes(true)
+				});
 			});
 		}).play;
 	}
@@ -626,7 +630,7 @@ Synthi100 {
 					"pan", {
 						modulOutputChannels[index].setPan(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
-						},
+					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);

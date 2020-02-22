@@ -16,7 +16,7 @@ o.guiSC.makeWindow
 o.pairDevice
 
 o = Synthi100()
-
+o.run
 o.setParameterOSC("\env\1\gate", 1)
 o.close
 o.guiSC.closeWindows;
@@ -28,6 +28,9 @@ o.guiSC.pannels.do({|i| i.window.front})
 
 o.guiSC.resetSize
 o.run
+
+o.guiSC.panels[4].parameterViews.values.do({|i| i.view.enabled = false})
+o.guiSC.panels[4].enableNodes(true);
 
 View
 
@@ -172,3 +175,58 @@ k.close;
 File.use("~/test.txt".standardizePath, "w", { |f| f.write("Doesn't this work?\n is this thing really on ?\n"); });
 File.use("~/test.txt".standardizePath, "r", { |f| f.readAllString.postln });
 
+
+
+
+
+
+	o.modulPatchbayAudio.inputsOutputs[123]
+
+
+
+
+
+
+
+
+	a = Dictionary.new
+	a.put([1,2,3], 1)
+	a.put([2,3,4], 2)
+
+	a[[1,2,3]]
+
+	a.do({|i|i.postln})
+
+	a.values.do({|i| a.findKeyForValue(i).postln})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
