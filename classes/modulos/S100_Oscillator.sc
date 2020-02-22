@@ -61,7 +61,8 @@ S100_Oscillator {
 			voltIn = In.ar(inputBusVoltage);
 			voltIn = voltIn + InFeedback.ar(inFeedbackBusVoltage);
 			scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
-			scaledFreq = scaledFreq * (2**(voltIn * 2)); // Ajustar la influencia del control de voltaje correctamente.
+			scaledFreq = scaledFreq * (2**(voltIn * 4)); // Ajustar la influencia del control de voltaje correctamente...
+			scaledFreq = scaledFreq.clip(freqMin, freqMax); // Se evita que pueda tener una frecuencia superior a la máxima.
 
 			// Pulse
 			//sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
@@ -98,7 +99,7 @@ S100_Oscillator {
 			Out.ar(outputBus1, sig1 * outVol);
 			Out.ar(outputBus2, sig2 * outVol);
 
-		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil, nil, nil]
+		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil, lag, lag]
 		).add;
 	}
 
