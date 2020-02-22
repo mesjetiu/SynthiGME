@@ -1,4 +1,4 @@
-S100_GUIPanel6 : S100_GUIPanel {
+S100_GUIPanel6 : S100_GUIPanelPatchbay {
 	makeWindow {
 		var rect;
 		var image;
@@ -72,10 +72,29 @@ S100_GUIPanel6 : S100_GUIPanel {
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchC/91/36
 		parameterViews.put(stringOSC, node);
+		nodes.put([nodeCountHor, nodeCountVer], node);
 
 		// Se añaden el view node y sus bound por defecto para resize
 		viewSizes = viewSizes ++ [
 			[node, bounds]
 		];
+	}
+
+	enableNodes { // Enable o disable los nodos según si el sintetizador los usa o no.
+		var option;
+		if (visibleNodes == true, {option = false; visibleNodes = false}, {option = true; visibleNodes = true});
+		nodes.values.do({|node|
+			var coordenates = nodes.findKeyForValue(node);
+			var ver, hor;
+			ver = coordenates[1] - 1;
+			hor = coordenates[0] - 1;
+			if ((synthi100.modulPatchbayVoltage.inputsOutputs[ver] == nil)
+				.or(synthi100.modulPatchbayVoltage.inputsOutputs[hor] == nil), {
+					node.visible_(option);
+				}, {
+					node.visible_(true);
+				}
+			);
+		})
 	}
 }

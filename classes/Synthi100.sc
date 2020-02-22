@@ -324,7 +324,8 @@ Synthi100 {
 				"Synthi100 en ejecución".postln;
 				// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
 				if (guiSC != nil, {
-					guiSC.panels[4].enableNodes(true)
+					guiSC.panels[4].enableNodes(true); // PatchbayAudio
+					guiSC.panels[5].enableNodes(true); // PatchbayVoltage
 				});
 			});
 		}).play;
