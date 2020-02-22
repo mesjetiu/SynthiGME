@@ -90,8 +90,6 @@ S100_GUIPanel6 : S100_GUIPanelPatchbay {
 					if ((synthi100.modulPatchbayVoltage.inputsOutputs[v] == nil)
 						.or(synthi100.modulPatchbayVoltage.inputsOutputs[h+66] == nil), {
 							node.visible_(option);
-						}, {
-							node.visible_(true);
 						}
 					)
 				})
