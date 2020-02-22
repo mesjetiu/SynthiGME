@@ -22,6 +22,7 @@ S100_EnvFreeRun {
 			inputBus,
 			inFeedbackBus,
 			outputBus,
+			outputBusVol,
 			delayTime,
 			attackTime,
 			decayTime,
@@ -30,7 +31,7 @@ S100_EnvFreeRun {
 			envelopeLevel,
 			signalLevel;
 
-			var sig, env;
+			var sig, vol, env;
 			//sig = SinOsc.ar; // pruebas
 			sig = In.ar(inputBus);
 			sig = sig + InFeedback.ar(inFeedbackBus);
@@ -49,13 +50,16 @@ S100_EnvFreeRun {
 				loopNode: 0,
 			).ar(0, gate: generalGate);
 
-			env = env * envelopeLevel;
 
-
-			// Se aplica la envolvente y el nivel (level) a la señal
+			// Se aplica la envolvente a la señal
 			sig = sig * env * signalLevel; // gate tiene lag, para que cuando se envíe valor 0, no se corte bruscamente.
 
+
+			// Se aplica la envolvente al voltage
+			vol = env * envelopeLevel.lag(0.2); // gate tiene lag, para que cuando se envíe valor 0, no se corte bruscamente.
+
 			Out.ar(outputBus, sig);
+			Out.ar(outputBusVol, vol);
 
 		},
 		).add
@@ -74,6 +78,7 @@ S100_EnvFreeRun {
 		inputBus,
 		inFeedbackBus,
 		outputBus,
+		outputBusVol,
 		delayTime,
 		attackTime,
 		decayTime,
@@ -87,6 +92,7 @@ S100_EnvFreeRun {
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
+				outputBusVol: outputBusVol,
 				\delayTime, delayTime,
 				\attackTime, attackTime,
 				\decayTime, decayTime,

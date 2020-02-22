@@ -108,6 +108,16 @@ S100_PatchbayVoltage : S100_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		index = 97; // 3 Envelope Shapers. 97-99
+		envelopeShapers.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\outBus, i.outputBusVol,
+			]);
+			index = index + 1;
+		});
+
 		/*
 		index = 89; // Noise Generators 89 y 90
 		noiseGenerators.do({|i|

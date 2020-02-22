@@ -33,6 +33,7 @@ S100_EnvelopeShaper {
 	var <inputBus; // Entrada de audio.
 	var <inFeedbackBus;
 	var <outputBus; // Salida de audio.
+	var <outputBusVol; // Salida de voltage.
 	var <signalTrigger; // entrada trigger y gate.
 	var <inFeedbackSignalTrigger;
 	var <gateSynth; // Synth para abrir o cerrar gate.
@@ -95,6 +96,7 @@ S100_EnvelopeShaper {
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
+		outputBusVol = Bus.audio(server);
 		signalTrigger = Bus.audio(server);
 		inFeedbackSignalTrigger = Bus.audio(server);
 
@@ -120,6 +122,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
+				outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -137,6 +140,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
+			//	outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -154,6 +158,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
+			//	outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -171,6 +176,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
+			//	outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -188,6 +194,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
+			//	outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
