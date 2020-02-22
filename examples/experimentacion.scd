@@ -1,5 +1,5 @@
 Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
-o =Synthi100(gui:false).run
+o = Synthi100().run
 //Quarks.install("https://github.com/mesjetiu/Synthi100.git")
 
 Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
