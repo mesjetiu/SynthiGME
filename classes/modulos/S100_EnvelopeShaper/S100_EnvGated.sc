@@ -25,6 +25,7 @@ S100_EnvGated {
 			inputBus,
 			inFeedbackBus,
 			outputBus,
+			outputBusVol,
 			delayTime,
 			attackTime,
 			decayTime,
@@ -33,7 +34,7 @@ S100_EnvGated {
 			envelopeLevel,
 			signalLevel;
 
-			var sig, env, gate;
+			var sig, vol, env, gate;
 			gate = In.ar(signalTrigger);
 			gate = gate + InFeedback.ar(inFeedbackSignalTrigger);
 			sig = In.ar(inputBus);
@@ -52,12 +53,16 @@ S100_EnvGated {
 				releaseNode: 3,
 			).ar(0, gate: gate * generalGate);
 
-			env = env * envelopeLevel;
 
-			// Se aplica la envolvente y el nivel (level) a la señal
-			sig = sig * env * signalLevel;
+			// Se aplica la envolvente a la señal
+			sig = sig * env * signalLevel; // gate tiene lag, para que cuando se envíe valor 0, no se corte bruscamente.
+
+
+			// Se aplica la envolvente al voltage
+			vol = env * envelopeLevel.lag(0.2); // gate tiene lag, para que cuando se envíe valor 0, no se corte bruscamente.
 
 			Out.ar(outputBus, sig);
+			Out.ar(outputBusVol, vol);
 
 		},
 		).add;
@@ -78,6 +83,7 @@ S100_EnvGated {
 		inputBus,
 		inFeedbackBus,
 		outputBus,
+		outputBusVol,
 		delayTime,
 		attackTime,
 		decayTime,
@@ -93,6 +99,7 @@ S100_EnvGated {
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
+				\outputBusVol: outputBusVol,
 				\delayTime, delayTime,
 				\attackTime, attackTime,
 				\decayTime, decayTime,

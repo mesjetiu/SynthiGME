@@ -70,7 +70,7 @@ S100_GUIPanel {
 
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
-			keycode.postln;
+		//	keycode.postln;
 			keycode.switch(
 				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizePanel(factor)}, // +

@@ -81,7 +81,7 @@ S100_EnvelopeShaper {
 			var env;
 			env = Env.asr(
 				attackTime: 0.001,
-				sustain: 1,
+				sustainLevel: 1,
 				releaseTime: 0.001,
 			).ar(gate: gate);
 			Out.ar(signalTrigger, env);
@@ -140,7 +140,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
-			//	outputBusVol: outputBusVol,
+				outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -158,7 +158,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
-			//	outputBusVol: outputBusVol,
+				outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -176,7 +176,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
-			//	outputBusVol: outputBusVol,
+				outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -194,7 +194,7 @@ S100_EnvelopeShaper {
 				inputBus: inputBus,
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
-			//	outputBusVol: outputBusVol,
+				outputBusVol: outputBusVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),

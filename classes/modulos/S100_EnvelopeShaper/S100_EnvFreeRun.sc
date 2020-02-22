@@ -92,7 +92,7 @@ S100_EnvFreeRun {
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
-				outputBusVol: outputBusVol,
+				\outputBusVol: outputBusVol,
 				\delayTime, delayTime,
 				\attackTime, attackTime,
 				\decayTime, decayTime,
