@@ -12,7 +12,7 @@ S100_GUIPanel5 : S100_GUIPanelPatchbay {
 		);
 		window.name = "Panel 5";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/panel_5.png");
+		image = Image(installedPath ++ "/classes/GUI/images/panels/panel_5.png");
 		compositeView
 		.setBackgroundImage(image,10)
 		.background_(whiteBackground);

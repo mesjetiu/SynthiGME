@@ -12,7 +12,7 @@ S100_GUIPanel3 : S100_GUIPanel {
 		);
 		window.name = "Panel 3";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/panel_3.png");
+		image = Image(installedPath ++ "/classes/GUI/images/panels/panel_3.png");
 		compositeView.setBackgroundImage(image,10);
 
 		// Los 6 osciladores de la izquierda
