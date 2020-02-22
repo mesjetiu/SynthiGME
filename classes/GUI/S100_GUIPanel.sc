@@ -93,6 +93,7 @@ S100_GUIPanel {
 				},
 				101, { // Tecla e: Hace visibles o invisibles todos los nodos dependiendo de si son posibles de usar en el Synthi100
 					synthi100.guiSC.panels[4].enableNodes;
+					synthi100.guiSC.panels[5].enableNodes;
 				}
 			);
 		};
