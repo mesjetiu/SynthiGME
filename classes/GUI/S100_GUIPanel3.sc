@@ -33,10 +33,15 @@ S100_GUIPanel3 : S100_GUIPanel {
 			top = top + spacing;
 		});
 
-		// Los 3 Noise generators
+		// Los 2 Noise generators
 		left = 32.2;
 		top = 411.5;
 		this.makeNoiseGenerators(compositeView, left, top);
+
+		// El Random voltage generator
+		left = 228;
+		top = 411.5;
+		this.makeRandomGenerator(compositeView, left, top);
 
 
 		// Cuando se hace doble click se hace zoom
@@ -252,5 +257,110 @@ S100_GUIPanel3 : S100_GUIPanel {
 				)
 			};
 		})
+	}
+
+	makeRandomGenerator {|parent, left, top|
+		var size = 35;
+		var spacing = 45;
+		var rect;
+		var mean, variance, voltage1, voltage2, key;
+
+		rect = Rect(left, top, size, size);
+		mean = Knob(parent, rect)
+		.color_([red, black, white, nil])
+		.mode_(\horiz)
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
+		viewSizes = viewSizes.add([mean, rect]);
+
+		left = left + spacing;
+
+		rect = Rect(left, top, size, size);
+		variance = Knob(parent, rect)
+		.color_([red, black, white, nil])
+		.mode_(\horiz)
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
+		viewSizes = viewSizes.add([variance, rect]);
+
+		left = left + spacing;
+
+		rect = Rect(left, top, size, size);
+		voltage1 = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([voltage1, rect]);
+		left = left + spacing;
+
+		rect = Rect(left, top, size, size);
+		voltage2 = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([voltage2, rect]);
+
+		left = left + spacing;
+
+		rect = Rect(left, top, size, size);
+		key = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
+		viewSizes = viewSizes.add([key, rect]);
+
+		// Se añaden al diccionario todos los mandos del Random Voltage Generator para poder cambiar su valor.
+			parameterViews
+			.put("/random/" ++ "/mean", mean)
+			.put("/random/" ++ "/variance", variance)
+			.put("/random/" ++ "/voltage1", voltage1)
+			.put("/random/" ++ "/voltage2", voltage2)
+			.put("/random/" ++ "/key", key);
+
+		// Acciones de los knobs
+			mean.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/random/" ++ "/mean",
+					value: knob.value.linlin(0,1,-5,5),
+					addrForbidden: \GUI,
+				)
+			};
+
+			variance.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/random/" ++ "/variance",
+					value: knob.value.linlin(0,1,-5,5),
+					addrForbidden: \GUI,
+				)
+			};
+
+
+			voltage1.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/random/" ++ "/voltage1",
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+
+			voltage2.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/random/" ++ "/voltage2",
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+
+			key.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/random/" ++ "/key",
+					value: knob.value.linlin(0,1,-5,5),
+					addrForbidden: \GUI,
+				)
+			};
 	}
 }
