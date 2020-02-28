@@ -45,6 +45,13 @@ S100_EnvGated {
 			signalLevel;
 
 			var sig, vol, env, gate;
+			var delayVol;
+
+			delayVol = In.ar(inDelayVol) + InFeedback.ar(inFeedbackDelayVol);
+			delayTime = delayTime * (2**(delayVol * 3));
+			delayTime = delayTime.clip(0.002, 20);
+			delayTime = A2K.kr(delayTime);
+
 			gate = In.ar(signalTrigger);
 			gate = gate + InFeedback.ar(inFeedbackSignalTrigger);
 			sig = In.ar(inputBus);
