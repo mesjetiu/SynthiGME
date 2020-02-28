@@ -7,6 +7,7 @@ Synthi100 {
 	var <modulOscillators;
 	var <modulNoiseGenerators;
 	var <modulRingModulators;
+	var <modulRandomGenerator;
 	var <modulOutputChannels;
 	var <modulPatchbayAudio;
 	var <modulPatchbayVoltage;
@@ -54,6 +55,7 @@ Synthi100 {
 		Class.initClassTree(S100_InputAmplifier);
 		Class.initClassTree(S100_NoiseGenerator);
 		Class.initClassTree(S100_RingModulator);
+		Class.initClassTree(S100_RandomGenerator);
 		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_PatchbayAudio);
 		Class.initClassTree(S100_PatchbayVoltage);
@@ -116,6 +118,7 @@ Synthi100 {
 		S100_Oscillator.addSynthDef;
 		S100_NoiseGenerator.addSynthDef;
 		S100_RingModulator.addSynthDef;
+		S100_RandomGenerator.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
 		S100_PatchbayVoltage.addSynthDef;
@@ -161,6 +164,7 @@ Synthi100 {
 				modulOscillators = 12.collect({S100_Oscillator(server)});
 				modulNoiseGenerators = 2.collect({S100_NoiseGenerator(server)});
 				modulRingModulators = 3.collect({S100_RingModulator(server)});
+				modulRandomGenerator = S100_RandomGenerator(server);
 				modulOutputChannels = 8.collect({S100_OutputChannel(server)});
 				modulPatchbayAudio = S100_PatchbayAudio(server);
 				modulPatchbayVoltage = S100_PatchbayVoltage(server);
@@ -260,6 +264,12 @@ Synthi100 {
 				});
 				"OK\n".post;
 
+				// Random Generator
+				"Random Voltage Generator...".post;
+				modulRandomGenerator.createSynth;
+				while({modulRandomGenerator.synth.isPlaying == false}, {wait(waitTime)});
+				"OK\n".post;
+
 				// Oscillators
 				"Oscillators...".post;
 				modulOscillators.do({|i|
@@ -306,6 +316,7 @@ Synthi100 {
 					inputAmplifiers: modulInputAmplifiers,
 					envelopeShapers: modulEnvelopeShapers,
 					oscillators: modulOscillators,
+					randomGenerator: modulRandomGenerator,
 					outputChannels: modulOutputChannels,
 				);
 				"OK\n".post;
@@ -519,5 +530,6 @@ Synthi100 {
 	close {
 		{Window.closeAll}.defer(0);
 		server.freeAll;
+		modulRandomGenerator.randomRoutine.stop;
 	}
 }

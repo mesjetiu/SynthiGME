@@ -81,7 +81,11 @@
 		\envPeakLevel, 1,
 		\envSustainLevelMax, 1,
 
+		// CONFIGURACIÓN DE RANDOM VOLTAGE GENERATOR************************************************
 
+		\randomTimeMax, 10,
+		\randomTimeMin, 0.01,
+		\randomFactorVol, 1, // Factor por el que se multiplica la salida de cada voltage
 
 
 
