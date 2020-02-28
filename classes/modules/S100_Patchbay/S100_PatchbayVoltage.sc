@@ -19,6 +19,46 @@ S100_PatchbayVoltage : S100_Patchbay{
 
 		// Inputs horizontales (1-66) /////////////////////////////////////////////////////////////
 
+		index = 4; // EnvelopeShapers ocupan los números 4-21 horizontales
+		envelopeShapers.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\inBus, i.signalTrigger,
+				\inFeedbackBus, i.inFeedbackSignalTrigger,
+			]);
+			index = index + 1;
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\inBus, i.inDelayVol,
+				\inFeedbackBus, i.inFeedbackDelayVol,
+			]);
+			index = index + 1;
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\inBus, i.inAttackVol,
+				\inFeedbackBus, i.inFeedbackAttackVol,
+			]);
+			index = index + 1;
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\inBus, i.inDecayVol,
+				\inFeedbackBus, i.inFeedbackDecayVol,
+			]);
+			index = index + 1;
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\inBus, i.inSustainVol,
+				\inFeedbackBus, i.inFeedbackSustainVol,
+			]);
+			index = index + 1;
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.group,
+				\inBus, i.inReleaseVol,
+				\inFeedbackBus, i.inFeedbackReleaseVol,
+			]);
+			index = index + 1;
+		});
+
 		index = 30; // Oscillators ocupan los números 30-41 horizontales
 		12.do({|i|
 			i = oscillators[i];
