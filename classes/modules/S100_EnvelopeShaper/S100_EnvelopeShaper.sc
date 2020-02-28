@@ -34,8 +34,21 @@ S100_EnvelopeShaper {
 	var <inFeedbackBus;
 	var <outputBus; // Salida de audio.
 	var <outputBusVol; // Salida de voltage.
-	var <signalTrigger; // entrada trigger y gate.
+	var <signalTrigger; // entrada trigger y gate. También sirve de "key" en el Control de Voltaje
 	var <inFeedbackSignalTrigger;
+	// buses de entrada de Voltaje
+	var <inDelayVol;
+	var <inFeedbackDelayVol;
+	var <inAttackVol;
+	var <inFeedbackAttackVol;
+	var <inDecayVol;
+	var <inFeedbackDecayVol;
+	var <inSustainVol;
+	var <inFeedbackSustainVol;
+	var <inReleaseVol;
+	var <inFeedbackReleaseVol;
+
+
 	var <gateSynth; // Synth para abrir o cerrar gate.
 
 	// Parámetros correspondientes a los diales del Synthi (todos escalados entre 0 y 10)
@@ -99,6 +112,16 @@ S100_EnvelopeShaper {
 		outputBusVol = Bus.audio(server);
 		signalTrigger = Bus.audio(server);
 		inFeedbackSignalTrigger = Bus.audio(server);
+		inDelayVol = Bus.audio(server);
+		inFeedbackDelayVol = Bus.audio(server);
+		inAttackVol = Bus.audio(server);
+		inFeedbackAttackVol = Bus.audio(server);
+		inDecayVol = Bus.audio(server);
+		inFeedbackDecayVol = Bus.audio(server);
+		inSustainVol = Bus.audio(server);
+		inFeedbackSustainVol = Bus.audio(server);
+		inReleaseVol = Bus.audio(server);
+		inFeedbackReleaseVol = Bus.audio(server);
 
 		envGatedFreeRun = S100_EnvGatedFreeRun(server);
 		envFreeRun = S100_EnvFreeRun(server);
@@ -123,6 +146,16 @@ S100_EnvelopeShaper {
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
 				outputBusVol: outputBusVol,
+				inDelayVol: inDelayVol,
+				inFeedbackDelayVol: inFeedbackDelayVol,
+				inAttackVol: inAttackVol,
+				inFeedbackAttackVol: inFeedbackAttackVol,
+				inDecayVol: inDecayVol,
+				inFeedbackDecayVol: inFeedbackDecayVol,
+				inSustainVol: inSustainVol,
+				inFeedbackSustainVol: inFeedbackSustainVol,
+				inReleaseVol: inReleaseVol,
+				inFeedbackReleaseVol: inFeedbackReleaseVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -141,6 +174,16 @@ S100_EnvelopeShaper {
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
 				outputBusVol: outputBusVol,
+				inDelayVol: inDelayVol,
+				inFeedbackDelayVol: inFeedbackDelayVol,
+				inAttackVol: inAttackVol,
+				inFeedbackAttackVol: inFeedbackAttackVol,
+				inDecayVol: inDecayVol,
+				inFeedbackDecayVol: inFeedbackDecayVol,
+				inSustainVol: inSustainVol,
+				inFeedbackSustainVol: inFeedbackSustainVol,
+				inReleaseVol: inReleaseVol,
+				inFeedbackReleaseVol: inFeedbackReleaseVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -159,6 +202,16 @@ S100_EnvelopeShaper {
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
 				outputBusVol: outputBusVol,
+				inDelayVol: inDelayVol,
+				inFeedbackDelayVol: inFeedbackDelayVol,
+				inAttackVol: inAttackVol,
+				inFeedbackAttackVol: inFeedbackAttackVol,
+				inDecayVol: inDecayVol,
+				inFeedbackDecayVol: inFeedbackDecayVol,
+				inSustainVol: inSustainVol,
+				inFeedbackSustainVol: inFeedbackSustainVol,
+				inReleaseVol: inReleaseVol,
+				inFeedbackReleaseVol: inFeedbackReleaseVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -177,6 +230,16 @@ S100_EnvelopeShaper {
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
 				outputBusVol: outputBusVol,
+				inDelayVol: inDelayVol,
+				inFeedbackDelayVol: inFeedbackDelayVol,
+				inAttackVol: inAttackVol,
+				inFeedbackAttackVol: inFeedbackAttackVol,
+				inDecayVol: inDecayVol,
+				inFeedbackDecayVol: inFeedbackDecayVol,
+				inSustainVol: inSustainVol,
+				inFeedbackSustainVol: inFeedbackSustainVol,
+				inReleaseVol: inReleaseVol,
+				inFeedbackReleaseVol: inFeedbackReleaseVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
@@ -195,6 +258,16 @@ S100_EnvelopeShaper {
 				inFeedbackBus: inFeedbackBus,
 				outputBus: outputBus,
 				outputBusVol: outputBusVol,
+				inDelayVol: inDelayVol,
+				inFeedbackDelayVol: inFeedbackDelayVol,
+				inAttackVol: inAttackVol,
+				inFeedbackAttackVol: inFeedbackAttackVol,
+				inDecayVol: inDecayVol,
+				inFeedbackDecayVol: inFeedbackDecayVol,
+				inSustainVol: inSustainVol,
+				inFeedbackSustainVol: inFeedbackSustainVol,
+				inReleaseVol: inReleaseVol,
+				inFeedbackReleaseVol: inFeedbackReleaseVol,
 				delayTime: this.convertTime(delayTime),
 				attackTime: this.convertTime(attackTime),
 				decayTime: this.convertTime(decayTime),
