@@ -43,6 +43,23 @@ S100_GUINode {
 		view.visible = option;
 	}
 
+	enable_ {|option| // habilita y deshabilita el nodo
+		view.enabled = option;
+		if (option==false, {
+			if(value==1, {
+				view.setBackgroundImage(image2, 10, alpha: 0.3);
+			}, {
+				view.setBackgroundImage(image1, 10, alpha: 0.3);
+			})
+		}, {
+			if(value==1, {
+				view.setBackgroundImage(image2, 10, alpha: 1);
+			}, {
+				view.setBackgroundImage(image1, 10, alpha: 1);
+			})
+		})
+	}
+
 	bounds {
 		^view.bounds;
 	}

@@ -89,7 +89,7 @@ S100_GUIPanel5 : S100_GUIPanelPatchbay {
 				if(node != nil, {
 					if ((synthi100.modulPatchbayAudio.inputsOutputs[v] == nil)
 						.or(synthi100.modulPatchbayAudio.inputsOutputs[h+66] == nil), {
-							node.visible_(option);
+							node.enable_(option);
 						}
 					)
 				})
