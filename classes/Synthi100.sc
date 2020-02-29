@@ -76,6 +76,12 @@ Synthi100 {
 			Out.ar(outBus, sig * vol);
 		}).add;
 
+		SynthDef(\connectionMono, {|outputBus, inputBus, vol|
+			var sig;
+			sig = In.ar(inputBus);
+			Out.ar(outputBus, sig * vol);
+		}).add;
+
 		SynthDef(\connection4, {|outBusL, outBusR, inBusR1, inBusL1, inBusR2, inBusL2, inBusR3, inBusL3, inBusR4, inBusL4, vol|
 			var sigL, sigR;
 			sigL = In.ar([inBusL1, inBusL2, inBusL3, inBusL4]);
@@ -156,6 +162,7 @@ Synthi100 {
 
 				panOutputs1to4Busses = settings[\panOutputs1to4Busses];
 				panOutputs5to8Busses = settings[\panOutputs5to8Busses];
+				individualChannelOutputsBusses = settings[\individualChannelOutputsBusses];
 
 
 				// Módulos.
@@ -184,7 +191,7 @@ Synthi100 {
 						\inBusR2, panOutputs5to8Busses[1],
 						\outBusL, stereoOutBuses[0],
 						\outBusR, stereoOutBuses[1],
-						\vol, 1,
+						\vol, generalVol,
 					], server).register;
 					while({result.isPlaying == false}, {wait(waitTime)});
 					result
@@ -218,7 +225,7 @@ Synthi100 {
 				connectionOut.add({
 					var result = nil;
 					var channels = modulOutputChannels[4..7];
-					result = Synth(\connection4, [
+					result = Synth(\connection4, [ // Las salidas stereo salen postfader
 						\inBusL1, channels[0].outBusL,
 						\inBusR1, channels[0].outBusR,
 						\inBusL2, channels[1].outBusL,
@@ -232,7 +239,20 @@ Synthi100 {
 						\vol, generalVol,
 					], server).register;
 					while({result.isPlaying == false}, {wait(waitTime)});
-					result
+				}.value);
+				"OK\n".post;
+
+				"Conexión de salida de cada canal individual...".post;
+				connectionOut.add({
+					var result = nil;
+					modulOutputChannels.do({|out|
+						result = Synth(\connectionMono, [
+							\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
+							\outputBus, settings[\individualChannelOutputsBusses],
+							\vol, generalVol,
+						], server).register;
+						while({result.isPlaying == false}, {wait(waitTime)});
+					});
 				}.value);
 				"OK\n".post;
 
