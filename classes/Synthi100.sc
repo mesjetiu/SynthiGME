@@ -245,10 +245,10 @@ Synthi100 {
 				"Conexión de salida de cada canal individual...".post;
 				connectionOut.add({
 					var result = nil;
-					modulOutputChannels.do({|out|
+					modulOutputChannels.do({|out, n|
 						result = Synth(\connectionMono, [
 							\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
-							\outputBus, settings[\individualChannelOutputsBusses],
+							\outputBus, settings[\individualChannelOutputsBusses][n],
 							\vol, generalVol,
 						], server).register;
 						while({result.isPlaying == false}, {wait(waitTime)});
