@@ -50,18 +50,18 @@
 		\outLag, 0.2,
 		\outLevelMax, 4,
 		\outHPFreqMin, 10,
-		\outHPFreqMax, 1000,
+		\outHPFreqMax, 400,
 		\outLPFreqMin, 400,
-		\outLPFreqMax, 2000,
+		\outLPFreqMax, 20000,
 
 		// CONFIGURACIÓN DE NOISE GENERATORS********************************************************
 
 		\noiseLag, 0.2,
 		\noiseLevelMax, 2,
 		\noiseHPFreqMin, 10,
-		\noiseHPFreqMax, 1000,
+		\noiseHPFreqMax, 400,
 		\noiseLPFreqMin, 400,
-		\noiseLPFreqMax, 2000,
+		\noiseLPFreqMax, 20000,
 
 		// CONFIGURACIÓN DE INPUT AMPLIFIERS********************************************************
 

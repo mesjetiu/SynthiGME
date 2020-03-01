@@ -8,6 +8,7 @@ S100_OutputChannel {
 	var <server;
 	var <inputBus; // Entrada del amplificador.
 	var <inFeedbackBus; // Entrada de feedback: admite audio del ciclo anterior.
+	var <outputBusBypass; // Salida del amplificador sin procesado (para bus interno del synthi.
 	var <outputBus; // Salida del amplificador.
 	var <outBusL; // Canal izquierdo de la salida stereo.
 	var <outBusR; // Canal derecho de la salida stereo.
@@ -62,7 +63,7 @@ S100_OutputChannel {
 			// Se aplica el paneo
 			#sigPannedL, sigPannedR = Pan2.ar(sig, pan) * on;
 
-			//Out.ar(outputBus, sigIn); // señal que pasa por el canal sin ser procesada (incluso si está en modo off), a modo de bus
+			Out.ar(outputBus, sig); // señal que sale hacia los canales SC sin ser paneada
 			Out.ar(outBusL, sigPannedL);
 			Out.ar(outBusR, sigPannedR);
 		}, [nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]
@@ -71,11 +72,11 @@ S100_OutputChannel {
 		SynthDef(\S100_outputChannelBypass, {
 			arg inputBus,
 			inFeedbackBus,
-			outputBus;
+			outputBusBypass;
 
 			var sig = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 
-			Out.ar(outputBus, sig);
+			Out.ar(outputBusBypass, sig);
 		}
 		).add;
 	}
@@ -86,6 +87,7 @@ S100_OutputChannel {
 	init { arg serv = Server.local;
 		server = serv;
 		outputBus = Bus.audio(server);
+		outputBusBypass = Bus.audio(server);
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
 		outBusL = Bus.audio(server);
@@ -107,7 +109,7 @@ S100_OutputChannel {
 			synthBypass = Synth(\S100_outputChannelBypass, [
 					\inputBus, inputBus,
 					\inFeedbackBus, inFeedbackBus,
-					\outputBus, outputBus,
+					\outputBusBypass, outputBusBypass,
 			], group).register;
 			while({synthBypass.isPlaying == false}, {wait(waitTime)});
 			// se crea el synth principal
