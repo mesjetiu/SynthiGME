@@ -18,10 +18,13 @@ S100_GUIPanel4 : S100_GUIPanel {
 		// Se crean los módulos
 		left = 57;
 		top = 329;
-	//	top = 401;
 		// Envelope Followers
 		this.makeEnvolopeFollowers(compositeView, left, top);
 
+		// Slew Limiters
+		left = left + 164.3;
+		top = 329 + 80;
+		this.makeSlewLimiters(compositeView, left, top);
 
 
 
@@ -44,7 +47,6 @@ S100_GUIPanel4 : S100_GUIPanel {
 
 	makeEnvolopeFollowers{|parent, left, top|
 		var size = 35;
-		var spacing = 46;
 		var rect;
 		var range1, range2;
 
@@ -91,5 +93,33 @@ S100_GUIPanel4 : S100_GUIPanel {
 	}
 
 
+	makeSlewLimiters {|parent, left, top|
+		var size = 35;
+		var rect;
+		var slewRate;
+
+		3.do({|num|
+			rect = Rect(left, top, size, size);
+			slewRate = Knob(parent, rect)
+			.color_([red, black, white, nil])
+			.mode_(\horiz)
+			.step_(step);
+			viewSizes = viewSizes.add([slewRate, rect]);
+
+			// Se añaden al diccionario el mando de Slew Rate para poder cambiar su valor.
+			parameterViews
+			.put("/slew/" ++ num+1 ++ "/rate", slewRate);
+
+			// Acciones a realizar al cambiar manualmente el valor de cada mando
+			slewRate.action = {|knob|
+				synthi100.setParameterOSC(
+					string: "/slew/" ++ num+1 ++ "/rate",
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+			left = left + 55.2;
+		});
+	}
 
 }
