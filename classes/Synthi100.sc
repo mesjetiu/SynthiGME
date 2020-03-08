@@ -194,7 +194,6 @@ Synthi100 {
 						\vol, generalVol,
 					], server).register;
 					while({result.isPlaying == false}, {wait(waitTime)});
-					result
 				}.value
 				);
 				"OK\n".post;
@@ -217,7 +216,6 @@ Synthi100 {
 						\vol, generalVol,
 					], server).register;
 					while({result.isPlaying == false}, {wait(waitTime)});
-					result
 				}.value);
 				"OK\n".post;
 
