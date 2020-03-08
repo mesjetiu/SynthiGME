@@ -14,7 +14,7 @@ S100_SlewLimiter {
 	var <outputBusVol;
 
 	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
-	var <range = 0;
+	var <rate = 0;
 
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
@@ -37,13 +37,13 @@ S100_SlewLimiter {
 			arg inputBusVol,
 			inFeedbackBusVol,
 			outputBusVol,
-			range;
+			rate;
 
 			var sig;
-			//sig = 0; // Limitar la pendiente...
-			sig=In.ar(inputBusVol) + InFeedback.ar(inFeedbackBusVol);
+			sig = In.ar(inputBusVol) + InFeedback.ar(inFeedbackBusVol);
+			sig = Slew.ar(sig, rate, rate);
 
-			Out.ar(outputBusVol, sig); // funciona por ahora como un simple bypass
+			Out.ar(outputBusVol, sig);
 		}).add
 	}
 
@@ -67,7 +67,7 @@ S100_SlewLimiter {
 				\inputBusVol, inputBusVol,
 				\inFeedbackBusVol, inFeedbackBusVol,
 				\outputBusVol, outputBusVol,
-				\range, this.convertRange(range),
+				\rate, this.convertRate(rate),
 			], server).register;
 		});
 	//	this.synthRun;
@@ -87,15 +87,15 @@ S100_SlewLimiter {
 
 	// Conversores de unidades.
 
-	convertRange {|range|
-		^range.linlin(0, 10, settings[\slewRangeMin], settings[\slewRangeMax]);
+	convertRate {|r|
+		^r.linexp(0, 10, 1/0.001, 1/1);//settings[\slewRangeMin], settings[\slewRangeMax]);
 	}
 
 	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
 
-	setRange {|rang|
-			range = rang;
+	setRate {|r|
+			rate = r;
 		//	this.synthRun();
-			synth.set(\range, this.convertRange(rang))
+			synth.set(\rate, this.convertRate(r))
 	}
 }

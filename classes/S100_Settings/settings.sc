@@ -88,7 +88,11 @@
 		\randomFactorVol, 1, // Factor por el que se multiplica la salida de cada voltage
 
 
+		// CONFIGURACIÓN DE SLEW LIMITERS***********************************************************
 
+		\slewRangeMax, 1, // en segundos
+		\slewRangeMin, 0.001,
+		\randomFactorVol, 1, // Factor por el que se multiplica la salida de cada voltage
 
 
 

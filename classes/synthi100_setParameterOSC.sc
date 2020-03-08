@@ -297,11 +297,24 @@
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
 					},
 				);
-
-
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
+
+
+			"slew", { // Ejemplo "/slew/1/range"
+				var index = splitted[2].asInt - 1;
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0],
+					"rate", {
+						modulSlewLimiters[index].setRate(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
 
 			// Si el mensaje es distinto a los casos anteriores, se sale de la función
 			{^this}

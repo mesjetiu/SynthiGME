@@ -108,12 +108,12 @@ S100_GUIPanel4 : S100_GUIPanel {
 
 			// Se añaden al diccionario el mando de Slew Rate para poder cambiar su valor.
 			parameterViews
-			.put("/slew/" ++ num+1 ++ "/rate", slewRate);
+			.put("/slew/" ++ (num+1) ++ "/rate", slewRate);
 
 			// Acciones a realizar al cambiar manualmente el valor de cada mando
 			slewRate.action = {|knob|
 				synthi100.setParameterOSC(
-					string: "/slew/" ++ num+1 ++ "/rate",
+					string: "/slew/" ++ (num+1) ++ "/rate",
 					value: knob.value.linlin(0,1,0,10),
 					addrForbidden: \GUI,
 				)
