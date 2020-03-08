@@ -1,18 +1,19 @@
 S100_PatchbayVoltage : S100_Patchbay{
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, envelopeShapers, oscillators, randomGenerator, outputChannels|
+	connect {|inputAmplifiers, envelopeShapers, oscillators, randomGenerator, slewLimiters, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			inputAmplifiers: inputAmplifiers,
 			envelopeShapers: envelopeShapers,
 			randomGenerator: randomGenerator,
+			slewLimiters: slewLimiters,
 			oscillators: oscillators,
 			outputChannels: outputChannels,
 		);
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, envelopeShapers, oscillators, randomGenerator, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, envelopeShapers, oscillators, randomGenerator, slewLimiters, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -70,8 +71,22 @@ S100_PatchbayVoltage : S100_Patchbay{
 			index = index + 1;
 		});
 
+		index = 54; // Slew Limiters 1, 2 y 3, 42-53
+		slewLimiters.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\inBus, i.inputBusVol,
+				\inFeedbackBus, i.inFeedbackBusVol,
+			]);
+			index = index + 1;
+		});
+		slewLimiters.do({|i|
+			// conectar aquí "Level Control" (por hacer)
+			index = index + 1;
+		});
+
 		// Outputs verticales (67-126) ////////////////////////////////////////////////////////////
-		index = 67; // Inputs de Amplificador del 67-74
+		index = 67; // Inputs de Amplificador 67-74
 		inputAmplifiers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\synth, i.synth,
@@ -80,11 +95,20 @@ S100_PatchbayVoltage : S100_Patchbay{
 			index = index + 1;
 		});
 
-		index = 75; // Output channels del 75-82
+		index = 75; // Output channels 75-82
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\synth, i.group,
 				\outBus, i.outputBus,
+			]);
+			index = index + 1;
+		});
+
+		index = 94; // Slew Limiters 1, 2 y 3, 94-96
+		slewLimiters.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\outBus, i.outputBusVol,
 			]);
 			index = index + 1;
 		});

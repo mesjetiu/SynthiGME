@@ -8,6 +8,7 @@ Synthi100 {
 	var <modulNoiseGenerators;
 	var <modulRingModulators;
 	var <modulRandomGenerator;
+	var <modulSlewLimiters;
 	var <modulOutputChannels;
 	var <modulPatchbayAudio;
 	var <modulPatchbayVoltage;
@@ -56,6 +57,7 @@ Synthi100 {
 		Class.initClassTree(S100_NoiseGenerator);
 		Class.initClassTree(S100_RingModulator);
 		Class.initClassTree(S100_RandomGenerator);
+		Class.initClassTree(S100_SlewLimiter);
 		Class.initClassTree(S100_OutputChannel);
 		Class.initClassTree(S100_PatchbayAudio);
 		Class.initClassTree(S100_PatchbayVoltage);
@@ -125,6 +127,7 @@ Synthi100 {
 		S100_NoiseGenerator.addSynthDef;
 		S100_RingModulator.addSynthDef;
 		S100_RandomGenerator.addSynthDef;
+		S100_SlewLimiter.addSynthDef;
 		S100_OutputChannel.addSynthDef;
 		S100_PatchbayAudio.addSynthDef;
 		S100_PatchbayVoltage.addSynthDef;
@@ -172,6 +175,7 @@ Synthi100 {
 				modulNoiseGenerators = 2.collect({S100_NoiseGenerator(server)});
 				modulRingModulators = 3.collect({S100_RingModulator(server)});
 				modulRandomGenerator = S100_RandomGenerator(server);
+				modulSlewLimiters = 3.collect({S100_SlewLimiter(server)});
 				modulOutputChannels = 8.collect({S100_OutputChannel(server)});
 				modulPatchbayAudio = S100_PatchbayAudio(server);
 				modulPatchbayVoltage = S100_PatchbayVoltage(server);
@@ -288,6 +292,14 @@ Synthi100 {
 				while({modulRandomGenerator.synth.isPlaying == false}, {wait(waitTime)});
 				"OK\n".post;
 
+				// Slew Limiters
+				"Slew Limiters...".post;
+				modulSlewLimiters.do({|i|
+					i.createSynth;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
 				// Oscillators
 				"Oscillators...".post;
 				modulOscillators.do({|i|
@@ -335,6 +347,7 @@ Synthi100 {
 					envelopeShapers: modulEnvelopeShapers,
 					oscillators: modulOscillators,
 					randomGenerator: modulRandomGenerator,
+					slewLimiters: modulSlewLimiters,
 					outputChannels: modulOutputChannels,
 				);
 				"OK\n".post;
