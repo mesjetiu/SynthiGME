@@ -39,6 +39,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		this.makeEnvelopes(compositeView, 38, 238, 59.7);
 		this.makeRingModulators(compositeView, 41.5, 417);
+		this.makeEcho(compositeView, 200, 417);
 
 		this.saveOrigin;
 		this.resizePanel(Window.availableBounds.width/virtualWidth);
@@ -297,6 +298,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 		var rect;
 		var ring1, ring2, ring3;
 
+
 		rect = Rect(left, top, size, size);
 		ring1 = Knob(parent, rect)
 		.color_([white, black, white, nil])
@@ -351,5 +353,54 @@ S100_GUIPanel1 : S100_GUIPanel {
 				addrForbidden: \GUI,
 			)
 		};
+	}
+
+	makeEcho {|parent, left, top|
+		var size = 35;
+		var spacing = 38.5;
+		var rect;
+		var delay, mix, feedback, level;
+
+		left = 301.5;
+		top = 417;
+
+		rect = Rect(left, top, size, size);
+		delay = Knob(parent, rect)
+		.color_([blue, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([delay, rect]);
+
+		left = left + spacing;
+		rect = Rect(left, top, size, size);
+		mix = Knob(parent, rect)
+		.color_([blue, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([mix, rect]);
+
+		left = left + spacing;
+		rect = Rect(left, top, size, size);
+		feedback = Knob(parent, rect)
+		.color_([blue, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([feedback, rect]);
+
+		left = left + spacing;
+		rect = Rect(left, top, size, size);
+		level = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([level, rect]);
+
+		// Se añaden al diccionario todos los mandos.
+		parameterViews
+		.put("/echo/delay", delay)
+		.put("/echo/mix", mix)
+		.put("/echo/feedback", feedback)
+		.put("/echo/level", level);
+
 	}
 }

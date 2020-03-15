@@ -26,18 +26,15 @@ o.guiSC.frontWindows;
 o.guiSC.panels[0].window.front
 o.guiSC.panels[2].parameterVisibility(true)
 
+Slew
 
 
 
+(
+{
 
+    z = Saw.ar(800,mul:0.2);
+    Slew.ar(z,100,100)
 
-[1,2,3].sum
-
-
-
-
-
-
-
-View
-Routine
+}.play
+)
