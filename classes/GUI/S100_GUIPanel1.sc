@@ -402,5 +402,38 @@ S100_GUIPanel1 : S100_GUIPanel {
 		.put("/echo/feedback", feedback)
 		.put("/echo/level", level);
 
+		// Acciones de los knobs
+		delay.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/echo/delay",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		mix.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/echo/mix",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		feedback.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/echo/feedback",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		level.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/echo/level",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
 	}
 }

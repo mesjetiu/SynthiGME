@@ -315,6 +315,31 @@
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
+			"echo", { // Ejemplo "/echo/level"
+				var index = splitted[1].asInt - 1;
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0],
+					"delay", {
+						modulEcho.setDelay(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
+					},
+					"mix", {
+						modulEcho.setMix(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
+					},
+					"feedback", {
+						modulEcho.setFeedback(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"level", {
+						modulEcho.setLevel(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
 
 			// Si el mensaje es distinto a los casos anteriores, se sale de la función
 			{^this}

@@ -1,24 +1,33 @@
 S100_PatchbayAudio : S100_Patchbay{
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, outputChannels|
+	connect {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			inputAmplifiers: inputAmplifiers,
 			envelopeShapers: envelopeShapers,
 			oscillators: oscillators,
 			noiseGenerators: noiseGenerators,
 			ringModulators: ringModulators,
+			echo: echo,
 			outputChannels: outputChannels,
 		);
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
 
 		// Inputs horizontales (1-66) /////////////////////////////////////////////////////////////
+
+		index = 2; // Echo A.D.L.
+		array[index-1] = Dictionary.newFrom(List[
+			\synth, echo.synth,
+			\inBus, echo.inputBus,
+			\inFeedbackBus, echo.inFeedbackBus,
+		]);
+
 		index = 3; // Ring Modulators ocupan los números 3-8 horizontales
 		ringModulators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -123,6 +132,12 @@ S100_PatchbayAudio : S100_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		index = 125; // Echo A.D.L.
+		array[index-1] = Dictionary.newFrom(List[
+			\synth, echo.synth,
+			\outBus, echo.outputBus,
+		]);
 
 		^array;
 	}
