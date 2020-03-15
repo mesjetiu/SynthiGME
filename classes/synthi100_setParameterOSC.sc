@@ -273,7 +273,7 @@
 			},
 
 			"random", { // Ejemplo "/random/mean"
-				switch (splitted[2].postln,
+				switch (splitted[2],
 					"mean", {
 						modulRandomGenerator.setMean(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
@@ -314,7 +314,7 @@
 			},
 
 			"echo", { // Ejemplo "/echo/level"
-				switch (splitted[2].postln,
+				switch (splitted[2],
 					"delay", {
 						modulEcho.setDelay(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});

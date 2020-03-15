@@ -36,7 +36,7 @@ S100_Echo {
 	}
 
 	*addSynthDef {
-		lag = 0.01; //S100_Settings.get[\ringLag];
+		lag = 0.01;
 		SynthDef(\S100_Echo, {
 			arg inputBus,
 			inFeedbackBus,
@@ -46,10 +46,10 @@ S100_Echo {
 			feedback,
 			level;
 
-			var sigIn, sigOut, sigFeedback;
+			var sigIn, sigOut;
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 
-			sigOut = SwitchDelay.ar(sigIn, mix, 1, delay) * level;
+			sigOut = SwitchDelay.ar(sigIn, mix, 1, delay, feedback * 0.7) * level;
 
 			Out.ar(outputBus, sigOut);
 		}).add
