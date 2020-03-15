@@ -272,10 +272,8 @@
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
-			"random", { // Ejemplo "/random/level"
-				var index = splitted[1].asInt - 1;
-				3.do({splitted.removeAt(0)});
-				switch (splitted[0],
+			"random", { // Ejemplo "/random/mean"
+				switch (splitted[2].postln,
 					"mean", {
 						modulRandomGenerator.setMean(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
@@ -316,16 +314,14 @@
 			},
 
 			"echo", { // Ejemplo "/echo/level"
-				var index = splitted[1].asInt - 1;
-				3.do({splitted.removeAt(0)});
-				switch (splitted[0],
+				switch (splitted[2].postln,
 					"delay", {
 						modulEcho.setDelay(value);
-						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"mix", {
 						modulEcho.setMix(value);
-						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"feedback", {
 						modulEcho.setFeedback(value);

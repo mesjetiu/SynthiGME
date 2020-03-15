@@ -8,13 +8,17 @@ S100_Echo {
 	var <synth = nil;
 	var <server;
 
-	// Buses de entrada y salida de voltaje
+	// Buses de entrada y salida de audio
 	var <inputBus;
 	var <inFeedbackBus;
 	var <outputBus;
 
-	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
-	var <rate = 0;
+	// Knobs del módulo
+	var <delay = 0;
+	var <mix = 0;
+	var <feedback = 0;
+	var <level = 0;
+
 
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
@@ -37,15 +41,17 @@ S100_Echo {
 			arg inputBus,
 			inFeedbackBus,
 			outputBus,
-			rate;
+			delay,
+			mix,
+			feedback,
+			level;
 
-			var sig;
-			sig = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
-			sig = Slew.ar(sig, rate, rate);
+			var sigIn, sigOut, sigFeedback;
+			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 
-			sig = SinOsc.ar;
+			sigOut = SwitchDelay.ar(sigIn, mix, 1, delay) * level;
 
-			Out.ar(outputBus, sig);
+			Out.ar(outputBus, sigOut);
 		}).add
 	}
 
@@ -69,7 +75,10 @@ S100_Echo {
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
-				\rate, this.convertRate(rate),
+				\delay, this.convertDelay(delay),
+				\mix, this.convertMix(mix),
+				\feedback, this.convertFeedback(feedback),
+				\level, this.convertLevel(level),
 			], server).register;
 		});
 	//	this.synthRun;
@@ -89,20 +98,45 @@ S100_Echo {
 
 	// Conversores de unidades.
 
-	convertRate {|r|
-		^r.linexp(0, 10, 1/0.001, 1/1);//settings[\slewRangeMin], settings[\slewRangeMax]);
+	convertDelay {|d|
+		^d.linexp(0, 10, 1/0.002, 20);
+	}
+
+	convertMix {|m|
+		^m.linlin(0, 10, 0, 1);
+	}
+
+	convertFeedback {|f|
+		^f.linlin(0, 10, 0, 1);
+	}
+
+	convertLevel {|m|
+		^m.linlin(0, 10, 0, 2);
 	}
 
 	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
 
-	setRate {|r|
-			rate = r;
+	setDelay {|v|
+		delay = v;
 		//	this.synthRun();
-			synth.set(\rate, this.convertRate(r))
+			synth.set(\delay, this.convertDelay(v))
 	}
 
-	setDelay {}
-	setMix {}
-	setFeedback {}
-	setLevel {}
+	setMix {|v|
+		mix = v;
+		//	this.synthRun();
+			synth.set(\mix, this.convertMix(v))
+	}
+
+	setFeedback {|v|
+		feedback = v;
+		//	this.synthRun();
+			synth.set(\feedback, this.convertFeedback(v))
+	}
+
+	setLevel {|v|
+		level = v;
+		//	this.synthRun();
+			synth.set(\level, this.convertLevel(v))
+	}
 }

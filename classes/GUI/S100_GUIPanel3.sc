@@ -315,16 +315,16 @@ S100_GUIPanel3 : S100_GUIPanel {
 
 		// Se añaden al diccionario todos los mandos del Random Voltage Generator para poder cambiar su valor.
 		parameterViews
-		.put("/random/" ++ "/mean", mean)
-		.put("/random/" ++ "/variance", variance)
-		.put("/random/" ++ "/voltage1", voltage1)
-		.put("/random/" ++ "/voltage2", voltage2)
-		.put("/random/" ++ "/key", key);
+		.put("/random" ++ "/mean", mean)
+		.put("/random" ++ "/variance", variance)
+		.put("/random" ++ "/voltage1", voltage1)
+		.put("/random" ++ "/voltage2", voltage2)
+		.put("/random" ++ "/key", key);
 
 		// Acciones de los knobs
 		mean.action = {|knob|
 			synthi100.setParameterOSC(
-				string: "/random/" ++ "/mean",
+				string: "/random" ++ "/mean",
 				value: knob.value.linlin(0,1,-5,5),
 				addrForbidden: \GUI,
 			)
@@ -332,7 +332,7 @@ S100_GUIPanel3 : S100_GUIPanel {
 
 		variance.action = {|knob|
 			synthi100.setParameterOSC(
-				string: "/random/" ++ "/variance",
+				string: "/random" ++ "/variance",
 				value: knob.value.linlin(0,1,-5,5),
 				addrForbidden: \GUI,
 			)
@@ -341,7 +341,7 @@ S100_GUIPanel3 : S100_GUIPanel {
 
 		voltage1.action = {|knob|
 			synthi100.setParameterOSC(
-				string: "/random/" ++ "/voltage1",
+				string: "/random" ++ "/voltage1",
 				value: knob.value.linlin(0,1,0,10),
 				addrForbidden: \GUI,
 			)
@@ -349,7 +349,7 @@ S100_GUIPanel3 : S100_GUIPanel {
 
 		voltage2.action = {|knob|
 			synthi100.setParameterOSC(
-				string: "/random/" ++ "/voltage2",
+				string: "/random" ++ "/voltage2",
 				value: knob.value.linlin(0,1,0,10),
 				addrForbidden: \GUI,
 			)
@@ -357,7 +357,7 @@ S100_GUIPanel3 : S100_GUIPanel {
 
 		key.action = {|knob|
 			synthi100.setParameterOSC(
-				string: "/random/" ++ "/key",
+				string: "/random" ++ "/key",
 				value: knob.value.linlin(0,1,-5,5),
 				addrForbidden: \GUI,
 			)
