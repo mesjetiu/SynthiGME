@@ -26,6 +26,39 @@ o.guiSC.frontWindows;
 o.guiSC.panels[0].window.front
 o.guiSC.panels[2].parameterVisibility(true)
 
+
+
+
+
+
+
+
+
+delay
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Slew
 
 

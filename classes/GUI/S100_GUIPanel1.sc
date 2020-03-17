@@ -37,6 +37,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 			})
 		});
 
+		this.makeFilters(compositeView, 38, 80, 53.4);
 		this.makeEnvelopes(compositeView, 38, 238, 59.7);
 		this.makeRingModulators(compositeView, 41.5, 417);
 		this.makeEcho(compositeView, 200, 417);
@@ -44,6 +45,43 @@ S100_GUIPanel1 : S100_GUIPanel {
 		this.saveOrigin;
 		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		window.front;
+	}
+
+	makeFilters {|parent, left, top, spacing|
+		8.do({|num|
+			this.makeFilter(parent, left, top, num+1);
+			left = left + spacing;
+		})
+	}
+
+	makeFilter {|parent, left, top, num|
+		var size = 35;
+		var spacing = 50;
+		var rect;
+		var frequency, response, level;
+
+		rect = Rect(left, top, size, size);
+		frequency = Knob(parent, rect)
+		.color_([blue, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([frequency, rect]);
+
+		top = top + spacing;
+		rect = Rect(left, top, size, size);
+		response = Knob(parent, rect)
+		.color_([yellow, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([response, rect]);
+
+		top = top + spacing;
+		rect = Rect(left, top, size, size);
+		level = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\horiz)
+		.step_(step);
+		viewSizes = viewSizes.add([level, rect]);
 	}
 
 	makeEnvelopes {|parent, left, top, spacing|
