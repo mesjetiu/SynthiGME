@@ -35,6 +35,6 @@ S100_HPFilter : S100_Filter {
 				\outVol, outVol,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
-	//	this.synthRun;
+		this.synthRun;
 	}
 }

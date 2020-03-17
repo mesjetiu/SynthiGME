@@ -93,7 +93,7 @@ S100_FilterBank {
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {|i|
 		var outputTotal = outVol * bands[i];
-		if (outputTotal == 0, {
+		if (outputTotal.postln == 0, {
 			synths[i].run(false);
 		}, {
 			synths[i].run(true);

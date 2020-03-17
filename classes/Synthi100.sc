@@ -292,7 +292,7 @@ Synthi100 {
 				"OK\n".post;
 
 				// Filters
-				"Filters...".post;
+				"Octave Filter Bank...".post;
 				modulFilterBank.do({|i|
 					i.createSynth;
 					while({i.group.isPlaying == false}, {wait(waitTime)});
@@ -353,7 +353,7 @@ Synthi100 {
 
 				// Input Amplifier
 				inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
-				"Input Amplifiers...".post;
+				"Input Amplifier Level...".post;
 				modulInputAmplifiers.do({|i|
 					i.createSynth;
 					while({i.synth.isPlaying == false}, {wait(waitTime)});

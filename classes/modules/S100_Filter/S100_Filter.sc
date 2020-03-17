@@ -80,19 +80,19 @@ S100_Filter {
 
 	setFrequency {|f|
 		frequency = f;
-	//	this.synthRun();
+		this.synthRun();
 		synth.set(\frequency, this.convertFrequency(f))
 	}
 
 	setResponse {|r|
 		response = r;
-	//	this.synthRun();
+		this.synthRun();
 		synth.set(\response, this.convertResponse(r))
 	}
 
 	setLevel {|l|
 		level = l;
-	//	this.synthRun();
+		this.synthRun();
 		synth.set(\level, this.convertLevel(l))
 	}
 }
