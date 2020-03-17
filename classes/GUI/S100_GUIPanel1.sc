@@ -82,6 +82,38 @@ S100_GUIPanel1 : S100_GUIPanel {
 		.mode_(\horiz)
 		.step_(step);
 		viewSizes = viewSizes.add([level, rect]);
+
+		// Se añaden al diccionario todos los mandos para poder cambiar su valor.
+		parameterViews
+		.put("/filter/" ++ num ++ "/frequency", frequency)
+		.put("/filter/" ++ num ++ "/response", response)
+		.put("/filter/" ++ num ++ "/level", level);
+
+		// Acciones de los knobs
+
+		frequency.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/filter/" ++ num ++ "/frequency",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		response.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/filter/" ++ num ++ "/frequency",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		level.action = {|knob|
+			synthi100.setParameterOSC(
+				string: "/filter/" ++ num ++ "/frequency",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
 	}
 
 	makeEnvelopes {|parent, left, top, spacing|

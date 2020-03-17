@@ -1,9 +1,10 @@
 S100_PatchbayAudio : S100_Patchbay{
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	connect {|inputAmplifiers, filters, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			inputAmplifiers: inputAmplifiers,
+			filters: filters,
 			envelopeShapers: envelopeShapers,
 			oscillators: oscillators,
 			noiseGenerators: noiseGenerators,
@@ -14,7 +15,7 @@ S100_PatchbayAudio : S100_Patchbay{
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, filters, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -62,6 +63,16 @@ S100_PatchbayAudio : S100_Patchbay{
 			index = index + 1;
 		});
 
+		index = 15; // Filters ocupan los números 15-22
+		filters.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\inBus, i.inputBus,
+				\inFeedbackBus, i.inFeedbackBus,
+			]);
+			index = index + 1;
+		});
+
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -72,7 +83,7 @@ S100_PatchbayAudio : S100_Patchbay{
 			index = index + 1;
 		});
 
-		// Outputs verticales (67-126) ////////////////////////////////////////////////////////////
+		// Outputs verticales (67-126) ///////////////////////////////////////////////////////////////////////////////////////////
 		index = 67; // Inputs de Amplificador del 67-74
 		inputAmplifiers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -111,6 +122,15 @@ S100_PatchbayAudio : S100_Patchbay{
 			array[index-1] = Dictionary.newFrom(List[ // Pulse y Triangle
 				\synth, i.synth,
 				\outBus, i.outputBus2,
+			]);
+			index = index + 1;
+		});
+
+		index = 110; // Filters ocupan los números 110-117
+		filters.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\synth, i.synth,
+				\outBus, i.outputBus,
 			]);
 			index = index + 1;
 		});

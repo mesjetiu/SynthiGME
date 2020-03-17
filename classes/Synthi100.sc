@@ -3,6 +3,7 @@ Synthi100 {
 
 	// Módulos que incluye:
 	var <modulInputAmplifiers;
+	var <modulFilters;
 	var <modulEnvelopeShapers;
 	var <modulOscillators;
 	var <modulNoiseGenerators;
@@ -54,6 +55,7 @@ Synthi100 {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(S100_Settings);
 		Class.initClassTree(S100_Oscillator);
+		Class.initClassTree(S100_Filter);
 		Class.initClassTree(S100_InputAmplifier);
 		Class.initClassTree(S100_NoiseGenerator);
 		Class.initClassTree(S100_RingModulator);
@@ -124,6 +126,7 @@ Synthi100 {
 		// Se añaden al servidor las declaracines SynthDefs
 		Synthi100.addSynthDef;
 		S100_InputAmplifier.addSynthDef;
+		S100_Filter.addSynthDef;
 		S100_EnvelopeShaper.addSynthDef;
 		S100_Oscillator.addSynthDef;
 		S100_NoiseGenerator.addSynthDef;
@@ -172,6 +175,7 @@ Synthi100 {
 
 
 				// Módulos.
+				modulFilters = 8.collect({S100_Filter(server)});
 				modulInputAmplifiers = 8.collect({S100_InputAmplifier(server)});
 				modulEnvelopeShapers = 3.collect({S100_EnvelopeShaper(server)});
 				modulOscillators = 12.collect({S100_Oscillator(server)});
@@ -274,6 +278,14 @@ Synthi100 {
 				});
 				"OK\n".post;
 
+				// Filters
+				"Filters...".post;
+				modulFilters.do({|i|
+					i.createSynth;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
 				// Ring Modulators
 				"Ring Modulators...".post;
 				modulRingModulators.do({|i|
@@ -342,6 +354,7 @@ Synthi100 {
 				"Conexiones en Patchbay de audio...".post;
 				modulPatchbayAudio.connect(
 					inputAmplifiers: modulInputAmplifiers,
+					filters: modulFilters,
 					envelopeShapers: modulEnvelopeShapers,
 					oscillators: modulOscillators,
 					noiseGenerators: modulNoiseGenerators,
