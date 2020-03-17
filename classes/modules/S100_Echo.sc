@@ -81,12 +81,12 @@ S100_Echo {
 				\level, this.convertLevel(level),
 			], server).register;
 		});
-	//	this.synthRun;
+		this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun { // Dejo esta función aunque no se va a usar. Por ahora no hay manera de saber que no hay output.
-		var outputTotal = 1;
+		var outputTotal = level;
 		if (outputTotal == 0, {
 			running = false;
 			synth.run(false);
@@ -118,25 +118,22 @@ S100_Echo {
 
 	setDelay {|v|
 		delay = v;
-		//	this.synthRun();
 			synth.set(\delay, this.convertDelay(v))
 	}
 
 	setMix {|v|
 		mix = v;
-		//	this.synthRun();
 			synth.set(\mix, this.convertMix(v))
 	}
 
 	setFeedback {|v|
 		feedback = v;
-		//	this.synthRun();
 			synth.set(\feedback, this.convertFeedback(v))
 	}
 
 	setLevel {|v|
 		level = v;
-		//	this.synthRun();
+			this.synthRun();
 			synth.set(\level, this.convertLevel(v))
 	}
 }
