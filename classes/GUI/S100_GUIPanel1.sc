@@ -101,7 +101,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		response.action = {|knob|
 			synthi100.setParameterOSC(
-				string: "/filter/" ++ num ++ "/frequency",
+				string: "/filter/" ++ num ++ "/response",
 				value: knob.value.linlin(0,1,0,10),
 				addrForbidden: \GUI,
 			)
@@ -109,7 +109,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 
 		level.action = {|knob|
 			synthi100.setParameterOSC(
-				string: "/filter/" ++ num ++ "/frequency",
+				string: "/filter/" ++ num ++ "/level",
 				value: knob.value.linlin(0,1,0,10),
 				addrForbidden: \GUI,
 			)

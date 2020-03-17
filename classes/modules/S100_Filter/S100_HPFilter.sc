@@ -1,21 +1,24 @@
 S100_HPFilter : S100_Filter {
 
 	*addSynthDef {
-		lag = 0.01; //= S100_Settings.get[\ringLag];
+		lag = 0.2; //= S100_Settings.get[\ringLag];
 		SynthDef(\S100_HPFilter, {
 			arg inputBus,
 			inFeedbackBus,
 			outputBus,
+			frequency,
+			response,
 			level,
 			outVol;
 
-			var sig;
-			sig= In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
+			var sigIn, sigOut;
+			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 
-			sig = SinOsc.ar(660); // Salida de prueba
+			sigIn = sigIn + WhiteNoise.ar(0.001); // Ruido no audible para poder crear sonido sin entrada
+			sigOut = BHiPass.ar(sigIn, frequency, response) * level;
 
-			Out.ar(outputBus, sig);
-		}, [nil, nil, nil, lag, lag]
+			Out.ar(outputBus, sigOut);
+		}, [nil, nil, nil, lag, lag, lag, lag]
 		).add
 	}
 
@@ -26,6 +29,8 @@ S100_HPFilter : S100_Filter {
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
+				\frequency, frequency,
+				\response, response,
 				\level, this.convertLevel(level),
 				\outVol, outVol,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"

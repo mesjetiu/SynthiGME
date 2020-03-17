@@ -11,6 +11,8 @@ S100_Filter {
 	var <outputBus; // Salida
 
 	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
+	var <frequency = 0;
+	var <response = 1;
 	var <level = 0;
 
 	// Otros atributos de instancia
@@ -62,19 +64,35 @@ S100_Filter {
 
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
 
-	convertLevel {|level|
-		^level.linlin(0, 10, 0, settings[\ringLevelMax]);
+	convertFrequency {|f|
+		^f.linexp(0, 10, 5, 20000); // Datos tomados del Synthi 100 (1971)
+	}
+
+	convertResponse {|r|
+		^r.linexp(0, 10, 1, 0.000001);
+	}
+
+	convertLevel {|l|
+		^l.linlin(0, 10, 0.000001, 1);
 	}
 
 	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
 
+	setFrequency {|f|
+		frequency = f;
+	//	this.synthRun();
+		synth.set(\frequency, this.convertFrequency(f))
+	}
 
-	setLevel {|lev|
-		if((lev>=0).and(lev<=10), {
-			level = lev;
-			this.synthRun();
-			synth.set(\level, this.convertLevel(lev))
-		}, {
-			("S100_RingModulator/setLevel: " + lev + " no es un valor entre 0 y 1").postln});
+	setResponse {|r|
+		response = r;
+	//	this.synthRun();
+		synth.set(\response, this.convertResponse(r))
+	}
+
+	setLevel {|l|
+		level = l;
+	//	this.synthRun();
+		synth.set(\level, this.convertLevel(l))
 	}
 }
