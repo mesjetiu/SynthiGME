@@ -126,7 +126,8 @@ Synthi100 {
 		// Se añaden al servidor las declaracines SynthDefs
 		Synthi100.addSynthDef;
 		S100_InputAmplifier.addSynthDef;
-		S100_Filter.addSynthDef;
+		S100_LPFilter.addSynthDef;
+		S100_HPFilter.addSynthDef;
 		S100_EnvelopeShaper.addSynthDef;
 		S100_Oscillator.addSynthDef;
 		S100_NoiseGenerator.addSynthDef;
@@ -175,7 +176,7 @@ Synthi100 {
 
 
 				// Módulos.
-				modulFilters = 8.collect({S100_Filter(server)});
+				modulFilters = 4.collect({S100_LPFilter(server)}) ++ 4.collect({S100_HPFilter(server)});
 				modulInputAmplifiers = 8.collect({S100_InputAmplifier(server)});
 				modulEnvelopeShapers = 3.collect({S100_EnvelopeShaper(server)});
 				modulOscillators = 12.collect({S100_Oscillator(server)});

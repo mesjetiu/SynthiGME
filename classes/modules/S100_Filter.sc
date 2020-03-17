@@ -1,4 +1,6 @@
 S100_Filter {
+	// Esta clase ha de ser heredada por S100_LPFilter y S100_HPFilter. Ambas clases han de sobrescribir *addSynthDef y this.createSynth
+
 	// Synth de la instancia
 	var <synth = nil;
 	var <server;
@@ -26,23 +28,7 @@ S100_Filter {
 		^super.new.init(server);
 	}
 
-	*addSynthDef {
-		lag = 0.01; //= S100_Settings.get[\ringLag];
-		SynthDef(\S100_Filter, {
-			arg inputBus,
-			inFeedbackBus,
-			outputBus,
-			level,
-			outVol;
-
-			var sig;
-			sig= In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
-
-			sig = SinOsc.ar; // Salida de prueba
-
-			Out.ar(outputBus, sig);
-		}, [nil, nil, nil, lag, lag]
-		).add
+	*addSynthDef { // Esta función ha de ser sobrescrita.
 	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
@@ -59,17 +45,7 @@ S100_Filter {
 	}
 
 	// Crea el Synth en el servidor
-	createSynth {
-		if(synth.isPlaying==false, {
-			synth = Synth(\S100_Filter, [
-				\inputBus, inputBus,
-				\inFeedbackBus, inFeedbackBus,
-				\outputBus, outputBus,
-				\level, this.convertLevel(level),
-				\outVol, outVol,
-			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
-		});
-	//	this.synthRun;
+	createSynth { // Este método ha de ser sobrescrito
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
