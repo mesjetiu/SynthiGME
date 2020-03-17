@@ -29,8 +29,8 @@ S100_LPFilter : S100_Filter {
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\outputBus, outputBus,
-				\frequency, frequency,
-				\response, response,
+				\frequency, this.convertFrequency(frequency),
+				\response, this.convertResponse(response),
 				\level, this.convertLevel(level),
 				\outVol, outVol,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"

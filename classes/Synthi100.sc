@@ -4,6 +4,7 @@ Synthi100 {
 	// Módulos que incluye:
 	var <modulInputAmplifiers;
 	var <modulFilters;
+	var <modulFilterBank;
 	var <modulEnvelopeShapers;
 	var <modulOscillators;
 	var <modulNoiseGenerators;
@@ -56,6 +57,7 @@ Synthi100 {
 		Class.initClassTree(S100_Settings);
 		Class.initClassTree(S100_Oscillator);
 		Class.initClassTree(S100_Filter);
+		Class.initClassTree(S100_FilterBank);
 		Class.initClassTree(S100_InputAmplifier);
 		Class.initClassTree(S100_NoiseGenerator);
 		Class.initClassTree(S100_RingModulator);
@@ -128,6 +130,7 @@ Synthi100 {
 		S100_InputAmplifier.addSynthDef;
 		S100_LPFilter.addSynthDef;
 		S100_HPFilter.addSynthDef;
+		S100_FilterBank.addSynthDef;
 		S100_EnvelopeShaper.addSynthDef;
 		S100_Oscillator.addSynthDef;
 		S100_NoiseGenerator.addSynthDef;
@@ -177,6 +180,7 @@ Synthi100 {
 
 				// Módulos.
 				modulFilters = 4.collect({S100_LPFilter(server)}) ++ 4.collect({S100_HPFilter(server)});
+				modulFilterBank = S100_FilterBank(server);
 				modulInputAmplifiers = 8.collect({S100_InputAmplifier(server)});
 				modulEnvelopeShapers = 3.collect({S100_EnvelopeShaper(server)});
 				modulOscillators = 12.collect({S100_Oscillator(server)});
@@ -287,6 +291,14 @@ Synthi100 {
 				});
 				"OK\n".post;
 
+				// Filters
+				"Filters...".post;
+				modulFilterBank.do({|i|
+					i.createSynth;
+					while({i.group.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
 				// Ring Modulators
 				"Ring Modulators...".post;
 				modulRingModulators.do({|i|
@@ -336,9 +348,6 @@ Synthi100 {
 				modulEnvelopeShapers.do({|i|
 					i.createSynth;
 					while({i.group.isPlaying == false}, {wait(waitTime)});
-					while({i.envFreeRun.synth.isPlaying == false}, {wait(waitTime)});
-					while({i.envGatedFreeRun.synth.isPlaying == false}, {wait(waitTime)});
-					while({i.gateSynth.isPlaying == false}, {wait(waitTime)});
 				});
 				"OK\n".post;
 
