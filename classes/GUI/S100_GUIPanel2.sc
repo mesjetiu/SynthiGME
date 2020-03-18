@@ -2,6 +2,7 @@ S100_GUIPanel2 : S100_GUIPanel {
 	makeWindow {
 		var rect;
 		var image;
+		id = 1;
 		super.makeWindow;
 		rect = Rect(
 			left: Window.availableBounds.width/4,

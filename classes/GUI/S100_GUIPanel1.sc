@@ -15,6 +15,7 @@ S100_GUIPanel1 : S100_GUIPanel {
 	makeWindow {
 		var rect;
 		var image;
+		id = 0;
 		super.makeWindow;
 		rect = Rect(
 			left: 0,

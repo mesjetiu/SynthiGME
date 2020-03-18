@@ -3,6 +3,7 @@ S100_GUIPanel5 : S100_GUIPanelPatchbay {
 	makeWindow {
 		var rect;
 		var image;
+		id = 4;
 		super.makeWindow;
 		rect = Rect(
 			left: 0,

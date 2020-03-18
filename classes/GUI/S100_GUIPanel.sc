@@ -1,5 +1,6 @@
 S100_GUIPanel {
 
+	var <id;
 	var <window;
 	var <compositeView;
 	var viewSizes;
@@ -9,6 +10,7 @@ S100_GUIPanel {
 	var rectCompositeView;
 	var virtualWidth = 1920; // Todos las Views usan unidades de medida en relación a esta anchura.
 	var origin; // El tamaño y posición original de la ventana. Para volver a ella cuando se quiera
+	var <>hasFocus; // booleano. Solo un panel tendrá el foco (para zoom)
 
 	// Cantidad que varían los valores de incremento y decremento usando el ratón
 	var stepDefault = 0.001;
@@ -43,6 +45,7 @@ S100_GUIPanel {
 
 	init {|synthi, parameters|
 		synthi100 = synthi;
+		hasFocus = false;
 		parameterViews = parameters;
 		installedPath = Quarks.installedPaths.select({|path| "Synthi100".matchRegexp(path)})[0];
 
@@ -70,21 +73,21 @@ S100_GUIPanel {
 
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
-		//	keycode.postln;
+			//	keycode.postln;
 			keycode.switch(
 				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
-				65451, {this.resizePanel(factor)}, // +
-				65453, {this.resizePanel(1/factor)}, // -
-				43, {this.resizePanel(factor)}, // + (en mi portatil Slimbook)
-				45, {this.resizePanel(1/factor)}, // - (en mi portatil Slimbook)
+				65451, {this.resizeFocusedPanel(factor)}, // +
+				65453, {this.resizeFocusedPanel(1/factor)}, // -
+				43, {this.resizeFocusedPanel(factor)}, // + (en mi portatil Slimbook)
+				45, {this.resizeFocusedPanel(1/factor)}, // - (en mi portatil Slimbook)
 				102, {synthi100.guiSC.frontWindows}, // f (front) Todas las ventanas al frente
-				49, {synthi100.guiSC.panels[0].window.front}, // Tecla 1: Panel 1 al frente
-				50, {synthi100.guiSC.panels[1].window.front}, // Tecla 2: Panel 2 al frente
-				51, {synthi100.guiSC.panels[2].window.front}, // Tecla 3: Panel 3 al frente
-				52, {synthi100.guiSC.panels[3].window.front}, // Tecla 4: Panel 4 al frente
-				53, {synthi100.guiSC.panels[4].window.front}, // Tecla 5: Panel 5 al frente
-				54, {synthi100.guiSC.panels[5].window.front}, // Tecla 6: Panel 6 al frente
-				55, {synthi100.guiSC.panels[6].window.front}, // Tecla 7: Panel 7 al frente
+				49, {synthi100.guiSC.panels[0].window.front; this.focus(0)}, // Tecla 1: Panel 1 al frente
+				50, {synthi100.guiSC.panels[1].window.front; this.focus(1)}, // Tecla 2: Panel 2 al frente
+				51, {synthi100.guiSC.panels[2].window.front; this.focus(2)}, // Tecla 3: Panel 3 al frente
+				52, {synthi100.guiSC.panels[3].window.front; this.focus(3)}, // Tecla 4: Panel 4 al frente
+				53, {synthi100.guiSC.panels[4].window.front; this.focus(4)}, // Tecla 5: Panel 5 al frente
+				54, {synthi100.guiSC.panels[5].window.front; this.focus(5)}, // Tecla 6: Panel 6 al frente
+				55, {synthi100.guiSC.panels[6].window.front; this.focus(6)}, // Tecla 7: Panel 7 al frente
 				111, {this.goToOrigin}, // Tecla O: Panel a posición y tamaño original
 				79, {// Tecla o: Todos los Paneles a posición y tamaño original
 					synthi100.guiSC.panels.do({|panel|
@@ -98,9 +101,32 @@ S100_GUIPanel {
 			);
 		};
 
+		window.view.mouseDownAction = {
+			this.focus;
+		};
+
 		viewSizes = [];
 		viewSizes = viewSizes.add([window, rectWindow]);
 		viewSizes = viewSizes.add([compositeView, rectCompositeView]);
+	}
+
+	resizeFocusedPanel {|factor|
+		synthi100.guiSC.panels.do({|panel|
+			if (panel.hasFocus == true, {
+				panel.resizePanel(factor);
+				^this;
+			})
+		})
+	}
+
+	focus {arg numPanel = id;
+		synthi100.guiSC.panels.do({|panel, i|
+			if (i == numPanel, {
+				panel.hasFocus = true;
+			}, {
+				panel.hasFocus = false;
+			})
+		})
 	}
 
 
