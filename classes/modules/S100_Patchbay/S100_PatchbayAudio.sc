@@ -1,10 +1,11 @@
 S100_PatchbayAudio : S100_Patchbay{
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, filters, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	connect {|inputAmplifiers, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			inputAmplifiers: inputAmplifiers,
 			filters: filters,
+			filterBank: filterBank,
 			envelopeShapers: envelopeShapers,
 			oscillators: oscillators,
 			noiseGenerators: noiseGenerators,
@@ -15,7 +16,7 @@ S100_PatchbayAudio : S100_Patchbay{
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, filters, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -73,6 +74,13 @@ S100_PatchbayAudio : S100_Patchbay{
 			index = index + 1;
 		});
 
+		index = 23; // Filter Bank, número 23
+		array[index-1] = Dictionary.newFrom(List[
+			\synth, filterBank.group,
+			\inBus, filterBank.inputBus,
+			\inFeedbackBus, filterBank.inFeedbackBus,
+		]);
+
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -125,6 +133,12 @@ S100_PatchbayAudio : S100_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		index = 109; // Filter Bank, número 109
+		array[index-1] = Dictionary.newFrom(List[
+			\synth, filterBank.group,
+			\outBus, filterBank.outputBus,
+		]);
 
 		index = 110; // Filters ocupan los números 110-117
 		filters.do({|i|

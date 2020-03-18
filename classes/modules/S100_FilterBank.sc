@@ -14,7 +14,7 @@ S100_FilterBank {
 	var <bands; // Array con el valor de cada banda (0-10)
 
 	// Otros atributos de instancia
-	var <outVol = 1;
+	var <outVol = 2;
 	var pauseRoutine; // Array de rutinas de pausado de los Synths
 	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar settings;

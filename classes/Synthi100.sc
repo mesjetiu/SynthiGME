@@ -365,6 +365,7 @@ Synthi100 {
 				modulPatchbayAudio.connect(
 					inputAmplifiers: modulInputAmplifiers,
 					filters: modulFilters,
+					filterBank: modulFilterBank,
 					envelopeShapers: modulEnvelopeShapers,
 					oscillators: modulOscillators,
 					noiseGenerators: modulNoiseGenerators,
@@ -592,6 +593,7 @@ Synthi100 {
 		^data;
 	}
 
+	// Libera todos los Synths del servidor y cierra la GUI
 	close {
 		{Window.closeAll}.defer(0);
 		server.freeAll;

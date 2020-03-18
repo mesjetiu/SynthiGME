@@ -235,7 +235,8 @@
 					},
 					"selector", {
 						modulEnvelopeShapers[index].setSelector(value);
-						if(guiSC.running, {{guiSC.parameterViews[string].value = S100_GUIPanel1.selectorValuesConvert(value)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value
+							= S100_GUIPanel1.selectorValuesConvert(value)}.defer(0)});
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
@@ -333,6 +334,46 @@
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
+
+			"filterBank", { // Ejemplo "/echo/level"
+				switch (splitted[2],
+					"63", {
+						modulFilterBank.setBand63(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"125", {
+						modulFilterBank.setBand125(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"250", {
+						modulFilterBank.setBand250(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"500", {
+						modulFilterBank.setBand500(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"1000", {
+						modulFilterBank.setBand1000(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"2000", {
+						modulFilterBank.setBand2000(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"4000", {
+						modulFilterBank.setBand4000(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"8000", {
+						modulFilterBank.setBand8000(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
 
 			"echo", { // Ejemplo "/echo/level"
 				switch (splitted[2],

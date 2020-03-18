@@ -25,11 +25,37 @@ S100_GUIPanel2 : S100_GUIPanel {
 			})
 		});
 
+		this.makeFilterBank(compositeView, 31.2, 312);
+
 		this.makeInputAmplifiers(compositeView, 31.2, 367);
 
 		this.saveOrigin;
 		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		window.front;
+	}
+
+	makeFilterBank {|parent, left, top|
+		var size = 35;
+		var spacing = 53.6;
+		var rect;
+		8.do({|num|
+			var knob;
+			rect = Rect(left, top, size, size);
+			knob = Knob(parent, rect)
+			.color_([blue, black, white, nil])
+			.mode_(\horiz)
+			.step_(step);
+			viewSizes = viewSizes.add([knob, rect]);
+			parameterViews.put("/filterBank/" ++ (62.5*(2**(num))).ceil, knob); // Ejemplo: /filterBank/4000
+			knob.action = {|knob|
+				synthi100.setParameterOSC(
+					string:"/filterBank/" ++ (62.5*(2**(num))).ceil,
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+			left = left + spacing;
+		});
 	}
 
 	makeInputAmplifiers {|parent, left, top|
