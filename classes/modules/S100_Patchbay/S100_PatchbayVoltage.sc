@@ -23,36 +23,42 @@ S100_PatchbayVoltage : S100_Patchbay{
 		index = 4; // EnvelopeShapers ocupan los números 4-21 horizontales
 		envelopeShapers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.signalTrigger,
 				\inFeedbackBus, i.inFeedbackSignalTrigger,
 			]);
 			index = index + 1;
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.inDelayVol,
 				\inFeedbackBus, i.inFeedbackDelayVol,
 			]);
 			index = index + 1;
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.inAttackVol,
 				\inFeedbackBus, i.inFeedbackAttackVol,
 			]);
 			index = index + 1;
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.inDecayVol,
 				\inFeedbackBus, i.inFeedbackDecayVol,
 			]);
 			index = index + 1;
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.inSustainVol,
 				\inFeedbackBus, i.inFeedbackSustainVol,
 			]);
 			index = index + 1;
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.inReleaseVol,
 				\inFeedbackBus, i.inFeedbackReleaseVol,
@@ -64,6 +70,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 		12.do({|i|
 			i = oscillators[i];
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\inBus, i.inputBusVoltage,
 				\inFeedbackBus, i.inFeedbackBusVoltage,
@@ -74,6 +81,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 		index = 54; // Slew Limiters 1, 2 y 3, 42-53
 		slewLimiters.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\inBus, i.inputBusVol,
 				\inFeedbackBus, i.inFeedbackBusVol,
@@ -89,6 +97,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 		index = 67; // Inputs de Amplificador 67-74
 		inputAmplifiers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus,
 			]);
@@ -98,6 +107,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 		index = 75; // Output channels 75-82
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\outBus, i.outputBus,
 			]);
@@ -107,6 +117,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 		index = 94; // Slew Limiters 1, 2 y 3, 94-96
 		slewLimiters.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBusVol,
 			]);
@@ -117,11 +128,13 @@ S100_PatchbayVoltage : S100_Patchbay{
 		3.do({|i|
 			i = oscillators[i + 9];
 			array[index-1] = Dictionary.newFrom(List[ // Sine y Saw
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus1,
 			]);
 			index = index + 1;
 			array[index-1] = Dictionary.newFrom(List[ // Pulse y Triangle
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus2,
 			]);
@@ -130,16 +143,19 @@ S100_PatchbayVoltage : S100_Patchbay{
 
 		index = 89; // Random Voltage Generator, ocupa 89-91
 		array[index-1] = Dictionary.newFrom(List[
+			\modul, randomGenerator,
 			\synth, randomGenerator.synth,
 			\outBus, randomGenerator.outputBusKey,
 		]);
 		index = index + 1;
 		array[index-1] = Dictionary.newFrom(List[
+			\modul, randomGenerator,
 			\synth, randomGenerator.synth,
 			\outBus, randomGenerator.outputBusVoltage1,
 		]);
 		index = index + 1;
 		array[index-1] = Dictionary.newFrom(List[
+			\modul, randomGenerator,
 			\synth, randomGenerator.synth,
 			\outBus, randomGenerator.outputBusVoltage2,
 		]);
@@ -147,6 +163,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 		index = 97; // 3 Envelope Shapers. 97-99
 		envelopeShapers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\outBus, i.outputBusVol,
 			]);
