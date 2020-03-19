@@ -103,7 +103,7 @@ S100_RandomGenerator : S100_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		if ((voltage1==0)
+		if ((voltage1 * outCount ==0)
 			.and(voltage2==0)
 			.and(key==0), {
 				running = false;

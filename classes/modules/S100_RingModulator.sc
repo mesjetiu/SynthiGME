@@ -83,7 +83,7 @@ S100_RingModulator : S100_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = outVol * level;
+		var outputTotal = outVol * level * inCount * outCount;
 		if (outputTotal == 0, {
 			running = false;
 			synth.run(false);

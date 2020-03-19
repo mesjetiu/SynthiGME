@@ -77,7 +77,7 @@ S100_NoiseGenerator : S100_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = level;
+		var outputTotal = level * outCount;
 		if (outputTotal==0, {
 			running = false;
 			pauseRoutine.reset;

@@ -86,7 +86,7 @@ S100_Echo : S100_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun { // Dejo esta función aunque no se va a usar. Por ahora no hay manera de saber que no hay output.
-		var outputTotal = level;
+		var outputTotal = level * inCount * outCount;
 		if (outputTotal == 0, {
 			running = false;
 			synth.run(false);

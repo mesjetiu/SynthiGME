@@ -1,10 +1,8 @@
 Lista "To Do"
 
-* paneles de patchbay con encabezado fijo
-* terminar GUI con los módulos existentes hasta ahora (ring modulator y noise generator).
-* crear el patchbay de control de voltaje.
-* unir más canales a los puertos de SC.
-
+* Patchbay ha de sumar y restar entradas y salidas a los módulos que interconecta
+* Hacer que synthRun compruebe que si hay entradas y salidas
+(para todo ello copiar archivos del repositorio "copia"
 
 
 
