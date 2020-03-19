@@ -1,8 +1,7 @@
 Lista "To Do"
 
-* Patchbay ha de sumar y restar entradas y salidas a los módulos que interconecta
-* Hacer que synthRun compruebe que si hay entradas y salidas
-(para todo ello copiar archivos del repositorio "copia"
+* EFICIENCIA: Revisar la gestión de cada módulo de syntRun
+* Completar entradas y salidas de todos los módulos creados
 
 
 
