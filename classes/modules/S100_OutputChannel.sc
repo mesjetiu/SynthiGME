@@ -93,7 +93,7 @@ S100_OutputChannel : S100_Connectable {
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
 		pauseRoutine = Routine({
-			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
+			1.wait;
 			synth.run(false);
 		});
 	}

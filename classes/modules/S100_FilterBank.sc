@@ -57,7 +57,7 @@ S100_FilterBank : S100_Connectable {
 		outputBus = Bus.audio(server);
 		pauseRoutine = 8.do({|i|
 			Routine({
-				lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
+				1.wait;
 				synths[i].run(false);
 			});
 		});

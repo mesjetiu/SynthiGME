@@ -55,7 +55,7 @@ S100_SlewLimiter : S100_Connectable {
 		inFeedbackBusVol = Bus.audio(server);
 		outputBusVol = Bus.audio(server);
 		pauseRoutine = Routine({
-			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
+			1.wait;
 			synth.run(false);
 		});
 	}

@@ -60,7 +60,7 @@ S100_RingModulator : S100_Connectable {
 		inFeedbackBusB = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
-			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
+			1.wait;
 			synth.run(false);
 		});
 	}

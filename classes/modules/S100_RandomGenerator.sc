@@ -59,7 +59,7 @@ S100_RandomGenerator : S100_Connectable {
 		outputBusVoltage2 = Bus.audio(server);
 		outputBusKey = Bus.audio(server);
 		pauseRoutine = Routine({
-			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
+			1.wait;
 			synth.run(false);
 		});
 		randomRoutine = Routine({

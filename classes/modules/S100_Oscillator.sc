@@ -115,7 +115,7 @@ S100_Oscillator : S100_Connectable {
 		inputBusVoltage = Bus.audio(server);
 		inFeedbackBusVoltage = Bus.audio(server);
 		pauseRoutine = Routine({
-			lag.wait; // espera el mismo tiempo que el rate de los argumentos del Synth.
+			1.wait;
 			synth.run(false);
 		});
 	}
