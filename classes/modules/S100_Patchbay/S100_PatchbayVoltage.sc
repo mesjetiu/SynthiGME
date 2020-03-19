@@ -109,7 +109,7 @@ S100_PatchbayVoltage : S100_Patchbay{
 			array[index-1] = Dictionary.newFrom(List[
 				\modul, i,
 				\synth, i.group,
-				\outBus, i.outputBus,
+				\outBus, i.outputBusBypass,
 			]);
 			index = index + 1;
 		});
