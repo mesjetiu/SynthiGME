@@ -1,4 +1,4 @@
-S100_NoiseGenerator {
+S100_NoiseGenerator : S100_Connectable {
 
 	// Synth de la instancia
 	var <synth = nil;

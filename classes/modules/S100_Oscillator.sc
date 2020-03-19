@@ -1,4 +1,4 @@
-S100_Oscillator {
+S100_Oscillator : S100_Connectable {
 
 	// Synth de la instancia
 	var <synth = nil;

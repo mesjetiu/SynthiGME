@@ -1,4 +1,4 @@
-S100_RandomGenerator {
+S100_RandomGenerator : S100_Connectable {
 
 	// Synth de la instancia
 	var <synth = nil;

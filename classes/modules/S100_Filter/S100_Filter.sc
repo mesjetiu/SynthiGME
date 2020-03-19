@@ -1,4 +1,4 @@
-S100_Filter {
+S100_Filter : S100_Connectable {
 	// Esta clase ha de ser heredada por S100_LPFilter y S100_HPFilter. Ambas clases han de sobrescribir *addSynthDef y this.createSynth
 
 	// Synth de la instancia

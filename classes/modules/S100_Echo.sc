@@ -1,4 +1,4 @@
-S100_Echo {
+S100_Echo : S100_Connectable {
 
 	// TODO: (Importante para eficiencia)
 	// Hacer que Patchbay cambie un semáforo en cada módulo cada vez que esté conectado. De este modo el módulo podrá saber que tiene input o tiene output. En función de estos semáforos se podrá tomar decisiones como la de poner en pausa los synths. En el caso de este módulo (y algunos más), si no existe este sistema, no hay manera de saber cuándo ponerse en pausa.

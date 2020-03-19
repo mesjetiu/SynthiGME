@@ -1,4 +1,4 @@
-S100_OutputChannel {
+S100_OutputChannel : S100_Connectable {
 
 	// Group y synths de la instancia
 	var <group = nil;

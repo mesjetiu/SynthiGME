@@ -1,4 +1,4 @@
-S100_RingModulator {
+S100_RingModulator : S100_Connectable {
 	// Synth de la instancia
 	var <synth = nil;
 	var <server;

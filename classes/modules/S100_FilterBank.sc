@@ -1,4 +1,4 @@
-S100_FilterBank {
+S100_FilterBank : S100_Connectable {
 
 	// Synth de la instancia
 	var <group = nil;
