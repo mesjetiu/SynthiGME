@@ -21,4 +21,6 @@ S100_Connectable {
 		});
 		this.synthRun;
 	}
+	synthRun {} // para sobrescribir
 }
+
