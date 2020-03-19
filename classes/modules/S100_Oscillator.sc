@@ -204,73 +204,67 @@ S100_Oscillator : S100_Connectable {
 
 	// Setters Oscillators////////////////////////////////////////////////////////////////////////
 	setRange {| rang |
-		if((rang==1).or(rang==0), {
-			range = rang.asInt;
-			synth.set(\freqMin, this.freqMinMax(rang.asInt, \min));
-			synth.set(\freqMax, this.freqMinMax(rang.asInt, \max));
-		}, {
-			("S100_Oscillator/setRange: " + rang + " debe contener los valores 1 (hi) o 0 (lo)").postln})
+		range = rang.asInt;
+		synth.run(true);
+		synth.set(\freqMin, this.freqMinMax(rang.asInt, \min));
+		synth.set(\freqMax, this.freqMinMax(rang.asInt, \max));
+		this.synthRun();
 	}
 
 	setPulseLevel {| level |
-		if((level>=0).and(level<=10), {
-			pulseLevel = level;
-			this.synthRun();
-			synth.set(\pulseLevel, this.convertPulseLevel(level))}, {
-			("S100_Oscillator/setPulseLevel: " + level + " no es un valor entre 0 y 1").postln})
+		pulseLevel = level;
+		synth.run(true);
+		synth.set(\pulseLevel, this.convertPulseLevel(level));
+		this.synthRun();
 	}
 
 	setPulseShape {| shape |
-		if((shape>=(-5)).and(shape<=5), {
-			pulseShape = shape;
-			synth.set(\pulseShape, this.convertPulseShape(shape))}, {
-			("S100_Oscillator/setPulseShape: " + shape + " no es un valor entre 0 y 1").postln});
+		pulseShape = shape;
+		synth.run(true);
+		synth.set(\pulseShape, this.convertPulseShape(shape));
+		this.synthRun();
 	}
 
 	setSineLevel {| level |
-		if((level>=0).and(level<=10), {
-			sineLevel = level;
-			this.synthRun();
-			synth.set(\sineLevel, this.convertSineLevel(level))}, {
-			("S100_Oscillator/setSineLevel: " + level + " no es un valor entre 0 y 1").postln});
+		sineLevel = level;
+		synth.run(true);
+		synth.set(\sineLevel, this.convertSineLevel(level));
+		this.synthRun();
 	}
 
 	setSineSymmetry {| symmetry |
-		if((symmetry>=(-5)).and(symmetry<=5), {
-			sineSymmetry = symmetry;
-			synth.set(\sineSymmetry, this.convertSineSymmetry(symmetry))}, {
-			("S100_Oscillator/setSineSymmetry: " + symmetry + " no es un valor entre -1 y 1").postln});
+		sineSymmetry = symmetry;
+		synth.run(true);
+		synth.set(\sineSymmetry, this.convertSineSymmetry(symmetry));
+		this.synthRun();
 	}
 
 	setTriangleLevel {| level |
-		if((level>=0).and(level<=10), {
-			triangleLevel = level;
-			this.synthRun();
-			synth.set(\triangleLevel, this.convertTriangleLevel(level))}, {
-			("S100_Oscillator/setTriangleLevel: " + level + " no es un valor entre 0 y 1").postln});
+		triangleLevel = level;
+		synth.run(true);
+		synth.set(\triangleLevel, this.convertTriangleLevel(level));
+		this.synthRun();
 	}
 
 	setSawtoothLevel {| level |
-		if((level>=0).and(level<=10), {
-			sawtoothLevel = level;
-			this.synthRun();
-			synth.set(\sawtoothLevel, this.convertSawtoothLevel(level))}, {
-			("S100_Oscillator/setSawtoothLevel: " + level + " no es un valor entre 0 y 1").postln});
+		sawtoothLevel = level;
+		synth.run(true);
+		synth.set(\sawtoothLevel, this.convertSawtoothLevel(level));
+		this.synthRun();
 	}
 
 	setFrequency {| freq |
-		if((freq>=0).and(freq<=10), {
-			frequency = freq;
-			synth.set(\freq, freq)}, {
-			("S100_Oscillator/setfrequency: " + freq + " no es un valor entre 0 y 10000").postln});
+		frequency = freq;
+		synth.run(true);
+		synth.set(\freq, freq);
+		this.synthRun();
 	}
 
 	setOutVol {| level |
-		if((level>=0).and(level<=1), {
-			outVol = level;
-			this.synthRun();
-			synth.set(\outVol, level)}, {
-			("S100_Oscillator/setOutVol: " + level + " no es un valor entre 0 y 1").postln});
+		outVol = level;
+		synth.run(true);
+		synth.set(\outVol, level);
+		this.synthRun();
 	}
 	//End Setters Oscillators//////////////////////////////////////////////////////////////////////
 

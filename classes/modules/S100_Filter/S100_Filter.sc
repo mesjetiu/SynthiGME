@@ -80,19 +80,22 @@ S100_Filter : S100_Connectable {
 
 	setFrequency {|f|
 		frequency = f;
+		synth.run(true);
+		synth.set(\frequency, this.convertFrequency(f));
 		this.synthRun();
-		synth.set(\frequency, this.convertFrequency(f))
 	}
 
 	setResponse {|r|
 		response = r;
+		synth.run(true);
+		synth.set(\response, this.convertResponse(r));
 		this.synthRun();
-		synth.set(\response, this.convertResponse(r))
 	}
 
 	setLevel {|l|
 		level = l;
+		synth.run(true);
+		synth.set(\level, this.convertLevel(l));
 		this.synthRun();
-		synth.set(\level, this.convertLevel(l))
 	}
 }

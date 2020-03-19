@@ -115,22 +115,19 @@ S100_NoiseGenerator : S100_Connectable {
 
 	// Setters de los parámetros
 	setLevel {|lev|
-		if((lev>=0).and(lev<=10), {
-			level = lev;
-			this.synthRun();
-			synth.set(\level, this.convertLevel(lev))
-		}, {
-			("S100_NoiseGenerator/setLevel: " + lev + " no es un valor entre 0 y 1").postln});
+		level = lev;
+		synth.run(true);
+		synth.set(\level, this.convertLevel(lev));
+		this.synthRun();
 	}
 
 	setColour {|col|
-		if((col>=0).and(col<=10), {
-			var freqHP, freqLP;
-			#freqHP,freqLP = this.convertColour(col);
-			colour = col;
-			synth.set(\freqHP, freqHP);
-			synth.set(\freqLP, freqLP);
-		}, {
-			("S100_NoiseGenerator/setColour: " + col + " no es un valor entre 0 y 1").postln});
+		var freqHP, freqLP;
+		#freqHP,freqLP = this.convertColour(col);
+		colour = col;
+		synth.run(true);
+		synth.set(\freqHP, freqHP);
+		synth.set(\freqLP, freqLP);
+		this.synthRun();
 	}
 }

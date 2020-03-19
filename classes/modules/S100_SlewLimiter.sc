@@ -70,7 +70,7 @@ S100_SlewLimiter : S100_Connectable {
 				\rate, this.convertRate(rate),
 			], server).register;
 		});
-	//	this.synthRun;
+		this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
@@ -94,8 +94,9 @@ S100_SlewLimiter : S100_Connectable {
 	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
 
 	setRate {|r|
-			rate = r;
-		//	this.synthRun();
-			synth.set(\rate, this.convertRate(r))
+		rate = r;
+		synth.run(true);
+		synth.set(\rate, this.convertRate(r));
+		this.synthRun();
 	}
 }

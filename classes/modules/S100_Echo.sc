@@ -118,22 +118,29 @@ S100_Echo : S100_Connectable {
 
 	setDelay {|v|
 		delay = v;
-			synth.set(\delay, this.convertDelay(v))
+		synth.run(true);
+		synth.set(\delay, this.convertDelay(v));
+		this.synthRun();
 	}
 
 	setMix {|v|
 		mix = v;
-			synth.set(\mix, this.convertMix(v))
+		synth.run(true);
+		synth.set(\mix, this.convertMix(v));
+		this.synthRun();
 	}
 
 	setFeedback {|v|
 		feedback = v;
-			synth.set(\feedback, this.convertFeedback(v))
+		synth.run(true);
+		synth.set(\feedback, this.convertFeedback(v));
+		this.synthRun();
 	}
 
 	setLevel {|v|
 		level = v;
-			this.synthRun();
-			synth.set(\level, this.convertLevel(v))
+		synth.run(true);
+		synth.set(\level, this.convertLevel(v));
+		this.synthRun();
 	}
 }

@@ -103,11 +103,9 @@ S100_RingModulator : S100_Connectable {
 
 
 	setLevel {|lev|
-		if((lev>=0).and(lev<=10), {
-			level = lev;
-			this.synthRun();
-			synth.set(\level, this.convertLevel(lev))
-		}, {
-			("S100_RingModulator/setLevel: " + lev + " no es un valor entre 0 y 1").postln});
+		level = lev;
+		synth.run(true);
+		synth.set(\level, this.convertLevel(lev));
+		this.synthRun();
 	}
 }

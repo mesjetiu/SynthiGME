@@ -107,9 +107,9 @@ S100_OutputChannel : S100_Connectable {
 			while({group.isPlaying == false}, {wait(waitTime)});
 			// se crea el synth bypass (hace del canal un bus aunque esté apagado)
 			synthBypass = Synth(\S100_outputChannelBypass, [
-					\inputBus, inputBus,
-					\inFeedbackBus, inFeedbackBus,
-					\outputBusBypass, outputBusBypass,
+				\inputBus, inputBus,
+				\inFeedbackBus, inFeedbackBus,
+				\outputBusBypass, outputBusBypass,
 			], group).register;
 			while({synthBypass.isPlaying == false}, {wait(waitTime)});
 			// se crea el synth principal
@@ -175,41 +175,34 @@ S100_OutputChannel : S100_Connectable {
 
 	// Setters de los parámetros
 	setLevel {|lev|
-		if((lev>=0).and(lev<=10), {
-			level = lev;
-			this.synthRun();
-			synth.set(\level, this.convertLevel(lev))
-		}, {
-			("S100_OutputChannel/setLevel: " + lev + " no es un valor entre 0 y 1").postln});
+		level = lev;
+		synth.run(true);
+		synth.set(\level, this.convertLevel(lev));
+		this.synthRun();
 	}
 
 	setFilter {|filt|
-		if((filt>=0).and(filt<=10), {
-			var freqHP, freqLP;
-			#freqHP,freqLP = this.convertFilter(filt);
-			filter = filt;
-			synth.set(\freqHP, freqHP);
-			synth.set(\freqLP, freqLP);
-		}, {
-			("S100_OutputChannel/setFilter: " + filt + " no es un valor entre 0 y 1").postln});
+		var freqHP, freqLP;
+		#freqHP,freqLP = this.convertFilter(filt);
+		filter = filt;
+		synth.run(true);
+		synth.set(\freqHP, freqHP);
+		synth.set(\freqLP, freqLP);
+		this.synthRun();
 	}
 
 	setOn {|value|
-		if((value == 0).or(value == 1), {
-			on = value;
-			synth.set(\on, on);
-			this.synthRun();
-		}, {
-			("S100_OutputChannel/setOn: " + value + " no es un valor de 0 o 1").postln});
+		on = value;
+		synth.run(true);
+		synth.set(\on, on);
+		this.synthRun();
 	}
 
 	setPan {|p|
-		if((p>=0).and(p<=10), {
-			pan = p;
-			this.synthRun();
-			synth.set(\pan, this.convertPan(p))
-		}, {
-			("S100_OutputChannel/setPan: " + p + " no es un valor entre -1 y 1").postln});
+		pan = p;
+		synth.run(true);
+		synth.set(\pan, this.convertPan(p));
+		this.synthRun();
 	}
 
 }
