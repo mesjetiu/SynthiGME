@@ -15,3 +15,6 @@ o = Synthi100().run.pairDevice
 o = Synthi100().run
 o.run
 o.close
+
+o.modulFilterBank.inCount(false)
+o.modulFilterBank.outCount
