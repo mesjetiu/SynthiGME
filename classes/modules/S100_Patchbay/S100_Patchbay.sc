@@ -52,8 +52,10 @@ S100_Patchbay {
 
 	// Crea nodo de conexión entre dos módulos
 	administrateNode {|ver, hor, ganancy|
+		var fromModul = inputsOutputs[ver-1].at(\modul);
 		var fromSynth = inputsOutputs[ver-1].at(\synth);
 		var fromBus = inputsOutputs[ver-1].at(\outBus);
+		var toModul = inputsOutputs[hor-1].at(\modul);
 		var toSynth = inputsOutputs[hor-1].at(\synth);
 		var toBus; // su valor dependerá de la relación de orden de ejecución de ambos synths
 		var numFromSynth =  this.getNumSynth(fromSynth);
@@ -67,6 +69,8 @@ S100_Patchbay {
 
 		if(ganancy > 0, {
 			if(nodeSynths[[hor,ver].asString] == nil, {
+				fromModul.outPlusOne;
+				toModul.inPlusOne;
 				Routine({
 					nodeSynths.put(
 						[ver,hor].asString,
@@ -95,6 +99,8 @@ S100_Patchbay {
 			})
 		},{
 			if(nodeSynths[[ver,hor].asString] != nil, {
+				fromModul.outPlusOne(false);
+				toModul.inPlusOne(false);
 				Routine({
 					nodeSynths[[ver,hor].asString][\synth].set(\ganancy, 0);
 					wait(lag); // espera un tiempo para que el synt baje su ganancia a 0;

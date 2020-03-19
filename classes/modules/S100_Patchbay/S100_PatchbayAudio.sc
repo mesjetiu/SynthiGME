@@ -25,6 +25,7 @@ S100_PatchbayAudio : S100_Patchbay{
 
 		index = 2; // Echo A.D.L.
 		array[index-1] = Dictionary.newFrom(List[
+			\modul, echo,
 			\synth, echo.synth,
 			\inBus, echo.inputBus,
 			\inFeedbackBus, echo.inFeedbackBus,
@@ -33,12 +34,14 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 3; // Ring Modulators ocupan los números 3-8 horizontales
 		ringModulators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\inBus, i.inputBusA,
 				\inFeedbackBus, i.inFeedbackBusA,
 			]);
 			index = index + 1;
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\inBus, i.inputBusB,
 				\inFeedbackBus, i.inFeedbackBusB,
@@ -49,6 +52,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 9; // Envelope Shapers ocupan los números 9 a 14 horizontales
 		envelopeShapers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.inputBus,
 				\inFeedbackBus, i.inFeedbackBus,
@@ -57,6 +61,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		});
 		envelopeShapers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.signalTrigger,
 				\inFeedbackBus, i.inFeedbackSignalTrigger,
@@ -67,6 +72,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 15; // Filters ocupan los números 15-22
 		filters.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\inBus, i.inputBus,
 				\inFeedbackBus, i.inFeedbackBus,
@@ -76,6 +82,7 @@ S100_PatchbayAudio : S100_Patchbay{
 
 		index = 23; // Filter Bank, número 23
 		array[index-1] = Dictionary.newFrom(List[
+			\modul, filterBank,
 			\synth, filterBank.group,
 			\inBus, filterBank.inputBus,
 			\inFeedbackBus, filterBank.inFeedbackBus,
@@ -84,6 +91,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\inBus, i.inputBus,
 				\inFeedbackBus, i.inFeedbackBus,
@@ -95,6 +103,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 67; // Inputs de Amplificador del 67-74
 		inputAmplifiers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus,
 			]);
@@ -104,6 +113,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 75; // Output channels del 75-82
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\outBus, i.outputBus,
 			]);
@@ -113,6 +123,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 89; // Noise Generators 89 y 90
 		noiseGenerators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus,
 			]);
@@ -123,11 +134,13 @@ S100_PatchbayAudio : S100_Patchbay{
 		9.do({|i|
 			i = oscillators[i];
 			array[index-1] = Dictionary.newFrom(List[ // Sine y Saw
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus1,
 			]);
 			index = index + 1;
 			array[index-1] = Dictionary.newFrom(List[ // Pulse y Triangle
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus2,
 			]);
@@ -136,6 +149,7 @@ S100_PatchbayAudio : S100_Patchbay{
 
 		index = 109; // Filter Bank, número 109
 		array[index-1] = Dictionary.newFrom(List[
+			\modul, filterBank,
 			\synth, filterBank.group,
 			\outBus, filterBank.outputBus,
 		]);
@@ -143,6 +157,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 110; // Filters ocupan los números 110-117
 		filters.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus,
 			]);
@@ -152,6 +167,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 118; // Envelope Shapers del 118-120
 		envelopeShapers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.group,
 				\outBus, i.outputBus,
 			]);
@@ -161,6 +177,7 @@ S100_PatchbayAudio : S100_Patchbay{
 		index = 121; // Ring Modulators del 121-123
 		ringModulators.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
 				\synth, i.synth,
 				\outBus, i.outputBus,
 			]);
@@ -169,6 +186,7 @@ S100_PatchbayAudio : S100_Patchbay{
 
 		index = 125; // Echo A.D.L.
 		array[index-1] = Dictionary.newFrom(List[
+			\modul, echo,
 			\synth, echo.synth,
 			\outBus, echo.outputBus,
 		]);
