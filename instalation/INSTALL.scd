@@ -1,3 +1,9 @@
+/*
+Para instalar el Quark Synthi GME es necesario tener Git en el sistema.
+Synthi GME utiliza extensiones de SC3-plugins. Si no se instalan no funcionará.
+*/
+
+
 
 // Instalar SynthiGME desde GitHub
 (
@@ -20,27 +26,3 @@ o = SynthiGME().run.pairDevice
 
 // Cerrar
 o.close
-
-
-
-
-
-
-
-
-
-// Para instalar y desinstalar desarrollando el Quark
-
-// Instalar SynthiGME desde directorio local
-(
-Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/SynthiGME");
-thisProcess.recompile;
-)
-
-// Desinstalar SynthiGME (versión de directorio local)
-(
-Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/SynthiGME");
-Quarks.clear;
-thisProcess.recompile;
-)
-
