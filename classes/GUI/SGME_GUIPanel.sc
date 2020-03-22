@@ -5,6 +5,7 @@ SGME_GUIPanel {
 	var <compositeView;
 	var viewSizes;
 	var zoomWLevel = 1;
+	var zoomHLevel = 1;
 	var rectWindow;
 	var rectCompositeView;
 	var virtualWidth = 1920; // Todos las Views usan unidades de medida en relación a esta anchura.
@@ -147,7 +148,7 @@ SGME_GUIPanel {
 
 
 	resizePanel {arg factor;
-		var factorW;
+		var factorW, factorH;
 		if ((factor * zoomWLevel * viewSizes[0][1].width) > (Window.availableBounds.width * 1), {
 			factorW = (Window.availableBounds.width * 1) /  (viewSizes[0][1].width);
 		}, {factorW = factor * zoomWLevel});
@@ -157,13 +158,21 @@ SGME_GUIPanel {
 			factorW = (Window.availableBounds.width/4) / viewSizes[0][1].width;
 		});
 
+		if ((factor * zoomHLevel * viewSizes[0][1].width) > (Window.availableBounds.height), {
+			factorH = Window.availableBounds.height / viewSizes[0][1].width;
+		},{
+			factorH = factorW;
+		});
+
+		//[factorH, factorW].postln;
+
 		viewSizes.do({|v|
 			if (v[0].class === Window, {
 				v[0].bounds_(Rect(
 					left: origin.left,
 					top: origin.top,
 					width: v[1].width * factorW,
-					height: v[1].height * factorW,
+					height: v[1].height * factorH,
 				))
 			}, {
 				v[0].bounds_(Rect(
@@ -175,6 +184,7 @@ SGME_GUIPanel {
 			})
 		});
 		zoomWLevel = factorW;
+		zoomHLevel = factorH;
 
 		this.goInside;
 	}
@@ -231,7 +241,7 @@ SGME_GUIPanel {
 				left: origin.left,
 				top: origin.top,
 				width: window.bounds.width,
-				height: window.bounds.height,
+				height: window.bounds.width,
 			);
 			window.bounds = rect;
 			while({window.bounds != rect}, {wait(0.01)}); // Nos aseguramos que se realiza la primera operación antes de seguir

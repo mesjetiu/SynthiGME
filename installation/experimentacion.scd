@@ -13,20 +13,13 @@ thisProcess.recompile;
 )
 
 // Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.
-o = SynthiGME().run
+o = SynthiGME()
 
 // Ejecutar y sincronizar otros dispositivos (experimental)
 o = SynthiGME().run.pairDevice
 
 // Cerrar
 o.close
-
-
-
-
-
-
-
 
 
 // Para instalar y desinstalar desarrollando el Quark
@@ -43,4 +36,3 @@ Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synth
 Quarks.clear;
 thisProcess.recompile;
 )
-
