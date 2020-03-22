@@ -105,7 +105,11 @@ SGME_GUIPanel {
 			);
 		};
 
-		window.view.mouseDownAction = {
+/*		window.view.mouseDownAction = {
+			this.focus;
+		};*/
+
+		window.toFrontAction = {
 			this.focus;
 		};
 
