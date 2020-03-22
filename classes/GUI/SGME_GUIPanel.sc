@@ -73,7 +73,7 @@ SGME_GUIPanel {
 
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
-			//	keycode.postln;
+			//keycode.postln;
 			keycode.switch(
 				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizeFocusedPanel(factor)}, // +
@@ -97,7 +97,12 @@ SGME_GUIPanel {
 				101, { // Tecla e: Hace visibles o invisibles todos los nodos dependiendo de si son posibles de usar en el SynthiGME
 					synthiGME.guiSC.panels[4].enableNodes;
 					synthiGME.guiSC.panels[5].enableNodes;
-				}
+				},
+				99, { // Tecla Ctrl+C: Para cerrar la aplicación.
+					if (mod.isCtrl, { // Comprueba si está el modificador "Control"
+						synthiGME.close;
+					})
+				},
 			);
 		};
 
