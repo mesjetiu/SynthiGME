@@ -1,9 +1,9 @@
 
-// Uso del Synthi100
+// Uso del SynthiGME
 
-o = Synthi100(standalone: true)
+o = SynthiGME(standalone: true)
 o.run
 o.pairDevice
 
 
-o = Synthi100(standalone: true).run.pairDevice
+o = SynthiGME(standalone: true).run.pairDevice

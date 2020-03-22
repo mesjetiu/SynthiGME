@@ -1,20 +1,36 @@
-Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/Synthi100")
-o = Synthi100().run
 
-o.run
+// Instalar SynthiGME desde GitHub
+(
+Quarks.install("https://github.com/mesjetiu/SynthiGME.git");
+thisProcess.recompile;
+)
 
-//Quarks.install("https://github.com/mesjetiu/Synthi100.git")
+// Desinstalar SynthiGME (versión de GitHub)
+(
+Quarks.uninstall("https://github.com/mesjetiu/SynthiGME.git");
+Quarks.clear;
+thisProcess.recompile;
+)
 
-Quarks.uninstall("https://github.com/mesjetiu/Synthi100.git")
+// Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.
+o = SynthiGME().run
 
-Quarks.clear
+// Ejecutar y sincronizar otros dispositivos (experimental)
+o = SynthiGME().run.pairDevice
 
-Window
-
-o = Synthi100().run.pairDevice
-o = Synthi100().run
-o.run
+// Cerrar
 o.close
 
-o.modulFilterBank.inCount(false)
-o.modulFilterBank.outCount
+
+// Instalar SynthiGME desde directorio local
+(
+Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/SynthiGME");
+thisProcess.recompile;
+)
+
+// Desinstalar SynthiGME (versión de directorio local)
+(
+Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/SynthiGME");
+Quarks.clear;
+thisProcess.recompile;
+)
