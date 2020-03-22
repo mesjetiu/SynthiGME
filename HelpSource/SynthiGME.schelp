@@ -1,31 +1,10 @@
-TITLE:: Synthi100
+TITLE:: SynthiGME
 summary:: Emulador del sintetizador EMS Synthi 100 del GME de Cuenca.
 categories:: Undocumented classes
 
 DESCRIPTION::
-(put long description here)
 
 
-CLASSMETHODS::
-
-METHOD:: new
-(describe method here)
-argument::server
-Servidor en el que se ejecutará el sintetizador.
-
-argument::standalone
-true: Se unen los canales de entrada y salida a los de SuperCollider, creándose, si es necesario, los puertos
-
-returns:: Devuelve una instancia de Synthi100
-
-
-
-INSTANCEMETHODS::
-
-METHOD:: panOutputs5to8Busses
-(describe method here)
-
-returns:: (describe returnvalue here)
 
 
 
@@ -33,13 +12,12 @@ returns:: (describe returnvalue here)
 EXAMPLES::
 
 code::
-// Ejemplo de instanciación del Synthi100;
+// Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.
+o = SynthiGME().run
 
-o = Synthi100(standalone: true);
-o.run;
-o.pairDevice;
+// Ejecutar y sincronizar otros dispositivos (experimental)
+o = SynthiGME().run.pairDevice
 
-// o, de forma resumida:
-
-o = Synthi100(standalone: true).run.pairDevice
+// Cerrar
+o.close
 ::
