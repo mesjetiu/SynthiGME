@@ -29,8 +29,10 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 
 		this.makeInputAmplifiers(compositeView, 31.2, 367);
 
+
 		this.saveOrigin;
 		this.resizePanel(Window.availableBounds.width/virtualWidth);
+		this.saveOrigin;
 		window.front;
 	}
 

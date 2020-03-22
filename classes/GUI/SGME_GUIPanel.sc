@@ -4,7 +4,6 @@ SGME_GUIPanel {
 	var <window;
 	var <compositeView;
 	var viewSizes;
-	var zoomHLevel = 1;
 	var zoomWLevel = 1;
 	var rectWindow;
 	var rectCompositeView;
@@ -88,7 +87,7 @@ SGME_GUIPanel {
 				53, {synthiGME.guiSC.panels[4].window.front; this.focus(4)}, // Tecla 5: Panel 5 al frente
 				54, {synthiGME.guiSC.panels[5].window.front; this.focus(5)}, // Tecla 6: Panel 6 al frente
 				55, {synthiGME.guiSC.panels[6].window.front; this.focus(6)}, // Tecla 7: Panel 7 al frente
-				111, {this.goToOrigin}, // Tecla O: Panel a posición y tamaño original
+				111, {this.goToOriginFocusedPanel}, // Tecla O: Panel a posición y tamaño original
 				79, {// Tecla o: Todos los Paneles a posición y tamaño original
 					synthiGME.guiSC.panels.do({|panel|
 						panel.goToOrigin
@@ -115,6 +114,14 @@ SGME_GUIPanel {
 		viewSizes = viewSizes.add([compositeView, rectCompositeView]);
 	}
 
+	goToOriginFocusedPanel {
+		synthiGME.guiSC.panels.do({|panel|
+			if (panel.hasFocus == true, {
+				panel.goToOrigin;
+				^this;
+			})
+		})
+	}
 	resizeFocusedPanel {|factor|
 		synthiGME.guiSC.panels.do({|panel|
 			if (panel.hasFocus == true, {
@@ -136,20 +143,14 @@ SGME_GUIPanel {
 
 
 	resizePanel {arg factor;
-		var factorH, factorW;
+		var factorW;
 		if ((factor * zoomWLevel * viewSizes[0][1].width) > (Window.availableBounds.width * 1), {
 			factorW = (Window.availableBounds.width * 1) /  (viewSizes[0][1].width);
 		}, {factorW = factor * zoomWLevel});
-		if ((factor * zoomHLevel * viewSizes[0][1].height) > (Window.availableBounds.height * 1), {
-			factorH = (Window.availableBounds.height * 1) / (viewSizes[0][1].height);
-		}, {factorH = factorW});
 
 
-		if ((factor * zoomWLevel * viewSizes[0][1].width) < origin.width, {
-			factorW = origin.width / viewSizes[0][1].width;
-		});
-		if ((factor * zoomHLevel * viewSizes[0][1].height) < origin.height, {
-			factorH = origin.height / viewSizes[0][1].height;
+		if ((factor * zoomWLevel * viewSizes[0][1].width) < (Window.availableBounds.width/4), {
+			factorW = (Window.availableBounds.width/4) / viewSizes[0][1].width;
 		});
 
 		viewSizes.do({|v|
@@ -158,7 +159,7 @@ SGME_GUIPanel {
 					left: origin.left,
 					top: origin.top,
 					width: v[1].width * factorW,
-					height: v[1].height * factorH,
+					height: v[1].height * factorW,
 				))
 			}, {
 				v[0].bounds_(Rect(
@@ -170,7 +171,6 @@ SGME_GUIPanel {
 			})
 		});
 		zoomWLevel = factorW;
-		zoomHLevel = factorH;
 
 		this.goInside;
 	}

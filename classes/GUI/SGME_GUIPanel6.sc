@@ -31,6 +31,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 
 		this.saveOrigin;
 		this.resizePanel(Window.availableBounds.width/virtualWidth);
+		this.saveOrigin;
 		window.front;
 	}
 

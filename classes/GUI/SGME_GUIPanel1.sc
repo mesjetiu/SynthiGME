@@ -45,6 +45,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 
 		this.saveOrigin;
 		this.resizePanel(Window.availableBounds.width/virtualWidth);
+		this.saveOrigin;
 		window.front;
 	}
 
