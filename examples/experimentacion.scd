@@ -35,3 +35,30 @@ Quarks.clear;
 thisProcess.recompile;
 )
 
+PathName
+
+Quarks.quarkNameAsLocalPath("SynthiGME");
+Platform.systemExtensionDir;
+Platform.classLibraryDir;
+Platform;
+(
+Platform.case(
+    \osx,       { "OSX".postln },
+    \linux,     { "Linux".postln },
+    \windows,   { "Windows".postln }
+);
+)
+
+
+Comprueba si está instalado los plugins
+(
+var myPath;
+myPath = PathName.new(Platform.systemExtensionDir);
+(myPath.entries.select({|path| "SC3".matchRegexp(path.asString)})[0] != nil).postln;
+)
+
+Quarks.installedPaths.select({|path| "SynthiGME".matchRegexp(path)})[0];
+
+{1.postln}.value
+
+Quarks.installedPaths('SythiGME')[0] == nil
