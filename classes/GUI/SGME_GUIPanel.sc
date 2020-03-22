@@ -47,7 +47,7 @@ SGME_GUIPanel {
 		synthiGME = synthi;
 		hasFocus = false;
 		parameterViews = parameters;
-		installedPath = Quarks.installedPaths.select({|path| "SynthiGME".matchRegexp(path)})[0];
+		installedPath = Quarks.quarkNameAsLocalPath("SynthiGME");
 
 		blue = Color.new255(61.8, 86.7, 118.4);
 		green = Color.new255(68.6, 107.2, 82.6);

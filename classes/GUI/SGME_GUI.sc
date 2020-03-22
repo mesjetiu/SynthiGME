@@ -40,7 +40,7 @@ SGME_GUI {
 
 	init {|synthi|
 		parameterViews = Dictionary.new;
-		installedPath = Quarks.installedPaths.select({|path| "SynthiGME".matchRegexp(path)})[0];
+		installedPath = Quarks.quarkNameAsLocalPath("SynthiGME");
 
 		panels = [];
 		panels = panels.add(SGME_GUIPanel1(synthi, parameterViews));

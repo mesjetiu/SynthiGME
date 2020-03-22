@@ -11,7 +11,7 @@ SGME_GUINode {
 
 	init {|synthi, parent, bounds, stringOSC|
 		synthiGME = synthi;
-		installedPath = Quarks.installedPaths.select({|path| "SynthiGME".matchRegexp(path)})[0];
+		installedPath = Quarks.installedPaths('SynthiGME')[0];
 		image1 = Image(installedPath ++ "/classes/GUI/images/widgets/patchbay_hole.png");
 		image2 = Image(installedPath ++ "/classes/GUI/images/widgets/patchbay_white_pin.png");
 		value = 0;
