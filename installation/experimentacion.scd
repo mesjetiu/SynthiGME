@@ -13,7 +13,7 @@ thisProcess.recompile;
 )
 
 // Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.
-o = SynthiGME()
+o = SynthiGME().run
 
 // Ejecutar y sincronizar otros dispositivos (experimental)
 o = SynthiGME().run.pairDevice

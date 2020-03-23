@@ -73,7 +73,7 @@ SGME_GUIPanel {
 
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
-			//keycode.postln;
+			keycode.postln;
 			keycode.switch(
 				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizeFocusedPanel(factor)}, // +
@@ -88,10 +88,18 @@ SGME_GUIPanel {
 				53, {synthiGME.guiSC.panels[4].window.front; this.focus(4)}, // Tecla 5: Panel 5 al frente
 				54, {synthiGME.guiSC.panels[5].window.front; this.focus(5)}, // Tecla 6: Panel 6 al frente
 				55, {synthiGME.guiSC.panels[6].window.front; this.focus(6)}, // Tecla 7: Panel 7 al frente
-				111, {this.goToOriginFocusedPanel}, // Tecla O: Panel a posición y tamaño original
-				79, {// Tecla o: Todos los Paneles a posición y tamaño original
+				79, {// Tecla O: Todos los Paneles a posición y tamaño original
 					synthiGME.guiSC.panels.do({|panel|
 						panel.goToOrigin
+					})
+				},
+				111, {
+					if(mod.isCtrl, { // Ctrl + O. Establece un nuevo origen de todas las ventanas
+						synthiGME.guiSC.panels.do({|panel|
+							panel.saveOrigin;
+						})
+					}, {// Tecla o: Panel a posición y tamaño original
+						this.goToOriginFocusedPanel
 					})
 				},
 				101, { // Tecla e: Hace visibles o invisibles todos los nodos dependiendo de si son posibles de usar en el SynthiGME
@@ -106,8 +114,8 @@ SGME_GUIPanel {
 			);
 		};
 
-/*		window.view.mouseDownAction = {
-			this.focus;
+		/*		window.view.mouseDownAction = {
+		this.focus;
 		};*/
 
 		window.toFrontAction = {
