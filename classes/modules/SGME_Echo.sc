@@ -49,7 +49,7 @@ SGME_Echo : SGME_Connectable {
 			var sigIn, sigOut;
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 
-			sigOut = SwitchDelay.ar(sigIn, mix, 1, delay, feedback * 0.7) * level;
+			sigOut = SwitchDelay.ar(sigIn, 1-mix, mix, delay, feedback * 0.7) * level;
 
 			Out.ar(outputBus, sigOut);
 		}).add
