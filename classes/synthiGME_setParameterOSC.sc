@@ -6,7 +6,7 @@
 		var splitted = string.split($/);
 		switch (splitted[1],
 			"osc", { // Ejemplo: "/osc/1/pulse/level"
-				var index = splitted[2].asInt - 1;
+				var index = splitted[2].asInteger - 1;
 				var parameter;
 				3.do({splitted.removeAt(0)});
 				if (splitted.size == 1,
@@ -55,7 +55,7 @@
 
 			"patchA", { // Ejemplo "/patchA/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horzontal
 				2.do({splitted.removeAt(0)});
-				modulPatchbayAudio.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
+				modulPatchbayAudio.administrateNode(splitted[0].asInteger, splitted[1].asInteger, value);
 				if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -63,7 +63,7 @@
 
 			"patchV", { // Ejemplo "/patchV/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horzontal
 				2.do({splitted.removeAt(0)});
-				modulPatchbayVoltage.administrateNode(splitted[0].asInt, splitted[1].asInt, value);
+				modulPatchbayVoltage.administrateNode(splitted[0].asInteger, splitted[1].asInteger, value);
 				if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -74,8 +74,8 @@
 			"patchATouchOSCA1a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
-				ver = 67 + (16-splitted[0].asInt);
-				hor = splitted[1].asInt;
+				ver = 67 + (16-splitted[0].asInteger);
+				hor = splitted[1].asInteger;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -85,8 +85,8 @@
 			"patchATouchOSCA2a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
-				ver = 67 + (16-splitted[0].asInt);
-				hor = splitted[1].asInt + 32;
+				ver = 67 + (16-splitted[0].asInteger);
+				hor = splitted[1].asInteger + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -96,8 +96,8 @@
 			"patchATouchOSCB1a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
-				ver = 83 + (16-splitted[0].asInt);
-				hor = splitted[1].asInt;
+				ver = 83 + (16-splitted[0].asInteger);
+				hor = splitted[1].asInteger;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -107,8 +107,8 @@
 			"patchATouchOSCB2a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
-				ver = 83 + (16-splitted[0].asInt);
-				hor = splitted[1].asInt + 32;
+				ver = 83 + (16-splitted[0].asInteger);
+				hor = splitted[1].asInteger + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -118,8 +118,8 @@
 			"patchATouchOSCC1a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
-				ver = 99 + (16-splitted[0].asInt);
-				hor = splitted[1].asInt;
+				ver = 99 + (16-splitted[0].asInteger);
+				hor = splitted[1].asInteger;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -129,8 +129,8 @@
 			"patchATouchOSCC2a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
-				ver = 99 + (16-splitted[0].asInt);
-				hor = splitted[1].asInt + 32;
+				ver = 99 + (16-splitted[0].asInteger);
+				hor = splitted[1].asInteger + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -140,8 +140,8 @@
 			"patchATouchOSCD1a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
-				ver = 115 + (12-splitted[0].asInt);
-				hor = splitted[1].asInt;
+				ver = 115 + (12-splitted[0].asInteger);
+				hor = splitted[1].asInteger;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -151,8 +151,8 @@
 			"patchATouchOSCD2a", {
 				var hor, ver;
 				2.do({splitted.removeAt(0)});
-				ver = 115 + (12-splitted[0].asInt);
-				hor = splitted[1].asInt + 32;
+				ver = 115 + (12-splitted[0].asInteger);
+				hor = splitted[1].asInteger + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
@@ -160,7 +160,7 @@
 
 
 			"out", { // Ejemplo "/out/1/level"
-				var index = splitted[2].asInt - 1;
+				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"level", {
@@ -185,7 +185,7 @@
 			},
 
 			"in", { // Ejemplo "/in/1/level"
-				var index = splitted[2].asInt - 1;
+				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"level", {
@@ -198,7 +198,7 @@
 			},
 
 			"env", { // Ejemplo "/env/1/decay"
-				var index = splitted[2].asInt - 1;
+				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"delay", {
@@ -244,7 +244,7 @@
 			},
 
 			"ring", { // Ejemplo "/ring/1/level"
-				var index = splitted[2].asInt - 1;
+				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"level", {
@@ -257,7 +257,7 @@
 			},
 
 			"noise", { // Ejemplo "/noise/1/level"
-				var index = splitted[2].asInt - 1;
+				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"colour", {
@@ -302,7 +302,7 @@
 
 
 			"slew", { // Ejemplo "/slew/1/range"
-				var index = splitted[2].asInt - 1;
+				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"rate", {
@@ -315,7 +315,7 @@
 			},
 
 			"filter", { // Ejemplo "/filter/1/response"
-				var index = splitted[2].asInt - 1;
+				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"frequency", {
