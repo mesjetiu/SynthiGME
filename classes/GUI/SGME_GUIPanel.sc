@@ -207,6 +207,14 @@ SGME_GUIPanel {
 				height: window.bounds.height,
 			)
 		});
+		if ((window.bounds.top + window.bounds.height) > Window.availableBounds.height, {
+			window.bounds = Rect (
+				left: window.bounds.left,
+				top: Window.availableBounds.height - window.bounds.height,
+				width: window.bounds.width,
+				height: window.bounds.height,
+			)
+		});
 	}
 
 
