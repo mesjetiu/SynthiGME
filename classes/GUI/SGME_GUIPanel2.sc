@@ -45,7 +45,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			knob = Knob(parent, rect)
 			.color_([blue, black, white, nil])
-			.mode_(\horiz)
+			.mode_(\vert)
 			.step_(step);
 			viewSizes = viewSizes.add([knob, rect]);
 			parameterViews.put("/filterBank/" ++ (62.5*(2**(num))).ceil, knob); // Ejemplo: /filterBank/4000
@@ -69,7 +69,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			knob = Knob(parent, rect)
 			.color_([white, black, white, nil])
-			.mode_(\horiz)
+			.mode_(\vert)
 			.step_(step);
 			viewSizes = viewSizes.add([knob, rect]);
 			parameterViews.put("/in/" ++ (num + 1) ++ "/level", knob);

@@ -52,7 +52,7 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		filter = Knob(parent, rect)
 		.color_([blue, black, white, nil])
-		.mode_(\horiz)
+		.mode_(\vert)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -62,7 +62,7 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		pan = Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\horiz)
+		.mode_(\vert)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);

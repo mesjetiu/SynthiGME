@@ -55,7 +55,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		range1 = Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\horiz)
+		.mode_(\vert)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -65,7 +65,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		range2 = Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\horiz)
+		.mode_(\vert)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -104,7 +104,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			slewRate = Knob(parent, rect)
 			.color_([red, black, white, nil])
-			.mode_(\horiz)
+			.mode_(\vert)
 			.step_(step);
 			viewSizes = viewSizes.add([slewRate, rect]);
 
