@@ -78,6 +78,18 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			index = index + 1;
 		});
 
+		index = 42; // Output channels "voltage input". Los cuatro primeros canales admiten entrada de voltaje (42-45)
+		4.do({|i|
+			var o = outputChannels[i];
+			array[index-1] = Dictionary.newFrom(List[
+				\modul, o,
+				\synth, o.group,
+				\inBus, o.inputBus,
+				\inFeedbackBus, o.inFeedbackBus,
+			]);
+			index = index + 1;
+		});
+
 		index = 54; // Slew Limiters 1, 2 y 3, 42-53
 		slewLimiters.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
