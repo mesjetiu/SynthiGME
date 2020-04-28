@@ -1,3 +1,22 @@
+/*
+This file is part of SynthiGME.
+
+SynthiGME is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SynthiGME is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
+*/
+
 SGME_GUIPanel1 : SGME_GUIPanel {
 
 	// Valores de las opciones de selector: 1 = 0.293; 2 = 0.405; 3 = 0.5; 4 = 0.59; 5 = 0.691

@@ -26,13 +26,13 @@ o.close
 
 // Instalar SynthiGME desde directorio local
 (
-Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/SynthiGME");
+Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME");
 thisProcess.recompile;
 )
 
 // Desinstalar SynthiGME (versión de directorio local)
 (
-Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/trabajo/SynthiGME");
+Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME");
 Quarks.clear;
 thisProcess.recompile;
 )
