@@ -354,7 +354,7 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
-			"filterBank", { // Ejemplo "/echo/level"
+			"filterBank", { // Ejemplo "/filter/63"
 				switch (splitted[2],
 					"63", {
 						modulFilterBank.setBand63(value);
