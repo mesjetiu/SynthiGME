@@ -2,16 +2,15 @@
 
 ## Sobre el Quark
 
-Este repositorio contiene un Quark de SuperCollider, consistente en un emulador del sintetizador analógico EMS Synthi 100 dell Gabinete de Música Electroacústica de Cuenca.
-Esta aplicación forma parte del Trabajo de Fin de Máster en "Arte Sonoro" del autor, en la Facultad de Bellas Artes de la Universidad de Barcelona, en el 2019/2020, bajo la dirección de [José Manuel Berenguér Alarcón](http://www.sonoscop.net/jmb/).
+Este repositorio contiene un Quark de SuperCollider, consistente en un emulador del sintetizador analógico EMS Synthi 100 del Gabinete de Música Electroacústica de Cuenca.
+Esta aplicación forma parte del Trabajo de Fin de Máster en "Arte Sonoro" del autor, en la Facultad de Bellas Artes de la Universidad de Barcelona, en el 2019/2020, bajo la dirección de [José Manuel Berenguer Alarcón](http://www.sonoscop.net/jmb/).
 
-El nombre de la aplicación, "GME", tiene un significado recursivo: "GME Modular Emulator", haciendo un claro guiño al Gabinete de Música Electroacústica de Cuenca. Esta recursividad puede leerse como la imposibilidad de emular de manera fiel un sintetizador analógico, como es el del GME, por medios digitales, por más que se itere el trabajo del programador.  
+El nombre de la aplicación, "GME", tiene un significado recursivo: "GME Modular Emulator", haciendo un claro guiño al Gabinete de Música Electroacústica de Cuenca. Esta recursividad puede leerse como la imposibilidad de emular de manera fiel un sintetizador analógico, como es el del GME, por medios digitales, por más que se itere el trabajo del programador. 
 
 Las fotografías de los paneles del GUI de la aplicación, son del Synthi 100 del GME de Cuenca, al cual he podido acceder en diversas ocasiones los últimos meses gracias a la gentileza y generosidad de [Julio Sanz Vázquez](https://www.facebook.com/juliosanzvaz) y [Sylvia Molina Muro](https://www.facebook.com/sylvia.mmuro).
 
 Esta herramienta tiene primeramente un fin pedagógico. Quien quiera puede ver su código, mejorarlo, aprender de él, Conocer el funcionamiento básico de un sintetizador modular y, en concreto, el coloso Synthi 100 de EMS.
 
-Olaf. 2009/12/23
 
 ## Instalación
 
