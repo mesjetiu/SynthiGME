@@ -17,7 +17,7 @@ Esta herramienta tiene primeramente un fin pedagógico. Quien quiera puede ver s
 La aplicación está escrita en [SuperCollider](https://github.com/supercollider/supercollider). Los requisitos previos a la instalación son los siguientes:
 
 * [SuperCollider](https://github.com/supercollider/supercollider).
-* [SC3-plugins](https://github.com/supercollider/sc3-plugins). Ciertos UGens son de este paquete.
+* [SC3-plugins](https://github.com/supercollider/sc3-plugins). Ciertos UGens son de este paquete, por lo que es necesario para que funcione. La instalación de SC3-plugins en cada plataforma puede variar. Ver las instruccionies dentro de la propia web.
 * [git](https://git-scm.com/) para poder descargar el Quark.
 
 ### Instalación desde el IDE de SuperCollider
@@ -25,24 +25,11 @@ La aplicación está escrita en [SuperCollider](https://github.com/supercollider
 Para instalar el Quark de Synth GME, ejecutar en SuperCollider IDE:
 
 	// Instala el Quark desde el repositorio remoto:
-    Quarks.install("https://github.com/mesjetiu/SynthiGME.git");
+    Quarks.install("SynthiGME");
     // Recompila las clases para poder utilizarlas (también con Ctrl+Shift+L)
     thisProcess.recompile;
-
-### Instalación desde la línea de comandos del sistema
-
-Otro modo de instalar el Quark es a través de la línea de comandos del sistema. Descargar el archivo ["install_SGME.scd"](https://github.com/mesjetiu/SynthiGME/blob/master/installation/install_SGME.scd) del repositorio, y ejecutar la siguiente instrucción:
-
-    sclang ./install_SGME.scd
-
-
-
-## Ejecutar la aplicación
-
-Cuando se ejecuta Synthi GME no es posible usar más clases en la misma sesión de SuperCollider. Incluso el servidor de sonido es reiniciado cuando se abre la aplicación, ya que es necesario una configuración ad hoc para una correcta ejecución.
-
-Del mismo modo que en la instalación, existen dos modos de ejecutar la aplicación: desde el IDE de Supercollider (scide) o desde una terminal de comandos del sistema.
-
+    // Si se quiere desinstalar:
+    Quarks.uninstall("SynthiGME");
 
 
 ### Ejecutar la aplicación desde el IDE de SuperCollider
@@ -55,4 +42,5 @@ Del mismo modo que en la instalación, existen dos modos de ejecutar la aplicaci
     ~synthi.close;
 
 Una vez abierta la aplicación, aparecerán un conjunto de ventanas que representan los diversos paneles del Synthi 100, y todo estará listo para crear sonidos.
+Enjoy!
 
