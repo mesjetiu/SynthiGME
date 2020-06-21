@@ -208,7 +208,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 
 
 	// Hace visible o invisible los mandos de una ventana
-	commuteVisibility {
+	conmuteVisibility {
 		var visible;
 		viewSizes.do({|v|
 			if(

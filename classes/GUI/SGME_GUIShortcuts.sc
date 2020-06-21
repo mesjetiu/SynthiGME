@@ -28,7 +28,7 @@ SGME_GUIShortcuts {
 			keycode.switch(
 				118, {
 					synthiGME.guiSC.panels.do({|panel|
-						panel.commuteVisibility
+						panel.conmuteVisibility
 					})
 				},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizeFocusedPanel(factor)}, // +
@@ -67,7 +67,7 @@ SGME_GUIShortcuts {
 					})
 				},
 				104, { // Tecla h: (help) ayuda con los atajos de teclado
-					synthiGME.guiSC.helpWindow.switchVisibility;
+					synthiGME.guiSC.helpWindow.conmuteVisibility;
 				},
 			)
 		}

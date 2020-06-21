@@ -78,16 +78,22 @@ SGME_GUI {
 	}
 
 	makeWindow {
+		var waitTime = 0.1;
 		Window.closeAll; // Cierra todas las ventanas
-		panels.do({|panel|
-			panel.makeWindow
-		});
 
-		panels[0].hasFocus = true; // damos el foco al primer panel.
-		panels[0].window.front; // Ponemos al frente al primer panel.
+		Routine({
+			panels.do({|panel|
+				panel.makeWindow;
+				while({panel.window.visible == false}, {wait(waitTime)});
+			});
 
-		helpWindow.makeWindow;
-		running = true;
+			panels[0].hasFocus = true; // damos el foco al primer panel.
+			panels[0].window.front; // Ponemos al frente al primer panel.
+
+			helpWindow.makeWindow;
+			running = true;
+
+		}).play(AppClock);
 	}
 
 	closeWindows {

@@ -64,7 +64,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 	}
 
 
-	switchVisibility {
+	conmuteVisibility {
 		if (window.visible, {
 			window.visible_(false);
 		}, {
