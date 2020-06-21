@@ -58,7 +58,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 		});
 
 		this.makeShortcuts(window, synthiGME);
-
+		window.alwaysOnTop = true;
 
 		window.front;
 	}
