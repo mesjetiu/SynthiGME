@@ -23,6 +23,7 @@ SGME_GUINode {
 	var image1, image2;
 	var installedPath;
 	var synthiGME;
+	var <visible; // atributo "dummy" para el cambio de visibilidad de los witches en los paneles. No afecta a los Nodos pero se incluye el atributo para cambios generales en la visibilidad de GUI.
 
 	*new {arg synthi, parent, bounds, stringOSC;
 		^super.new.init(synthi, parent, bounds, stringOSC);

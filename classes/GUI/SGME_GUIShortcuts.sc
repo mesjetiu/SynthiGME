@@ -26,7 +26,11 @@ SGME_GUIShortcuts {
 			var factor = 2;
 			//keycode.postln;
 			keycode.switch(
-				118, {this.commuteVisibility},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
+				118, {
+					synthiGME.guiSC.panels.do({|panel|
+						panel.commuteVisibility
+					})
+				},  // 'v' Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 				65451, {this.resizeFocusedPanel(factor)}, // +
 				65453, {this.resizeFocusedPanel(1/factor)}, // -
 				43, {this.resizeFocusedPanel(factor)}, // + (en mi portatil Slimbook)
@@ -63,7 +67,7 @@ SGME_GUIShortcuts {
 					})
 				},
 				104, { // Tecla h: (help) ayuda con los atajos de teclado
-					synthiGME.guiSC.makeHelp();
+					synthiGME.guiSC.helpWindow.switchVisibility;
 				},
 			)
 		}
