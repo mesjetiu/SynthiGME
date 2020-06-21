@@ -17,7 +17,9 @@ along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
 Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
-SGME_GUIPanel {
+
+// De esta clase heredan los paneles.
+SGME_GUIPanel : SGME_GUIShortcuts{
 
 	var <id;
 	var <window;
@@ -56,6 +58,7 @@ SGME_GUIPanel {
 	*initClass {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(SGME_GUINode);
+		Class.initClassTree(SGME_GUIShortcuts);
 	}
 
 	*new {|synthi, parameters|
@@ -90,6 +93,9 @@ SGME_GUIPanel {
 		.userCanClose_(false);
 		compositeView = CompositeView(window, rectCompositeView);
 
+		this.makeShortcuts(window, synthiGME);
+
+		/*
 		window.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
 			//keycode.postln;
@@ -136,6 +142,7 @@ SGME_GUIPanel {
 			);
 		};
 
+		*/
 		/*		window.view.mouseDownAction = {
 		this.focus;
 		};*/
