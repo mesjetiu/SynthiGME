@@ -25,6 +25,7 @@ sclang ./SGME.scd
 */
 (
 
+/*
 Routine({
 	var myPath = PathName.new(Platform.systemExtensionDir);
 	wait(3);
@@ -35,5 +36,7 @@ Routine({
 		SynthiGME().run;
 	})
 }).play(AppClock);
+*/
 
+SynthiGME().run;
 )

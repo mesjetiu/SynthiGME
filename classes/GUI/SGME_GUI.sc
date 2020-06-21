@@ -28,6 +28,8 @@ SGME_GUI {
 
 	var <panels;
 
+	var <helpWindow; // Ventana de ayuda de atajos de teclado
+
 	var installedPath; // Dirección absoluta de instalación del Quark.
 	var <running; // Es true cuando se enciende la GUI. Sirve de semáforo para enviar o no mensajes desde fuera.
 
@@ -84,6 +86,42 @@ SGME_GUI {
 
 		running = true;
 	}
+
+	// Crea una ventana con la información de atajos de teclado
+	makeHelp {
+		if (helpWindow == nil,
+			{
+				var row, allTexts;
+				helpWindow = Window.new("Atajos de teclado", Rect(200,200,255,800), resizable: false).userCanClose_(false);
+				row = VLayoutView.new(helpWindow, Rect(0, 0, 255, 800)); //cada una de las filas
+
+				allTexts = [
+					["f", "Trae al frente"],
+					["h", "ayuda"],
+				];
+
+				allTexts.do({|textRow|
+					var columns = HLayoutView.new(row, Rect(0, 0, 255, 20));
+					CompositeView.new(columns, Rect(0, 0, 10, 20));
+					StaticText.new(columns, Rect(0, 0, 20, 20)).string_(textRow[0]);
+					StaticText.new(columns, Rect(0, 0, 100, 20)).string_(textRow[1]);
+				});
+
+				helpWindow.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
+					keycode.switch(
+						104, { // Tecla h: (help) ayuda con los atajos de teclado
+							this.makeHelp();
+						},
+					);
+				};
+
+				helpWindow.front;
+			}, {
+				helpWindow.close;
+				helpWindow = nil;
+		});
+	}
+
 
 	closeWindows {
 		panels.do({|panel|

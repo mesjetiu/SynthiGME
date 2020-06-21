@@ -130,6 +130,9 @@ SGME_GUIPanel {
 						synthiGME.close;
 					})
 				},
+				104, { // Tecla h: (help) ayuda con los atajos de teclado
+					synthiGME.guiSC.makeHelp();
+				},
 			);
 		};
 
