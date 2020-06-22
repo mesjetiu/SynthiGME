@@ -42,19 +42,41 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 	// Crea una ventana con la información de atajos de teclado
 	makeWindow {
 		var row, allTexts;
-		window = Window.new("Atajos de teclado", Rect(200,200,255,800), resizable: false).userCanClose_(false);
-		row = VLayoutView.new(window, Rect(0, 0, 255, 800)); //cada una de las filas
+		window = Window.new("Atajos de teclado",
+			Rect(
+				Window.availableBounds.width/3.9,
+				Window.availableBounds.height/6.5,
+				450,
+				380
+			),
+			resizable: false, scroll: true).userCanClose_(false);
+		row = VLayoutView.new(window, Rect(0, 0, 450, 380)); //cada una de las filas
 
 		allTexts = [
-			["f", "Trae al frente"],
-			["h", "ayuda"],
+			["h", "Abre y cierra esta ventana de ayuda"],
+			["1", "Trae al frente el panel 1"],
+			["2", "Trae al frente el panel 2"],
+			["3", "Trae al frente el panel 3"],
+			["4", "Trae al frente el panel 4"],
+			["5", "Trae al frente el panel 5"],
+			["6", "Trae al frente el panel 6"],
+			["7", "Trae al frente el panel 7"],
+			["f", "Trae al frente todas los paneles"],
+			["v", "Conmuta visibilidad de las views"],
+			["e", "Activa o desactiva los pines sin función de las matrices"],
+			["o", "Lleva al tamaño y posición original el panel en foco"],
+			["Shift+O", "Lleva al tamaño y posición original todas las ventanas"],
+			["Ctrl+O", "Establece una nueva posición \"origen\" de ventanas"],
+			["+", "Zoom in (también con doble click izquierdo)"],
+			["-", "Zoom out (también con doble click derecho)"],
+			["Ctrl+C", "Cierra la aplicación"],
 		];
 
 		allTexts.do({|textRow|
-			var columns = HLayoutView.new(row, Rect(0, 0, 255, 20));
+			var columns = HLayoutView.new(row, Rect(0, 0, 485, 20));
 			CompositeView.new(columns, Rect(0, 0, 10, 20));
-			StaticText.new(columns, Rect(0, 0, 20, 20)).string_(textRow[0]);
-			StaticText.new(columns, Rect(0, 0, 100, 20)).string_(textRow[1]);
+			StaticText.new(columns, Rect(0, 0, 60, 20)).string_(textRow[0]);
+			StaticText.new(columns, Rect(0, 0, 400, 20)).string_(textRow[1]);
 		});
 
 		this.makeShortcuts(window, synthiGME);
