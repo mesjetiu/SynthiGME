@@ -617,5 +617,8 @@ SynthiGME {
 		{Window.closeAll}.defer(0);
 		server.freeAll;
 		modulRandomGenerator.randomRoutine.stop;
+		if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
+			0.exit;
+		});
 	}
 }
