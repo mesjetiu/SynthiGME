@@ -88,12 +88,13 @@ SGME_Oscillator : SGME_Connectable {
 			sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
 			//sigPulse=PulseDPW.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); // sin alias y sin distorsión (forma parte de SC extended)
 			// Truco para evitar aliasing mezclando dos UGens dependiendo del rango de frecuencia
-
+			/*
 			sigPulse = (LFPulse.ar(scaledFreq, mul: pulseLevel, add: (-1*(pulseLevel/2)), width: 1-pulseShape)
-				* linlin(scaledFreq, 100, 1000,1,0));
+			* linlin(scaledFreq, 100, 1000,1,0));
 			sigPulse = sigPulse + Pulse.ar(scaledFreq, mul: pulseLevel
-				* linlin(scaledFreq, 100, 1000,0,1), width: 1-pulseShape);
+			* linlin(scaledFreq, 100, 1000,0,1), width: 1-pulseShape);
 			sigPulse = sigPulse/2;
+			*/
 
 			// Sine
 			sigSym = SinOsc.ar(scaledFreq).abs * sineSymmetry * sineLevel;
@@ -101,15 +102,18 @@ SGME_Oscillator : SGME_Connectable {
 			(sigSym + SinOsc.ar(scaledFreq, 0, (1-sineSymmetry.abs) * sineLevel));
 
 			// Triangle
-			//sigTriangle = LFTri.ar(scaledFreq, 0, triangleLevel);
+			sigTriangle = LFTri.ar(scaledFreq, 0, triangleLevel); // con aliasing pero más barato computacionalmente...
 			// Truco para evitar aliasing. A partir de 600Hz se convierte el triangulo en seno (sin aliasing)
+			/*
 			fadeTriangle = linlin(scaledFreq, 6000, 12000, 1, 0);
 			sigTriangle = LFTri.ar(scaledFreq, mul: triangleLevel * fadeTriangle);
 			sigTriangle = sigTriangle + SinOsc.ar(scaledFreq, mul: triangleLevel * (1 - fadeTriangle));
+			*/
+
 
 			// Sawtooth
-			//sigSawtooth = Saw.ar(scaledFreq, sawtoothLevel);
-			sigSawtooth = SawDPW.ar(scaledFreq, mul: sawtoothLevel); // sin alias y sin distorsión (forma parte de SC extended)
+			sigSawtooth = Saw.ar(scaledFreq, sawtoothLevel);
+			//sigSawtooth = SawDPW.ar(scaledFreq, mul: sawtoothLevel); // sin alias y sin distorsión (forma parte de SC extended)
 
 			// Suma de señales
 			sig1 = sigSine + sigSawtooth;
