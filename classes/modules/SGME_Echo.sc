@@ -67,7 +67,12 @@ SGME_Echo : SGME_Connectable {
 
 			var sigIn, sigOut;
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
-			sigOut = SwitchDelay.ar(sigIn, 1-mix, mix, VarLag.ar(K2A.ar(delay),0.001), feedback * 0.7) * level;
+			// Implementación usando SC3plugins
+			//sigOut = SwitchDelay.ar(sigIn, 1-mix, mix, VarLag.ar(K2A.ar(delay),0.001), feedback * 0.7) * level;
+			// Implementación sin usar SC3plugins
+			sigOut = (CombC.ar(sigIn, 20, delay, 20 * feedback) * mix) + (sigIn * (1-mix));
+
+			sigOut = sigOut * level;
 
 			Out.ar(outputBus, sigOut);
 		}).add
@@ -99,7 +104,7 @@ SGME_Echo : SGME_Connectable {
 				\level, this.convertLevel(level),
 			], server).register;
 		});
-	//	this.synthRun;
+		//	this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
@@ -117,7 +122,7 @@ SGME_Echo : SGME_Connectable {
 	// Conversores de unidades.
 
 	convertDelay {|d|
-		^d.linexp(0, 10, 1/0.002, 20);
+		^d.linexp(0, 10, 0.002, 20);
 	}
 
 	convertMix {|m|
@@ -138,27 +143,27 @@ SGME_Echo : SGME_Connectable {
 		delay = v;
 		synth.run(true);
 		synth.set(\delay, this.convertDelay(v));
-	//	this.synthRun();
+		//	this.synthRun();
 	}
 
 	setMix {|v|
 		mix = v;
 		synth.run(true);
 		synth.set(\mix, this.convertMix(v));
-	//	this.synthRun();
+		//	this.synthRun();
 	}
 
 	setFeedback {|v|
 		feedback = v;
 		synth.run(true);
 		synth.set(\feedback, this.convertFeedback(v));
-	//	this.synthRun();
+		//	this.synthRun();
 	}
 
 	setLevel {|v|
 		level = v;
 		synth.run(true);
 		synth.set(\level, this.convertLevel(v));
-	//	this.synthRun();
+		//	this.synthRun();
 	}
 }
