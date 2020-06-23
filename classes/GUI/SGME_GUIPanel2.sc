@@ -38,10 +38,22 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			var factor = 2;
 			if(clickCount == 2, {
 				buttonNumber.switch(
-					0, {this.resizePanel(factor)},
-					1, {this.resizePanel(1/factor)},
+					0, {this.resizePanel(factor)}, // botón izquierdo
+					1, {this.resizePanel(1/factor)}, // botón derecho
 				)
-			})
+			}, { // si se hace un solo click...
+				buttonNumber.switch(
+					0, {}, // botón izquierdo
+					1, {
+						Menu(
+							MenuAction("Salir (Ctrl+C)", { synthiGME.close }),
+						//	MenuAction("B", { "B selected".postln }),
+						//	MenuAction("C", { "C selected".postln }),
+						).front;
+					}, // botón derecho
+				)
+			}
+			)
 		});
 
 		this.makeFilterBank(compositeView, 31.2, 312);

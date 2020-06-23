@@ -13,7 +13,7 @@ thisProcess.recompile;
 )
 
 // Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.
-o = SynthiGME().run
+o = SynthiGME()
 
 // Ejecutar y sincronizar otros dispositivos (experimental)
 o = SynthiGME().run.pairDevice
@@ -26,7 +26,7 @@ o.close
 
 // Instalar SynthiGME desde directorio local
 (
-Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME");
+Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME", "HEAD");
 thisProcess.recompile;
 )
 
@@ -35,4 +35,15 @@ thisProcess.recompile;
 Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME");
 Quarks.clear;
 thisProcess.recompile;
+)
+
+
+// Para hacer menús...
+
+(
+~menu = Menu(
+    MenuAction("A", { "A selected".postln }),
+    MenuAction("B", { "B selected".postln }),
+    MenuAction("C", { "C selected".postln }),
+).front;
 )
