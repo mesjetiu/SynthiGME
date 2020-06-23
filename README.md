@@ -14,11 +14,10 @@ Esta herramienta tiene primeramente un fin pedagógico. Quien quiera puede ver s
 
 ## Instalación
 
-La aplicación está escrita en [SuperCollider](https://github.com/supercollider/supercollider). Los requisitos previos a la instalación son los siguientes:
+La aplicación está escrita en [SuperCollider](https://supercollider.github.io/download). Los requisitos previos a la instalación son los siguientes:
 
-* [SuperCollider](https://github.com/supercollider/supercollider).
-* [SC3-plugins](https://github.com/supercollider/sc3-plugins). Ciertos UGens son de este paquete, por lo que es necesario para que funcione. La instalación de SC3-plugins en cada plataforma puede variar. Ver las instruccionies dentro de la propia web.
-* [git](https://git-scm.com/) para poder descargar el Quark.
+* [SuperCollider](https://supercollider.github.io/download).
+* [git](https://git-scm.com/downloads) para poder descargar el Quark.
 
 ### Instalación desde el IDE de SuperCollider
 
