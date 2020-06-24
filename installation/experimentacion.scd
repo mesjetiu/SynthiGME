@@ -38,6 +38,7 @@ thisProcess.recompile;
 )
 
 
+<<<<<<< Updated upstream
 // Para hacer menús...
 
 (
@@ -47,3 +48,59 @@ thisProcess.recompile;
     MenuAction("C", { "C selected".postln }),
 ).front;
 )
+=======
+// Para crear un nuevo servidor (interesante que cada instancia tenga su servidor, con sus conexiones...)
+n = Server(\myServer, NetAddr("127.0.0.1", 57000));
+n.boot
+{PinkNoise.ar(0.1)!2}.play(n)
+
+/////////////////////////////
+
+p = Server(\scideS2, NetAddr("127.0.0.1", 57006));
+
+p.boot
+
+p = Server(\myServer2, NetAddr("127.0.0.1", 57001));
+
+p.boot
+
+{PinkNoise.ar(0.1)!2}.play(n)
+
+
+Server.named
+
+Server.all
+
+
+Server.killAll
+
+
+
+
+
+NetAddr("127.0.0.1", 57006)
+
+
+
+/version.reply
+
+
+
+
+
+
+
+
+b = NetAddr.new("127.0.0.1", 57001);    // create the NetAddr
+b.sendMsg("/version");    // send the application the message "hello" with the parameter "there"
+b.sendMsg("/status");    // send the application the message "hello" with the parameter "there"
+b.sendMsg("/quit");    // send the application the message "hello" with the parameter "there"
+b.sendMsg("/ping");    // send the application the message "hello" with the parameter "there"
+
+n = NetAddr.new("127.0.0.1", 57001);    // create the NetAddr
+// create the OSCFunc
+o = OSCFunc({ arg msg, time, addr, recvPort; [msg, time, addr, recvPort].postln; }, "/version.reply", n);
+o.free;    // remove the OSCFunc when you are done.
+o
+OSCFunc.trace(false)
+>>>>>>> Stashed changes
