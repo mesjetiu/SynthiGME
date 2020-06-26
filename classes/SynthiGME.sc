@@ -179,6 +179,7 @@ SynthiGME {
 				"OK\n".post;
 			});
 			"Estableciendo número correcto de canales de entrada y salida...".post;
+			server.options.device = "Synthi GME";
 			server.options.numAudioBusChannels = 2048; // Número de buses de Audio permitidos.
 			server.options.numOutputBusChannels = 18;
 			while({server.options.numOutputBusChannels != 18}, {wait(waitTime)});

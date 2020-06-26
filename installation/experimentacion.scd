@@ -47,6 +47,12 @@ thisProcess.recompile;
     MenuAction("B", { "B selected".postln }),
     MenuAction("C", { "C selected".postln }),
 ).front;
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+)
+=======
+>>>>>>> Stashed changes
 )
 =======
 // Para crear un nuevo servidor (interesante que cada instancia tenga su servidor, con sus conexiones...)
@@ -76,7 +82,11 @@ Server.killAll
 
 
 
+<<<<<<< Updated upstream
 
+=======
+Server
+>>>>>>> Stashed changes
 
 NetAddr("127.0.0.1", 57006)
 
@@ -87,6 +97,11 @@ NetAddr("127.0.0.1", 57006)
 
 
 
+<<<<<<< Updated upstream
+=======
+1000.rand + 58000
+
+>>>>>>> Stashed changes
 
 
 
