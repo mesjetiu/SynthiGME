@@ -51,6 +51,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 							MenuAction("Salir (Ctrl+C)", { synthiGME.close }),
 							MenuAction("Zoom In", { this.resizePanel(factor) }),
 							MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
+							MenuAction("Invisible", { window.visible = false }),
 						).front;
 					}, // botón derecho
 				)

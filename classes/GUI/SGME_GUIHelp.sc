@@ -108,7 +108,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 									window.alwaysOnTop = true
 								});
 							}),
-							//	MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
+							MenuAction("Invisible", { window.visible = false }),
 						).front;
 					}, // botón derecho
 				)
