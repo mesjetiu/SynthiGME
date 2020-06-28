@@ -18,7 +18,6 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
-
 	makeWindow {
 		var rect;
 		var image;
@@ -50,15 +49,14 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 					1, {
 						Menu(
 							MenuAction("Salir (Ctrl+C)", { synthiGME.close }),
-						//	MenuAction("B", { "B selected".postln }),
-						//	MenuAction("C", { "C selected".postln }),
+							//	MenuAction("B", { "B selected".postln }),
+							//	MenuAction("C", { "C selected".postln }),
 						).front;
 					}, // botón derecho
 				)
 			}
 			)
 		});
-
 		this.makeNodeTable;
 
 		this.saveOrigin;
@@ -67,14 +65,14 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		window.front;
 	}
 
-	makeNodeTable {
+	makeNodeTable { /////////BUG AQUÍ DENTRO... (WINDOWS)
 		// Se crean los nodos (botones)
 		var left = 56.2;
 		var top = 55;
 		var spacing = 6.1;
 		var nodeCountHor = 67;
 
-		63.do({|row|
+		63.do({|row| // 63
 			if((row < 30).or(row > 32), {
 				this.makeRow(compositeView, left, top, row, nodeCountHor);
 				nodeCountHor = nodeCountHor + 1;
@@ -87,20 +85,27 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 	makeRow {|parent, left, top, row, nodeCountHor|
 		var nodeCountVer = 1;
 		var spacing = 5.75;
-		67.do({|column|
+		var numColumns = 67;
+		Platform.case(
+			\osx,       { },
+			\linux,     { },
+			\windows,   { numColumns = 59 }
+		);
+		numColumns.do({|column| // 67
 			if(column != 33, {
 				this.makeNode(parent, left, top, column, row, nodeCountHor, nodeCountVer);
 				nodeCountVer = nodeCountVer + 1;
 			});
 			left = left + spacing;
-		})
+		});
 	}
+
+
 
 	makeNode {|parent, left, top, column, row, nodeCountHor, nodeCountVer|
 		var stringOSC = "/patchA/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
-
 		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC);
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchA/91/36
@@ -108,9 +113,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		nodes.put([nodeCountHor, nodeCountVer], node);
 
 		// Se añaden el view node y sus bound por defecto para resize
-		viewSizes = viewSizes ++ [
-			[node, bounds]
-		];
+		viewSizes = viewSizes.add([node, bounds]);
 	}
 
 	enableNodes { // Enable o disable los nodos según si el sintetizador los usa o no.
@@ -128,5 +131,6 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 				})
 			})
 		})
-		}
 	}
+
+}

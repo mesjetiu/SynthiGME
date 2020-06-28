@@ -53,8 +53,14 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var top = 55;
 		var spacing = 6.1;
 		var nodeCountHor = 67;
+		var numRows = 63;
+		Platform.case(
+			\osx,       { },
+			\linux,     { },
+			\windows,   { numRows = 59 }
+		);
 
-		63.do({|row|
+		numRows.do({|row|
 			if((row < 30).or(row > 32), {
 				this.makeRow(compositeView, left, top, row, nodeCountHor);
 				nodeCountHor = nodeCountHor + 1;
@@ -67,7 +73,13 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 	makeRow {|parent, left, top, row, nodeCountHor|
 		var nodeCountVer = 1;
 		var spacing = 5.75;
-		67.do({|column|
+		var numColumns = 67;
+		Platform.case(
+			\osx,       { },
+			\linux,     { },
+			\windows,   { numColumns = 60 }
+		);
+		numColumns.do({|column|
 			if(column != 33, {
 				this.makeNode(parent, left, top, column, row, nodeCountHor, nodeCountVer);
 				nodeCountVer = nodeCountVer + 1;

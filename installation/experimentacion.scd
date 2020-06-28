@@ -13,7 +13,7 @@ thisProcess.recompile;
 )
 
 // Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.
-o = SynthiGME()
+o = SynthiGME().run
 
 // Ejecutar y sincronizar otros dispositivos (experimental)
 o = SynthiGME().run.pairDevice
@@ -24,7 +24,20 @@ o.close
 
 // Para instalar y desinstalar desarrollando el Quark
 
-// Instalar SynthiGME desde directorio local
+// Instalar SynthiGME desde directorio local (Windows)
+(
+Quarks.install("C:/Users/mesje/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME", "HEAD");
+thisProcess.recompile;
+)
+
+// Desinstalar SynthiGME (versión de directorio local)
+(
+Quarks.uninstall("C:/Users/mesje/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME");
+Quarks.clear;
+thisProcess.recompile;
+)
+
+// Instalar SynthiGME desde directorio local (Linux)
 (
 Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME", "HEAD");
 thisProcess.recompile;
@@ -47,6 +60,7 @@ thisProcess.recompile;
     MenuAction("B", { "B selected".postln }),
     MenuAction("C", { "C selected".postln }),
 ).front;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 <<<<<<< Updated upstream
@@ -119,3 +133,20 @@ o.free;    // remove the OSCFunc when you are done.
 o
 OSCFunc.trace(false)
 >>>>>>> Stashed changes
+=======
+)
+
+(
+var viewSizes = [];
+var window = Window();
+var bounds = Rect(10,10,10,10);
+(80*67).do({
+	viewSizes = viewSizes.add([window, bounds]);
+});
+viewSizes.size.postln;
+
+)
+
+
+Platform
+>>>>>>> Windows: reducido número de nodos en matrices
