@@ -150,3 +150,8 @@ viewSizes.size.postln;
 
 Platform
 >>>>>>> Windows: reducido número de nodos en matrices
+
+"h" === Char
+5 === Integer
+'h'.ascii
+"h"[0] === Char
