@@ -25,7 +25,9 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		super.makeWindow;
 		rect = Rect(
 			left: 0,
-			top: 0,
+			top: (Window.availableBounds.height/2.1)
+			-(window.bounds.height
+				* (Window.availableBounds.width/virtualWidth)),//0,
 			width: window.bounds.width,
 			height: window.bounds.height,
 		);

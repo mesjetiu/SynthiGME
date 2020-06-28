@@ -25,7 +25,9 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 		super.makeWindow;
 		rect = Rect(
 			left: Window.availableBounds.width/(3/4),
-			top: 0,
+			top: (Window.availableBounds.height/2.1)
+			-(window.bounds.height
+				* (Window.availableBounds.width/virtualWidth)),//0,
 			width: window.bounds.width,
 			height: window.bounds.height,
 		);
