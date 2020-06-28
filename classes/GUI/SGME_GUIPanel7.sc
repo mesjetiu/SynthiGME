@@ -47,8 +47,8 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 					1, {
 						Menu(
 							MenuAction("Salir (Ctrl+C)", { synthiGME.close }),
-						//	MenuAction("B", { "B selected".postln }),
-						//	MenuAction("C", { "C selected".postln }),
+							MenuAction("Zoom In", { this.resizePanel(factor) }),
+							MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
 						).front;
 					}, // botón derecho
 				)

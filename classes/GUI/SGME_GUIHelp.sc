@@ -80,7 +80,41 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 		});
 
 		this.makeShortcuts(window, synthiGME);
-		window.alwaysOnTop = true;
+		window.alwaysOnTop = false;
+
+		window.asView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var factor = 2;
+			if(clickCount == 2, {
+				buttonNumber.switch(
+					0, {}, // botón izquierdo
+					1, {}, // botón derecho
+				)
+			}, { // si se hace un solo click...
+				buttonNumber.switch(
+					0, {}, // botón izquierdo
+					1, {
+						var onTopText;
+						if (window.alwaysOnTop == true, {
+							onTopText = "No poner sobre las demás"
+						},{
+							onTopText = "Poner sobre las demás"
+						});
+						Menu(
+							MenuAction("Salir (Ctrl+C)", { synthiGME.close }),
+							MenuAction(onTopText, {
+								if (window.alwaysOnTop == true, {
+									window.alwaysOnTop = false
+								},{
+									window.alwaysOnTop = true
+								});
+							}),
+							//	MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
+						).front;
+					}, // botón derecho
+				)
+			}
+			)
+		});
 
 		window.front;
 	}
