@@ -106,7 +106,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 					0, {}, // botón izquierdo
 					1, {
 						Menu(
-							MenuAction("Salir (Ctrl+C)", { synthiGME.close }),
+							MenuAction("Salir", { synthiGME.close }),
 							MenuAction("Zoom In", { this.resizePanel(factor) }),
 							MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
 							MenuAction("Invisible", { window.visible = false }),

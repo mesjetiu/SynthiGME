@@ -18,7 +18,7 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 
-// De esta clase heredan los paneles.
+// Ventana de ayuda con atajos de teclado
 SGME_GUIHelp : SGME_GUIShortcuts{
 
 	var <window;
@@ -100,7 +100,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 							onTopText = "Poner sobre las demás"
 						});
 						Menu(
-							MenuAction("Salir (Ctrl+C)", { synthiGME.close }),
+							MenuAction("Salir", { synthiGME.close }),
 							MenuAction(onTopText, {
 								if (window.alwaysOnTop == true, {
 									window.alwaysOnTop = false
