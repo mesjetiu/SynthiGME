@@ -86,11 +86,10 @@ SGME_GUI {
 				panel.makeWindow;
 				while({panel.window.visible == false}, {wait(waitTime)});
 			});
-
-			panels[0].hasFocus = true; // damos el foco al primer panel.
-			panels[0].window.front; // Ponemos al frente al primer panel.
-
 			helpWindow.makeWindow;
+			panels[0].window.front; // Ponemos al frente al primer panel.
+			panels[0].focus(0); // damos el foco al primer panel.
+
 			running = true;
 
 		}).play(AppClock);

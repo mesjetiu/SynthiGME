@@ -108,7 +108,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 									window.alwaysOnTop = true
 								});
 							}),
-							MenuAction("Invisible", { window.visible = false }),
+							MenuAction("Cerrar ayuda", { window.visible = false }),
 						).front;
 					}, // botón derecho
 				)
@@ -117,6 +117,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 		});
 
 		window.front;
+		window.visible = false;
 	}
 
 
@@ -127,5 +128,15 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 			window.visible_(true);
 		})
 	}
+
+/*	focus {arg numPanel;
+		synthiGME.guiSC.panels.do({|panel, i|
+			if (i == numPanel, {
+				panel.hasFocus = true;
+			}, {
+				panel.hasFocus = false;
+			})
+		})
+	} */
 
 }

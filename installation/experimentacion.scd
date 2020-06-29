@@ -155,3 +155,6 @@ Platform
 5 === Integer
 'h'.ascii
 "h"[0] === Char
+
+
+Array

@@ -18,29 +18,6 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		compositeView
 		.setBackgroundImage(image,10)
 		.background_(whiteBackground);
-		// Cuando se hace doble click se hace zoom
-		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
-			var factor = 2;
-			if(clickCount == 2, {
-				buttonNumber.switch(
-					0, {this.resizePanel(factor)}, // botón izquierdo
-					1, {this.resizePanel(1/factor)}, // botón derecho
-				)
-			}, { // si se hace un solo click...
-				buttonNumber.switch(
-					0, {}, // botón izquierdo
-					1, {
-						Menu(
-							MenuAction("Salir (Ctrl+C)", { synthiGME.close }),
-							MenuAction("Zoom In", { this.resizePanel(factor) }),
-							MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
-							MenuAction("Invisible", { window.visible = false }),
-						).front;
-					}, // botón derecho
-				)
-			}
-			)
-		});
 
 		this.makeNodeTable;
 
