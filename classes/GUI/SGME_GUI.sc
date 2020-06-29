@@ -50,6 +50,8 @@ SGME_GUI {
 		Class.initClassTree(SGME_GUIPanel5);
 		Class.initClassTree(SGME_GUIPanel6);
 		Class.initClassTree(SGME_GUIPanel7);
+		Class.initClassTree(SGME_GUIHelp);
+		Class.initClassTree(SGME_GUIAbout);
 	}
 
 	*new {arg synthi;
