@@ -111,12 +111,16 @@ SGME_FilterBank : SGME_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {|i|
-		var outputTotal = outVol * bands[i];
-		if (outputTotal == 0, {
-			synths[i].run(false);
+		if (i == nil,{
+			8.do{|j| this.synthRun(j)}
 		}, {
-			synths[i].run(true);
-		});
+			var outputTotal = outVol * bands[i];
+			if (outputTotal == 0, {
+				synths[i].run(false);
+			}, {
+				synths[i].run(true);
+			});
+		})
 	}
 
 	// Conversores de unidades. Los diales del Synthi tienen la escala del 0 al 10. Cada valor de cada dial debe ser convertido a unidades comprensibles por los Synths. Se crean métodos ad hoc, de modo que dentro de ellos se pueda "afinar" el comportamiento de cada dial o perilla.
@@ -137,7 +141,7 @@ SGME_FilterBank : SGME_Connectable {
 	setBand125 {|l|
 		bands[1] = l;
 		this.synthRun(1);
-		synths[1].set(\level, this.convertLevel(l))
+		synths[1].set(\level, this.convertLevel(l));
 	}
 
 	setBand250 {|l|
