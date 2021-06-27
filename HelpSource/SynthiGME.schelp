@@ -1,23 +1,22 @@
 TITLE:: SynthiGME
 summary:: Emulador del sintetizador EMS Synthi 100 del GME de Cuenca.
 categories:: Undocumented classes
+DESCRIPTION:: Este emulador está inspirado en el sintetizador EMS Synthi 100 del GME de Cuenca, actualmente operativo en el nGME, situado en el Instituto de Tecnología, construcción y telecomunicaciones de Cuenca.
 
-DESCRIPTION::
+Su finalidad es enteramente educativa. Puede ser utilizado para fines pedagógicos y artísticos.
 
+El emulador no está completado al 100%, pero es más que funcional para poder experimentar y aprender con él el funcionamiento de este sintetizador mítico, y el de los sintetizadores modulares en general.
 
+Repositorio: https://github.com/mesjetiu/SynthiGME
 
-
+Web del proyecto: https://synthigme.com
 
 
 EXAMPLES::
+code::// Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.::
 
-code::
-// Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.
-o = SynthiGME().run
+code::o = SynthiGME().run::
 
-// Ejecutar y sincronizar otros dispositivos (experimental)
-o = SynthiGME().run.pairDevice
+code::// Cerrar::
 
-// Cerrar
-o.close
-::
+code::o.close::
