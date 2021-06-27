@@ -58,7 +58,6 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			.step_(step);
 			viewSizes = viewSizes.add([knob, rect]);
 			parameterViews.put("/filterBank/" ++ (62.5*(2**(num))).ceil, knob); // Ejemplo: /filterBank/4000
-			("/filterBank/" ++ (62.5*(2**(num))).ceil.asInt).postln;
 			knob.action = {|knob|
 				synthiGME.setParameterOSC(
 					string:"/filterBank/" ++ (62.5*(2**(num))).ceil.asInt,
