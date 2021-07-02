@@ -621,5 +621,6 @@ SynthiGME {
 		if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
 			0.exit;
 		});
+		thisProcess.recompile;
 	}
 }
