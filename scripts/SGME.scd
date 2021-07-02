@@ -54,7 +54,8 @@ Routine({
 		if (time_answer == 1, {time_answer = nil}); // para salir del bucle
 	});
 	if (time_answer == nil, { // Si en el puerto no hay un servidor de Supercollider no obtenemos respuesta. ¡está libre!
-		server = Server(\synthiGME_Server, address);
+		server = Server(name: \synthiGME_Server ++ "_" ++ address.hostname ++ "_" ++ address.port,
+			addr: address);
 		wait (0.1);
 		("Servidor creado en " + address).postln;
 		SynthiGME(server: server).run;
