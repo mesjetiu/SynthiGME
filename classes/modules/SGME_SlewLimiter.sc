@@ -30,6 +30,8 @@ SGME_SlewLimiter : SGME_Connectable {
 	// Buses de entrada y salida de voltaje
 	var <inputBusVol;
 	var <inFeedbackBusVol;
+	var <inputBusControl;
+	var <inFeedbackBusControl;
 	var <outputBusVol;
 
 	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
@@ -55,12 +57,25 @@ SGME_SlewLimiter : SGME_Connectable {
 		SynthDef(\SGME_slewLimiter, {
 			arg inputBusVol,
 			inFeedbackBusVol,
+			inputBusControl,
+			inFeedbackBusControl,
 			outputBusVol,
 			rate;
 
-			var sig;
+			var sig, control;
 			sig = In.ar(inputBusVol) + InFeedback.ar(inFeedbackBusVol);
-			sig = Slew.ar(sig, rate, rate);
+			control = In.ar(inputBusControl) + InFeedback.ar(inFeedbackBusControl);
+
+			control = control.linlin(-1, 1, 300, -300);
+
+
+			control.poll(label:"inControl clip");
+			control = (rate + control).clip(1, 1000);
+
+			control.poll(label:"control sum");
+
+
+			sig = Slew.ar(sig, control, control);
 
 			Out.ar(outputBusVol, sig);
 		}).add
@@ -72,6 +87,8 @@ SGME_SlewLimiter : SGME_Connectable {
 		server = serv;
 		inputBusVol = Bus.audio(server);
 		inFeedbackBusVol = Bus.audio(server);
+		inputBusControl = Bus.audio(server);
+		inFeedbackBusControl = Bus.audio(server);
 		outputBusVol = Bus.audio(server);
 		pauseRoutine = Routine({
 			1.wait;
@@ -85,6 +102,8 @@ SGME_SlewLimiter : SGME_Connectable {
 			synth = Synth(\SGME_slewLimiter, [
 				\inputBusVol, inputBusVol,
 				\inFeedbackBusVol, inFeedbackBusVol,
+				\inputBusControl, inputBusControl,
+				\inFeedbackBusControl, inFeedbackBusControl,
 				\outputBusVol, outputBusVol,
 				\rate, this.convertRate(rate),
 			], server).register;
@@ -94,7 +113,7 @@ SGME_SlewLimiter : SGME_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun { // Dejo esta función aunque no se va a usar. Por ahora no hay manera de saber que no hay output.
-		var outputTotal = inCount * outCount;
+		var outputTotal = inCount + outCount;
 		if (outputTotal == 0, {
 			running = false;
 			synth.run(false);

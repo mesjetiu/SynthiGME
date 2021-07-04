@@ -144,7 +144,12 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			index = index + 1;
 		});
 		slewLimiters.do({|i|
-			// conectar aquí "Level Control" (por hacer)
+			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
+				\synth, i.synth,
+				\inBus, i.inputBusControl,
+				\inFeedbackBus, i.inFeedbackBusControl,
+			]);
 			index = index + 1;
 		});
 
