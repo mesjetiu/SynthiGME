@@ -39,13 +39,13 @@ thisProcess.recompile;
 
 // Instalar SynthiGME desde directorio local (Linux)
 (
-Quarks.install("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME", "HEAD");
+Quarks.install("/home/carlos/Software/SynthiGME", "HEAD");
 thisProcess.recompile;
 )
 
 // Desinstalar SynthiGME (versión de directorio local)
 (
-Quarks.uninstall("/home/carlos/Dropbox/Máster Arte Sonoro TFM/TFM/SynthiGME");
+Quarks.uninstall("/home/carlos/Software/SynthiGME");
 Quarks.clear;
 thisProcess.recompile;
 )
@@ -157,4 +157,59 @@ Platform
 "h"[0] === Char
 
 
-Array
+
+
+
+
+
+
+// frecuencia de corte en un solo oscilador (para limitar bandas y tener antialiasing)
+(
+{ var freq, sig, amp, nyquist;
+    freq = MouseX.kr(50, 50000, 1);
+	nyquist = SampleRate.ir / 2;
+	amp = Select.kr(freq < nyquist, [0, 1]);
+	sig = amp * SinOsc.ar(freq)!2;
+}.play;
+)
+
+
+
+// frecuencia de corte en varios osciladores generando una onda cuadrada
+(
+{ var freq, sig, nyquist, numSin = 100;
+    freq = MouseX.kr(10, 50000, 1);
+	nyquist = SampleRate.ir / 2;
+	sig = Array.fill(numSin, {|n|
+		var f = freq*(1,3..199)[n];
+		var a = (1,3..199)[n];
+		var amp = Select.kr(f < nyquist, [0, 1]);
+		SinOsc.ar(f, mul: amp/a)
+	});
+	sig = sig.sum;
+	sig = sig*0.5;
+	sig!2
+}.play;
+)
+
+// Es la única manera que veo posible para tener al mismo tiempo la posibilidad de hacer sync y modular la anchura del pulso, así como de respetar el cambio de forma de onda de la sinusoidal. La única pega es el aliasing... pero todo no se puede tener :-)
+(
+{var fase, sig, freq, width, masterFreq, masterSig;
+	freq = 100;//
+	masterFreq = MouseY.kr(10, 500, 1); //
+	masterSig = SinOsc.ar(masterFreq);
+	width = MouseX.kr(-1,1,0,1);
+	// marca la fase de la onda (para hardsync)
+	fase = Phasor.ar(masterSig,(freq*2)/SampleRate.ir,-1,1);
+	// pulso cuadrada
+	//sig = Select.ar(fase<width,K2A.ar([1,0]));
+	// Sinusoidal
+	//sig = SinOsc.ar(0,fase);
+	// Triangular
+	sig = Select.ar(fase<0,[(fase*(-1))+0.5,fase+0.5]);
+	// Diente de sierra
+	sig = fase;
+	sig = sig*0.1;
+	sig!2
+}.play;
+)
