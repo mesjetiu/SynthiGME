@@ -20,8 +20,9 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_PatchbayVoltage : SGME_Patchbay{
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, outputChannels|
+	connect {|echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
+			echo: echo,
 			inputAmplifiers: inputAmplifiers,
 			filters: filters,
 			envelopeShapers: envelopeShapers,
@@ -33,12 +34,27 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, outputChannels|
+	ordenateInputsOutputs {|echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
 
 		// Inputs horizontales (1-66) /////////////////////////////////////////////////////////////
+
+		index = 2; // Echo A.D.L. (2 y 3)
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, echo,
+			\synth, echo.synth,
+			\inBus, echo.inputBusMix,
+			\inFeedbackBus, echo.inFeedbackBusMix,
+		]);
+		index = index + 1;
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, echo,
+			\synth, echo.synth,
+			\inBus, echo.inputBusDelay,
+			\inFeedbackBus, echo.inFeedbackBusDelay,
+		]);
 
 		index = 4; // EnvelopeShapers ocupan los números 4-21 horizontales
 		envelopeShapers.do({|i|

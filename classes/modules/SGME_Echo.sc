@@ -30,6 +30,10 @@ SGME_Echo : SGME_Connectable {
 	// Buses de entrada y salida de audio
 	var <inputBus;
 	var <inFeedbackBus;
+	var <inputBusMix;
+	var <inFeedbackBusMix;
+	var <inputBusDelay;
+	var <inFeedbackBusDelay;
 	var <outputBus;
 
 	// Knobs del módulo
@@ -59,18 +63,28 @@ SGME_Echo : SGME_Connectable {
 		SynthDef(\SGME_Echo, {
 			arg inputBus,
 			inFeedbackBus,
+			inputBusMix,
+			inFeedbackBusMix,
+			inputBusDelay,
+			inFeedbackBusDelay,
 			outputBus,
 			delay,
 			mix,
 			feedback,
 			level;
 
-			var sigIn, sigOut;
+			var sigIn, sigOut, inMix, inDelay;
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
+			inMix = In.ar(inputBusMix) + InFeedback.ar(inFeedbackBusMix);
+			inMix = inMix.linlin(-1, 1, -0.25, 0.25) + mix;
+			inMix = inMix.clip(0, 1);
+			inDelay = In.ar(inputBusDelay) + InFeedback.ar(inFeedbackBusDelay);
+			inDelay = inDelay.linlin(-1, 1, -5, 5) + delay;
+			inDelay = inDelay.clip(0.002, 20);
 			// Implementación usando SC3plugins
 			//sigOut = SwitchDelay.ar(sigIn, 1-mix, mix, VarLag.ar(K2A.ar(delay),0.001), feedback * 0.7) * level;
 			// Implementación sin usar SC3plugins
-			sigOut = (CombC.ar(sigIn, 20, delay, 20 * feedback) * mix) + (sigIn * (1-mix));
+			sigOut = (CombC.ar(sigIn, 20, inDelay, 20 * feedback) * inMix) + (sigIn * (1-inMix));
 
 			sigOut = sigOut * level;
 
@@ -84,6 +98,10 @@ SGME_Echo : SGME_Connectable {
 		server = serv;
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
+		inputBusMix = Bus.audio(server);
+		inFeedbackBusMix = Bus.audio(server);
+		inputBusDelay = Bus.audio(server);
+		inFeedbackBusDelay = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
 			1.wait;
@@ -97,6 +115,10 @@ SGME_Echo : SGME_Connectable {
 			synth = Synth(\SGME_Echo, [
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
+				\inputBusMix, inputBusMix,
+				\inFeedbackBusMix, inFeedbackBusMix,
+				\inputBusDelay, inputBusDelay,
+				\inFeedbackBusDelay, inFeedbackBusDelay,
 				\outputBus, outputBus,
 				\delay, this.convertDelay(delay),
 				\mix, this.convertMix(mix),

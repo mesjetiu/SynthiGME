@@ -398,6 +398,7 @@ SynthiGME {
 				// conecta cada entrada y salida de cada módulo en el patchbay de voltaje
 				"Conexiones en Patchbay de voltage...".post;
 				modulPatchbayVoltage.connect(
+					echo: modulEcho,
 					inputAmplifiers: modulInputAmplifiers,
 					filters: modulFilters,
 					envelopeShapers: modulEnvelopeShapers,
