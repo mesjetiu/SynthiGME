@@ -222,6 +222,18 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			\outBus, echo.outputBus,
 		]);
 
+		index = 59; // Oscillators (Pulse Modulation) ocupan los números 59-64 horizontales
+		6.do({|i| // Solo los 6 primeros osciladores pueden ser modulados en el pulso.
+			i = oscillators[i];
+			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
+				\synth, i.synth,
+				\inBus, i.inputBusPulseMod,
+				\inFeedbackBus, i.inFeedbackBusPulseMod,
+			]);
+			index = index + 1;
+		});
+
 		^array;
 	}
 }
