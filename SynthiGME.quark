@@ -2,7 +2,7 @@
 	\name:	"SynthiGME",
 	\path:	"SynthiGME",
 	\summary:	"Clase SynthiGME, emulando el EMS Synthi 100 del GME de Cuenca",
-	\version:	"1.3.0",
+	\version:	"1.4.0",
 	\schelp:	"SynthiGME",
 	\license:	"GNU GPLv3",
 	\copyright:	"Carlos Arturo Guerra Parra, 2021"
