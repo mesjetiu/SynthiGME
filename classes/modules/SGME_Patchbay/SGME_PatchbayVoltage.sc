@@ -121,6 +121,18 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			index = index + 1;
 		});
 
+		index = 46; // Output channels "Level". (46-53)
+		8.do({|i|
+			var o = outputChannels[i];
+			array[index-1] = Dictionary.newFrom(List[
+				\modul, o,
+				\synth, o.group,
+				\inBus, o.inputBusLevel,
+				\inFeedbackBus, o.inFeedbackBusLevel,
+			]);
+			index = index + 1;
+		});
+
 		index = 54; // Slew Limiters 1, 2 y 3, 42-53
 		slewLimiters.do({|i|
 			array[index-1] = Dictionary.newFrom(List[

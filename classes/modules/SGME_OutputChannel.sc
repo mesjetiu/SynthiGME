@@ -27,6 +27,8 @@ SGME_OutputChannel : SGME_Connectable {
 	var <server;
 	var <inputBus; // Entrada del amplificador.
 	var <inFeedbackBus; // Entrada de feedback: admite audio del ciclo anterior.
+	var <inputBusLevel; // Modulación de Level por voltaje.
+	var <inFeedbackBusLevel; // Modulación de Level por voltaje.
 	var <outputBusBypass; // Salida del amplificador sin procesado (para bus interno del synthi.
 	var <outputBus; // Salida del amplificador.
 	var <outBusL; // Canal izquierdo de la salida stereo.
@@ -58,6 +60,8 @@ SGME_OutputChannel : SGME_Connectable {
 		SynthDef(\SGME_outputChannel, {
 			arg inputBus,
 			inFeedbackBus,
+			inputBusLevel,
+			inFeedbackBusLevel,
 			outputBus,
 			outBusL,
 			outBusR,
@@ -67,17 +71,19 @@ SGME_OutputChannel : SGME_Connectable {
 			level, // entre 0 y 1
 			on;
 
-			var sigIn, sigInFeedback, sig, sigPannedR, sigPannedL;
+			var sigIn, sigInFeedback, inLevel, sig, sigPannedR, sigPannedL;
 
-			sigIn = In.ar(inputBus);
-			sigIn = sigIn + InFeedback.ar(inFeedbackBus);
+			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
+
+			inLevel = In.ar(inputBusLevel) + InFeedback.ar(inFeedbackBusLevel);
+
 
 			// Se realiza el filtrado
 			sig = HPF.ar(sigIn, freqHP);
 			sig = LPF.ar(sig, freqLP);
 
 			// Se aplica el nivel (level)
-			sig = sig * level;
+			sig = sig * (level+inLevel);
 
 			// Se aplica el paneo
 			#sigPannedL, sigPannedR = Pan2.ar(sig, pan) * on;
@@ -85,7 +91,7 @@ SGME_OutputChannel : SGME_Connectable {
 			Out.ar(outputBus, sig); // señal que sale hacia los canales SC sin ser paneada
 			Out.ar(outBusL, sigPannedL);
 			Out.ar(outBusR, sigPannedR);
-		}, [nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]
+		}, [nil, nil, nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]
 		).add;
 
 		SynthDef(\SGME_outputChannelBypass, {
@@ -109,6 +115,8 @@ SGME_OutputChannel : SGME_Connectable {
 		outputBusBypass = Bus.audio(server);
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
+		inputBusLevel = Bus.audio(server);
+		inFeedbackBusLevel = Bus.audio(server);
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
 		pauseRoutine = Routine({
@@ -136,6 +144,8 @@ SGME_OutputChannel : SGME_Connectable {
 				synth = Synth(\SGME_outputChannel, [
 					\inputBus, inputBus,
 					\inFeedbackBus, inFeedbackBus,
+					\inputBusLevel, inputBusLevel,
+					\inFeedbackBusLevel, inFeedbackBusLevel,
 					\outputBus, outputBus,
 					\outBusL, outBusL,
 					\outBusR, outBusR,
