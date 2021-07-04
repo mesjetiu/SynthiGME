@@ -399,6 +399,7 @@ SynthiGME {
 				"Conexiones en Patchbay de voltage...".post;
 				modulPatchbayVoltage.connect(
 					inputAmplifiers: modulInputAmplifiers,
+					filters: modulFilters,
 					envelopeShapers: modulEnvelopeShapers,
 					oscillators: modulOscillators,
 					randomGenerator: modulRandomGenerator,
@@ -439,7 +440,7 @@ SynthiGME {
 					"/ping".matchRegexp(msg[0].asString), // ...o si está activado el /ping en TouchOSC en menos de 4s
 					{
 						if(oscDevices.trueAt(addr.ip) == false, {
-							oscDevices.put(addr.ip, addr.ip);
+							oscDevices.put(addr.ip, [addr.ip, recvPort]);
 							("Found device at " ++ addr.ip).postln;
 						})
 				})
@@ -454,7 +455,7 @@ SynthiGME {
 				this.prepareOSC;
 				netAddr = List.new;
 				oscDevices.do({|i|
-					netAddr.add(NetAddr(i, devicePort));
+					netAddr.add(NetAddr(i[0], i[1]));
 				});
 				this.sendStateOSC;
 			});
@@ -479,7 +480,7 @@ SynthiGME {
 	sendBroadcastMsg{|msg, value, addrForbidden|
 		if(addrForbidden == \GUI, {
 			netAddr.do({|i|
-				i.sendMsg(msg, value)
+				i.sendMsg(msg, value).postln;
 			})
 		}, {
 			// Poner aquí código de reenvío a GUI de los mensajes recibidos de otros dispositivos

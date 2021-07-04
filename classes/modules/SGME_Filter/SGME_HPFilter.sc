@@ -24,20 +24,27 @@ SGME_HPFilter : SGME_Filter {
 		SynthDef(\SGME_HPFilter, {
 			arg inputBus,
 			inFeedbackBus,
+			inputBusVoltage,
+			inFeedbackBusVoltage,
 			outputBus,
 			frequency,
 			response,
 			level,
 			outVol;
 
-			var sigIn, sigOut;
+			var sigIn, sigOut, inVoltage, freq;
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 
 			sigIn = sigIn + WhiteNoise.ar(0.001); // Ruido no audible para poder crear sonido sin entrada
-			sigOut = BHiPass.ar(sigIn, frequency, response) * level;
+			inVoltage = In.ar(inputBusVoltage) + InFeedback.ar(inFeedbackBusVoltage);
+
+			freq = inVoltage.linlin(-1, 1, -1000, 1000, nil);
+			freq = (freq + frequency).clip(5, 20000);
+
+			sigOut = BHiPass.ar(sigIn, freq, response) * level;
 
 			Out.ar(outputBus, sigOut);
-		}, [nil, nil, nil, lag, lag, lag, lag]
+		}, [nil, nil, nil, nil, nil, lag, lag, lag, lag]
 		).add
 	}
 
@@ -47,6 +54,8 @@ SGME_HPFilter : SGME_Filter {
 			synth = Synth(\SGME_HPFilter, [
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
+				\inputBusVoltage, inputBusVoltage,
+				\inFeedbackBusVoltage, inFeedbackBusVoltage,
 				\outputBus, outputBus,
 				\frequency, this.convertFrequency(frequency),
 				\response, this.convertResponse(response),

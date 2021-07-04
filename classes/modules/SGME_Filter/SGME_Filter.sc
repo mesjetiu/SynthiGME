@@ -27,6 +27,8 @@ SGME_Filter : SGME_Connectable {
 	// Buses de entrada y salida
 	var <inputBus;
 	var <inFeedbackBus;
+	var <inputBusVoltage;
+	var <inFeedbackBusVoltage;
 	var <outputBus; // Salida
 
 	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
@@ -58,6 +60,8 @@ SGME_Filter : SGME_Connectable {
 		server = serv;
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
+		inputBusVoltage = Bus.audio(server);
+		inFeedbackBusVoltage = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
 			1.wait;
