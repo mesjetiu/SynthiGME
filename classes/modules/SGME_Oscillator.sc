@@ -24,7 +24,7 @@ SGME_Oscillator : SGME_Connectable {
 
 	// Valores de los parámetros del Synthi 100
 	// Cada vez que sean modificados en el Synth se almacenará aquí su nuevo valor
-	var <range = 1; // Valores: 1 = "hi" y 0 = "lo". Por ahora no tiene ningún efecto
+	var <range = 1; // Valores: 1 = "hi" y 0 = "lo".
 	var <pulseLevel = 0; // Todos los valores son entre 0 y 10, como los diales del Synthi 100.
 	var <pulseShape = 0; // entre -5 y 5
 	var <sineLevel = 0;
@@ -67,15 +67,13 @@ SGME_Oscillator : SGME_Connectable {
 			sawtoothLevel, // de 0 a 1
 			freq, // de 0 a 10 (tal cual desde el dial)
 			freqMin, freqMax, // frecuencia mínima y máxima a la que convertir los valores del dial.
-
 			outVol, // de 0 a 1
-
 			outputBus1,
 			outputBus2,
 			inputBusVoltage,
 			inFeedbackBusVoltage;
 
-			var scaledFreq, sigPulse, sigSym, sigSine, sigTriangle, fadeTriangle, sigSawtooth, sig1, sig2, voltIn;
+			var scaledFreq, sigPulse, sigSym, sigSine, sigTriangle, fadeTriangle, sigSawtooth, sig1, sig2, voltIn, phase;
 
 			voltIn = In.ar(inputBusVoltage);
 			voltIn = voltIn + InFeedback.ar(inFeedbackBusVoltage);
@@ -83,10 +81,19 @@ SGME_Oscillator : SGME_Connectable {
 			scaledFreq = scaledFreq * (2**(voltIn * 4)); // Ajustar la influencia del control de voltaje correctamente...
 			scaledFreq = scaledFreq.clip(0, 20000); // Se evita que pueda tener una frecuencia superior a 20000.
 
-			// Pulse
+			// Fase que gobierna a todos los osciladores (en caso de Opción B). Permite "hard sync", aunque los resultados sean con aliassing.
+			phase = Phasor.ar(0,(scaledFreq*2)/SampleRate.ir,-1,1);
+
+			// PULSE **********************************
+			// Opción A: (probada y funcionando hasta v1.2.2)
+			//sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
+			// Opción B: (permite hard sync)
+			sigPulse = Select.ar(phase<((pulseShape*2)-1),K2A.ar([1,0]))*pulseLevel;
+			// Opción C:
 			//sigPulse = LFPulse.ar(freq: scaledFreq, width: pulseShape, mul: pulseLevel);
-			sigPulse=Pulse.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); //sin alias.
+			// Opción D:
 			//sigPulse=PulseDPW.ar(freq: scaledFreq,width: 1-pulseShape,mul: pulseLevel); // sin alias y sin distorsión (forma parte de SC extended)
+			// Opción E:
 			// Truco para evitar aliasing mezclando dos UGens dependiendo del rango de frecuencia
 			/*
 			sigPulse = (LFPulse.ar(scaledFreq, mul: pulseLevel, add: (-1*(pulseLevel/2)), width: 1-pulseShape)
@@ -96,13 +103,22 @@ SGME_Oscillator : SGME_Connectable {
 			sigPulse = sigPulse/2;
 			*/
 
-			// Sine
+			// SINE ******************************************
+			// Opción A: (probada y funcionando hasta v1.2.2)
+			/*
 			sigSym = SinOsc.ar(scaledFreq).abs * sineSymmetry * sineLevel;
-			sigSine =
-			(sigSym + SinOsc.ar(scaledFreq, 0, (1-sineSymmetry.abs) * sineLevel));
+			sigSine = (sigSym + SinOsc.ar(scaledFreq, 0, (1-sineSymmetry.abs) * sineLevel));
+			*/
+			// Opción B:
+			sigSym = SinOsc.ar(0, phase.linlin(-1,1,0,2pi)).abs * sineSymmetry * sineLevel;
+			sigSine = (sigSym + SinOsc.ar(0, phase.linlin(-1,1,0,2pi), (1-sineSymmetry.abs) * sineLevel));
 
-			// Triangle
-			sigTriangle = LFTri.ar(scaledFreq, 0, triangleLevel); // con aliasing pero más barato computacionalmente...
+			// TRIANGLE *******************************************
+			// Opción A: (probada y funcionando hasta v1.2.2)
+			//sigTriangle = LFTri.ar(scaledFreq, 0, triangleLevel); // con aliasing pero más barato computacionalmente...
+			// Opción B:
+			sigTriangle = Select.ar(phase<0,[(phase*(-1))+0.5,phase+0.5]) * triangleLevel;
+			// Opción C:
 			// Truco para evitar aliasing. A partir de 600Hz se convierte el triangulo en seno (sin aliasing)
 			/*
 			fadeTriangle = linlin(scaledFreq, 6000, 12000, 1, 0);
@@ -110,9 +126,12 @@ SGME_Oscillator : SGME_Connectable {
 			sigTriangle = sigTriangle + SinOsc.ar(scaledFreq, mul: triangleLevel * (1 - fadeTriangle));
 			*/
 
-
-			// Sawtooth
+			// SAWTOOTH ********************************
+			// Opción A: (probada y funcionando hasta v1.2.2)
 			sigSawtooth = Saw.ar(scaledFreq, sawtoothLevel);
+			// Opción B:
+			sigSawtooth = phase * sawtoothLevel;
+			// Opción C:
 			//sigSawtooth = SawDPW.ar(scaledFreq, mul: sawtoothLevel); // sin alias y sin distorsión (forma parte de SC extended)
 
 			// Suma de señales
