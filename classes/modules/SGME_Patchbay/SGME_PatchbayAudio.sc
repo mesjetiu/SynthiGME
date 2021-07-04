@@ -107,6 +107,18 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			\inFeedbackBus, filterBank.inFeedbackBus,
 		]);
 
+		index = 24; // Oscillators (synchronisation) ocupan los números 24-35 horizontales
+		12.do({|i|
+			i = oscillators[i];
+			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
+				\synth, i.synth,
+				\inBus, i.inputBusSync,
+				\inFeedbackBus, i.inFeedbackBusSync,
+			]);
+			index = index + 1;
+		});
+
 		index = 36; // Output Channels ocupan los números 36-43 horizontales
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[

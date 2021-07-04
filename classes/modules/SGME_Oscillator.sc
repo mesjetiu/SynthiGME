@@ -37,6 +37,8 @@ SGME_Oscillator : SGME_Connectable {
 	var <outputBus2; // Pulse y Triangle
 	var <inputBusVoltage; // entrada de voltage para control de la frecuencia
 	var <inFeedbackBusVoltage;
+	var <inputBusSync; // entrada de audio para control de la sincronización
+	var <inFeedbackBusSync;
 
 	// Otros atributos de instancia
 	var <server;
@@ -71,18 +73,21 @@ SGME_Oscillator : SGME_Connectable {
 			outputBus1,
 			outputBus2,
 			inputBusVoltage,
-			inFeedbackBusVoltage;
+			inFeedbackBusVoltage,
+			inputBusSync,
+			inFeedbackBusSync;
 
-			var scaledFreq, sigPulse, sigSym, sigSine, sigTriangle, fadeTriangle, sigSawtooth, sig1, sig2, voltIn, phase;
+			var scaledFreq, sigPulse, sigSym, sigSine, sigTriangle, fadeTriangle, sigSawtooth, sig1, sig2, voltIn, phase, syncIn;
 
-			voltIn = In.ar(inputBusVoltage);
-			voltIn = voltIn + InFeedback.ar(inFeedbackBusVoltage);
+			voltIn = In.ar(inputBusVoltage) + InFeedback.ar(inFeedbackBusVoltage);
 			scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
 			scaledFreq = scaledFreq * (2**(voltIn * 4)); // Ajustar la influencia del control de voltaje correctamente...
 			scaledFreq = scaledFreq.clip(0, 20000); // Se evita que pueda tener una frecuencia superior a 20000.
+			syncIn = In.ar(inputBusSync) + InFeedback.ar(inFeedbackBusSync);
 
 			// Fase que gobierna a todos los osciladores (en caso de Opción B). Permite "hard sync", aunque los resultados sean con aliassing.
-			phase = Phasor.ar(0,(scaledFreq*2)/SampleRate.ir,-1,1);
+			phase = Phasor.ar(syncIn,
+				(scaledFreq*2)/SampleRate.ir,-1,1);
 
 			// PULSE **********************************
 			// Opción A: (probada y funcionando hasta v1.2.2)
@@ -141,7 +146,7 @@ SGME_Oscillator : SGME_Connectable {
 			Out.ar(outputBus1, sig1 * outVol);
 			Out.ar(outputBus2, sig2 * outVol);
 
-		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil, lag, lag]
+		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil, lag, lag, nil, nil]
 		).add;
 	}
 
@@ -156,6 +161,8 @@ SGME_Oscillator : SGME_Connectable {
 		outputBus2 = Bus.audio(server);
 		inputBusVoltage = Bus.audio(server);
 		inFeedbackBusVoltage = Bus.audio(server);
+		inputBusSync = Bus.audio(server);
+		inFeedbackBusSync = Bus.audio(server);
 		pauseRoutine = Routine({
 			1.wait;
 			synth.run(false);
@@ -179,6 +186,8 @@ SGME_Oscillator : SGME_Connectable {
 				\outputBus2, outputBus2,
 				\inputBusVoltage, inputBusVoltage,
 				\inFeedbackBusVoltage, inFeedbackBusVoltage,
+				\inputBusSync, inputBusSync,
+				\inFeedbackBusSync, inFeedbackBusSync,
 				\outVol, 1,
 			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
 		});
