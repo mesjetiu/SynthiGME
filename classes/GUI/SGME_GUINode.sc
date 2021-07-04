@@ -20,7 +20,7 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_GUINode {
 	var <view;
 	var value;
-	var image1, image2;
+	var image1, image2, image3;
 	var installedPath;
 	var synthiGME;
 	var <visible; // atributo "dummy" para el cambio de visibilidad de los witches en los paneles. No afecta a los Nodos pero se incluye el atributo para cambios generales en la visibilidad de GUI.
@@ -34,19 +34,37 @@ SGME_GUINode {
 		installedPath = Quarks.quarkNameAsLocalPath("SynthiGME");
 		image1 = Image(installedPath ++ "/classes/GUI/images/widgets/patchbay_hole.png");
 		image2 = Image(installedPath ++ "/classes/GUI/images/widgets/patchbay_white_pin.png");
+		image3 = Image(installedPath ++ "/classes/GUI/images/widgets/patchbay_yellow_pin.png");
 		value = 0;
 		view = View(parent, bounds)
 		.setBackgroundImage(image1, 10)
 		.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			buttonNumber.switch(
 				0, {
-					if(value==1, {
+					if ((value==1).and(modifiers.isCtrl==false), { // Se hace clic en un nodo encendido
 						value=0;
 						view.setBackgroundImage(image1, 10);
 					}, {
-						value=1;
-						view.setBackgroundImage(image2, 10);
-					});
+						if ((value==0).and(modifiers.isCtrl==false),{ // Se hace click en un nodo apagado
+							value=1;
+							view.setBackgroundImage(image2, 10);
+						}, {
+							if (value==1 && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo encendido
+								value=(-1);
+								view.setBackgroundImage(image3, 10);
+							}, {
+								if (value==0 && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo apagado
+									value=(-1);
+									view.setBackgroundImage(image3, 10);
+								}, {
+									if (value==(-1) && modifiers.isCtrl==false, { // Se hace Ctrl+click en un nodo con pin a medias
+										value=1;
+										view.setBackgroundImage(image2, 10);
+									}, {
+										if (value==(-1) && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo con pin a medias
+											value=0;
+											view.setBackgroundImage(image1, 10);
+					})})})})})});
 					synthiGME.setParameterOSC(
 						string: stringOSC,
 						value: value,
@@ -54,7 +72,7 @@ SGME_GUINode {
 					);
 
 				}, // click izquierdo
-				1, {"der".postln}, // click derecho
+				1, {}, // click derecho, no implementado
 			)
 		});
 	}
