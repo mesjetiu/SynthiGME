@@ -53,7 +53,7 @@ SGME_SlewLimiter : SGME_Connectable {
 	}
 
 	*addSynthDef {
-		lag = 0.01; //SGME_Settings.get[\ringLag];
+		lag = 0.2; //SGME_Settings.get[\ringLag];
 		SynthDef(\SGME_slewLimiter, {
 			arg inputBusVol,
 			inFeedbackBusVol,
@@ -78,7 +78,8 @@ SGME_SlewLimiter : SGME_Connectable {
 			sig = Slew.ar(sig, control, control);
 
 			Out.ar(outputBusVol, sig);
-		}).add
+		},[nil, nil, nil, nil, nil, lag]
+		).add
 	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
