@@ -59,7 +59,7 @@ SGME_Echo : SGME_Connectable {
 	}
 
 	*addSynthDef {
-		lag = 0.01;
+		lag = 0.2;
 		SynthDef(\SGME_Echo, {
 			arg inputBus,
 			inFeedbackBus,
@@ -89,7 +89,7 @@ SGME_Echo : SGME_Connectable {
 			sigOut = sigOut * level;
 
 			Out.ar(outputBus, sigOut);
-		}).add
+		},[nil, nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]).add
 	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////

@@ -152,7 +152,7 @@ SGME_Oscillator : SGME_Connectable {
 			Out.ar(outputBus1, sig1 * outVol);
 			Out.ar(outputBus2, sig2 * outVol);
 
-		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil, lag, lag, nil, nil]
+		},[lag, lag, lag, lag, lag, lag, lag, nil, nil, lag, nil, nil, nil, nil, nil, nil]
 		).add;
 	}
 
