@@ -149,7 +149,8 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		.mode_(\vert)
 		.step_(step)
 		.enabled_(false)
-		.action_({|s| s.value.postln});
+		.action_({|s| s.value.postln})
+		.value_(SGME_GUIPanel1.selectorValuesConvert(3));
 		viewSizes = viewSizes.add([selector, rect]);
 
 
