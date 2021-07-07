@@ -20,9 +20,10 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_PatchbayAudio : SGME_Patchbay{
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	connect {|inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			inputAmplifiers: inputAmplifiers,
+			externalTreatmentReturns: externalTreatmentReturns,
 			filters: filters,
 			filterBank: filterBank,
 			envelopeShapers: envelopeShapers,
@@ -35,7 +36,7 @@ SGME_PatchbayAudio : SGME_Patchbay{
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	ordenateInputsOutputs {|inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -147,6 +148,16 @@ SGME_PatchbayAudio : SGME_Patchbay{
 				\modul, i,
 				\synth, i.group,
 				\outBus, i.outputBusBypass,
+			]);
+			index = index + 1;
+		});
+
+		index = 83; // Inputs de Amplificador del 83-86
+		externalTreatmentReturns.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
+				\synth, i.synth,
+				\outBus, i.outputBus,
 			]);
 			index = index + 1;
 		});

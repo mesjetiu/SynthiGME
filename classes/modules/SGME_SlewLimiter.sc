@@ -65,15 +65,8 @@ SGME_SlewLimiter : SGME_Connectable {
 			var sig, control;
 			sig = In.ar(inputBusVol) + InFeedback.ar(inFeedbackBusVol);
 			control = In.ar(inputBusControl) + InFeedback.ar(inFeedbackBusControl);
-
 			control = control.linlin(-1, 1, 300, -300);
-
-
-			control.poll(label:"inControl clip");
 			control = (rate + control).clip(1, 1000);
-
-			control.poll(label:"control sum");
-
 
 			sig = Slew.ar(sig, control, control);
 

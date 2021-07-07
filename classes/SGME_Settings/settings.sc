@@ -87,6 +87,11 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		\inputLag, 0.2,
 		\inputLevelMax, 1,
 
+		// CONFIGURACIÓN DE External Treatment Returns**********************************************
+
+		\returnLag, 0.2,
+		\returnLevelMax, 1,
+
 		// CONFIGURACIÓN DE RING MODULATOR**********************************************************
 
 		\ringLag, 0.2,

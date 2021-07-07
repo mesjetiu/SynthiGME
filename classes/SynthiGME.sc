@@ -22,6 +22,7 @@ SynthiGME {
 
 	// Módulos que incluye:
 	var <modulInputAmplifiers;
+	var <modulExternalTreatmentReturns;
 	var <modulFilters;
 	var <modulFilterBank;
 	var <modulEnvelopeShapers;
@@ -78,6 +79,7 @@ SynthiGME {
 		Class.initClassTree(SGME_Filter);
 		Class.initClassTree(SGME_FilterBank);
 		Class.initClassTree(SGME_InputAmplifier);
+		Class.initClassTree(SGME_ExternalTreatmentReturn);
 		Class.initClassTree(SGME_NoiseGenerator);
 		Class.initClassTree(SGME_RingModulator);
 		Class.initClassTree(SGME_Echo);
@@ -98,6 +100,12 @@ SynthiGME {
 
 	*addSynthDef {
 		SynthDef(\connectionInputAmplifier, {|outBus, inBus, vol|
+			var sig;
+			sig = SoundIn.ar(inBus);
+			Out.ar(outBus, sig * vol);
+		}).add;
+
+		SynthDef(\connectionExternalTreatmentReturn, {|outBus, inBus, vol|
 			var sig;
 			sig = SoundIn.ar(inBus);
 			Out.ar(outBus, sig * vol);
@@ -147,6 +155,7 @@ SynthiGME {
 		// Se añaden al servidor las declaracines SynthDefs
 		SynthiGME.addSynthDef;
 		SGME_InputAmplifier.addSynthDef;
+		SGME_ExternalTreatmentReturn.addSynthDef;
 		SGME_LPFilter.addSynthDef;
 		SGME_HPFilter.addSynthDef;
 		SGME_FilterBank.addSynthDef;
@@ -202,6 +211,7 @@ SynthiGME {
 				modulFilters = 4.collect({SGME_LPFilter(server)}) ++ 4.collect({SGME_HPFilter(server)});
 				modulFilterBank = SGME_FilterBank(server);
 				modulInputAmplifiers = 8.collect({SGME_InputAmplifier(server)});
+				modulExternalTreatmentReturns = 4.collect({SGME_ExternalTreatmentReturn(server)});
 				modulEnvelopeShapers = 3.collect({SGME_EnvelopeShaper(server)});
 				modulOscillators = 12.collect({SGME_Oscillator(server)});
 				modulNoiseGenerators = 2.collect({SGME_NoiseGenerator(server)});
@@ -373,8 +383,17 @@ SynthiGME {
 
 				// Input Amplifier
 				inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
-				"Input Amplifier Level...".post;
+				"Input Amplifiers Level...".post;
 				modulInputAmplifiers.do({|i|
+					i.createSynth;
+					while({i.synth.isPlaying == false}, {wait(waitTime)});
+				});
+				"OK\n".post;
+
+				// External Treatment Returns
+				returnFromDeviceBusses = modulExternalTreatmentReturns.collect({|i| i.inputBus});
+				"External Treatment Returns...".post;
+				modulExternalTreatmentReturns.do({|i|
 					i.createSynth;
 					while({i.synth.isPlaying == false}, {wait(waitTime)});
 				});
@@ -384,6 +403,7 @@ SynthiGME {
 				"Conexiones en Patchbay de audio...".post;
 				modulPatchbayAudio.connect(
 					inputAmplifiers: modulInputAmplifiers,
+					externalTreatmentReturns: modulExternalTreatmentReturns,
 					filters: modulFilters,
 					filterBank: modulFilterBank,
 					envelopeShapers: modulEnvelopeShapers,
@@ -413,6 +433,18 @@ SynthiGME {
 				connectionIn = inputAmplifiersBusses.collect({|item, i|
 					var result = Synth(\connectionInputAmplifier, [
 						\inBus, settings[\inputAmplifiersBusses][i],
+						\outBus, item,
+						\vol, 1,
+					], server).register;
+					while({result.isPlaying == false}, {wait(waitTime)});
+					result
+				});
+				"OK\n".post;
+
+				"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".post;
+				connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
+					var result = Synth(\connectionExternalTreatmentReturn, [
+						\inBus, settings[\returnFromDeviceBusses][i],
 						\outBus, item,
 						\vol, 1,
 					], server).register;
