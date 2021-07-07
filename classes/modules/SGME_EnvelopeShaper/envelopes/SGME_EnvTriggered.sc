@@ -64,12 +64,36 @@ SGME_EnvTriggered {
 			signalLevel;
 
 			var sig, vol, env, gate;
-			var delayVol;
+			var inDelay, inAttack, inDecay, inSustain, inRelease;
 
-			delayVol = In.ar(inDelayVol) + InFeedback.ar(inFeedbackDelayVol);
-			delayTime = delayTime * (2**(delayVol * 3));
+			// Suma de Delay
+			inDelay = In.ar(inDelayVol) + InFeedback.ar(inFeedbackDelayVol);
+			delayTime = inDelay.linlin(-1, 1, -5, 5) + delayTime;
 			delayTime = delayTime.clip(0.002, 20);
 			delayTime = A2K.kr(delayTime);
+
+			// Suma de Attack
+			inAttack = In.ar(inAttackVol) + InFeedback.ar(inFeedbackAttackVol);
+			attackTime = inAttack.linlin(-1, 1, -5, 5) + attackTime;
+			attackTime = attackTime.clip(0.002, 20);
+			attackTime = A2K.kr(attackTime);
+
+			// Suma de Decay
+			inDecay = In.ar(inDecayVol) + InFeedback.ar(inFeedbackDecayVol);
+			decayTime = inDecay.linlin(-1, 1, -5, 5) + decayTime;
+			decayTime = decayTime.clip(0.002, 20);
+			decayTime = A2K.kr(decayTime);
+
+			// Suma de Sustain Level
+			inSustain = In.ar(inSustainVol) + InFeedback.ar(inFeedbackSustainVol);
+			sustainLevel = inSustain.linlin(-1, 1, -1, 1) + sustainLevel.lag(0.2);
+			sustainLevel = sustainLevel.clip(0.002, 20);
+
+			// Suma de Release
+			inRelease = In.ar(inReleaseVol) + InFeedback.ar(inFeedbackReleaseVol);
+			releaseTime = inRelease.linlin(-1, 1, -5, 5) + releaseTime;
+			releaseTime = releaseTime.clip(0.002, 20);
+			releaseTime = A2K.kr(releaseTime);
 
 			gate = In.ar(signalTrigger);
 			gate = gate + InFeedback.ar(inFeedbackSignalTrigger);
