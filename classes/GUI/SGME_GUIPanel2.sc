@@ -35,8 +35,8 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 		compositeView.setBackgroundImage(image,10);
 
 		this.makeFilterBank(compositeView, 31.2, 312);
-
 		this.makeInputAmplifiers(compositeView, 31.2, 367);
+		this.makeExternalTreatmenDevices(compositeView, 31.2, 422);
 
 
 		this.saveOrigin;
@@ -85,6 +85,48 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			knob.action = {|knob|
 				synthiGME.setParameterOSC(
 					string: "/in/" ++ (num + 1) ++ "/level",
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+			left = left + spacing;
+		});
+	}
+
+	makeExternalTreatmenDevices {|parent, left, top|
+		var size = 35;
+		var spacing = 53.6;
+		var rect;
+		4.do({|num|
+			var knob;
+			rect = Rect(left, top, size, size);
+			knob = Knob(parent, rect)
+			.color_([white, black, white, nil])
+			.mode_(\vert)
+			.step_(step);
+			viewSizes = viewSizes.add([knob, rect]);
+			parameterViews.put("/send/" ++ (num + 1) ++ "/level", knob);
+			knob.action = {|knob|
+				synthiGME.setParameterOSC(
+					string: "/send/" ++ (num + 1) ++ "/level",
+					value: knob.value.linlin(0,1,0,10),
+					addrForbidden: \GUI,
+				)
+			};
+			left = left + spacing;
+		});
+		4.do({|num|
+			var knob;
+			rect = Rect(left, top, size, size);
+			knob = Knob(parent, rect)
+			.color_([white, black, white, nil])
+			.mode_(\vert)
+			.step_(step);
+			viewSizes = viewSizes.add([knob, rect]);
+			parameterViews.put("/return/" ++ (num + 1) ++ "/level", knob);
+			knob.action = {|knob|
+				synthiGME.setParameterOSC(
+					string: "/return/" ++ (num + 1) ++ "/level",
 					value: knob.value.linlin(0,1,0,10),
 					addrForbidden: \GUI,
 				)

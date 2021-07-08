@@ -72,7 +72,7 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
-			"patchA", { // Ejemplo "/patchA/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horzontal
+			"patchA", { // Ejemplo "/patchA/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horizontal
 				2.do({splitted.removeAt(0)});
 				modulPatchbayAudio.administrateNode(splitted[0].asInteger, splitted[1].asInteger, value);
 				if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
@@ -80,7 +80,7 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
 
-			"patchV", { // Ejemplo "/patchV/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horzontal
+			"patchV", { // Ejemplo "/patchV/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horizontal
 				2.do({splitted.removeAt(0)});
 				modulPatchbayVoltage.administrateNode(splitted[0].asInteger, splitted[1].asInteger, value);
 				if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
@@ -209,6 +209,19 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				switch (splitted[0],
 					"level", {
 						modulInputAmplifiers[index].setLevel(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
+			"return", { // Ejemplo "/return/1/level"
+				var index = splitted[2].asInteger - 1;
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0],
+					"level", {
+						modulExternalTreatmentReturns[index].setLevel(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 				);
