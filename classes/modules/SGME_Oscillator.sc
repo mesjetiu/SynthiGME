@@ -265,10 +265,10 @@ SGME_Oscillator : SGME_Connectable {
 
 	// Setters Oscillators////////////////////////////////////////////////////////////////////////
 	setRange {| rang |
-		range = rang.asInt;
+		range = rang.asInteger;
 		synth.run(true);
-		synth.set(\freqMin, this.freqMinMax(rang.asInt, \min));
-		synth.set(\freqMax, this.freqMinMax(rang.asInt, \max));
+		synth.set(\freqMin, this.freqMinMax(rang.asInteger, \min));
+		synth.set(\freqMax, this.freqMinMax(rang.asInteger, \max));
 		this.synthRun();
 	}
 
