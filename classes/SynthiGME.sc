@@ -192,10 +192,10 @@ SynthiGME {
 			});
 			"Estableciendo número correcto de canales de entrada y salida:".postln;
 			server.options.device_("Synthi GME")
-			.numAudioBusChannels_(2048) // Número de buses de Audio permitidos.
-			.numOutputBusChannels_(18)
-			.numInputBusChannels_(16)
-			.blockSize_(64); // Control rate. Si es hardware lo permite se puede aproximar a 1
+			.numAudioBusChannels_(settings[\numAudioBusChannels])
+			.numOutputBusChannels_(settings[\numOutputBusChannels])
+			.numInputBusChannels_(settings[\numInputBusChannels])
+			.blockSize_(settings[\blockSize]); // Control rate. Si es hardware lo permite se puede aproximar a 1
 
 			("Número de canales de Audio:" + server.options.numAudioBusChannels).postln;
 			("Número de canales de output:" + server.options.numOutputBusChannels).postln;
@@ -203,10 +203,10 @@ SynthiGME {
 			("Tamaño del bloque:" + server.options.blockSize).postln;
 
 			if(
-				server.options.numAudioBusChannels >= 2048
-				&& server.options.numOutputBusChannels >= 18
-				&& server.options.numInputBusChannels >= 16
-				&& server.options.blockSize >= 64
+				server.options.numAudioBusChannels >= settings[\numAudioBusChannels]
+				&& server.options.numOutputBusChannels >= settings[\numOutputBusChannels]
+				&& server.options.numInputBusChannels >= settings[\numInputBusChannels]
+				&& server.options.blockSize >= settings[\blockSize]
 			){
 				"Opciones actualizadas correctamente".postln;
 			}{

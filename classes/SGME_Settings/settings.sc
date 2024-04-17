@@ -21,7 +21,7 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	* settings {^[
 
 		//******************************************************************************************
-		// Archivo de configuración de SynthiGME. Todos los límites y valores "afinables"
+		// Archivo de configuración de SynthiGME. Todos los límites y valores ajustables
 		// del SynthiGME pueden ser cambiados en este archivo.
 		// El esquema del archivo es el de pares clave-valor, separando cada elemento por una coma.
 		// Por claridad, cada par de elementos clave-valor estarán en una línea diferente.
@@ -32,6 +32,12 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 		\generalVol, 0.5,
 		\OSCDevicePort, 9000,
+
+		// Opciones del servidor de audio
+		\numAudioBusChannels, 2048,
+		\numOutputBusChannels, 18,
+		\numInputBusChannels, 16,
+		\blockSize, 64,
 
 		// Output Busses (solo si se elige la opción "standalone")
 		\panOutputs1to4Busses, [2,3],
