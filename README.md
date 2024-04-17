@@ -1,5 +1,7 @@
 # Synthi GME
 
+[![Alt text](https://img.youtube.com/vi/EBUEooWrfBE/0.jpg)](https://www.youtube.com/watch?v=EBUEooWrfBE)
+
 ## Sobre el Quark
 
 Este repositorio contiene un Quark de SuperCollider, consistente en un emulador del sintetizador analógico EMS Synthi 100 del Gabinete de Música Electroacústica de Cuenca.
