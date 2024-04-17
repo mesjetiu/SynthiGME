@@ -175,14 +175,20 @@ SynthiGME {
 	// Métodos de instancia /////////////////////////////////////////////////////////////////////////
 
 	run {
+		var thisRoutine;
 		if (connectionOut != nil, {"SynthiGME en ejecución".error; ^this});
-
-		Routine({
+		thisRoutine = Routine({
 			if (server.serverRunning, {
 				"El servidor de audio está encendido. Apagando servidor...".postln;
 				server.quit;
 				server.sync;
-				if (server.serverRunning, {"Servidor no apagado correctamente".error}, {"Servidor apagado correctamente".postln});
+				if (server.serverRunning, {
+					"Servidor no apagado correctamente".error;
+					"Saliendo del programa...".postln;
+					thisRoutine.stop();
+				}, {
+					"Servidor apagado correctamente".postln;
+				});
 			});
 			"Estableciendo número correcto de canales de entrada y salida:".postln;
 			server.options.device_("Synthi GME")
@@ -204,7 +210,9 @@ SynthiGME {
 			){
 				"Opciones actualizadas correctamente".postln;
 			}{
-				"No se ha podido establecer las opciones adecuadas del servidor".error;
+				"No se han podido establecer las opciones adecuadas del servidor".error;
+				"Saliendo del programa...".postln;
+				thisRoutine.stop();
 			};
 
 			// Se arranca el servidor (si no lo está)
