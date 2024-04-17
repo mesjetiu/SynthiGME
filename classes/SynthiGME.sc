@@ -179,18 +179,33 @@ SynthiGME {
 
 		Routine({
 			if (server.serverRunning, {
-				"Apagando servidor...".post;
+				"El servidor de audio está encendido. Apagando servidor...".postln;
 				server.quit;
 				server.sync;
-				if (server.serverRunning, {"Servidor apagado\n".post}, {"Servidor no apagado correctamente\n".post});
+				if (server.serverRunning, {"Servidor no apagado correctamente".error}, {"Servidor apagado correctamente".postln});
 			});
-			"Estableciendo número correcto de canales de entrada y salida...".post;
-			server.options.device = "Synthi GME";
-			server.options.numAudioBusChannels = 2048; // Número de buses de Audio permitidos.
-			server.options.numOutputBusChannels = 18;
-			server.options.numInputBusChannels = 16;
-			server.options.blockSize = 64; // Control rate. Si es hardware lo permite se puede aproximar a 1
-			"OK\n".post;
+			"Estableciendo número correcto de canales de entrada y salida:".postln;
+			server.options.device_("Synthi GME")
+			.numAudioBusChannels_(2048) // Número de buses de Audio permitidos.
+			.numOutputBusChannels_(18)
+			.numInputBusChannels_(16)
+			.blockSize_(64); // Control rate. Si es hardware lo permite se puede aproximar a 1
+
+			("Número de canales de Audio:" + server.options.numAudioBusChannels).postln;
+			("Número de canales de output:" + server.options.numOutputBusChannels).postln;
+			("Número de canales de input:" + server.options.numInputBusChannels).postln;
+			("Tamaño del bloque:" + server.options.blockSize).postln;
+
+			if(
+				server.options.numAudioBusChannels >= 2048
+				&& server.options.numOutputBusChannels >= 18
+				&& server.options.numInputBusChannels >= 16
+				&& server.options.blockSize >= 64
+			){
+				"Opciones actualizadas correctamente".postln;
+			}{
+				"No se ha podido establecer las opciones adecuadas del servidor".error;
+			};
 
 			// Se arranca el servidor (si no lo está)
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
