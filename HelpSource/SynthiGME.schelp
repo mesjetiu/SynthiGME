@@ -9,8 +9,6 @@ El emulador no está completado al 100%, pero es más que funcional para poder e
 
 Repositorio: https://github.com/mesjetiu/SynthiGME
 
-Web del proyecto: https://synthigme.com
-
 
 EXAMPLES::
 code::// Ejecutar SynthiGME (comando recomendado): Atención: Se reiniciará el servidor de sonido.::
