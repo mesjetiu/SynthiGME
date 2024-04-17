@@ -18,7 +18,7 @@ Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 SynthiGME {
-	var <server; // Servidor por defecto
+	var <server; // Servidor de audio a utilizar
 
 	// Módulos que incluye:
 	var <modulInputAmplifiers;
@@ -175,27 +175,21 @@ SynthiGME {
 	// Métodos de instancia /////////////////////////////////////////////////////////////////////////
 
 	run {
-		var waitTime = 0.001;
 		if (connectionOut != nil, {"SynthiGME en ejecución".error; ^this});
 
 		Routine({
-			while({server == nil}, {wait(waitTime)});
 			if (server.serverRunning, {
 				"Apagando servidor...".post;
 				server.quit;
-				wait(waitTime);
-				while({server.serverRunning}, {wait(waitTime)});
-				"OK\n".post;
+				server.sync;
+				if (server.serverRunning, {"Servidor apagado\n".post}, {"Servidor no apagado correctamente\n".post});
 			});
 			"Estableciendo número correcto de canales de entrada y salida...".post;
 			server.options.device = "Synthi GME";
 			server.options.numAudioBusChannels = 2048; // Número de buses de Audio permitidos.
 			server.options.numOutputBusChannels = 18;
-			while({server.options.numOutputBusChannels != 18}, {wait(waitTime)});
 			server.options.numInputBusChannels = 16;
-			while({server.options.numInputBusChannels != 16}, {wait(waitTime)});
 			server.options.blockSize = 64; // Control rate. Si es hardware lo permite se puede aproximar a 1
-			while({server.options.blockSize != 64}, {wait(waitTime)});
 			"OK\n".post;
 
 			// Se arranca el servidor (si no lo está)
@@ -224,7 +218,9 @@ SynthiGME {
 				modulPatchbayVoltage = SGME_PatchbayVoltage(server);
 
 
-				wait(0.2); // Tiempo de seguridad para estar seguros que se han creado correctamente los módulos y sus buses. De otro modo puede que se oiga sonido sin conectar nada. Quizás se pueda encontrar otra solución más elegante...
+				//wait(0.2); // Tiempo de seguridad para estar seguros que se han creado correctamente los módulos y sus buses. De otro modo puede que se oiga sonido sin conectar nada. Quizás se pueda encontrar otra solución más elegante...
+
+				server.sync;
 
 				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
 				"Conexión de salida stereo canales 1 a 8...".post;
@@ -240,7 +236,7 @@ SynthiGME {
 						\outBusR, stereoOutBuses[1],
 						\vol, generalVol,
 					], server).register;
-					while({result.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				}.value
 				);
 				"OK\n".post;
@@ -262,7 +258,7 @@ SynthiGME {
 						\outBusR, panOutputs1to4Busses[1],
 						\vol, generalVol,
 					], server).register;
-					while({result.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				}.value);
 				"OK\n".post;
 
@@ -283,7 +279,7 @@ SynthiGME {
 						\outBusR, panOutputs5to8Busses[1],
 						\vol, generalVol,
 					], server).register;
-					while({result.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				}.value);
 				"OK\n".post;
 
@@ -296,7 +292,7 @@ SynthiGME {
 							\outputBus, settings[\individualChannelOutputsBusses][n],
 							\vol, generalVol,
 						], server).register;
-						while({result.isPlaying == false}, {wait(waitTime)});
+						server.sync;
 					});
 				}.value);
 				"OK\n".post;
@@ -309,7 +305,7 @@ SynthiGME {
 				"Output Channels...".post;
 				modulOutputChannels.do({|i|
 					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
@@ -317,7 +313,7 @@ SynthiGME {
 				"Filters...".post;
 				modulFilters.do({|i|
 					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
@@ -325,7 +321,7 @@ SynthiGME {
 				"Octave Filter Bank...".post;
 				modulFilterBank.do({|i|
 					i.createSynth;
-					while({i.group.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
@@ -333,35 +329,35 @@ SynthiGME {
 				"Ring Modulators...".post;
 				modulRingModulators.do({|i|
 					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
 				// Echo A. D. L.
 				"Echo A.D.L...".post;
 				modulEcho.createSynth;
-				while({modulEcho.synth.isPlaying == false}, {wait(waitTime)});
+				server.sync;
 				"OK\n".post;
 
 				// Noise Generators
 				"Noise Generators...".post;
 				modulNoiseGenerators.do({|i|
 					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
 				// Random Generator
 				"Random Voltage Generator...".post;
 				modulRandomGenerator.createSynth;
-				while({modulRandomGenerator.synth.isPlaying == false}, {wait(waitTime)});
+				server.sync;
 				"OK\n".post;
 
 				// Slew Limiters
 				"Slew Limiters...".post;
 				modulSlewLimiters.do({|i|
 					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
@@ -369,7 +365,7 @@ SynthiGME {
 				"Oscillators...".post;
 				modulOscillators.do({|i|
 					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
@@ -377,7 +373,7 @@ SynthiGME {
 				"Envelope Shapers...".post;
 				modulEnvelopeShapers.do({|i|
 					i.createSynth;
-					while({i.group.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
@@ -386,7 +382,7 @@ SynthiGME {
 				"Input Amplifiers Level...".post;
 				modulInputAmplifiers.do({|i|
 					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
@@ -395,7 +391,7 @@ SynthiGME {
 				"External Treatment Returns...".post;
 				modulExternalTreatmentReturns.do({|i|
 					i.createSynth;
-					while({i.synth.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 				});
 				"OK\n".post;
 
@@ -436,7 +432,7 @@ SynthiGME {
 						\outBus, item,
 						\vol, 1,
 					], server).register;
-					while({result.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 					result
 				});
 				"OK\n".post;
@@ -448,7 +444,7 @@ SynthiGME {
 						\outBus, item,
 						\vol, 1,
 					], server).register;
-					while({result.isPlaying == false}, {wait(waitTime)});
+					server.sync;
 					result
 				});
 				"OK\n".post;
