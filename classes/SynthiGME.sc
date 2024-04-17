@@ -240,9 +240,6 @@ SynthiGME {
 				modulPatchbayAudio = SGME_PatchbayAudio(server);
 				modulPatchbayVoltage = SGME_PatchbayVoltage(server);
 
-
-				//wait(0.2); // Tiempo de seguridad para estar seguros que se han creado correctamente los módulos y sus buses. De otro modo puede que se oiga sonido sin conectar nada. Quizás se pueda encontrar otra solución más elegante...
-
 				server.sync;
 
 				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
