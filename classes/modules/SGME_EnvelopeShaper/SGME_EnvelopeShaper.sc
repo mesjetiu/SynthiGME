@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
 
-Copyright 2020 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
+Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 SGME_EnvelopeShaper : SGME_Connectable{
