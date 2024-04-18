@@ -117,7 +117,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 		});
 
 		window.front;
-		window.visible = false;
+	//	window.visible = false; // Comento esto porque tras volverse invisible no es posible volverlo visible... en cambio cuando se vuelve invisible más adelante, todo funciona bien.
 	}
 
 
