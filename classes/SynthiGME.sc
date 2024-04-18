@@ -245,7 +245,7 @@ SynthiGME {
 				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
 				"Conexión de salida stereo canales 1 a 8...".post;
 				connectionOut = [];
-				connectionOut.add({
+				connectionOut = connectionOut.add({
 					var result = nil;
 					result = Synth(\connection2, [
 						\inBusL1, panOutputs1to4Busses[0],
@@ -256,13 +256,12 @@ SynthiGME {
 						\outBusR, stereoOutBuses[1],
 						\vol, generalVol,
 					], server).register;
-					server.sync;
-				}.value
-				);
+				}.value);
+				server.sync;
 				"OK\n".post;
 
 				"Conexión de salida stereo canales 1 a 4...".post;
-				connectionOut.add({
+				connectionOut = connectionOut.add({
 					var result = nil;
 					var channels = modulOutputChannels[0..3];
 					result = Synth(\connection4, [
@@ -278,12 +277,12 @@ SynthiGME {
 						\outBusR, panOutputs1to4Busses[1],
 						\vol, generalVol,
 					], server).register;
-					server.sync;
 				}.value);
+				server.sync;
 				"OK\n".post;
 
 				"Conexión de salida stereo canales 5 a 8...".post;
-				connectionOut.add({
+				connectionOut = connectionOut.add({
 					var result = nil;
 					var channels = modulOutputChannels[4..7];
 					result = Synth(\connection4, [ // Las salidas stereo salen postfader
@@ -299,22 +298,23 @@ SynthiGME {
 						\outBusR, panOutputs5to8Busses[1],
 						\vol, generalVol,
 					], server).register;
-					server.sync;
 				}.value);
+				server.sync;
 				"OK\n".post;
 
 				"Conexión de salida de cada canal individual...".post;
-				connectionOut.add({
-					var result = nil;
-					modulOutputChannels.do({|out, n|
+				modulOutputChannels.do({|out, n|
+					connectionOut = connectionOut.add({
+						var result = nil;
 						result = Synth(\connectionMono, [
 							\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
 							\outputBus, settings[\individualChannelOutputsBusses][n],
 							\vol, generalVol,
 						], server).register;
 						server.sync;
-					});
-				}.value);
+						result;
+					}.value);
+				});
 				"OK\n".post;
 
 
