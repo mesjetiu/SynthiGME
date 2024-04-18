@@ -92,8 +92,8 @@ SynthiGME {
 	}
 
 	*new {
-		arg server = Server.local,
-		gui = true;
+		arg gui = true,
+		server = Server.local;
 		^super.new.init(server, gui);
 	}
 
