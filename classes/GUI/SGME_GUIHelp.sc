@@ -118,6 +118,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 
 		window.front;
 	//	window.visible = false; // Comento esto porque tras volverse invisible no es posible volverlo visible... en cambio cuando se vuelve invisible más adelante, todo funciona bien.
+	//	window.alwaysOnTop = true; // posible configuración... aunque es posible que en Windows no funcione.
 	}
 
 
