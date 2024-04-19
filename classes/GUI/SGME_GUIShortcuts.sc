@@ -25,48 +25,45 @@ SGME_GUIShortcuts {
 		win.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
 			//keycode.postln;
-			//[char, unicode, keycode, key].postln;
+			//[char, unicode, keycode, key, mod].postln;
 
-			char.switch(
-				"v"[0], {
+			unicode.switch(
+				118, {
 					synthiGME.guiSC.panels.do({|panel|
 						panel.conmuteVisibility
 					})
 				},  // "v" Activa y desactiva la visibilidad de los mandos de la ventana en foco.
-				"+"[0], {this.resizeFocusedPanel(factor)}, // +
-				"-"[0], {this.resizeFocusedPanel(1/factor)}, // -
-				"f"[0], {synthiGME.guiSC.frontWindows}, // f (front) Todas las ventanas al frente
-				"1"[0], {synthiGME.guiSC.panels[0].window.front; synthiGME.guiSC.panels[0].focus(0)}, // Tecla 1: Panel 1 al frente
-				"2"[0], {synthiGME.guiSC.panels[1].window.front; synthiGME.guiSC.panels[0].focus(1)}, // Tecla 2: Panel 2 al frente
-				"3"[0], {synthiGME.guiSC.panels[2].window.front; synthiGME.guiSC.panels[0].focus(2)}, // Tecla 3: Panel 3 al frente
-				"4"[0], {synthiGME.guiSC.panels[3].window.front; synthiGME.guiSC.panels[0].focus(3)}, // Tecla 4: Panel 4 al frente
-				"5"[0], {synthiGME.guiSC.panels[4].window.front; synthiGME.guiSC.panels[0].focus(4)}, // Tecla 5: Panel 5 al frente
-				"6"[0], {synthiGME.guiSC.panels[5].window.front; synthiGME.guiSC.panels[0].focus(5)}, // Tecla 6: Panel 6 al frente
-				"7"[0], {synthiGME.guiSC.panels[6].window.front; synthiGME.guiSC.panels[0].focus(6)}, // Tecla 7: Panel 7 al frente
-				"O"[0], {// Tecla O: Todos los Paneles a posición y tamaño original
+				43, {this.resizeFocusedPanel(factor)}, // +
+				45, {this.resizeFocusedPanel(1/factor)}, // -
+				102, {synthiGME.guiSC.frontWindows}, // f (front) Todas las ventanas al frente
+				49, {synthiGME.guiSC.panels[0].window.front; synthiGME.guiSC.panels[0].focus(0)}, // Tecla 1: Panel 1 al frente
+				50, {synthiGME.guiSC.panels[1].window.front; synthiGME.guiSC.panels[0].focus(1)}, // Tecla 2: Panel 2 al frente
+				51, {synthiGME.guiSC.panels[2].window.front; synthiGME.guiSC.panels[0].focus(2)}, // Tecla 3: Panel 3 al frente
+				52, {synthiGME.guiSC.panels[3].window.front; synthiGME.guiSC.panels[0].focus(3)}, // Tecla 4: Panel 4 al frente
+				53, {synthiGME.guiSC.panels[4].window.front; synthiGME.guiSC.panels[0].focus(4)}, // Tecla 5: Panel 5 al frente
+				54, {synthiGME.guiSC.panels[5].window.front; synthiGME.guiSC.panels[0].focus(5)}, // Tecla 6: Panel 6 al frente
+				55, {synthiGME.guiSC.panels[6].window.front; synthiGME.guiSC.panels[0].focus(6)}, // Tecla 7: Panel 7 al frente
+				56, {// Tecla O: Todos los Paneles a posición y tamaño original
 					synthiGME.guiSC.panels.do({|panel|
 						panel.goToOrigin
 					})
 				},
-				"o"[0], {
-					if(mod.isCtrl, { // Ctrl + O. Establece un nuevo origen de todas las ventanas
-						synthiGME.guiSC.panels.do({|panel|
-							panel.saveOrigin;
-						})
-					}, {// Tecla o: Panel a posición y tamaño original
-						this.goToOriginFocusedPanel
+				15, {// Ctrl + O. Establece un nuevo origen de todas las ventanas
+					synthiGME.guiSC.panels.do({|panel|
+						panel.saveOrigin;
 					})
 				},
-				"e"[0], { // Tecla e: Hace visibles o invisibles todos los nodos dependiendo de si son posibles de usar en el SynthiGME
+				111, {// Tecla o: Panel a posición y tamaño original
+					this.goToOriginFocusedPanel
+				},
+				101, { // Tecla e: Hace visibles o invisibles todos los nodos dependiendo de si son posibles de usar en el SynthiGME
 					synthiGME.guiSC.panels[4].enableNodes;
 					synthiGME.guiSC.panels[5].enableNodes;
 				},
-				"c"[0], { // Tecla Ctrl+C: Para cerrar la aplicación.
-					if (mod.isCtrl, { // Comprueba si está el modificador "Control"
-						synthiGME.close;
-					})
+				3, { // Tecla Ctrl+C: Para cerrar la aplicación.
+					synthiGME.close;
 				},
-				"h"[0], { // Tecla h: (help) ayuda con los atajos de teclado
+				104, { // Tecla h: (help) ayuda con los atajos de teclado
 					synthiGME.guiSC.helpWindow.conmuteVisibility;
 				},
 			)
