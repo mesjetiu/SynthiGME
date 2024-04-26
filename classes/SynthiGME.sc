@@ -215,266 +215,274 @@ SynthiGME {
 				thisRoutine.stop();
 			};
 
-			// Se arranca el servidor (si no lo está)
+			// Se anuncia que se arrancará el servidor (si no lo está)
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
-			server.waitForBoot({
 
-				panOutputs1to4Busses = settings[\panOutputs1to4Busses];
-				panOutputs5to8Busses = settings[\panOutputs5to8Busses];
-				individualChannelOutputsBusses = settings[\individualChannelOutputsBusses];
+			// Arrancamos el servidor si aún no lo está
+			server.waitForBoot(
+				onComplete: {
+					panOutputs1to4Busses = settings[\panOutputs1to4Busses];
+					panOutputs5to8Busses = settings[\panOutputs5to8Busses];
+					individualChannelOutputsBusses = settings[\individualChannelOutputsBusses];
 
 
-				// Módulos.
-				modulFilters = 4.collect({SGME_LPFilter(server)}) ++ 4.collect({SGME_HPFilter(server)});
-				modulFilterBank = SGME_FilterBank(server);
-				modulInputAmplifiers = 8.collect({SGME_InputAmplifier(server)});
-				modulExternalTreatmentReturns = 4.collect({SGME_ExternalTreatmentReturn(server)});
-				modulEnvelopeShapers = 3.collect({SGME_EnvelopeShaper(server)});
-				modulOscillators = 12.collect({SGME_Oscillator(server)});
-				modulNoiseGenerators = 2.collect({SGME_NoiseGenerator(server)});
-				modulRingModulators = 3.collect({SGME_RingModulator(server)});
-				modulEcho = SGME_Echo(server);
-				modulRandomGenerator = SGME_RandomGenerator(server);
-				modulSlewLimiters = 3.collect({SGME_SlewLimiter(server)});
-				modulOutputChannels = 8.collect({SGME_OutputChannel(server)});
-				modulPatchbayAudio = SGME_PatchbayAudio(server);
-				modulPatchbayVoltage = SGME_PatchbayVoltage(server);
+					// Módulos.
+					modulFilters = 4.collect({SGME_LPFilter(server)}) ++ 4.collect({SGME_HPFilter(server)});
+					modulFilterBank = SGME_FilterBank(server);
+					modulInputAmplifiers = 8.collect({SGME_InputAmplifier(server)});
+					modulExternalTreatmentReturns = 4.collect({SGME_ExternalTreatmentReturn(server)});
+					modulEnvelopeShapers = 3.collect({SGME_EnvelopeShaper(server)});
+					modulOscillators = 12.collect({SGME_Oscillator(server)});
+					modulNoiseGenerators = 2.collect({SGME_NoiseGenerator(server)});
+					modulRingModulators = 3.collect({SGME_RingModulator(server)});
+					modulEcho = SGME_Echo(server);
+					modulRandomGenerator = SGME_RandomGenerator(server);
+					modulSlewLimiters = 3.collect({SGME_SlewLimiter(server)});
+					modulOutputChannels = 8.collect({SGME_OutputChannel(server)});
+					modulPatchbayAudio = SGME_PatchbayAudio(server);
+					modulPatchbayVoltage = SGME_PatchbayVoltage(server);
 
-				server.sync;
+					server.sync;
 
-				2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
-				"Conexión de salida stereo canales 1 a 8...".post;
-				connectionOut = [];
-				connectionOut = connectionOut.add({
-					var result = nil;
-					result = Synth(\connection2, [
-						\inBusL1, panOutputs1to4Busses[0],
-						\inBusR1, panOutputs1to4Busses[1],
-						\inBusL2, panOutputs5to8Busses[0],
-						\inBusR2, panOutputs5to8Busses[1],
-						\outBusL, stereoOutBuses[0],
-						\outBusR, stereoOutBuses[1],
-						\vol, generalVol,
-					], server).register;
-				}.value);
-				server.sync;
-				"OK\n".post;
-
-				"Conexión de salida stereo canales 1 a 4...".post;
-				connectionOut = connectionOut.add({
-					var result = nil;
-					var channels = modulOutputChannels[0..3];
-					result = Synth(\connection4, [
-						\inBusL1, channels[0].outBusL,
-						\inBusR1, channels[0].outBusR,
-						\inBusL2, channels[1].outBusL,
-						\inBusR2, channels[1].outBusR,
-						\inBusL3, channels[2].outBusL,
-						\inBusR3, channels[2].outBusR,
-						\inBusL4, channels[3].outBusL,
-						\inBusR4, channels[3].outBusR,
-						\outBusL, panOutputs1to4Busses[0],
-						\outBusR, panOutputs1to4Busses[1],
-						\vol, generalVol,
-					], server).register;
-				}.value);
-				server.sync;
-				"OK\n".post;
-
-				"Conexión de salida stereo canales 5 a 8...".post;
-				connectionOut = connectionOut.add({
-					var result = nil;
-					var channels = modulOutputChannels[4..7];
-					result = Synth(\connection4, [ // Las salidas stereo salen postfader
-						\inBusL1, channels[0].outBusL,
-						\inBusR1, channels[0].outBusR,
-						\inBusL2, channels[1].outBusL,
-						\inBusR2, channels[1].outBusR,
-						\inBusL3, channels[2].outBusL,
-						\inBusR3, channels[2].outBusR,
-						\inBusL4, channels[3].outBusL,
-						\inBusR4, channels[3].outBusR,
-						\outBusL, panOutputs5to8Busses[0],
-						\outBusR, panOutputs5to8Busses[1],
-						\vol, generalVol,
-					], server).register;
-				}.value);
-				server.sync;
-				"OK\n".post;
-
-				"Conexión de salida de cada canal individual...".post;
-				modulOutputChannels.do({|out, n|
+					2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
+					"Conexión de salida stereo canales 1 a 8...".post;
+					connectionOut = [];
 					connectionOut = connectionOut.add({
 						var result = nil;
-						result = Synth(\connectionMono, [
-							\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
-							\outputBus, settings[\individualChannelOutputsBusses][n],
+						result = Synth(\connection2, [
+							\inBusL1, panOutputs1to4Busses[0],
+							\inBusR1, panOutputs1to4Busses[1],
+							\inBusL2, panOutputs5to8Busses[0],
+							\inBusR2, panOutputs5to8Busses[1],
+							\outBusL, stereoOutBuses[0],
+							\outBusR, stereoOutBuses[1],
 							\vol, generalVol,
 						], server).register;
-						server.sync;
-						result;
 					}.value);
-				});
-				"OK\n".post;
-
-
-
-				// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
-
-				// Output Channels
-				"Output Channels...".post;
-				modulOutputChannels.do({|i|
-					i.createSynth;
 					server.sync;
-				});
-				"OK\n".post;
+					"OK\n".post;
 
-				// Filters
-				"Filters...".post;
-				modulFilters.do({|i|
-					i.createSynth;
+					"Conexión de salida stereo canales 1 a 4...".post;
+					connectionOut = connectionOut.add({
+						var result = nil;
+						var channels = modulOutputChannels[0..3];
+						result = Synth(\connection4, [
+							\inBusL1, channels[0].outBusL,
+							\inBusR1, channels[0].outBusR,
+							\inBusL2, channels[1].outBusL,
+							\inBusR2, channels[1].outBusR,
+							\inBusL3, channels[2].outBusL,
+							\inBusR3, channels[2].outBusR,
+							\inBusL4, channels[3].outBusL,
+							\inBusR4, channels[3].outBusR,
+							\outBusL, panOutputs1to4Busses[0],
+							\outBusR, panOutputs1to4Busses[1],
+							\vol, generalVol,
+						], server).register;
+					}.value);
 					server.sync;
-				});
-				"OK\n".post;
+					"OK\n".post;
 
-				// Filters
-				"Octave Filter Bank...".post;
-				modulFilterBank.do({|i|
-					i.createSynth;
+					"Conexión de salida stereo canales 5 a 8...".post;
+					connectionOut = connectionOut.add({
+						var result = nil;
+						var channels = modulOutputChannels[4..7];
+						result = Synth(\connection4, [ // Las salidas stereo salen postfader
+							\inBusL1, channels[0].outBusL,
+							\inBusR1, channels[0].outBusR,
+							\inBusL2, channels[1].outBusL,
+							\inBusR2, channels[1].outBusR,
+							\inBusL3, channels[2].outBusL,
+							\inBusR3, channels[2].outBusR,
+							\inBusL4, channels[3].outBusL,
+							\inBusR4, channels[3].outBusR,
+							\outBusL, panOutputs5to8Busses[0],
+							\outBusR, panOutputs5to8Busses[1],
+							\vol, generalVol,
+						], server).register;
+					}.value);
 					server.sync;
-				});
-				"OK\n".post;
+					"OK\n".post;
 
-				// Ring Modulators
-				"Ring Modulators...".post;
-				modulRingModulators.do({|i|
-					i.createSynth;
+					"Conexión de salida de cada canal individual...".post;
+					modulOutputChannels.do({|out, n|
+						connectionOut = connectionOut.add({
+							var result = nil;
+							result = Synth(\connectionMono, [
+								\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
+								\outputBus, settings[\individualChannelOutputsBusses][n],
+								\vol, generalVol,
+							], server).register;
+							server.sync;
+							result;
+						}.value);
+					});
+					"OK\n".post;
+
+
+
+					// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
+
+					// Output Channels
+					"Output Channels...".post;
+					modulOutputChannels.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
+
+					// Filters
+					"Filters...".post;
+					modulFilters.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
+
+					// Filters
+					"Octave Filter Bank...".post;
+					modulFilterBank.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
+
+					// Ring Modulators
+					"Ring Modulators...".post;
+					modulRingModulators.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
+
+					// Echo A. D. L.
+					"Echo A.D.L...".post;
+					modulEcho.createSynth;
 					server.sync;
-				});
-				"OK\n".post;
+					"OK\n".post;
 
-				// Echo A. D. L.
-				"Echo A.D.L...".post;
-				modulEcho.createSynth;
-				server.sync;
-				"OK\n".post;
+					// Noise Generators
+					"Noise Generators...".post;
+					modulNoiseGenerators.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
 
-				// Noise Generators
-				"Noise Generators...".post;
-				modulNoiseGenerators.do({|i|
-					i.createSynth;
+					// Random Generator
+					"Random Voltage Generator...".post;
+					modulRandomGenerator.createSynth;
 					server.sync;
-				});
-				"OK\n".post;
+					"OK\n".post;
 
-				// Random Generator
-				"Random Voltage Generator...".post;
-				modulRandomGenerator.createSynth;
-				server.sync;
-				"OK\n".post;
+					// Slew Limiters
+					"Slew Limiters...".post;
+					modulSlewLimiters.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
 
-				// Slew Limiters
-				"Slew Limiters...".post;
-				modulSlewLimiters.do({|i|
-					i.createSynth;
-					server.sync;
-				});
-				"OK\n".post;
+					// Oscillators
+					"Oscillators...".post;
+					modulOscillators.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
 
-				// Oscillators
-				"Oscillators...".post;
-				modulOscillators.do({|i|
-					i.createSynth;
-					server.sync;
-				});
-				"OK\n".post;
+					// Envelope Shapers
+					"Envelope Shapers...".post;
+					modulEnvelopeShapers.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
 
-				// Envelope Shapers
-				"Envelope Shapers...".post;
-				modulEnvelopeShapers.do({|i|
-					i.createSynth;
-					server.sync;
-				});
-				"OK\n".post;
+					// Input Amplifier
+					inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
+					"Input Amplifiers Level...".post;
+					modulInputAmplifiers.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
 
-				// Input Amplifier
-				inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
-				"Input Amplifiers Level...".post;
-				modulInputAmplifiers.do({|i|
-					i.createSynth;
-					server.sync;
-				});
-				"OK\n".post;
+					// External Treatment Returns
+					returnFromDeviceBusses = modulExternalTreatmentReturns.collect({|i| i.inputBus});
+					"External Treatment Returns...".post;
+					modulExternalTreatmentReturns.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					"OK\n".post;
 
-				// External Treatment Returns
-				returnFromDeviceBusses = modulExternalTreatmentReturns.collect({|i| i.inputBus});
-				"External Treatment Returns...".post;
-				modulExternalTreatmentReturns.do({|i|
-					i.createSynth;
-					server.sync;
-				});
-				"OK\n".post;
+					// conecta cada entrada y salida de cada módulo en el patchbay de audio
+					"Conexiones en Patchbay de audio...".post;
+					modulPatchbayAudio.connect(
+						inputAmplifiers: modulInputAmplifiers,
+						externalTreatmentReturns: modulExternalTreatmentReturns,
+						filters: modulFilters,
+						filterBank: modulFilterBank,
+						envelopeShapers: modulEnvelopeShapers,
+						oscillators: modulOscillators,
+						noiseGenerators: modulNoiseGenerators,
+						ringModulators: modulRingModulators,
+						echo: modulEcho,
+						outputChannels: modulOutputChannels,
+					);
+					"OK\n".post;
 
-				// conecta cada entrada y salida de cada módulo en el patchbay de audio
-				"Conexiones en Patchbay de audio...".post;
-				modulPatchbayAudio.connect(
-					inputAmplifiers: modulInputAmplifiers,
-					externalTreatmentReturns: modulExternalTreatmentReturns,
-					filters: modulFilters,
-					filterBank: modulFilterBank,
-					envelopeShapers: modulEnvelopeShapers,
-					oscillators: modulOscillators,
-					noiseGenerators: modulNoiseGenerators,
-					ringModulators: modulRingModulators,
-					echo: modulEcho,
-					outputChannels: modulOutputChannels,
-				);
-				"OK\n".post;
+					// conecta cada entrada y salida de cada módulo en el patchbay de voltaje
+					"Conexiones en Patchbay de voltage...".post;
+					modulPatchbayVoltage.connect(
+						echo: modulEcho,
+						inputAmplifiers: modulInputAmplifiers,
+						filters: modulFilters,
+						envelopeShapers: modulEnvelopeShapers,
+						oscillators: modulOscillators,
+						randomGenerator: modulRandomGenerator,
+						slewLimiters: modulSlewLimiters,
+						outputChannels: modulOutputChannels,
+					);
+					"OK\n".post;
 
-				// conecta cada entrada y salida de cada módulo en el patchbay de voltaje
-				"Conexiones en Patchbay de voltage...".post;
-				modulPatchbayVoltage.connect(
-					echo: modulEcho,
-					inputAmplifiers: modulInputAmplifiers,
-					filters: modulFilters,
-					envelopeShapers: modulEnvelopeShapers,
-					oscillators: modulOscillators,
-					randomGenerator: modulRandomGenerator,
-					slewLimiters: modulSlewLimiters,
-					outputChannels: modulOutputChannels,
-				);
-				"OK\n".post;
+					"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
+					connectionIn = inputAmplifiersBusses.collect({|item, i|
+						var result = Synth(\connectionInputAmplifier, [
+							\inBus, settings[\inputAmplifiersBusses][i],
+							\outBus, item,
+							\vol, 1,
+						], server).register;
+						server.sync;
+						result
+					});
+					"OK\n".post;
 
-				"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
-				connectionIn = inputAmplifiersBusses.collect({|item, i|
-					var result = Synth(\connectionInputAmplifier, [
-						\inBus, settings[\inputAmplifiersBusses][i],
-						\outBus, item,
-						\vol, 1,
-					], server).register;
-					server.sync;
-					result
-				});
-				"OK\n".post;
-
-				"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".post;
-				connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
-					var result = Synth(\connectionExternalTreatmentReturn, [
-						\inBus, settings[\returnFromDeviceBusses][i],
-						\outBus, item,
-						\vol, 1,
-					], server).register;
-					server.sync;
-					result
-				});
-				"OK\n".post;
-				"SynthiGME en ejecución".postln;
-				// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
-				if (guiSC != nil, {
-					guiSC.panels[4].enableNodes(true); // PatchbayAudio
-					guiSC.panels[5].enableNodes(true); // PatchbayVoltage
-				});
-			});
+					"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".post;
+					connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
+						var result = Synth(\connectionExternalTreatmentReturn, [
+							\inBus, settings[\returnFromDeviceBusses][i],
+							\outBus, item,
+							\vol, 1,
+						], server).register;
+						server.sync;
+						result
+					});
+					"OK\n".post;
+					"SynthiGME en ejecución".postln;
+					// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
+					if (guiSC != nil, {
+						guiSC.panels[4].enableNodes(true); // PatchbayAudio
+						guiSC.panels[5].enableNodes(true); // PatchbayVoltage
+					});
+				},
+				onFailure: {
+					"No se ha podido arrancar el servidor de audio".error;
+					"Saliendo del programa...".postln;
+					thisRoutine.stop();
+				}
+			);
 		}).play;
 	}
 
