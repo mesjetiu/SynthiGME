@@ -427,9 +427,10 @@ SynthiGME {
 					});
 					"OK\n".post;
 
-					// conecta cada entrada y salida de cada módulo en el patchbay de audio
+					// conexiones de entrada y salida de cada módulo en el patchbay de audio
 					"Conexiones en Patchbay de audio...".post;
 					modulPatchbayAudio.connect(
+						reverb: modulReverb,
 						inputAmplifiers: modulInputAmplifiers,
 						externalTreatmentReturns: modulExternalTreatmentReturns,
 						filters: modulFilters,

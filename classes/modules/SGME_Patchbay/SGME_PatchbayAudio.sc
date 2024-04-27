@@ -20,8 +20,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_PatchbayAudio : SGME_Patchbay{
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	connect {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
+			reverb: reverb,
 			inputAmplifiers: inputAmplifiers,
 			externalTreatmentReturns: externalTreatmentReturns,
 			filters: filters,
@@ -36,12 +37,20 @@ SGME_PatchbayAudio : SGME_Patchbay{
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	ordenateInputsOutputs {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
 
 		// Inputs horizontales (1-66) /////////////////////////////////////////////////////////////
+
+		index = 1; // Reverb
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, reverb,
+			\synth, reverb.synth,
+			\inBus, reverb.inputBus,
+			\inFeedbackBus, reverb.inFeedbackBus,
+		]);
 
 		index = 2; // Echo A.D.L.
 		array[index-1] = Dictionary.newFrom(List[
@@ -225,6 +234,13 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		index = 124; // Reverb
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, reverb,
+			\synth, reverb.synth,
+			\outBus, reverb.outputBus,
+		]);
 
 		index = 125; // Echo A.D.L.
 		array[index-1] = Dictionary.newFrom(List[

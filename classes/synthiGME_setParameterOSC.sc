@@ -407,6 +407,22 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			},
 
 
+			"reverb", { // Ejemplo "/reverb/level"
+				switch (splitted[2],
+					"mix", {
+						modulReverb.setMix(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+					"level", {
+						modulReverb.setLevel(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+					},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				this.sendBroadcastMsg(string, value, addrForbidden);
+			},
+
+
 			"echo", { // Ejemplo "/echo/level"
 				switch (splitted[2],
 					"delay", {
