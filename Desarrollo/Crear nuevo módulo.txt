@@ -1,0 +1,3 @@
+- Crear una nueva rama para desarrollo del módulo.
+
+- Crear la clase. Copiar una clase existente con un comportamiento similar en cuanto a entradas y salidas. Adaptarla línea por línea. Comprobar que compila.
