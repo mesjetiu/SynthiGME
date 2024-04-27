@@ -31,8 +31,8 @@ SGME_Reverb : SGME_Connectable {
 	var <outputBus;
 
 	// Knobs del módulo
-	var <mix = 0;
-	var <level = 1; // solo para hacer bypass antes de hacer la GUI
+	var <mix = 10; // solo para hacer bypass antes de hacer la GUI
+	var <level = 10; // solo para hacer bypass antes de hacer la GUI
 
 
 	// Otros atributos de instancia
@@ -66,7 +66,10 @@ SGME_Reverb : SGME_Connectable {
 			inMix = In.ar(inputBusMix) + InFeedback.ar(inFeedbackBusMix);
 			inMix = inMix.linlin(-1, 1, -0.25, 0.25) + mix;
 			inMix = inMix.clip(0, 1);
-			sigOut = sigIn + inMix; // poner aquí la reverb (ahora es un bypass)
+
+			sigOut = FreeVerb.ar(sigIn, mix: inMix, room: 1); // Ajustar valores...
+
+		//	sigOut = sigIn + inMix; // poner aquí la reverb (ahora es un bypass)
 
 			sigOut = sigOut * level;
 
@@ -124,7 +127,7 @@ SGME_Reverb : SGME_Connectable {
 	}
 
 	convertLevel {|m|
-		^m.linlin(0, 10, 0, 2);
+		^m.linlin(0, 10, 0, 1);
 	}
 
 	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
