@@ -22,8 +22,11 @@
 - Editar SynthiGME.sc
 	En run():
 		Añadir entrada del módulo en "conexiones de entrada y salida de cada módulo en el patchbay de audio".
-	Editar "synthiGME_setParameterOSC:
+
+- Editar "synthiGME_setParameterOSC:
 		Añadir entrada del módulo con código OSC.
 		Forzar "level = 1" en el módulo para hacer bypass.
 	En este punto debería poder compilar, ejecutarse sin fallos. Debería poder utilizarse el módulo aunque sea dummy.
+	
+- Editar SGME_PatchbayVoltage (si procede): (hacer lo equivalente de SGME_PatchbayAudio) y editar SynthiGME del mismo modo. Debería compilar y poder ser conectado en Voltage.
 	
