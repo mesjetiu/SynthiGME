@@ -17,7 +17,7 @@ along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
 Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
-SGME_Echo : SGME_Connectable {
+SGME_Reverb : SGME_Connectable {
 
 	// Synth de la instancia
 	var <synth = nil;
@@ -28,14 +28,10 @@ SGME_Echo : SGME_Connectable {
 	var <inFeedbackBus;
 	var <inputBusMix;
 	var <inFeedbackBusMix;
-	var <inputBusDelay;
-	var <inFeedbackBusDelay;
 	var <outputBus;
 
 	// Knobs del módulo
-	var <delay = 0;
 	var <mix = 0;
-	var <feedback = 0;
 	var <level = 0;
 
 
@@ -56,36 +52,26 @@ SGME_Echo : SGME_Connectable {
 
 	*addSynthDef {
 		lag = 0.2;
-		SynthDef(\SGME_Echo, {
+		SynthDef(\SGME_Reverb, {
 			arg inputBus,
 			inFeedbackBus,
 			inputBusMix,
 			inFeedbackBusMix,
-			inputBusDelay,
-			inFeedbackBusDelay,
 			outputBus,
-			delay,
 			mix,
-			feedback,
 			level;
 
-			var sigIn, sigOut, inMix, inDelay;
+			var sigIn, sigOut, inMix;
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 			inMix = In.ar(inputBusMix) + InFeedback.ar(inFeedbackBusMix);
 			inMix = inMix.linlin(-1, 1, -0.25, 0.25) + mix;
 			inMix = inMix.clip(0, 1);
-			inDelay = In.ar(inputBusDelay) + InFeedback.ar(inFeedbackBusDelay);
-			inDelay = inDelay.linlin(-1, 1, -5, 5) + delay;
-			inDelay = inDelay.clip(0.002, 20);
-			// Implementación usando SC3plugins
-			//sigOut = SwitchDelay.ar(sigIn, 1-mix, mix, VarLag.ar(K2A.ar(delay),0.001), feedback * 0.7) * level;
-			// Implementación sin usar SC3plugins
-			sigOut = (CombC.ar(sigIn, 20, inDelay, 20 * feedback) * inMix) + (sigIn * (1-inMix));
+			sigOut = 0; // poner aquí la reverb
 
 			sigOut = sigOut * level;
 
 			Out.ar(outputBus, sigOut);
-		},[nil, nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]).add
+		},[nil, nil, nil, nil, nil, lag, lag]).add
 	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
@@ -96,8 +82,6 @@ SGME_Echo : SGME_Connectable {
 		inFeedbackBus = Bus.audio(server);
 		inputBusMix = Bus.audio(server);
 		inFeedbackBusMix = Bus.audio(server);
-		inputBusDelay = Bus.audio(server);
-		inFeedbackBusDelay = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
 			1.wait;
@@ -108,17 +92,13 @@ SGME_Echo : SGME_Connectable {
 	// Crea el Synth en el servidor
 	createSynth {
 		if(synth.isPlaying==false, {
-			synth = Synth(\SGME_Echo, [
+			synth = Synth(\SGME_Reverb, [
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
 				\inputBusMix, inputBusMix,
 				\inFeedbackBusMix, inFeedbackBusMix,
-				\inputBusDelay, inputBusDelay,
-				\inFeedbackBusDelay, inFeedbackBusDelay,
 				\outputBus, outputBus,
-				\delay, this.convertDelay(delay),
 				\mix, this.convertMix(mix),
-				\feedback, this.convertFeedback(feedback),
 				\level, this.convertLevel(level),
 			], server).register;
 		});
@@ -139,16 +119,8 @@ SGME_Echo : SGME_Connectable {
 
 	// Conversores de unidades.
 
-	convertDelay {|d|
-		^d.linexp(0, 10, 0.002, 20);
-	}
-
 	convertMix {|m|
 		^m.linlin(0, 10, 0, 1);
-	}
-
-	convertFeedback {|f|
-		^f.linlin(0, 10, 0, 1);
 	}
 
 	convertLevel {|m|
@@ -157,24 +129,10 @@ SGME_Echo : SGME_Connectable {
 
 	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
 
-	setDelay {|v|
-		delay = v;
-		synth.run(true);
-		synth.set(\delay, this.convertDelay(v));
-		//	this.synthRun();
-	}
-
 	setMix {|v|
 		mix = v;
 		synth.run(true);
 		synth.set(\mix, this.convertMix(v));
-		//	this.synthRun();
-	}
-
-	setFeedback {|v|
-		feedback = v;
-		synth.run(true);
-		synth.set(\feedback, this.convertFeedback(v));
 		//	this.synthRun();
 	}
 
