@@ -32,7 +32,7 @@ SGME_Reverb : SGME_Connectable {
 
 	// Knobs del módulo
 	var <mix = 0;
-	var <level = 0;
+	var <level = 1; // solo para hacer bypass antes de hacer la GUI
 
 
 	// Otros atributos de instancia
@@ -66,7 +66,7 @@ SGME_Reverb : SGME_Connectable {
 			inMix = In.ar(inputBusMix) + InFeedback.ar(inFeedbackBusMix);
 			inMix = inMix.linlin(-1, 1, -0.25, 0.25) + mix;
 			inMix = inMix.clip(0, 1);
-			sigOut = 0; // poner aquí la reverb
+			sigOut = sigIn + inMix; // poner aquí la reverb (ahora es un bypass)
 
 			sigOut = sigOut * level;
 
