@@ -1,0 +1,11 @@
+Implementar:
+Módulo Reverb
+Módulo Joystick
+Módulo Osciloscopio
+Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio)
+
+
+
+
+Bugs:
+Shift+o no lleva a todas las ventanas a origen
