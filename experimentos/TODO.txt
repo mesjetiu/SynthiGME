@@ -4,6 +4,8 @@ Módulo Joystick
 Módulo Osciloscopio
 Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio)
 
+Crear un documento sobre los pasos a seguir para añadir un nuevo módulo.
+
 
 
 
