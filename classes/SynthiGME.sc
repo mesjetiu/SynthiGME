@@ -21,6 +21,7 @@ SynthiGME {
 	var <server; // Servidor de audio a utilizar
 
 	// Módulos que incluye:
+	var <modulReverb;
 	var <modulInputAmplifiers;
 	var <modulExternalTreatmentReturns;
 	var <modulFilters;
@@ -74,6 +75,7 @@ SynthiGME {
 
 	*initClass {
 		// Inicializa otras clases antes de esta
+		Class.initClassTree(SGME_Reverb);
 		Class.initClassTree(SGME_Settings);
 		Class.initClassTree(SGME_Oscillator);
 		Class.initClassTree(SGME_Filter);
@@ -154,6 +156,7 @@ SynthiGME {
 
 		// Se añaden al servidor las declaracines SynthDefs
 		SynthiGME.addSynthDef;
+		SGME_Reverb.addSynthDef;
 		SGME_InputAmplifier.addSynthDef;
 		SGME_ExternalTreatmentReturn.addSynthDef;
 		SGME_LPFilter.addSynthDef;
@@ -226,7 +229,8 @@ SynthiGME {
 					individualChannelOutputsBusses = settings[\individualChannelOutputsBusses];
 
 
-					// Módulos.
+					// Instanciación de los Módulos.
+					modulReverb = SGME_Reverb(server);
 					modulFilters = 4.collect({SGME_LPFilter(server)}) ++ 4.collect({SGME_HPFilter(server)});
 					modulFilterBank = SGME_FilterBank(server);
 					modulInputAmplifiers = 8.collect({SGME_InputAmplifier(server)});
@@ -329,6 +333,12 @@ SynthiGME {
 						i.createSynth;
 						server.sync;
 					});
+					"OK\n".post;
+
+					// Reverb
+					"Reverb...".post;
+					modulReverb.createSynth;
+					server.sync;
 					"OK\n".post;
 
 					// Filters

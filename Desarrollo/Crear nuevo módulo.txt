@@ -1,3 +1,16 @@
 - Crear una nueva rama para desarrollo del módulo.
 
-- Crear la clase dummy. Copiar una clase existente con un comportamiento similar en cuanto a entradas y salidas. Adaptar nombre, nombre del synth, entradas y salidas, métodos. Comprobar que compila.
+- Crear la clase dummy. 
+	Copiar una clase existente con un comportamiento similar en cuanto a entradas y salidas. 
+	Adaptar nombre, nombre del synth, entradas y salidas, métodos. Comprobar que compila.
+
+- Editar SynthiGME.sc
+	Añadir variable modul[...] al principio de la clase.
+	Añadir línea en *initClass.
+	Añadir declaración de [modul].addSynthDef en init.
+	En run():
+		Añadir instanciación de módulo en server.waitForBoot().
+		Arrancar synths de módulo.
+	En este punto debería poder compilar y ejecutarse sin fallos.
+	
+- Editar SGME_PatchbayAudio (si procede)
