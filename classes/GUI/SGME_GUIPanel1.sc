@@ -50,7 +50,8 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		this.makeFilters(compositeView, 38, 80, 53.4);
 		this.makeEnvelopes(compositeView, 38, 238, 59.7);
 		this.makeRingModulators(compositeView, 41.5, 417);
-		this.makeEcho(compositeView, 200, 417);
+		this.makeReverb(compositeView, 218, 417);
+		this.makeEcho(compositeView, 301.5, 417);
 
 		this.saveOrigin;
 		this.resizePanel(Window.availableBounds.width/virtualWidth);
@@ -437,14 +438,55 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		};
 	}
 
+	makeReverb {|parent, left, top|
+		var size = 35;
+		var spacing = 38.5;
+		var rect;
+		var mix, level;
+
+		rect = Rect(left, top, size, size);
+		mix = Knob(parent, rect)
+		.color_([blue, black, white, nil])
+		.mode_(\vert)
+		.step_(step);
+		viewSizes = viewSizes.add([mix, rect]);
+
+		left = left + spacing;
+		rect = Rect(left, top, size, size);
+		level = Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\vert)
+		.step_(step);
+		viewSizes = viewSizes.add([level, rect]);
+
+		// Se añaden al diccionario todos los mandos.
+		parameterViews
+		.put("/reverb/mix", mix)
+		.put("/reverb/level", level);
+
+		// Acciones de los knobs
+		mix.action = {|knob|
+			synthiGME.setParameterOSC(
+				string: "/reverb/mix",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+
+		level.action = {|knob|
+			synthiGME.setParameterOSC(
+				string: "/reverb/level",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+	}
+
 	makeEcho {|parent, left, top|
 		var size = 35;
 		var spacing = 38.5;
 		var rect;
 		var delay, mix, feedback, level;
-
-		left = 301.5;
-		top = 417;
 
 		rect = Rect(left, top, size, size);
 		delay = Knob(parent, rect)

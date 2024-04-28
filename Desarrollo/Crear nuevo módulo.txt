@@ -29,4 +29,6 @@
 	En este punto debería poder compilar, ejecutarse sin fallos. Debería poder utilizarse el módulo aunque sea dummy.
 	
 - Editar SGME_PatchbayVoltage (si procede): (hacer lo equivalente de SGME_PatchbayAudio) y editar SynthiGME del mismo modo. Debería compilar y poder ser conectado en Voltage.
+
+- Añadir views al panel correspondiente. Copiar alguno ya hecho y adaptarlo.
 	
