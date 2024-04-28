@@ -6,6 +6,7 @@ Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio)
 Poner más cosas en configuración...
 
 Crear un documento sobre los pasos a seguir para añadir un nuevo módulo.
+Crear tabla de OSC actualizada y accesible.
 Poner en configuración (todos los módulos):
 	outVol
 	lag
