@@ -16,7 +16,7 @@ showTooltip = {
         tooltipWindow.front;
     }, {
         "Creating new tooltip window...".postln;
-        tooltipWindow = Window("Tooltip", Rect(x, y, text.size * 8 + 20, 20), false)
+        tooltipWindow = Window("Tooltip", Rect(x, y, text.size * 8 + 20, 20), resizable:  false, border: false)
         .alwaysOnTop_(true)
         .drawFunc_({
             Pen.fillColor = Color.white;
