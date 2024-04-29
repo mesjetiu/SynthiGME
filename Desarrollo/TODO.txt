@@ -1,5 +1,4 @@
 Implementar:
-Módulo Reverb
 Módulo Joystick
 Módulo Osciloscopio
 Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio)
@@ -12,7 +11,7 @@ Crear tabla de OSC actualizada y accesible.
 Poner en configuración (todos los módulos):
 	outVol
 	lag
-
+Ver si se pueden hacer las ventanas resizables. Actualmente no lo están. Pero hay que ver si es compatible con los atajos actuales para Zoom.
 
 
 
