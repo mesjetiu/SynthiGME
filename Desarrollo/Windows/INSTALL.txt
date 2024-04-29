@@ -1,0 +1,1 @@
+En el caso de distribuir un paquete con Synthi GME y Supercollider juntos, el quark SynthiGME ha de ir en la carpeta "External" (en SCClassLibrary\External), y el script "SynthiGME.cmd" fuera de la carpeta de SuperCollider.
