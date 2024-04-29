@@ -4,6 +4,7 @@ Módulo Joystick
 Módulo Osciloscopio
 Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio)
 Poner más cosas en configuración...
+Crear hints al poner el ratón sobre un view
 
 Crear un documento sobre los pasos a seguir para añadir un nuevo módulo.
 Crear tabla de OSC actualizada y accesible.
