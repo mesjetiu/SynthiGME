@@ -1,7 +1,7 @@
 TITLE:: SynthiGME
 summary:: Emulador del sintetizador EMS Synthi 100 del GME de Cuenca.
-categories:: Undocumented classes
-DESCRIPTION:: Este emulador está inspirado en el sintetizador EMS Synthi 100 del GME de Cuenca, actualmente operativo en el nGME, situado en el Instituto de Tecnología, construcción y telecomunicaciones de Cuenca.
+categories:: Quarks, Education
+DESCRIPTION:: Este emulador está inspirado en el sintetizador EMS Synthi 100 del GME de Cuenca, actualmente operativo en el nGME, situado en el Instituto de Tecnología, construcción y telecomunicaciones de Cuenca, y administrado por Fuzzy Gab 4.
 
 Su finalidad es enteramente educativa. Puede ser utilizado para fines pedagógicos y artísticos.
 
