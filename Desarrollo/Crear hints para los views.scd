@@ -18,7 +18,7 @@ showTooltip = {
         "Creating new tooltip window...".postln;
         tooltipWindow = Window("Tooltip", Rect(x, y, text.size * 8 + 20, 20), false)
         .alwaysOnTop_(true)
-        .drawHook_({
+        .drawFunc_({
             Pen.fillColor = Color.white;
             Pen.fillRect(tooltipWindow.bounds);
         });
