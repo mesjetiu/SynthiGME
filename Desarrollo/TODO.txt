@@ -7,6 +7,7 @@ Poner más cosas en configuración...
 Crear hints al poner el ratón sobre un view
 
 Crear un documento sobre los pasos a seguir para añadir un nuevo módulo.
+Crear un atajo de teclado "m" para mutear y desmutear el sonido (panic)
 Crear tabla de OSC actualizada y accesible.
 Poner en configuración (todos los módulos):
 	outVol
