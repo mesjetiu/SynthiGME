@@ -25,7 +25,7 @@ SGME_GUIShortcuts {
 		win.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
 			//keycode.postln;
-			//[char, unicode, keycode, key, mod].postln;
+			[char, unicode, keycode, key, mod].postln;
 
 			unicode.switch(
 				118, {
@@ -65,6 +65,12 @@ SGME_GUIShortcuts {
 				},
 				104, { // Tecla h: (help) ayuda con los atajos de teclado
 					synthiGME.guiSC.helpWindow.conmuteVisibility;
+				},
+				109, { // Tecla m: (mute) mutea y desmutea
+					if (synthiGME.server.volume.isMuted,
+						{synthiGME.server.volume.unmute},
+						{synthiGME.server.volume.mute}
+					)
 				},
 			)
 		}
