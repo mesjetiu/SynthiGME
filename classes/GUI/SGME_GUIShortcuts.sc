@@ -28,11 +28,11 @@ SGME_GUIShortcuts {
 			//[char, unicode, keycode, key, mod].postln;
 
 			unicode.switch(
-				118, {
+				118, {// "v" Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 					synthiGME.guiSC.panels.do({|panel|
 						panel.conmuteVisibility
 					})
-				},  // "v" Activa y desactiva la visibilidad de los mandos de la ventana en foco.
+				},
 				43, {this.resizeFocusedPanel(factor)}, // +
 				45, {this.resizeFocusedPanel(1/factor)}, // -
 				102, {synthiGME.guiSC.frontWindows}, // f (front) Todas las ventanas al frente
@@ -43,7 +43,7 @@ SGME_GUIShortcuts {
 				53, {synthiGME.guiSC.panels[4].window.front; synthiGME.guiSC.panels[0].focus(4)}, // Tecla 5: Panel 5 al frente
 				54, {synthiGME.guiSC.panels[5].window.front; synthiGME.guiSC.panels[0].focus(5)}, // Tecla 6: Panel 6 al frente
 				55, {synthiGME.guiSC.panels[6].window.front; synthiGME.guiSC.panels[0].focus(6)}, // Tecla 7: Panel 7 al frente
-				79, {// Tecla O: Todos los Paneles a posición y tamaño original
+				79, {// Shift + O: Todos los Paneles a posición y tamaño original
 					synthiGME.guiSC.panels.do({|panel|
 						panel.goToOrigin
 					})

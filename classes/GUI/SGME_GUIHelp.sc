@@ -54,6 +54,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 
 		allTexts = [
 			["h", "Abre y cierra esta ventana de ayuda"],
+			["m", "commuta silencio del audio de salida"],
 			["1", "Trae al frente el panel 1"],
 			["2", "Trae al frente el panel 2"],
 			["3", "Trae al frente el panel 3"],
@@ -61,7 +62,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 			["5", "Trae al frente el panel 5"],
 			["6", "Trae al frente el panel 6"],
 			["7", "Trae al frente el panel 7"],
-			["f", "Trae al frente todas los paneles"],
+			["f", "Trae al frente todos los paneles"],
 			["v", "Conmuta visibilidad de las views"],
 			["e", "Activa o desactiva los pines sin función de las matrices"],
 			["o", "Lleva al tamaño y posición original el panel en foco"],
