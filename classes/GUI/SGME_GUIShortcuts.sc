@@ -25,7 +25,7 @@ SGME_GUIShortcuts {
 		win.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
 			//keycode.postln;
-			[char, unicode, keycode, key, mod].postln;
+			//[char, unicode, keycode, key, mod].postln;
 
 			unicode.switch(
 				118, {
@@ -43,7 +43,7 @@ SGME_GUIShortcuts {
 				53, {synthiGME.guiSC.panels[4].window.front; synthiGME.guiSC.panels[0].focus(4)}, // Tecla 5: Panel 5 al frente
 				54, {synthiGME.guiSC.panels[5].window.front; synthiGME.guiSC.panels[0].focus(5)}, // Tecla 6: Panel 6 al frente
 				55, {synthiGME.guiSC.panels[6].window.front; synthiGME.guiSC.panels[0].focus(6)}, // Tecla 7: Panel 7 al frente
-				56, {// Tecla O: Todos los Paneles a posición y tamaño original
+				79, {// Tecla O: Todos los Paneles a posición y tamaño original
 					synthiGME.guiSC.panels.do({|panel|
 						panel.goToOrigin
 					})
