@@ -1,9 +1,10 @@
 # Implementar:
-- guardado de patches (autoguardado, archivo de guardado, selección de patche...)
+- Guardado de patches (autoguardado, archivo de guardado (JSON?), selección de patche...)
 - Módulo Joystick.
 - Módulo Osciloscopio.
 - Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio).
 - Poner variables relevantes de módulos en configuración.
+- Convertir archivo a JSON?
 - Crear hints al poner el ratón sobre un view.
 - Crear tabla de OSC actualizada y accesible.
 - Ver si se pueden hacer las ventanas resizables. Actualmente no lo están. Pero hay que ver si es compatible con los atajos actuales para Zoom.
