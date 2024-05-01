@@ -1,4 +1,5 @@
 # Implementar:
+- guardado de patches (autoguardado, archivo de guardado, selección de patche...)
 - Módulo Joystick.
 - Módulo Osciloscopio.
 - Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio).
