@@ -14,5 +14,6 @@
 
 # Ideas a pensar:
 - Threads. uso en Supercollider? puede aliviar la CPU?
+    - ver artículo sobre Supernova: https://madskjeldgaard.dk/posts/supernova-intro/
 - Rueda de envelope hacer que sea intuitivo
 - ¿poner todas las las salidas por defecto? (quizás dejar solo dos por defecto por si algún sistema operativo no puede lidiar con todo ello correctamente).
