@@ -15,6 +15,7 @@
 
 # Bugs y mejoras:
 - Comprobar qué servidor usa por defecto, porque no se ve en los controles de SCIDE
+- En el documento de creación de nuevos módulos, añadir la declaración de las variables en SynthiGME.getState()
 
 # Ideas a pensar:
 - Threads. uso en Supercollider? puede aliviar la CPU?
