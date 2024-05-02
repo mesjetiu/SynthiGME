@@ -20,7 +20,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SynthiGME {
 	var <server; // Servidor de audio a utilizar
 
-	var <>verbose_OSC; // true: se muestran en Post Window los mensajes OSC enviados al synti.
+	var <>verboseOSC; // true: se muestran en Post Window los mensajes OSC enviados al synti.
 
 	// Módulos que incluye:
 	var <modulReverb;
@@ -61,7 +61,7 @@ SynthiGME {
 	var devicePort;
 
 	// Diccionario que guarda el último valor de cada string recibido de OSC
-	var oscRecievedMessages;
+	var <oscRecievedMessages;
 
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC = nil;
@@ -98,8 +98,8 @@ SynthiGME {
 	*new {
 		arg server = Server.local,
 		gui = true,
-		verbose_OSC = true;
-		^super.new.init(server, gui, verbose_OSC);
+		verboseOSC = true;
+		^super.new.init(server, gui, verboseOSC);
 	}
 
 
@@ -141,7 +141,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, gui, verbose_OSC|
+	init {|serv, gui, verboseOSC|
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
@@ -155,7 +155,7 @@ SynthiGME {
 		devicePort = settings[\OSCDevicePort];
 
 		server = serv;
-		this.verbose_OSC = verbose_OSC;
+		this.verboseOSC = verboseOSC;
 		stereoOutBuses = [0,1];
 
 		// Se añaden al servidor las declaracines SynthDefs

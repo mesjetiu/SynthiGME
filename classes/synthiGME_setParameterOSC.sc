@@ -452,5 +452,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		);
 		// Si el mensaje es correcto se guarda el último valor de cada cadena en el diccionario
 		oscRecievedMessages.put(string, value);
+		// Se imprime en Post window
+		if (this.verboseOSC,
+			{(string + value.round(0.01)).postln}
+		)
 	}
 }
