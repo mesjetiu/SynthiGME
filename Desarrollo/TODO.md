@@ -1,4 +1,5 @@
 # Implementar:
+- Hacer modo "Verbose" que muestre en Post Window todos los mensajes OSC ejecutados.
 - Guardado de patches (autoguardado, archivo de guardado (JSON?), selección de patche...)
     - Guardar el estado actual:
 	    + Con SynthiGME.getState() que estaba hecho pero hay que construirlo y testearlo.
