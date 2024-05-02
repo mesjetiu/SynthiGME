@@ -23,6 +23,28 @@ o.verbose_OSC
 
 // estado actual... no hace falta getState!!!!
 // testear más y más.
-o.oscRecievedMesages
-
 o.oscRecievedMessages
+
+// tomamos un estado concreto
+// No copiarlo simplemente con asignación, ya que no se hace una copia sino una referencia:
+d = o.oscRecievedMessages
+d == o.oscRecievedMessages // true siempre, aunque se modifique uno.
+
+// copiar con la siguiente función:
+d = Dictionary.newFrom(o.oscRecievedMessages)
+
+
+// podemos ahora cambiar el valor del synthi para después recuperarlo
+// ...
+
+// modo de acceso al diccionario con par key value
+d.keysValuesDo {|key, value| (key + value).postln}
+
+// recuperamos valores anteriores
+(
+d.keysValuesDo {
+	|key, value|
+	o.setParameterOSC(key, value)
+}
+)
+
