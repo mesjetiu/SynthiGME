@@ -3,7 +3,10 @@
 - Guardado de patches (autoguardado, archivo de guardado (JSON?), selección de patche...)
     - Guardar el estado actual:
 	    + Con SynthiGME.getState() que estaba hecho pero hay que construirlo y testearlo.
-	    + getState() devuelve un diccionario con el estado de cada valor. Los valores han de ser de la GUI, no del sintetizador (p. ej. Frecuencia va de 0 a 10, no en Hz)
+	    + getState() devuelve un diccionario con el estado de cada valor. Los valores han de ser de la GUI, no del sintetizador (p. ej. Frecuencia va de 0 a 10, no en Hz) (quizás no se use)
+	    + Mejor: el método oscRecievedMessages almacena el último mensaje de cada variable de la GUI. Se puede revertir a un estado anterior con él.
+	    + Probar con todos los módulos:
+		    * Los PatchBays no se activan en la GUI al entrar un OSC. Revisar.
     - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables.
 - Módulo Joystick.
 - Módulo Osciloscopio.
