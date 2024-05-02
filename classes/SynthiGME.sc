@@ -638,7 +638,7 @@ SynthiGME {
 			data.add([string ++ "sawtooth/level", osc.sawtoothLevel]);
 			data.add([string ++ "frequency", osc.frequency]);
 		});
-
+/*
 		// Noise Generators:
 		modulNoiseGenerators.do({|ng, num|
 			var string = "/noise/" ++ (num + 1) ++ "/";
@@ -679,7 +679,7 @@ SynthiGME {
 			data.add([string ++ "signalLevel", env.signalLevel]);
 			data.add([string ++ "selector/1/" ++ env.selector, 1]);
 		});
-
+*/
 		^data;
 	}
 
