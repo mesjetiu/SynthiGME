@@ -1,5 +1,7 @@
 # Implementar:
 - Guardado de patches (autoguardado, archivo de guardado (JSON?), selección de patche...)
+    - Guardar el estado actual: actualizar un diccionario con todos los comandos OSC recibidos pero que guarde el último valor cada vez.
+    - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables.
 - Módulo Joystick.
 - Módulo Osciloscopio.
 - Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio).
