@@ -20,6 +20,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SynthiGME {
 	var <server; // Servidor de audio a utilizar
 
+	var <>verbose_OSC; // true: se muestran en Post Window los mensajes OSC enviados al synti.
+
 	// Módulos que incluye:
 	var <modulReverb;
 	var <modulInputAmplifiers;
@@ -94,9 +96,10 @@ SynthiGME {
 	}
 
 	*new {
-		arg gui = true,
-		server = Server.local;
-		^super.new.init(server, gui);
+		arg server = Server.local,
+		gui = true,
+		verbose_OSC = true;
+		^super.new.init(server, gui, verbose_OSC);
 	}
 
 
@@ -138,7 +141,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, gui|
+	init {|serv, gui, verbose_OSC|
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
@@ -152,7 +155,8 @@ SynthiGME {
 		devicePort = settings[\OSCDevicePort];
 
 		server = serv;
-		stereoOutBuses =  [0,1];
+		this.verbose_OSC = verbose_OSC;
+		stereoOutBuses = [0,1];
 
 		// Se añaden al servidor las declaracines SynthDefs
 		SynthiGME.addSynthDef;
