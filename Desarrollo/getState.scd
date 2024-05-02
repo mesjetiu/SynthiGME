@@ -17,3 +17,12 @@ a.[0..7].do{|osc|
 	o.setParameterOSC(osc[0], osc[1])
 }
 )
+
+
+o.verbose_OSC
+
+// estado actual... no hace falta getState!!!!
+// testear más y más.
+o.oscRecievedMesages
+
+o.oscRecievedMessages
