@@ -27,10 +27,10 @@ o.oscRecievedMessages
 
 // tomamos un estado concreto
 // No copiarlo simplemente con asignación, ya que no se hace una copia sino una referencia:
-d = o.oscRecievedMessages
-d == o.oscRecievedMessages // true siempre, aunque se modifique uno.
+d = o.oscRecievedMessages // copia la referencia, no es una copia distinta
+d == o.oscRecievedMessages // true siempre, aunque se modifique uno de los dos
 
-// copiar con la siguiente función:
+// MEJOR: copiar con la siguiente función:
 d = Dictionary.newFrom(o.oscRecievedMessages)
 d.size
 
@@ -42,6 +42,9 @@ d
 
 // modo de acceso al diccionario con par key value
 d.keysValuesDo {|key, value| (key + value).postln}
+
+// Otra forma de ver los valores, en un solo array
+d.asPairs
 
 // recuperamos valores anteriores
 (
