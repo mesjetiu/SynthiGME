@@ -97,11 +97,12 @@ SGME_GUINode {
 			})
 		})
 	}
-
-	value_ {|valueIn|
+/*
+	value_ {|valueIn| // Desde setParameterOSC() se cambia el valor del nodo
 		value = valueIn;
 		this.enable_(value == 1)
 	}
+	*/
 
 	bounds {
 		^view.bounds;
@@ -111,15 +112,12 @@ SGME_GUINode {
 		view.bounds = bounds;
 	}
 
-	/*
 	value_ {|val|
-		if(value == val, {^this});
 		value = val;
 		if(value==1, {
-			view.setBackgroundImage(image1, 10);
-		}, {
 			view.setBackgroundImage(image2, 10);
+		}, {
+			view.setBackgroundImage(image1, 10);
 		})
 	}
-	*/
 }

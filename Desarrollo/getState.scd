@@ -32,6 +32,9 @@ d == o.oscRecievedMessages // true siempre, aunque se modifique uno.
 
 // copiar con la siguiente función:
 d = Dictionary.newFrom(o.oscRecievedMessages)
+d.size
+
+d
 
 
 // podemos ahora cambiar el valor del synthi para después recuperarlo
