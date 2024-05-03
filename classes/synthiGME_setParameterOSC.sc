@@ -75,7 +75,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			"patchA", { // Ejemplo "/patchA/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horizontal
 				2.do({splitted.removeAt(0)});
 				modulPatchbayAudio.administrateNode(splitted[0].asInteger, splitted[1].asInteger, value);
-				if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
+				if(guiSC.running, {{guiSC.parameterViews[string].value_(value)}.defer(0)});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},
@@ -83,7 +83,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			"patchV", { // Ejemplo "/patchV/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horizontal
 				2.do({splitted.removeAt(0)});
 				modulPatchbayVoltage.administrateNode(splitted[0].asInteger, splitted[1].asInteger, value);
-				if(guiSC.running, {{guiSC.parameterViews[string].value = value}.defer(0)});
+				if(guiSC.running, {{guiSC.parameterViews[string].value_(value)}.defer(0)});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				this.sendBroadcastMsg(string, value, addrForbidden);
 			},

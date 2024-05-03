@@ -98,6 +98,11 @@ SGME_GUINode {
 		})
 	}
 
+	value_ {|valueIn|
+		value = valueIn;
+		this.enable_(value == 1)
+	}
+
 	bounds {
 		^view.bounds;
 	}
@@ -106,6 +111,7 @@ SGME_GUINode {
 		view.bounds = bounds;
 	}
 
+	/*
 	value_ {|val|
 		if(value == val, {^this});
 		value = val;
@@ -115,4 +121,5 @@ SGME_GUINode {
 			view.setBackgroundImage(image2, 10);
 		})
 	}
+	*/
 }
