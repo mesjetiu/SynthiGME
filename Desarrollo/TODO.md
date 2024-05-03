@@ -8,7 +8,6 @@
 	    + Crear un diccionario con estado inicial.
 	    + Guardar en archivo y recuperar un estado (como un array que se agrupa en pares key-value).
 	    + Guardar estados automáticamente antes de salir o cada cierto tiempo, y poder volver a estado anterior al reiniciar.
-    - Crear una serie de patches de ejemplo para poder empezar a usar rápidamente.
     - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables.
 - Módulo Joystick.
 - Módulo Osciloscopio.
