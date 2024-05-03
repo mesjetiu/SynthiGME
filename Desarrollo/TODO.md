@@ -6,6 +6,9 @@
 	    + getState() devuelve un diccionario con el estado de cada valor. Los valores han de ser de la GUI, no del sintetizador (p. ej. Frecuencia va de 0 a 10, no en Hz) (quizás no se use)
 	    + Mejor: el método oscRecievedMessages almacena el último mensaje de cada variable de la GUI. Se puede revertir a un estado anterior con él.
 	    + Probar con todos los módulos.
+	    + Crear un diccionario con estado inicial.
+	    + Guardar en archivo y recuperar un estado.
+	    + Guardar estados automáticamente antes de salir o cada cierto tiempo, y poder volver a estado anterior al reiniciar.
     - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables.
 - Módulo Joystick.
 - Módulo Osciloscopio.

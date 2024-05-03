@@ -34,8 +34,6 @@ d == o.oscRecievedMessages // true siempre, aunque se modifique uno de los dos
 d = Dictionary.newFrom(o.oscRecievedMessages)
 d.size
 
-d
-
 
 // podemos ahora cambiar el valor del synthi para después recuperarlo
 // ...
@@ -53,4 +51,12 @@ d.keysValuesDo {
 	o.setParameterOSC(key, value)
 }
 )
+
+
+
+
+
+
+
+
 
