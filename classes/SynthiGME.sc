@@ -18,9 +18,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 SynthiGME {
-	var <server; // Servidor de audio a utilizar
 
+	// Opciones de inicio:
+	var <server; // Servidor de audio a utilizar
 	var <>verboseOSC; // true: se muestran en Post Window los mensajes OSC enviados al synti.
+	var <numStereoOutputChannels;
+	var <numInputChannels;
+	var <numReturnChannels;
+	var alwaysRebootServer;
+	// fin opciones de inicio.
 
 	// Módulos que incluye:
 	var <modulReverb;
@@ -98,8 +104,13 @@ SynthiGME {
 	*new {
 		arg server = Server.local,
 		gui = true,
-		verboseOSC = true;
-		^super.new.init(server, gui, verboseOSC);
+		verboseOSC = true, // Muestra en Post window todo mensaje OSC procesado
+		numStereoOutputChannels = 1, // Número de canales de salida unidos a salidas de SC (cada canal es stereo). Máximo 8
+		numInputChannels = 2, // Máximo 4
+		numReturnChannels = 0, // Máximo 4
+		alwaysRebootServer = false; // false: no se reinicia si se cumple la configuración del servidor.
+
+		^super.new.init(server, gui, verboseOSC, numStereoOutputChannels, numInputChannels, numReturnChannels, alwaysRebootServer);
 	}
 
 
@@ -141,7 +152,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, gui, verboseOSC|
+	init {|serv, gui, verboseOSC, numStOutputChan, numInputChan, numReturnChan, alwaysRebootServ|
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
@@ -156,6 +167,11 @@ SynthiGME {
 
 		server = serv;
 		this.verboseOSC = verboseOSC;
+		numStereoOutputChannels = numStOutputChan;
+		numInputChannels = numInputChan;
+		numReturnChannels = numReturnChan;
+		alwaysRebootServer = alwaysRebootServ;
+
 		stereoOutBuses = [0,1];
 
 		// Se añaden al servidor las declaracines SynthDefs
