@@ -22,7 +22,7 @@ SynthiGME {
 	// Opciones de inicio:
 	var <server; // Servidor de audio a utilizar
 	var <>verboseOSC; // true: se muestran en Post Window los mensajes OSC enviados al synti.
-	var <numStereoOutputChannels;
+	var <numOutputChannels;
 	var <numInputChannels;
 	var <numReturnChannels;
 	var alwaysRebootServer;
@@ -105,12 +105,12 @@ SynthiGME {
 		arg server = Server.local,
 		gui = true,
 		verboseOSC = true, // Muestra en Post window todo mensaje OSC procesado
-		numStereoOutputChannels = 1, // Número de canales de salida unidos a salidas de SC (cada canal es stereo). Máximo 8
-		numInputChannels = 2, // Máximo 4
-		numReturnChannels = 0, // Máximo 4
+		numOutputChannels = 2, // Número de canales de salida unidos a salidas de SC. Mínimo 2 (2 canales por defecto del sistema) Máximo 16
+		numInputChannels = 2, // Mínimo 2 (del sistema por defecto) Máximo 8
+		numReturnChannels = 0, // Mínimo 0, Máximo 4
 		alwaysRebootServer = false; // false: no se reinicia si se cumple la configuración del servidor.
 
-		^super.new.init(server, gui, verboseOSC, numStereoOutputChannels, numInputChannels, numReturnChannels, alwaysRebootServer);
+		^super.new.init(server, gui, verboseOSC, numOutputChannels.clip(2,16), numInputChannels.clip(2,8), numReturnChannels.clip(0,4), alwaysRebootServer);
 	}
 
 
@@ -152,7 +152,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, gui, verboseOSC, numStOutputChan, numInputChan, numReturnChan, alwaysRebootServ|
+	init {|serv, gui, verboseOSC, numOutputChan, numInputChan, numReturnChan, alwaysRebootServ|
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
@@ -167,7 +167,7 @@ SynthiGME {
 
 		server = serv;
 		this.verboseOSC = verboseOSC;
-		numStereoOutputChannels = numStOutputChan;
+		numOutputChannels = numOutputChan;
 		numInputChannels = numInputChan;
 		numReturnChannels = numReturnChan;
 		alwaysRebootServer = alwaysRebootServ;
@@ -201,46 +201,73 @@ SynthiGME {
 		var thisRoutine;
 		if (connectionOut != nil, {"SynthiGME en ejecución".error; ^this});
 		thisRoutine = Routine({
-			if (server.serverRunning, {
-				"El servidor de audio está encendido. Apagando servidor...".postln;
-				server.quit;
-				server.sync;
-				if (server.serverRunning, {
-					"Servidor no apagado correctamente".error;
-					"Saliendo del programa...".postln;
-					thisRoutine.stop();
-				}, {
-					"Servidor apagado correctamente".postln;
-				});
+		/*  var <numStereoOutputChannels;
+			var <numInputChannels;
+			var <numReturnChannels;
+			var alwaysRebootServer;
+		*/
+			// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
+			var serverOptionsOK; // true si lo pedido coincide con las opciones actuales
+			if (
+				server.options.numOutputBusChannels == numOutputChannels,
+				{serverOptionsOK = true},
+				{serverOptionsOK = false}
+			);
+
+			// Apaga el servidor si es necesario
+			if (
+				(server.serverRunning && (serverOptionsOK == false)) || alwaysRebootServer,
+				{
+					"El servidor de audio está encendido. Apagando servidor...".postln;
+					server.quit;
+					server.sync;
+					if (server.serverRunning, {
+						"Servidor no apagado correctamente".error;
+						"Saliendo del programa...".postln;
+						thisRoutine.stop();
+					}, {
+						"Servidor apagado correctamente".postln;
+					});
 			});
-			"Estableciendo número correcto de canales de entrada y salida:".postln;
-			server.options.device_("Synthi GME")
-			.numAudioBusChannels_(settings[\numAudioBusChannels])
-			.numOutputBusChannels_(settings[\numOutputBusChannels])
-			.numInputBusChannels_(settings[\numInputBusChannels])
-			.blockSize_(settings[\blockSize]); // Control rate. Si es hardware lo permite se puede aproximar a 1
 
-			("Número de canales de Audio:" + server.options.numAudioBusChannels).postln;
-			("Número de canales de output:" + server.options.numOutputBusChannels).postln;
-			("Número de canales de input:" + server.options.numInputBusChannels).postln;
-			("Tamaño del bloque:" + server.options.blockSize).postln;
 
-			if(
-				server.options.numAudioBusChannels >= settings[\numAudioBusChannels]
-				&& server.options.numOutputBusChannels >= settings[\numOutputBusChannels]
-				&& server.options.numInputBusChannels >= settings[\numInputBusChannels]
-				&& server.options.blockSize >= settings[\blockSize]
-			){
-				"Opciones actualizadas correctamente".postln;
-			}{
-				"No se han podido establecer las opciones adecuadas del servidor".error;
-				"Saliendo del programa...".postln;
-				thisRoutine.stop();
-			};
+			if (
+				(serverOptionsOK == false) && (server.serverRunning == false),
+				{
+					"Estableciendo número correcto de canales de entrada y salida:".postln;
+					server.options.device_("Synthi GME")
+					.numAudioBusChannels_(settings[\numAudioBusChannels])
+					//.numOutputBusChannels_(settings[\numOutputBusChannels])
+					.numOutputBusChannels_(numOutputChannels)
+					.numInputBusChannels_(settings[\numInputBusChannels])
+					.blockSize_(settings[\blockSize]); // Control rate. Si es hardware lo permite se puede aproximar a 1
+					server.sync;
+
+					("Número de canales de Audio:" + server.options.numAudioBusChannels).postln;
+					("Número de canales de output:" + server.options.numOutputBusChannels).postln;
+					("Número de canales de input:" + server.options.numInputBusChannels).postln;
+					("Tamaño del bloque:" + server.options.blockSize).postln;
+
+					if(
+						server.options.numAudioBusChannels >= settings[\numAudioBusChannels]
+						//&& server.options.numOutputBusChannels >= settings[\numOutputBusChannels]
+						&& server.options.numOutputBusChannels >= numOutputChannels
+						&& server.options.numInputBusChannels >= settings[\numInputBusChannels]
+						&& server.options.blockSize >= settings[\blockSize]
+					){
+						"Opciones actualizadas correctamente".postln;
+					}{
+						"No se han podido establecer las opciones adecuadas del servidor".error;
+						"Saliendo del programa...".postln;
+						thisRoutine.stop();
+					};
+
+				}
+			);
+
 
 			// Se anuncia que se arrancará el servidor (si no lo está)
 			if(server.serverRunning == false, {"Arrancando servidor...".postln});
-
 			// Arrancamos el servidor si aún no lo está
 			server.waitForBoot(
 				onComplete: {
@@ -269,6 +296,10 @@ SynthiGME {
 					server.sync;
 
 					2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
+
+
+
+					/*
 					"Conexión de salida stereo canales 1 a 8...".post;
 					connectionOut = [];
 					connectionOut = connectionOut.add({
@@ -285,6 +316,7 @@ SynthiGME {
 					}.value);
 					server.sync;
 					"OK\n".post;
+					*/
 
 					"Conexión de salida stereo canales 1 a 4...".post;
 					connectionOut = connectionOut.add({
@@ -299,34 +331,41 @@ SynthiGME {
 							\inBusR3, channels[2].outBusR,
 							\inBusL4, channels[3].outBusL,
 							\inBusR4, channels[3].outBusR,
-							\outBusL, panOutputs1to4Busses[0],
-							\outBusR, panOutputs1to4Busses[1],
+							\outBusL, 0,
+							\outBusR, 1,
 							\vol, generalVol,
 						], server).register;
 					}.value);
 					server.sync;
 					"OK\n".post;
 
-					"Conexión de salida stereo canales 5 a 8...".post;
-					connectionOut = connectionOut.add({
-						var result = nil;
-						var channels = modulOutputChannels[4..7];
-						result = Synth(\connection4, [ // Las salidas stereo salen postfader
-							\inBusL1, channels[0].outBusL,
-							\inBusR1, channels[0].outBusR,
-							\inBusL2, channels[1].outBusL,
-							\inBusR2, channels[1].outBusR,
-							\inBusL3, channels[2].outBusL,
-							\inBusR3, channels[2].outBusR,
-							\inBusL4, channels[3].outBusL,
-							\inBusR4, channels[3].outBusR,
-							\outBusL, panOutputs5to8Busses[0],
-							\outBusR, panOutputs5to8Busses[1],
-							\vol, generalVol,
-						], server).register;
-					}.value);
-					server.sync;
-					"OK\n".post;
+
+					if (
+						numOutputChannels >= 4,
+						{
+							"Conexión de salida stereo canales 5 a 8...".post;
+							connectionOut = connectionOut.add({
+								var result = nil;
+								var channels = modulOutputChannels[4..7];
+								result = Synth(\connection4, [ // Las salidas stereo salen postfader
+									\inBusL1, channels[0].outBusL,
+									\inBusR1, channels[0].outBusR,
+									\inBusL2, channels[1].outBusL,
+									\inBusR2, channels[1].outBusR,
+									\inBusL3, channels[2].outBusL,
+									\inBusR3, channels[2].outBusR,
+									\inBusL4, channels[3].outBusL,
+									\inBusR4, channels[3].outBusR,
+									\outBusL, 2,
+									\outBusR, 3,
+									\vol, generalVol,
+								], server).register;
+							}.value);
+							server.sync;
+							"OK\n".post;
+						}
+					);
+
 
 					"Conexión de salida de cada canal individual...".post;
 					modulOutputChannels.do({|out, n|
