@@ -326,7 +326,7 @@ SynthiGME {
 					"OK\n".post;
 					*/
 
-					"Conexión de salida stereo canales 1 a 4...".post;
+					"Conexión de salida stereo canales 1 - 4 a salidas 1 y 2".postln;
 					connectionOut = connectionOut.add({
 						var result = nil;
 						var channels = modulOutputChannels[0..3];
@@ -345,13 +345,12 @@ SynthiGME {
 						], server).register;
 					}.value);
 					server.sync;
-					"OK\n".post;
 
 
 					if (
 						numOutputChannels >= 4,
 						{
-							"Conexión de salida stereo canales 5 a 8...".post;
+							"Conexión de salida stereo canales 5 - 8 a salidas 3 y 4".postln;
 							connectionOut = connectionOut.add({
 								var result = nil;
 								var channels = modulOutputChannels[4..7];
@@ -370,7 +369,6 @@ SynthiGME {
 								], server).register;
 							}.value);
 							server.sync;
-							"OK\n".post;
 						}
 					);
 
@@ -392,7 +390,6 @@ SynthiGME {
 							}.value);
 						}
 					});
-					"OK\n".post;
 
 
 
@@ -544,7 +541,6 @@ SynthiGME {
 							result
 						}
 					});
-					"OK\n".post;
 
 					"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".postln;
 					connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
@@ -560,7 +556,6 @@ SynthiGME {
 							result
 						}
 					});
-					"OK\n".post;
 
 					"SynthiGME en ejecución".postln;
 					// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
@@ -572,6 +567,7 @@ SynthiGME {
 				onFailure: {
 					"No se ha podido arrancar el servidor de audio".error;
 					"Saliendo del programa...".postln;
+					this.close;
 					thisRoutine.stop();
 				}
 			);
