@@ -25,6 +25,7 @@ SynthiGME {
 	var <numOutputChannels;
 	var <numInputChannels;
 	var <numReturnChannels;
+	var <blockSize;
 	var alwaysRebootServer;
 	// fin opciones de inicio.
 
@@ -77,6 +78,8 @@ SynthiGME {
 
 	classvar settings;
 
+	classvar instance; // aquí se guardará la instancia del Synthi, ya que solo se podrá tener una abierta.
+
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -108,9 +111,14 @@ SynthiGME {
 		numOutputChannels = 2, // Número de canales de salida unidos a salidas de SC. Mínimo 2 (2 canales por defecto del sistema) Máximo 16
 		numInputChannels = 2, // Mínimo 2 (del sistema por defecto) Máximo 8
 		numReturnChannels = 0, // Mínimo 0, Máximo 4
+		blockSize = 64,
 		alwaysRebootServer = false; // false: no se reinicia si se cumple la configuración del servidor.
 
-		^super.new.init(server, gui, verboseOSC, numOutputChannels.clip(2,16), numInputChannels.clip(2,8), numReturnChannels.clip(0,4), alwaysRebootServer);
+		// Se guarda la instancia:
+		if (instance != nil) {"Ya existe una instancia"; ^this};
+		instance = this;
+
+		^super.new.init(server, gui, verboseOSC, numOutputChannels.clip(2,16), numInputChannels.clip(2,8), numReturnChannels.clip(0,4), blockSize, alwaysRebootServer);
 	}
 
 
@@ -152,8 +160,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, gui, verboseOSC, numOutputChan, numInputChan, numReturnChan, alwaysRebootServ|
-
+	init {|serv, gui, verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ|
 		// Carga la configuración
 		settings = SGME_Settings.get;
 
@@ -170,6 +177,7 @@ SynthiGME {
 		numOutputChannels = numOutputChan;
 		numInputChannels = numInputChan;
 		numReturnChannels = numReturnChan;
+		blockSize = blockSiz;
 		alwaysRebootServer = alwaysRebootServ;
 
 		stereoOutBuses = [0,1];
@@ -216,11 +224,11 @@ SynthiGME {
 
 			// Apaga el servidor si es necesario
 			if (
-				(server.serverRunning && (serverOptionsOK == false)) || alwaysRebootServer,
+				(server.serverRunning && (serverOptionsOK == false || alwaysRebootServer)),
 				{
 					"El servidor de audio está encendido. Apagando servidor...".postln;
 					server.quit;
-					server.sync;
+					//server.sync;
 					if (server.serverRunning, {
 						"Servidor no apagado correctamente".error;
 						"Saliendo del programa...".postln;
@@ -239,9 +247,9 @@ SynthiGME {
 					.numAudioBusChannels_(settings[\numAudioBusChannels])
 					//.numOutputBusChannels_(settings[\numOutputBusChannels])
 					.numOutputBusChannels_(numOutputChannels)
-					.numInputBusChannels_(settings[\numInputBusChannels])
-					.blockSize_(settings[\blockSize]); // Control rate. Si es hardware lo permite se puede aproximar a 1
-					server.sync;
+					.numInputBusChannels_(numInputChannels)
+					.blockSize_(blockSize); // Control rate. Si es hardware lo permite se puede aproximar a 1
+					//server.sync;
 
 					("Número de canales de Audio:" + server.options.numAudioBusChannels).postln;
 					("Número de canales de output:" + server.options.numOutputBusChannels).postln;
@@ -252,8 +260,8 @@ SynthiGME {
 						server.options.numAudioBusChannels >= settings[\numAudioBusChannels]
 						//&& server.options.numOutputBusChannels >= settings[\numOutputBusChannels]
 						&& server.options.numOutputBusChannels >= numOutputChannels
-						&& server.options.numInputBusChannels >= settings[\numInputBusChannels]
-						&& server.options.blockSize >= settings[\blockSize]
+						&& server.options.numInputBusChannels >= numInputChannels
+						&& server.options.blockSize >= blockSize
 					){
 						"Opciones actualizadas correctamente".postln;
 					}{
@@ -367,18 +375,22 @@ SynthiGME {
 					);
 
 
-					"Conexión de salida de cada canal individual...".post;
+					"Conexión de salida de cada canal individual...".postln;
 					modulOutputChannels.do({|out, n|
-						connectionOut = connectionOut.add({
-							var result = nil;
-							result = Synth(\connectionMono, [
-								\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
-								\outputBus, settings[\individualChannelOutputsBusses][n],
-								\vol, generalVol,
-							], server).register;
-							server.sync;
-							result;
-						}.value);
+						if (n+4 <= server.options.numOutputBusChannels)
+						{
+							connectionOut = connectionOut.add({
+								var result = nil;
+								("Output Channel" + (n+1) + "conectado a salida" + (n+4)).postln;
+								result = Synth(\connectionMono, [
+									\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
+									\outputBus, settings[\individualChannelOutputsBusses][n],
+									\vol, generalVol,
+								], server).register;
+								server.sync;
+								result;
+							}.value);
+						}
 					});
 					"OK\n".post;
 
@@ -518,29 +530,38 @@ SynthiGME {
 					);
 					"OK\n".post;
 
-					"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".post;
+					"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".postln;
 					connectionIn = inputAmplifiersBusses.collect({|item, i|
-						var result = Synth(\connectionInputAmplifier, [
-							\inBus, settings[\inputAmplifiersBusses][i],
-							\outBus, item,
-							\vol, 1,
-						], server).register;
-						server.sync;
-						result
+						if (i+1 <= server.options.numInputBusChannels)
+						{
+							var result = Synth(\connectionInputAmplifier, [
+								\inBus, settings[\inputAmplifiersBusses][i],
+								\outBus, item,
+								\vol, 1,
+							], server).register;
+							("Input Channel" + (i+1) + "conectado a entrada" + (i+1)).postln;
+							server.sync;
+							result
+						}
 					});
 					"OK\n".post;
 
-					"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".post;
+					"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".postln;
 					connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
-						var result = Synth(\connectionExternalTreatmentReturn, [
-							\inBus, settings[\returnFromDeviceBusses][i],
-							\outBus, item,
-							\vol, 1,
-						], server).register;
-						server.sync;
-						result
+						if (i+8 <= server.options.numInputBusChannels)
+						{
+							var result = Synth(\connectionExternalTreatmentReturn, [
+								\inBus, settings[\returnFromDeviceBusses][i],
+								\outBus, item,
+								\vol, 1,
+							], server).register;
+							("External Input Channel" + (i+1) + "conectado a entrada" + (i+9)).postln;
+							server.sync;
+							result
+						}
 					});
 					"OK\n".post;
+
 					"SynthiGME en ejecución".postln;
 					// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
 					if (guiSC != nil, {
