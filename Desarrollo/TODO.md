@@ -9,6 +9,7 @@
 	    + Guardar en archivo y recuperar un estado (como un array que se agrupa en pares key-value).
 	    + Guardar estados automáticamente antes de salir o cada cierto tiempo, y poder volver a estado anterior al reiniciar.
     - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables.
+- Parpadeo de las views cuando se modifican, para ser vistas en la pantalla, especialmente si se modifican sus parámetros remotamente por OSC.
 - Módulo Joystick.
 - Módulo Osciloscopio.
 - Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio).
