@@ -20,6 +20,9 @@
 - Ver si se pueden hacer las ventanas resizables. Actualmente no lo están. Pero hay que ver si es compatible con los atajos actuales para Zoom.
 
 # Bugs y mejoras:
+- En Windows (versiones 3.13) error al inicial: "Interpreter has crashed or stopped forcefully. Exit code - 1073740771"
+	+ No hay documentación sobre este error.
+	+ Probar a jugar con los nodos. Quizás son demasiadas imágenes los nodos o demasiado pesadas... Se puede pasar a vectoriales.
 - Comprobar qué servidor usa por defecto, porque no se ve en los controles de SCIDE
 - En el documento de creación de nuevos módulos, añadir la declaración de las variables en SynthiGME.getState()
 - Módulo SGME_GUINode: refactorizar sin ifs anidados. Probar con case o switch.
