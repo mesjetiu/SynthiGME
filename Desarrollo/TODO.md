@@ -20,6 +20,7 @@
 - Ver si se pueden hacer las ventanas resizables. Actualmente no lo están. Pero hay que ver si es compatible con los atajos actuales para Zoom.
 
 # Bugs y mejoras:
+- Parece que no hay manera de poner un pin amarillo. Revisar atajo de teclado.
 - En Windows (versiones 3.13) error al inicial: "Interpreter has crashed or stopped forcefully. Exit code - 1073740771"
 	+ No hay documentación sobre este error.
 	+ Probar a jugar con los nodos. Quizás son demasiadas imágenes los nodos o demasiado pesadas... Se puede pasar a vectoriales.
