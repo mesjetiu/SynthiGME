@@ -32,7 +32,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		);
 		window.name = "Panel 3";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/panels/panel_3.jpg");
+		image = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "panels" +/+ "panel_3");
 		compositeView.setBackgroundImage(image,10);
 
 		// Los 6 osciladores de la izquierda

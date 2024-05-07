@@ -33,7 +33,7 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 		);
 		window.name = "Panel 7";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/panels/panel_7.jpg");
+		image = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "panels" +/+ "panel_7");
 		compositeView.setBackgroundImage(image,10);
 
 		this.makeChannels;

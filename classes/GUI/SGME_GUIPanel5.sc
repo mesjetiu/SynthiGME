@@ -33,7 +33,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		);
 		window.name = "Panel 5";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/panels/panel_5.png");
+		image = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "panels" +/+ "panel_5");
 		compositeView
 		.setBackgroundImage(image,10)
 		.background_(whiteBackground);

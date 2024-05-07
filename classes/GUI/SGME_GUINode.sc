@@ -32,9 +32,10 @@ SGME_GUINode {
 	init {|synthi, parent, bounds, stringOSC|
 		synthiGME = synthi;
 		installedPath = Quarks.quarkNameAsLocalPath("SynthiGME");
-		image1 = Image(installedPath ++ "/classes/GUI/images/widgets/patchbay_hole.png");
-		image2 = Image(installedPath ++ "/classes/GUI/images/widgets/patchbay_white_pin.png");
-		image3 = Image(installedPath ++ "/classes/GUI/images/widgets/patchbay_yellow_pin.png");
+		(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_hole").postln;
+		image1 = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_hole");
+		image2 = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_white_pin");
+		image3 = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_yellow_pin");
 		value = 0;
 		view = View(parent, bounds)
 		.setBackgroundImage(image1, 10)

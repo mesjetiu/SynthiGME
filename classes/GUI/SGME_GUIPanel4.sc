@@ -32,7 +32,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		);
 		window.name = "Panel 4";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/panels/panel_4.jpg");
+		image = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "panels" +/+ "panel_4");
 		compositeView.setBackgroundImage(image,10);
 
 		// Se crean los módulos
