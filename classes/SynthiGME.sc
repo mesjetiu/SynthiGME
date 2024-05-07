@@ -171,6 +171,10 @@ SynthiGME {
 
 		generalVol = settings[\generalVol];
 		devicePort = settings[\OSCDevicePort];
+		if (thisProcess.openUDPPort(devicePort)) {
+			("Abierto puerto" + devicePort + "para OSC.").postln;} {
+			("No se ha podido abrir el puerto" + devicePort + "para OSC").postln;
+		};
 
 		server = serv;
 		this.verboseOSC = verboseOSC;
@@ -577,7 +581,7 @@ SynthiGME {
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	pairDevice {
 		var oscDevices = Dictionary.new;
-		var searchTime = 5;
+		var searchTime = 10;
 		NetAddr.broadcastFlag = true;
 		Routine({
 			var functionOSC = {|msg, time, addr, recvPort|
