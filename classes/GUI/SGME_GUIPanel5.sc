@@ -70,7 +70,8 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { numColumns = 59 }
+			//\windows,   { numColumns = 59 }
+			\windows,   { "Windows!!!!".postln; numColumns = 0 }
 		);
 		numColumns.do({|column| // 67
 			if(column != 33, {
