@@ -56,7 +56,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { numRows = 59 }
+			\windows,   { numRows = 61 }
 		);
 
 		numRows.do({|row|
