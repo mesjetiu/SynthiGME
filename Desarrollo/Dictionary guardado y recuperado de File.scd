@@ -27,6 +27,7 @@ f = "
 "
 )
 f
+f.class
 
 // Eliminamos tabuladores, espacios, saltos de línea... Dividimos por coma y procesamos cada elemento
 i = f.replace("\n", "").replace(" ", "").replace("\t", "").split($,);
@@ -41,7 +42,7 @@ i[1].class
 i = i.collect({ |item|
    // item = item.stripWhiteSpace; // Usamos stripWhiteSpace para eliminar espacios al principio y al final
     // Convertimos a entero si es un número, de lo contrario a símbolo
-    if (item.isInteger) { item.asInteger } { item.asString }
+    if (item.isNumber) { item.asFloat } { item.asString }
 });
 )
 
