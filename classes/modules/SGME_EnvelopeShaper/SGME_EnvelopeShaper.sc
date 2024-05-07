@@ -419,7 +419,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 	}
 
 	setSelector{|value|
-		switch (value,
+		switch (value.asInteger,
 			1, { // Gated Free Run
 				envGatedFreeRun.synthRun(true);
 				envGated.synthRun(false);
