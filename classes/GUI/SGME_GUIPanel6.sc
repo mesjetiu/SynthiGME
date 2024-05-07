@@ -37,7 +37,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { numRows = 61 }
+			\windows,   { numRows = 36 } // 36 son las únicas que actualmente funcionan. Cuantos menos nodos en Windows, menos probable es un crash.
 		);
 
 		numRows.do({|row|
