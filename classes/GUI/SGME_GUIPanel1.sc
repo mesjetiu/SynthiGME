@@ -44,7 +44,8 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		);
 		window.name = "Panel 1";
 		window.bounds = rect;
-		image = Image(installedPath ++ "/classes/GUI/images/panels/panel_1.jpg");
+		image = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "panels" +/+ "panel_1");
+		//image = Image(installedPath ++ "/classes/GUI/images/panels/panel_1.jpg");
 		compositeView.setBackgroundImage(image,10);
 
 		this.makeFilters(compositeView, 38, 80, 53.4);
