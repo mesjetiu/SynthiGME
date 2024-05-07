@@ -57,7 +57,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { numRows = 61 }
+		//	\windows,   { numRows = 61 }
 		);
 
 		numRows.do({|row|
@@ -79,7 +79,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { numColumns = 60 }
+		//	\windows,   { numColumns = 60 }
 		);
 		numColumns.do({|column| // 67
 			if(column != 33, {

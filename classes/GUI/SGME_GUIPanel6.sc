@@ -34,15 +34,17 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var spacing = 6.1;
 		var nodeCountHor = 67;
 		var numRows = 63;
+		var forbidenRows = [25, 26] ++ (36..62); // Estas filas no se dibujarán. Son nodos válidos pero no implementados. Es una conveniencia para que Windows no tenga demasiados nodos. De este modo no dibujamos los nodos no utilizados.
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { numRows = 36 } // 36 son las únicas que actualmente funcionan. Cuantos menos nodos en Windows, menos probable es un crash.
+		//	\windows,   { numRows = 36 } // 36 son las únicas que actualmente funcionan. Cuantos menos nodos en Windows, menos probable es un crash.
 		);
 
 		numRows.do({|row|
 			if((row < 30).or(row > 32), {
-				this.makeRow(compositeView, left, top, row, nodeCountHor);
+				if (forbidenRows.any({|n| n == row}).not,
+					{this.makeRow(compositeView, left, top, row, nodeCountHor)});
 				nodeCountHor = nodeCountHor + 1;
 			});
 			top = top + spacing;
@@ -54,14 +56,16 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var nodeCountVer = 1;
 		var spacing = 5.75;
 		var numColumns = 67;
+		var forbidenColumns = (60..66); // Estas columnas no se dibujarán. Son nodos válidos pero no implementados. Es una conveniencia para que Windows no tenga demasiados nodos. De este modo no dibujamos los nodos no utilizados.
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { numColumns = 60 }
+		//	\windows,   { numColumns = 60 }
 		);
 		numColumns.do({|column|
 			if(column != 33, {
-				this.makeNode(parent, left, top, column, row, nodeCountHor, nodeCountVer);
+				if (forbidenColumns.any({|n| n == column}).not,
+					{this.makeNode(parent, left, top, column, row, nodeCountHor, nodeCountVer)});
 				nodeCountVer = nodeCountVer + 1;
 			});
 			left = left + spacing;
