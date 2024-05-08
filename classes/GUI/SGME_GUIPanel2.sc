@@ -60,7 +60,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			parameterViews.put("/filterBank/" ++ (62.5*(2**(num))).ceil, knob); // Ejemplo: /filterBank/4000
 			knob.action = {|knob|
 				synthiGME.setParameterOSC(
-					string:"/filterBank/" ++ (62.5*(2**(num))).ceil.asInt,
+					string:"/filterBank/" ++ (62.5*(2**(num))).ceil.asInteger,
 					value: knob.value.linlin(0,1,0,10),
 					addrForbidden: \GUI,
 				)
