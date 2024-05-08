@@ -33,7 +33,7 @@ SGME_Filter : SGME_Connectable {
 
 	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
 	var <frequency = 0;
-	var <response = 1;
+	var <response = 0;
 	var <level = 0;
 
 	// Otros atributos de instancia
