@@ -31,8 +31,8 @@ SGME_Reverb : SGME_Connectable {
 	var <outputBus;
 
 	// Knobs del módulo
-	var <mix = 10; // solo para hacer bypass antes de hacer la GUI
-	var <level = 10; // solo para hacer bypass antes de hacer la GUI
+	var <mix = 0; // solo para hacer bypass antes de hacer la GUI
+	var <level = 0; // solo para hacer bypass antes de hacer la GUI
 
 
 	// Otros atributos de instancia

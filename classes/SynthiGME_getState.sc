@@ -19,7 +19,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 /*
 // Módulos a implementar en getState()
-var <modulReverb;
+var <modulReverb;                       // Hecho
 var <modulInputAmplifiers;
 var <modulExternalTreatmentReturns;
 var <modulFilters;                      // Hecho
@@ -63,6 +63,14 @@ var <modulPatchbayVoltage;
 			data.put(string ++ "response", item.response);
 			data.put(string ++ "level", item.level);
 		});
+
+		// Reverb:
+		modulReverb.do({|item, num|
+			var string = "/reverb/";
+			data.put(string ++ "mix", item.mix);
+			data.put(string ++ "level", item.level);
+		});
+
 		/*
 		// Noise Generators:
 		modulNoiseGenerators.do({|ng, num|
