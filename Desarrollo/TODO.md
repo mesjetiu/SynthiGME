@@ -21,13 +21,6 @@
 
 # Bugs y mejoras:
 - Limpiar variables no utilizadas en la clase principal y algunos de sus valores en settings.
-- Parece que no hay manera de poner un pin amarillo. Revisar atajo de teclado.
-- En Windows error al inicial: "Interpreter has crashed or stopped forcefully. Exit code - 1073740771"
-	+ No hay documentación sobre este error.
-	+ Quizás son demasiadas imágenes los nodos o demasiado pesadas.
-	+ Se ha solventado temporalmente no dibujando los nodos que no están implementados.
-	+ En el futuro hay que encontrar otra solución cuando haya que dibujar más nodos (explorar el tema de los gráficos vectoriales)
-	+ Comprobar si no tiene que ver con el Dictionary "nodes" de PatchBay. Quizás la clave debería ser un string y no un array. O directamente eliminar este diccionario. Solo se usa para "enable" los nodos implementados.
 - Comprobar qué servidor usa por defecto, porque no se ve en los controles de SCIDE
 - En el documento de creación de nuevos módulos, añadir la declaración de las variables en SynthiGME.getState() (si finalmente se usa esta función)
 
