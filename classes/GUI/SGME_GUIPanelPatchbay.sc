@@ -20,6 +20,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_GUIPanelPatchbay : SGME_GUIPanel {
 
 	var visibleNodes = true;
+	var topPanel, bottomPanel, halfHeight;
 
 	*new {|synthi, parameters|
 		^super.new.init(synthi, parameters);
