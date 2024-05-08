@@ -20,7 +20,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_GUINode {
 	var <view;
 	var value;
-	var image1, image2, image3;
+	var imageHole, imageWhite, imageYellow;
 	var installedPath;
 	var synthiGME;
 	var <visible; // atributo "dummy" para el cambio de visibilidad de los witches en los paneles. No afecta a los Nodos pero se incluye el atributo para cambios generales en la visibilidad de GUI.
@@ -32,38 +32,38 @@ SGME_GUINode {
 	init {|synthi, parent, bounds, stringOSC|
 		synthiGME = synthi;
 		installedPath = Quarks.quarkNameAsLocalPath("SynthiGME");
-		image1 = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_hole");
-		image2 = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_white_pin");
-		image3 = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_yellow_pin");
+		imageHole = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_hole");
+		imageWhite = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_white_pin");
+		imageYellow = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_yellow_pin");
 		value = 0;
 		view = View(parent, bounds)
-		.setBackgroundImage(image1, 10)
+		.setBackgroundImage(imageHole, 10)
 		.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			buttonNumber.switch(
 				0, {
-					if ((value==1).and(modifiers.isCtrl==false), { // Se hace clic en un nodo encendido
+					if ((value==1) && modifiers.isCtrl.not, { // Se hace clic en un nodo encendido
 						value=0;
-						view.setBackgroundImage(image1, 10);
+						view.setBackgroundImage(imageHole, 10);
 					}, {
-						if ((value==0).and(modifiers.isCtrl==false),{ // Se hace click en un nodo apagado
+						if ((value==0) && modifiers.isCtrl.not,{ // Se hace click en un nodo apagado
 							value=1;
-							view.setBackgroundImage(image2, 10);
+							view.setBackgroundImage(imageWhite, 10);
 						}, {
-							if (value==1 && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo encendido
+							if ((value==1) && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo encendido
 								value=(-1);
-								view.setBackgroundImage(image3, 10);
+								view.setBackgroundImage(imageYellow, 10);
 							}, {
-								if (value==0 && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo apagado
+								if ((value==0) && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo apagado
 									value=(-1);
-									view.setBackgroundImage(image3, 10);
+									view.setBackgroundImage(imageYellow, 10);
 								}, {
-									if (value==(-1) && modifiers.isCtrl==false, { // Se hace Ctrl+click en un nodo con pin a medias
+									if ((value==(-1)) && modifiers.isCtrl.not, { // Se hace Ctrl+click en un nodo con pin a medias
 										value=1;
-										view.setBackgroundImage(image2, 10);
+										view.setBackgroundImage(imageWhite, 10);
 									}, {
-										if (value==(-1) && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo con pin a medias
+										if ((value==(-1)) && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo con pin a medias
 											value=0;
-											view.setBackgroundImage(image1, 10);
+											view.setBackgroundImage(imageHole, 10);
 					})})})})})});
 					synthiGME.setParameterOSC(
 						string: stringOSC,
@@ -85,15 +85,15 @@ SGME_GUINode {
 		view.enabled = option;
 		if (option==false, {
 			if(value==1, {
-				view.setBackgroundImage(image2, 10, alpha: 0.3);
+				view.setBackgroundImage(imageWhite, 10, alpha: 0.3);
 			}, {
-				view.setBackgroundImage(image1, 10, alpha: 0.3);
+				view.setBackgroundImage(imageHole, 10, alpha: 0.3);
 			})
 		}, {
 			if(value==1, {
-				view.setBackgroundImage(image2, 10, alpha: 1);
+				view.setBackgroundImage(imageWhite, 10, alpha: 1);
 			}, {
-				view.setBackgroundImage(image1, 10, alpha: 1);
+				view.setBackgroundImage(imageHole, 10, alpha: 1);
 			})
 		})
 	}
@@ -113,11 +113,10 @@ SGME_GUINode {
 	}
 
 	value_ {|val|
-		value = val;
-		if(value==1, {
-			view.setBackgroundImage(image2, 10);
-		}, {
-			view.setBackgroundImage(image1, 10);
-		})
+		switch(val)
+		{ 1 } { view.setBackgroundImage(imageWhite, 10) }
+		{ 0 } { view.setBackgroundImage(imageHole, 10) }
+		{ (-1) } { view.setBackgroundImage(imageYellow, 10) }
+		{ view.setBackgroundImage(imageHole, 10); };
 	}
 }
