@@ -20,6 +20,7 @@
 - Ver si se pueden hacer las ventanas resizables. Actualmente no lo están. Pero hay que ver si es compatible con los atajos actuales para Zoom.
 
 # Bugs y mejoras:
+- Limpiar variables no utilizadas en la clase principal y algunos de sus valores en settings.
 - Parece que no hay manera de poner un pin amarillo. Revisar atajo de teclado.
 - En Windows error al inicial: "Interpreter has crashed or stopped forcefully. Exit code - 1073740771"
 	+ No hay documentación sobre este error.
