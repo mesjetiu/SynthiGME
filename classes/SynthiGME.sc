@@ -149,10 +149,10 @@ SynthiGME {
 			Out.ar(outBusR, sigR.sum * vol);
 		}).add;
 
-		SynthDef(\connection2, {|outBusL, outBusR, inBusR1, inBusL1, inBusR2, inBusL2, vol|
+		SynthDef(\connection2, {|outBusL, outBusR, inBusR1, inBusL1, inBusR2, inBusL2, inBusL3, inBusR3, inBusL4, inBusR4, inBusL5, inBusR5, inBusL6, inBusR6, inBusL7, inBusR7, inBusL8, inBusR8,  vol|
 			var sigL, sigR;
-			sigL = In.ar([inBusL1, inBusL2]);
-			sigR = In.ar([inBusR1, inBusR2]);
+			sigL = In.ar([inBusL1, inBusL2, inBusL3, inBusL4, inBusL5, inBusL6, inBusL7, inBusL8]);
+			sigR = In.ar([inBusR2, inBusR2, inBusR3, inBusR4, inBusR5, inBusR6, inBusR7, inBusR8]);
 			Out.ar(outBusL, sigL.sum * vol);
 			Out.ar(outBusR, sigR.sum * vol);
 		}).add;
@@ -311,30 +311,13 @@ SynthiGME {
 
 
 
-					/*
-					"Conexión de salida stereo canales 1 a 8...".post;
+
+					"Conexión de salida stereo canales 1 a 8 mezclados a salidas 1 y 2".postln;
 					connectionOut = [];
 					connectionOut = connectionOut.add({
 						var result = nil;
+						var channels = modulOutputChannels[0..7];
 						result = Synth(\connection2, [
-							\inBusL1, panOutputs1to4Busses[0],
-							\inBusR1, panOutputs1to4Busses[1],
-							\inBusL2, panOutputs5to8Busses[0],
-							\inBusR2, panOutputs5to8Busses[1],
-							\outBusL, stereoOutBuses[0],
-							\outBusR, stereoOutBuses[1],
-							\vol, generalVol,
-						], server).register;
-					}.value);
-					server.sync;
-					"OK\n".post;
-					*/
-
-					"Conexión de salida stereo canales 1 - 4 a salidas 1 y 2".postln;
-					connectionOut = connectionOut.add({
-						var result = nil;
-						var channels = modulOutputChannels[0..3];
-						result = Synth(\connection4, [
 							\inBusL1, channels[0].outBusL,
 							\inBusR1, channels[0].outBusR,
 							\inBusL2, channels[1].outBusL,
@@ -343,6 +326,14 @@ SynthiGME {
 							\inBusR3, channels[2].outBusR,
 							\inBusL4, channels[3].outBusL,
 							\inBusR4, channels[3].outBusR,
+							\inBusL5, channels[4].outBusL,
+							\inBusR5, channels[4].outBusR,
+							\inBusL6, channels[5].outBusL,
+							\inBusR6, channels[5].outBusR,
+							\inBusL7, channels[6].outBusL,
+							\inBusR7, channels[6].outBusR,
+							\inBusL8, channels[7].outBusL,
+							\inBusR8, channels[7].outBusR,
 							\outBusL, 0,
 							\outBusR, 1,
 							\vol, generalVol,
@@ -354,7 +345,33 @@ SynthiGME {
 					if (
 						numOutputChannels >= 4,
 						{
-							"Conexión de salida stereo canales 5 - 8 a salidas 3 y 4".postln;
+							"Conexión de salida stereo canales 1 - 4 a salidas 3 y 4".postln;
+							connectionOut = connectionOut.add({
+								var result = nil;
+								var channels = modulOutputChannels[0..3];
+								result = Synth(\connection4, [
+									\inBusL1, channels[0].outBusL,
+									\inBusR1, channels[0].outBusR,
+									\inBusL2, channels[1].outBusL,
+									\inBusR2, channels[1].outBusR,
+									\inBusL3, channels[2].outBusL,
+									\inBusR3, channels[2].outBusR,
+									\inBusL4, channels[3].outBusL,
+									\inBusR4, channels[3].outBusR,
+									\outBusL, 2,
+									\outBusR, 3,
+									\vol, generalVol,
+								], server).register;
+							}.value);
+							server.sync;
+						}
+					);
+
+
+					if (
+						numOutputChannels >= 6,
+						{
+							"Conexión de salida stereo canales 5 - 8 a salidas 5 y 6".postln;
 							connectionOut = connectionOut.add({
 								var result = nil;
 								var channels = modulOutputChannels[4..7];
@@ -377,13 +394,13 @@ SynthiGME {
 					);
 
 
-					"Conexión de salida de cada canal individual...".postln;
+					//"Conexión de salida de cada canal individual...".postln;
 					modulOutputChannels.do({|out, n|
-						if (n+4 <= server.options.numOutputBusChannels)
+						if (n+6 <= server.options.numOutputBusChannels)
 						{
 							connectionOut = connectionOut.add({
 								var result = nil;
-								("Output Channel" + (n+1) + "conectado a salida" + (n+4)).postln;
+								("Output Channel" + (n+1) + "conectado a salida" + (n+7)).postln;
 								result = Synth(\connectionMono, [
 									\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
 									\outputBus, settings[\individualChannelOutputsBusses][n],
@@ -531,7 +548,7 @@ SynthiGME {
 					);
 					"OK\n".post;
 
-					"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".postln;
+					//"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".postln;
 					connectionIn = inputAmplifiersBusses.collect({|item, i|
 						if (i+1 <= server.options.numInputBusChannels)
 						{
@@ -546,7 +563,7 @@ SynthiGME {
 						}
 					});
 
-					"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".postln;
+					//"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".postln;
 					connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
 						if (i+8 <= server.options.numInputBusChannels)
 						{
