@@ -84,12 +84,12 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { forbidenRows = [20, 21, 62] }
+		//	\windows,   { forbidenRows = [20, 21, 62] }
 		);
 
 		numRows.do({|row|
-			if (row > 32) { panel = topPanel } { panel = bottomPanel };
-			if (row == 33) {top = 5}; // reiniciamos top para comenzar en el bottomPanel
+			if (row > 32) { panel = bottomPanel } { panel = topPanel };
+			if (row == 33) {top = 16.5}; // reiniciamos top para comenzar en el bottomPanel
 			if((row < 30).or(row > 32), {
 				if (forbidenRows.any({|n| n == row}).not,
 					{this.makeRow(panel, left, top, row, nodeCountHor)});
@@ -108,7 +108,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-			\windows,   { forbidenColumns = (44..58) ++ [65, 66] }
+		//	\windows,   { forbidenColumns = (44..58) ++ [65, 66] }
 		);
 		numColumns.do({|column| // 67
 			if(column != 33, {
