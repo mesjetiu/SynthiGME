@@ -721,19 +721,19 @@ SynthiGME {
 
 	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de todos los módulos
 	getState {
-		var data = List.newClear(0);
+		var data = Dictionary.new;
 
 		// Oscillators:
 		modulOscillators.do({|osc, num|
 			var string = "/osc/" ++ (num + 1) ++ "/";
-			data.add([string ++ "range", osc.range]);
-			data.add([string ++ "pulse/level", osc.pulseLevel]);
-			data.add([string ++ "pulse/shape", osc.pulseShape]);
-			data.add([string ++ "sine/level", osc.sineLevel]);
-			data.add([string ++ "sine/symmetry", osc.sineSymmetry]);
-			data.add([string ++ "triangle/level", osc.triangleLevel]);
-			data.add([string ++ "sawtooth/level", osc.sawtoothLevel]);
-			data.add([string ++ "frequency", osc.frequency]);
+			data.put(string ++ "range", osc.range);
+			data.put(string ++ "pulse/level", osc.pulseLevel);
+			data.put(string ++ "pulse/shape", osc.pulseShape);
+			data.put(string ++ "sine/level", osc.sineLevel);
+			data.put(string ++ "sine/symmetry", osc.sineSymmetry);
+			data.put(string ++ "triangle/level", osc.triangleLevel);
+			data.put(string ++ "sawtooth/level", osc.sawtoothLevel);
+			data.put(string ++ "frequency", osc.frequency);
 		});
 /*
 		// Noise Generators:
