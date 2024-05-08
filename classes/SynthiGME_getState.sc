@@ -17,6 +17,25 @@ along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
 Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
+/*
+// Módulos a implementar en getState()
+var <modulReverb;
+var <modulInputAmplifiers;
+var <modulExternalTreatmentReturns;
+var <modulFilters;                      // Hecho
+var <modulFilterBank;
+var <modulEnvelopeShapers;
+var <modulOscillators;                  // Hecho
+var <modulNoiseGenerators;
+var <modulRingModulators;
+var <modulEcho;
+var <modulRandomGenerator;
+var <modulSlewLimiters;
+var <modulOutputChannels;
+var <modulPatchbayAudio;
+var <modulPatchbayVoltage;
+*/
+
 + SynthiGME {
 
 	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de todos los módulos
@@ -35,6 +54,14 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			data.put(string ++ "triangle/level", osc.triangleLevel);
 			data.put(string ++ "sawtooth/level", osc.sawtoothLevel);
 			data.put(string ++ "frequency", osc.frequency);
+		});
+
+		// Filters:
+		modulFilters.do({|item, num|
+			var string = "/filter/" ++ (num + 1) ++ "/";
+			data.put(string ++ "frequency", item.frequency);
+			data.put(string ++ "response", item.response);
+			data.put(string ++ "level", item.level);
 		});
 		/*
 		// Noise Generators:
