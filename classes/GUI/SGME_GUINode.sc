@@ -20,9 +20,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_GUINode {
 	var <view;
 	var value;
-	var imageHole, imageWhite, imageYellow;
-	var installedPath;
-	var synthiGME;
+	classvar imageHole, imageWhite, imageYellow;
+	classvar installedPath;
+	classvar synthiGME;
 	var <visible; // atributo "dummy" para el cambio de visibilidad de los witches en los paneles. No afecta a los Nodos pero se incluye el atributo para cambios generales en la visibilidad de GUI.
 
 	*new {arg synthi, parent, bounds, stringOSC;
@@ -113,10 +113,11 @@ SGME_GUINode {
 	}
 
 	value_ {|val|
+		value = val;
 		switch(val)
 		{ 1 } { view.setBackgroundImage(imageWhite, 10) }
 		{ 0 } { view.setBackgroundImage(imageHole, 10) }
 		{ (-1) } { view.setBackgroundImage(imageYellow, 10) }
-		{ view.setBackgroundImage(imageHole, 10); };
+		{ view.setBackgroundImage(imageHole, 10) };
 	}
 }
