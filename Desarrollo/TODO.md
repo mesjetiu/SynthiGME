@@ -1,5 +1,5 @@
 # Implementar:
-- Hacer modo "Verbose" que muestre en Post Window todos los mensajes OSC ejecutados.
+- Explorar y mejorar la conectividad entre varios SynthiGME y otros dipositivos OSC.
 - Guardado de patches (autoguardado, archivo de guardado (JSON?), selección de patche...)
     - Guardar el estado actual:
 	    + Con SynthiGME.getState() que estaba hecho pero hay que construirlo y testearlo.
@@ -21,12 +21,13 @@
 
 # Bugs y mejoras:
 - Parece que no hay manera de poner un pin amarillo. Revisar atajo de teclado.
-- En Windows (versiones 3.13) error al inicial: "Interpreter has crashed or stopped forcefully. Exit code - 1073740771"
+- En Windows error al inicial: "Interpreter has crashed or stopped forcefully. Exit code - 1073740771"
 	+ No hay documentación sobre este error.
-	+ Probar a jugar con los nodos. Quizás son demasiadas imágenes los nodos o demasiado pesadas... Se puede pasar a vectoriales.
+	+ Quizás son demasiadas imágenes los nodos o demasiado pesadas.
+	+ Se ha solventado temporalmente no dibujando los nodos que no están implementados.
+	+ En el futuro hay que encontrar otra solución cuando haya que dibujar más nodos (explorar el tema de los gráficos vectoriales)
 - Comprobar qué servidor usa por defecto, porque no se ve en los controles de SCIDE
-- En el documento de creación de nuevos módulos, añadir la declaración de las variables en SynthiGME.getState()
-- Módulo SGME_GUINode: refactorizar sin ifs anidados. Probar con case o switch.
+- En el documento de creación de nuevos módulos, añadir la declaración de las variables en SynthiGME.getState() (si finalmente se usa esta función)
 
 # Ideas a pensar:
 - Threads. uso en Supercollider? puede aliviar la CPU?
