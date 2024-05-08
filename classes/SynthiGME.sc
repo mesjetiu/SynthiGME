@@ -596,9 +596,8 @@ SynthiGME {
 	}
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
-	pairDevice {
+	pairDevice { arg searchTime = 10;
 		var oscDevices = Dictionary.new;
-		var searchTime = 10;
 		NetAddr.broadcastFlag = true;
 		Routine({
 			var functionOSC = {|msg, time, addr, recvPort|
