@@ -21,8 +21,6 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 	makeWindow {
 		var rect;
 		var image;
-		var topPanelBounds;
-		var bottomPanelBounds;
 		id = 4;
 		super.makeWindow;
 		rect = Rect(
