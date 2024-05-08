@@ -38,8 +38,6 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		.setBackgroundImage(image,10)
 		.background_(whiteBackground);
 
-
-
 		// Calculamos la mitad de la altura de la ventana para los paneles
 		halfHeight = window.bounds.height * 0.5;
 
@@ -59,7 +57,6 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		viewSizes = viewSizes.add([bottomPanel, bottomPanelBounds]);
 		//bottomPanel.setBackgroundImage(image,10,fromRect: Rect(0, 2995/2, 2997, 2995/2)); // 10, 7, 8, 5
 
-		"hechos paneles!!".postln;
 
 		this.makeNodeTable;
 
