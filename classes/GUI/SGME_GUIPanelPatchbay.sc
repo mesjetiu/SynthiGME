@@ -20,7 +20,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_GUIPanelPatchbay : SGME_GUIPanel {
 
 	var visibleNodes = true;
-	var nodes;
 
 	*new {|synthi, parameters|
 		^super.new.init(synthi, parameters);
@@ -28,7 +27,6 @@ SGME_GUIPanelPatchbay : SGME_GUIPanel {
 
 	init {|synthi, parameters|
 		super.init(synthi, parameters);
-		nodes = Dictionary.new;
 	}
 
 	enableNodes { // Enable o disable los nodos según si el sintetizador los usa o no.

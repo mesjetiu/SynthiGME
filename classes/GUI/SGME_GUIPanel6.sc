@@ -82,7 +82,6 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchC/91/36
 		parameterViews.put(stringOSC, node);
-		nodes.put([nodeCountHor, nodeCountVer], node);
 
 		// Se añaden el view node y sus bound por defecto para resize
 		viewSizes = viewSizes ++ [
@@ -95,7 +94,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		if (visibleNodes == true, {option = false; visibleNodes = false}, {option = true; visibleNodes = true});
 		66.do({|v|
 			60.do({|h|
-				node = nodes[[h+67,v+1]];
+				node = parameterViews["/patchV/" ++ (h+67) ++ "/" ++ (v+1)];
 				if(node != nil, {
 					if ((synthiGME.modulPatchbayVoltage.inputsOutputs[v] == nil)
 						.or(synthiGME.modulPatchbayVoltage.inputsOutputs[h+66] == nil), {
