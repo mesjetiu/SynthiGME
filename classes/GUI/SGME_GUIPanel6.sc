@@ -34,11 +34,11 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var spacing = 6.1;
 		var nodeCountHor = 67;
 		var numRows = 63;
-		var forbidenRows = [25, 26] ++ (36..62); // Estas filas no se dibujarán. Son nodos válidos pero no implementados. Es una conveniencia para que Windows no tenga demasiados nodos. De este modo no dibujamos los nodos no utilizados.
+		var forbidenRows = []; // Estas filas no se dibujarán. Son nodos válidos pero no implementados. Es una conveniencia para que Windows no tenga demasiados nodos. De este modo no dibujamos los nodos no utilizados.
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-		//	\windows,   { numRows = 36 } // 36 son las únicas que actualmente funcionan. Cuantos menos nodos en Windows, menos probable es un crash.
+			\windows,   { forbidenRows = [25, 26] ++ (36..62) }
 		);
 
 		numRows.do({|row|
@@ -56,11 +56,11 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var nodeCountVer = 1;
 		var spacing = 5.75;
 		var numColumns = 67;
-		var forbidenColumns = (60..66); // Estas columnas no se dibujarán. Son nodos válidos pero no implementados. Es una conveniencia para que Windows no tenga demasiados nodos. De este modo no dibujamos los nodos no utilizados.
+		var forbidenColumns = []; // Estas columnas no se dibujarán. Son nodos válidos pero no implementados. Es una conveniencia para que Windows no tenga demasiados nodos. De este modo no dibujamos los nodos no utilizados.
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-		//	\windows,   { numColumns = 60 }
+			\windows,   { forbidenColumns = (60..66) }
 		);
 		numColumns.do({|column|
 			if(column != 33, {
