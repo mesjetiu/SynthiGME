@@ -21,6 +21,7 @@
 - Ver si se pueden hacer las ventanas resizables. Actualmente no lo están. Pero hay que ver si es compatible con los atajos actuales para Zoom.
 
 # Bugs y mejoras:
+- Evitar ejecuciones circulares de elementos de la GUI como ecos...
 - Limpiar variables no utilizadas en la clase principal y algunos de sus valores en settings.
 - Comprobar qué servidor usa por defecto, porque no se ve en los controles de SCIDE
 - En el documento de creación de nuevos módulos, añadir la declaración de las variables en SynthiGME.getState() (si finalmente se usa esta función)
