@@ -26,16 +26,16 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		var data = Dictionary.new;
 
 		// Oscillators:
-		modulOscillators.do({|osc, num|
+		modulOscillators.do({|item, num|
 			var string = "/osc/" ++ (num + 1) ++ "/";
-			data.put(string ++ "range", osc.range);
-			data.put(string ++ "pulse/level", osc.pulseLevel);
-			data.put(string ++ "pulse/shape", osc.pulseShape);
-			data.put(string ++ "sine/level", osc.sineLevel);
-			data.put(string ++ "sine/symmetry", osc.sineSymmetry);
-			data.put(string ++ "triangle/level", osc.triangleLevel);
-			data.put(string ++ "sawtooth/level", osc.sawtoothLevel);
-			data.put(string ++ "frequency", osc.frequency);
+			data.put(string ++ "range", item.range);
+			data.put(string ++ "pulse/level", item.pulseLevel);
+			data.put(string ++ "pulse/shape", item.pulseShape);
+			data.put(string ++ "sine/level", item.sineLevel);
+			data.put(string ++ "sine/symmetry", item.sineSymmetry);
+			data.put(string ++ "triangle/level", item.triangleLevel);
+			data.put(string ++ "sawtooth/level", item.sawtoothLevel);
+			data.put(string ++ "frequency", item.frequency);
 		});
 
 		// Filters:
