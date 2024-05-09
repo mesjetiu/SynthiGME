@@ -1,4 +1,5 @@
 # Implementar:
+- External Treatmen Device: terminar. Está hecha la GUI.
 - Explorar y mejorar la conectividad entre varios SynthiGME y otros dipositivos OSC.
 - Guardado de patches (autoguardado, archivo de guardado (JSON?), selección de patche...)
     - Guardar el estado actual:
