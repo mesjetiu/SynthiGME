@@ -29,7 +29,7 @@ var <modulOscillators;                  // Hecho
 var <modulNoiseGenerators;              // Hecho
 var <modulRingModulators;               // Hecho
 var <modulEcho;                         // Hecho
-var <modulRandomGenerator;
+var <modulRandomGenerator;              // Hecho
 var <modulSlewLimiters;
 var <modulOutputChannels;               // Hecho
 var <modulPatchbayAudio;
@@ -82,6 +82,16 @@ var <modulPatchbayVoltage;
 			var string = "/reverb/";
 			data.put(string ++ "mix", item.mix);
 			data.put(string ++ "level", item.level);
+		});
+
+		// Random Generator:
+		modulRandomGenerator.do({|item, num|
+			var string = "/random/";
+			data.put(string ++ "mean", item.mean);
+			data.put(string ++ "variance", item.variance);
+			data.put(string ++ "voltage1", item.voltage1);
+			data.put(string ++ "voltage2", item.voltage2);
+			data.put(string ++ "key", item.key);
 		});
 
 		// Echo:
