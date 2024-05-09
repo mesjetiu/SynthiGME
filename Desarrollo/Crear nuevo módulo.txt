@@ -28,6 +28,8 @@
 		Forzar "level = 1" en el módulo para hacer bypass.
 	En este punto debería poder compilar, ejecutarse sin fallos. Debería poder utilizarse el módulo aunque sea dummy.
 	
+- Editar forbidenRows y forbidenColumns en makeNodeTable() y makeRow() en Panel 5 y Panel 6 según corresponda para que estén habilitados los nodos.
+	
 - Editar SGME_PatchbayVoltage (si procede): (hacer lo equivalente de SGME_PatchbayAudio) y editar SynthiGME del mismo modo. Debería compilar y poder ser conectado en Voltage.
 
 - Añadir views al panel correspondiente. Copiar alguno ya hecho y adaptarlo.
