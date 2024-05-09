@@ -17,24 +17,6 @@ along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
 Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
-/*
-// Módulos a implementar en getState()
-var <modulReverb;                       // Hecho
-var <modulInputAmplifiers;              // Hecho
-var <modulExternalTreatmentReturns;     // Hecho
-var <modulFilters;                      // Hecho
-var <modulFilterBank;                   // Hecho
-var <modulEnvelopeShapers;              // Hecho
-var <modulOscillators;                  // Hecho
-var <modulNoiseGenerators;              // Hecho
-var <modulRingModulators;               // Hecho
-var <modulEcho;                         // Hecho
-var <modulRandomGenerator;              // Hecho
-var <modulSlewLimiters;
-var <modulOutputChannels;               // Hecho
-var <modulPatchbayAudio;
-var <modulPatchbayVoltage;
-*/
 
 + SynthiGME {
 
@@ -168,6 +150,20 @@ var <modulPatchbayVoltage;
 				}
 			})
 		});
+
+		// Patchbay Volgate:
+		66.do({|v|
+			var string = nil;
+			var value = nil;
+			60.do({|h|
+				string = "/patchV/" ++ (h+67) ++ "/" ++ (v+1);
+				value = guiSC.parameterViews[string].value;
+				if (value != nil) {
+					data.put(string, value)
+				}
+			})
+		});
+
 		^data;
 	}
 }

@@ -19,7 +19,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 SGME_GUINode {
 	var <view;
-	var value;
+	var <value;
 	classvar imageHole, imageWhite, imageYellow;
 	classvar installedPath;
 	classvar synthiGME;
