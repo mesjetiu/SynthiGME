@@ -156,6 +156,18 @@ var <modulPatchbayVoltage;
 			data.put(string ++ "selector",  item.selector);
 		});
 
+		// Patchbay Audio:
+		66.do({|v|
+			var string = nil;
+			var value = nil;
+			60.do({|h|
+				string = "/patchA/" ++ (h+67) ++ "/" ++ (v+1);
+				value = guiSC.parameterViews[string].value;
+				if (value != nil) {
+					data.put(string, value)
+				}
+			})
+		});
 		^data;
 	}
 }
