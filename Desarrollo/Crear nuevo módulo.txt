@@ -33,4 +33,6 @@
 - Editar SGME_PatchbayVoltage (si procede): (hacer lo equivalente de SGME_PatchbayAudio) y editar SynthiGME del mismo modo. Debería compilar y poder ser conectado en Voltage.
 
 - Añadir views al panel correspondiente. Copiar alguno ya hecho y adaptarlo.
+
+- Añadir las variables en SynthiGME.getState() para poder ser recuperadas.
 	
