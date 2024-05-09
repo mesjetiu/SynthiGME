@@ -30,7 +30,7 @@ SGME_FilterBank : SGME_Connectable {
 	var <outputBus; // Salida
 
 	// Parámetro correspondiente a los mandos del Synthi (todos escalados entre 0 y 10)
-	var <bands; // Array con el valor de cada banda (0-10)
+	var <bands; // Array con el valor de cada banda (0-7)
 
 	// Otros atributos de instancia
 	var <outVol = 2;

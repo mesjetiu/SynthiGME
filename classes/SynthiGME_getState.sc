@@ -21,14 +21,14 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 // Módulos a implementar en getState()
 var <modulReverb;                       // Hecho
 var <modulInputAmplifiers;              // Hecho
-var <modulExternalTreatmentReturns;
+var <modulExternalTreatmentReturns;     // Hecho
 var <modulFilters;                      // Hecho
-var <modulFilterBank;
+var <modulFilterBank;                   // Hecho
 var <modulEnvelopeShapers;              // Hecho
 var <modulOscillators;                  // Hecho
 var <modulNoiseGenerators;              // Hecho
 var <modulRingModulators;               // Hecho
-var <modulEcho;
+var <modulEcho;                         // Hecho
 var <modulRandomGenerator;
 var <modulSlewLimiters;
 var <modulOutputChannels;               // Hecho
@@ -64,10 +64,32 @@ var <modulPatchbayVoltage;
 			data.put(string ++ "level", item.level);
 		});
 
+		// Filter Bank:
+		modulFilterBank.do({|item|
+			var string = "/filterBank/";
+			data.put(string ++ "63", item.bands[0]);
+			data.put(string ++ "125", item.bands[1]);
+			data.put(string ++ "250", item.bands[2]);
+			data.put(string ++ "500", item.bands[3]);
+			data.put(string ++ "1000", item.bands[4]);
+			data.put(string ++ "2000", item.bands[5]);
+			data.put(string ++ "4000", item.bands[6]);
+			data.put(string ++ "8000", item.bands[7]);
+		});
+
 		// Reverb:
 		modulReverb.do({|item, num|
 			var string = "/reverb/";
 			data.put(string ++ "mix", item.mix);
+			data.put(string ++ "level", item.level);
+		});
+
+		// Echo:
+		modulEcho.do({|item, num|
+			var string = "/echo/";
+			data.put(string ++ "delay", item.delay);
+			data.put(string ++ "mix", item.mix);
+			data.put(string ++ "feedback", item.feedback);
 			data.put(string ++ "level", item.level);
 		});
 
@@ -93,6 +115,12 @@ var <modulPatchbayVoltage;
 			data.put(string ++ "level", item.level);
 		});
 
+		// External Treatment Returns:
+		modulExternalTreatmentReturns.do({|item, num|
+			var string = "/return/" ++ (num + 1) ++ "/";
+			data.put(string ++ "level", item.level);
+		});
+
 		// Ring Modulators:
 		modulRingModulators.do({|item, num|
 			var string = "/ring/" ++ (num + 1) ++ "/";
@@ -105,7 +133,7 @@ var <modulPatchbayVoltage;
 			data.put(string ++ "delay", item.delayTime);
 			data.put(string ++ "attack", item.attackTime);
 			data.put(string ++ "decay", item.decayTime);
-			data.put(string ++ "sustain", item.sustain);
+			data.put(string ++ "sustain", item.sustainLevel);
 			data.put(string ++ "release", item.releaseTime);
 			data.put(string ++ "envelopeLevel", item.envelopeLevel);
 			data.put(string ++ "signalLevel", item.signalLevel);
