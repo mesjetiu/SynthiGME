@@ -1,4 +1,5 @@
 # Implementar:
+- Grabación desde shortcuts y menú.
 - External Treatmen Device: terminar. Está hecha la GUI.
 - Envelope Followers: terminar. Está hecha la GUI.
 - Explorar y mejorar la conectividad entre varios SynthiGME y otros dipositivos OSC.
