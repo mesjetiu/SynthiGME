@@ -579,11 +579,14 @@ SynthiGME {
 					});
 
 					"SynthiGME en ejecución".postln;
+
+					/* No se ejecuta enableNodes ya que los nodos no implementados no están dibujados.
 					// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
 					if (guiSC != nil, {
 						guiSC.panels[4].enableNodes(true); // PatchbayAudio
 						guiSC.panels[5].enableNodes(true); // PatchbayVoltage
 					});
+					*/
 				},
 				onFailure: {
 					"No se ha podido arrancar el servidor de audio".error;

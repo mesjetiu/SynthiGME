@@ -56,10 +56,16 @@ SGME_GUIShortcuts {
 				111, {// Tecla o: Panel a posición y tamaño original
 					this.goToOriginFocusedPanel
 				},
+
+
+				/* No se ejecuta enableNodes porque de hecho los nodos no implementados no están dibujados.
 				101, { // Tecla e: Hace visibles o invisibles todos los nodos dependiendo de si son posibles de usar en el SynthiGME
 					synthiGME.guiSC.panels[4].enableNodes;
 					synthiGME.guiSC.panels[5].enableNodes;
 				},
+				*/
+
+
 				3, { // Tecla Ctrl+C: Para cerrar la aplicación.
 					synthiGME.close;
 				},
