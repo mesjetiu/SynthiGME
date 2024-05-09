@@ -20,18 +20,18 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 /*
 // Módulos a implementar en getState()
 var <modulReverb;                       // Hecho
-var <modulInputAmplifiers;
+var <modulInputAmplifiers;              // Hecho
 var <modulExternalTreatmentReturns;
 var <modulFilters;                      // Hecho
 var <modulFilterBank;
-var <modulEnvelopeShapers;
+var <modulEnvelopeShapers;              // Hecho
 var <modulOscillators;                  // Hecho
-var <modulNoiseGenerators;
-var <modulRingModulators;
+var <modulNoiseGenerators;              // Hecho
+var <modulRingModulators;               // Hecho
 var <modulEcho;
 var <modulRandomGenerator;
 var <modulSlewLimiters;
-var <modulOutputChannels;
+var <modulOutputChannels;               // Hecho
 var <modulPatchbayAudio;
 var <modulPatchbayVoltage;
 */
@@ -71,48 +71,47 @@ var <modulPatchbayVoltage;
 			data.put(string ++ "level", item.level);
 		});
 
-		/*
 		// Noise Generators:
-		modulNoiseGenerators.do({|ng, num|
-		var string = "/noise/" ++ (num + 1) ++ "/";
-		data.add([string ++ "colour", ng.colour]);
-		data.add([string ++ "level", ng.level]);
+		modulNoiseGenerators.do({|item, num|
+			var string = "/noise/" ++ (num + 1) ++ "/";
+			data.put(string ++ "colour", item.colour);
+			data.put(string ++ "level", item.level);
 		});
 
 		// Output channels:
-		modulOutputChannels.do({|oc, num|
-		var string = "/out/" ++ (num + 1) ++ "/";
-		data.add([string ++ "filter", oc.filter]);
-		data.add([string ++ "pan", oc.pan]);
-		data.add([string ++ "on", oc.on]);
-		data.add([string ++ "level", oc.level]);
+		modulOutputChannels.do({|item, num|
+			var string = "/out/" ++ (num + 1) ++ "/";
+			data.put(string ++ "filter", item.filter);
+			data.put(string ++ "pan", item.pan);
+			data.put(string ++ "on", item.on);
+			data.put(string ++ "level", item.level);
 		});
 
 		// Input Amplifiers:
-		modulInputAmplifiers.do({|ia, num|
-		var string = "/in/" ++ (num + 1) ++ "/";
-		data.add([string ++ "level", ia.level]);
+		modulInputAmplifiers.do({|item, num|
+			var string = "/in/" ++ (num + 1) ++ "/";
+			data.put(string ++ "level", item.level);
 		});
 
 		// Ring Modulators:
-		modulRingModulators.do({|ring, num|
-		var string = "/ring/" ++ (num + 1) ++ "/";
-		data.add([string ++ "level", ring.level]);
+		modulRingModulators.do({|item, num|
+			var string = "/ring/" ++ (num + 1) ++ "/";
+			data.put(string ++ "level", item.level);
 		});
 
 		// Envelope Shapers:
-		modulEnvelopeShapers.do({|env, num|
-		var string = "/env/" ++ (num + 1) ++ "/";
-		data.add([string ++ "delay", env.delayTime]);
-		data.add([string ++ "attack", env.attackTime]);
-		data.add([string ++ "decay", env.decayTime]);
-		data.add([string ++ "sustain", env.sustain]);
-		data.add([string ++ "release", env.releaseTime]);
-		data.add([string ++ "envelopeLevel", env.envelopeLevel]);
-		data.add([string ++ "signalLevel", env.signalLevel]);
-		data.add([string ++ "selector/1/" ++ env.selector, 1]);
+		modulEnvelopeShapers.do({|item, num|
+			var string = "/env/" ++ (num + 1) ++ "/";
+			data.put(string ++ "delay", item.delayTime);
+			data.put(string ++ "attack", item.attackTime);
+			data.put(string ++ "decay", item.decayTime);
+			data.put(string ++ "sustain", item.sustain);
+			data.put(string ++ "release", item.releaseTime);
+			data.put(string ++ "envelopeLevel", item.envelopeLevel);
+			data.put(string ++ "signalLevel", item.signalLevel);
+			data.put(string ++ "selector",  item.selector);
 		});
-		*/
+
 		^data;
 	}
 }
