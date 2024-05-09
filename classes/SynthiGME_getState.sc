@@ -78,14 +78,14 @@ var <modulPatchbayVoltage;
 		});
 
 		// Reverb:
-		modulReverb.do({|item, num|
+		modulReverb.do({|item| // solo hay uno
 			var string = "/reverb/";
 			data.put(string ++ "mix", item.mix);
 			data.put(string ++ "level", item.level);
 		});
 
 		// Random Generator:
-		modulRandomGenerator.do({|item, num|
+		modulRandomGenerator.do({|item| // solo hay uno
 			var string = "/random/";
 			data.put(string ++ "mean", item.mean);
 			data.put(string ++ "variance", item.variance);
@@ -123,6 +123,12 @@ var <modulPatchbayVoltage;
 		modulInputAmplifiers.do({|item, num|
 			var string = "/in/" ++ (num + 1) ++ "/";
 			data.put(string ++ "level", item.level);
+		});
+
+		// Slew Limiters:
+		modulSlewLimiters.do({|item, num|
+			var string = "/slew/" ++ (num + 1) ++ "/";
+			data.put(string ++ "rate", item.rate);
 		});
 
 		// External Treatment Returns:
