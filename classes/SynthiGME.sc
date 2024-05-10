@@ -67,6 +67,8 @@ SynthiGME {
 	// Puerto por defecto de envío de mensajes OSC (por defecto en TouchOSC)
 	var devicePort;
 
+	// Diccionario con todos los estados de todos los parámetros nada más iniciar. Se rellena con getFullState()
+	var initState;
 	// Diccionario que guarda el último valor de cada string recibido de OSC
 	var <oscRecievedMessages;
 
@@ -583,10 +585,13 @@ SynthiGME {
 					/* No se ejecuta enableNodes ya que los nodos no implementados no están dibujados.
 					// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
 					if (guiSC != nil, {
-						guiSC.panels[4].enableNodes(true); // PatchbayAudio
-						guiSC.panels[5].enableNodes(true); // PatchbayVoltage
+					guiSC.panels[4].enableNodes(true); // PatchbayAudio
+					guiSC.panels[5].enableNodes(true); // PatchbayVoltage
 					});
 					*/
+					// Se almacena el estado inicial de todos los parámetros:
+					initState = this.getFullState;
+					(initState.size.asString + "parámetros iniciados a sus valores por defecto.").postln;
 				},
 				onFailure: {
 					"No se ha podido arrancar el servidor de audio".error;
@@ -660,6 +665,7 @@ SynthiGME {
 		});
 	}
 
+	// REVISAR SI HACE FALTA
 	// Envía el estado de todo el Synthi por OSC
 	// Para mejorarlo sería bueno mandar un bundle.
 	sendStateOSC {
