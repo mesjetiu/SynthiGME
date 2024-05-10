@@ -21,7 +21,7 @@ SynthiGME {
 
 	// Opciones de inicio:
 	var <server; // Servidor de audio a utilizar
-	var <>verboseOSC; // true: se muestran en Post Window los mensajes OSC enviados al synti.
+	var <>verboseOSC; // true: se muestran en Post Window los mensajes OSC enviados al synthi.
 	var <numOutputChannels;
 	var <numInputChannels;
 	var <numReturnChannels;
@@ -71,6 +71,8 @@ SynthiGME {
 	var initState;
 	// Diccionario que guarda el último valor de cada string recibido de OSC
 	var <oscRecievedMessages;
+	// Path donde se guardan los estados
+	var <pathState;
 
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC = nil;
@@ -166,6 +168,7 @@ SynthiGME {
 		// Carga la configuración
 		settings = SGME_Settings.get;
 
+		pathState = Platform.userHomeDir; // path por defecto donde guardar estados
 		oscRecievedMessages = Dictionary.new;
 
 		guiSC = SGME_GUI(this);
