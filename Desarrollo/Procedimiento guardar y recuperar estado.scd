@@ -22,9 +22,72 @@ g = f.collect({
 })
 )
 
+g.size
+
 
 //******** Se procede a guardar en un archivo...
 
+
+
+
+
+
+// Método por código:
+(
+var archivo = File.new("/home/carlos/Dropbox/SC Quarks/SynthiGME/Desarrollo/archivo.txt", "w");  // Abrir el archivo para escritura
+
+g.do { |string|
+    archivo.write(string ++ " ");  // Escribe cada string en una nueva línea
+};
+
+archivo.close();  // Cierra el archivo después de escribir
+)
+
+// Podemos modificar algunos parámetros, por código o por la GUI...
+(
+o.setParameterOSC("/osc/1/pulse/level", 1);
+o.setParameterOSC("/osc/1/sine/level", 3);
+o.setParameterOSC("/osc/1/triangle/level", 10);
+o.setParameterOSC("/osc/1/pulse/shape", 3)
+)
+
+(
+var archivo = File.new("/home/carlos/Dropbox/SC Quarks/SynthiGME/Desarrollo/archivo.txt", "r");  // Abrir el archivo para lectura
+var contenido = archivo.readAllString;  // Lee todo el contenido del archivo como un solo string
+h = contenido.split($ );  // Divide el contenido en líneas
+
+archivo.close();  // Cierra el archivo después de leer
+)
+h.class
+
+~contenido.size
+~contenido[13].asAscii
+
+h.size
+
+f.size
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// con diálogo de ventanas para elegir archivo.
+
+(
+FileDialog({
+	|path|
+	var archivo = File.new(path[0], "w");  // Abrir el archivo para escritura
+	var arrayDeStrings = ["hola", "mundo", "supercollider"];
+
+	g.do { |string|
+		archivo.write(string ++ " ");  // Escribe cada string en una nueva línea
+	};
+
+	archivo.close();  // Cierra el archivo después de escribir
+}, {
+	"Guardado cancelado.".postln;
+}, fileMode: 0, // Modo para cualquier nombre de archivo
+acceptMode: 1 // Modo de guardar
+);
+)
 
 
 // Podemos modificar algunos parámetros, por código o por la GUI...
@@ -36,11 +99,26 @@ o.setParameterOSC("/osc/1/pulse/shape", 3)
 )
 
 
-//******* Se recupera el array de  strings
-
-// Se convierte cada elemento del array en String / Float, secuencialmente:
 (
-h = g.collect({ |item|
+FileDialog({
+    |path|
+    var archivo = File(path[0], "r");
+    var contenido = archivo.readAllString;  // Lee todo el contenido del archivo como un solo string
+	h = contenido.split($ );  // Divide el contenido en líneas
+    archivo.close();
+}, {
+    "Apertura cancelada.".postln;
+}, fileMode: 1, // Modo para un archivo existente
+acceptMode: 0, // Modo de apertura
+);
+)
+
+
+
+
+// Una vez recuperado el archivo, se convierte cada elemento del array en String / Float, secuencialmente:
+(
+i = h.collect({ |item|
    // item = item.stripWhiteSpace; // Usamos stripWhiteSpace para eliminar espacios al principio y al final
     // Convertimos a entero si es un número, de lo contrario a símbolo
 	if (item[0] == $/) {item.asString} {
@@ -51,15 +129,15 @@ h = g.collect({ |item|
 
 
 
-h.do({|item| item.class.postln})
+i.do({|item| item.class.postln})
 
 
 // Ahora reconstruimos el Dictionary
-i = Dictionary.newFrom(h);
+j = Dictionary.newFrom(i);
 
 // El diccionario recuperado debe coincidir con el orginal:
-i == e
-i.size
+j == e
+j.size == e.size
 
 // recuperamos valores anteriores en el synthi
 (
@@ -68,7 +146,3 @@ e.keysValuesDo { // poner "e" o "i" para ver diferencia
 	o.setParameterOSC(key, value)
 }
 )
-
-i["/osc/1/pulse/level"]
-i["/patchA/80/29"]
-
