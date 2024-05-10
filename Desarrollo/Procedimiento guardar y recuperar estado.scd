@@ -4,7 +4,7 @@
 o = SynthiGME().run
 
 // Diccionario con los últimos valores dados a cada parámetro:
-e = o.getState();
+e = o.getFullState();
 e.size
 
 // convertimos en  Array el diccionario:
@@ -36,8 +36,12 @@ g.size
 (
 var archivo = File.new("/home/carlos/Dropbox/SC Quarks/SynthiGME/Desarrollo/archivo.txt", "w");  // Abrir el archivo para escritura
 
-g.do { |string|
-    archivo.write(string ++ " ");  // Escribe cada string en una nueva línea
+g.do { |string, n|
+	if (n.even) {
+		archivo.write(string ++ "\t");
+	} {
+		archivo.write(string ++ "\n");
+	}
 };
 
 archivo.close();  // Cierra el archivo después de escribir
@@ -54,7 +58,7 @@ o.setParameterOSC("/osc/1/pulse/shape", 3)
 (
 var archivo = File.new("/home/carlos/Dropbox/SC Quarks/SynthiGME/Desarrollo/archivo.txt", "r");  // Abrir el archivo para lectura
 var contenido = archivo.readAllString;  // Lee todo el contenido del archivo como un solo string
-h = contenido.split($ );  // Divide el contenido en líneas
+h = contenido.replace("\t", " ").replace("\n", " ").split($ );  // Divide el contenido en líneas
 
 archivo.close();  // Cierra el archivo después de leer
 )
@@ -64,6 +68,7 @@ h.class
 ~contenido[13].asAscii
 
 h.size
+h
 
 f.size
 
@@ -77,8 +82,12 @@ FileDialog({
 	var archivo = File.new(path[0], "w");  // Abrir el archivo para escritura
 	var arrayDeStrings = ["hola", "mundo", "supercollider"];
 
-	g.do { |string|
-		archivo.write(string ++ " ");  // Escribe cada string en una nueva línea
+	g.do { |string, n|
+		if (n.even) {
+			archivo.write(string ++ "\t");
+		} {
+			archivo.write(string ++ "\n");
+		}
 	};
 
 	archivo.close();  // Cierra el archivo después de escribir
@@ -102,10 +111,10 @@ o.setParameterOSC("/osc/1/pulse/shape", 3)
 (
 FileDialog({
     |path|
-    var archivo = File(path[0], "r");
-    var contenido = archivo.readAllString;  // Lee todo el contenido del archivo como un solo string
-	h = contenido.split($ );  // Divide el contenido en líneas
-    archivo.close();
+	var archivo = File(path[0], "r");
+	var contenido = archivo.readAllString;  // Lee todo el contenido del archivo como un solo string
+	h = contenido.replace("\t", " ").replace("\n", " ").split($ );  // Divide el contenido en líneas
+	archivo.close();
 }, {
     "Apertura cancelada.".postln;
 }, fileMode: 1, // Modo para un archivo existente
