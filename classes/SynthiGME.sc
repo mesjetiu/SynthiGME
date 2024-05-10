@@ -110,7 +110,7 @@ SynthiGME {
 
 	*new {
 		arg server = Server.local,
-		gui = true,
+		/*gui = true,*/
 		verboseOSC = true, // Muestra en Post window todo mensaje OSC procesado
 		numOutputChannels = 2, // Número de canales de salida unidos a salidas de SC. Mínimo 2 (2 canales por defecto del sistema) Máximo 16
 		numInputChannels = 2, // Mínimo 2 (del sistema por defecto) Máximo 8
@@ -122,7 +122,7 @@ SynthiGME {
 		if (instance != nil) {"Ya existe una instancia"; ^this};
 		instance = this;
 
-		^super.new.init(server, gui, verboseOSC, numOutputChannels.clip(2,16), numInputChannels.clip(2,8), numReturnChannels.clip(0,4), blockSize, alwaysRebootServer);
+		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,16), numInputChannels.clip(2,8), numReturnChannels.clip(0,4), blockSize, alwaysRebootServer);
 	}
 
 
@@ -164,7 +164,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, gui, verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ|
+	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ|
 		// Carga la configuración
 		settings = SGME_Settings.get;
 
@@ -172,7 +172,8 @@ SynthiGME {
 		oscRecievedMessages = Dictionary.new;
 
 		guiSC = SGME_GUI(this);
-		if(gui == true, {guiSC.makeWindow});
+		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
+		guiSC.makeWindow;
 
 		generalVol = settings[\generalVol];
 		devicePort = settings[\OSCDevicePort];
