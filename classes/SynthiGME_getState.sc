@@ -20,9 +20,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 + SynthiGME {
 
-	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de todos los módulos
+	// Devuelve una colección de pares [mensaje_OSC, valor] con el estado actual de TODOS los módulos
 	// Separado en archivo aparte por su larga extensión.
-	getState {
+	getFullState {
 		var data = Dictionary.new;
 
 		// Oscillators:
