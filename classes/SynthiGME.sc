@@ -173,7 +173,6 @@ SynthiGME {
 
 		guiSC = SGME_GUI(this);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
-		guiSC.makeWindow;
 
 		generalVol = settings[\generalVol];
 		devicePort = settings[\OSCDevicePort];
@@ -593,6 +592,7 @@ SynthiGME {
 					guiSC.panels[5].enableNodes(true); // PatchbayVoltage
 					});
 					*/
+					guiSC.makeWindow;
 					// Se almacena el estado inicial de todos los parámetros:
 					initState = this.getFullState;
 					(initState.size.asString + "parámetros iniciados a sus valores por defecto.").postln;
