@@ -138,14 +138,19 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			data.put(string ++ "selector",  item.selector);
 		});
 
+
+/*	var <modulPatchbayAudio;
+	var <modulPatchbayVoltage;*/
+
 		// Patchbay Audio:
 		66.do({|v|
 			var string = nil;
 			var value = nil;
 			60.do({|h|
-				string = "/patchA/" ++ (h+67) ++ "/" ++ (v+1);
-				value = guiSC.parameterViews[string].value;
+				string = (h+67).asString +/+ (v+1).asString;
+				value = modulPatchbayAudio.nodeValues[string].value;
 				if (value != nil) {
+					string = "/patchA/" ++ string;
 					data.put(string, value)
 				}
 			})
@@ -156,9 +161,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			var string = nil;
 			var value = nil;
 			60.do({|h|
-				string = "/patchV/" ++ (h+67) ++ "/" ++ (v+1);
-				value = guiSC.parameterViews[string].value;
+				string = (h+67).asString +/+ (v+1).asString;
+				value = modulPatchbayVoltage.nodeValues[string].value;
 				if (value != nil) {
+					string = "/patchV/" ++ string;
 					data.put(string, value)
 				}
 			})

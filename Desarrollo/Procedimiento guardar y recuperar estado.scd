@@ -7,6 +7,8 @@ o = SynthiGME().run
 e = o.getFullState();
 e.size
 
+e["/patchA/70/5"]
+
 // convertimos en  Array el diccionario:
 f = e.getPairs
 f.class
@@ -66,6 +68,8 @@ h.class
 
 ~contenido.size
 ~contenido[13].asAscii
+
+h = g
 
 h.size
 h

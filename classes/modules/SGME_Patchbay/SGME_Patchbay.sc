@@ -25,6 +25,9 @@ SGME_Patchbay {
 	// Array que almacena todas las conexiones. Dos dimensiones [from] [to]. Almacena el Synth Node.
 	var <nodeSynths = nil;
 
+	// Diccionario con solo los valores del pin. Se busca por mensaje OSC.
+	var <nodeValues = nil;
+
 	// Módulos del Synthi 100 con entradas o salidas (en experimentación...)
 	// debería contener arrays de tres elementos:
 	// [synth, in/outputBus, feedbackIn/outputBus]
@@ -57,6 +60,7 @@ SGME_Patchbay {
 	init { arg serv = Server.local;
 		server = serv;
 		nodeSynths = Dictionary.new;
+		nodeValues = Dictionary.new;
 	}
 
 
@@ -68,9 +72,23 @@ SGME_Patchbay {
 		})
 	}
 
+	makeValues {
+		var string = nil;
+		var value = 0;
+		var nodes = inputsOutputs; //Dictionary.newFrom(inputsOutputs);
+		66.do({|v|
+			60.do({|h|
+				string = (h+67).asString ++ "/" ++ (v+1).asString;
+				if (nodes[v].isNil.not && nodes[h+66].isNil.not) {
+					nodeValues.put(string, value)
+				}
+			})
+		});
+	}
 
 	// Crea nodo de conexión entre dos módulos
 	administrateNode {|ver, hor, ganancy|
+		var stringOSC = (ver).asString +/+ (hor).asString;
 		var fromModul = inputsOutputs[ver-1].at(\modul);
 		var fromSynth = inputsOutputs[ver-1].at(\synth);
 		var fromBus = inputsOutputs[ver-1].at(\outBus);
@@ -79,6 +97,9 @@ SGME_Patchbay {
 		var toBus; // su valor dependerá de la relación de orden de ejecución de ambos synths
 		var numFromSynth =  this.getNumSynth(fromSynth);
 		var numToSynth = this.getNumSynth(toSynth);
+
+		//Se añade el valor del pin a nodeValue
+		nodeValues.put(stringOSC.postln, ganancy.postln);
 
 		if(numFromSynth > numToSynth, { // Si el synth de destino se ejecuta después que el de origen
 			toBus = inputsOutputs[hor-1].at(\inBus);

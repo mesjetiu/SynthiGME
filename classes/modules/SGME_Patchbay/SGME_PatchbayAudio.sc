@@ -19,6 +19,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 SGME_PatchbayAudio : SGME_Patchbay{
 
+
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
 	connect {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
@@ -34,6 +35,7 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			echo: echo,
 			outputChannels: outputChannels,
 		);
+		this.makeValues(); // Pone valores de 0 a todos los nodos existentes.
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
