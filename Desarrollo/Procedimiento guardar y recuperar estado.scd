@@ -4,7 +4,8 @@
 o = SynthiGME().run
 
 // Diccionario con los últimos valores dados a cada parámetro:
-e = o.getFullState();
+d = o.getFullState();
+e = Dictionary.newFrom(d)
 e.size
 
 e["/patchA/70/5"]
@@ -149,7 +150,7 @@ i.do({|item| item.class.postln})
 j = Dictionary.newFrom(i);
 
 // El diccionario recuperado debe coincidir con el orginal:
-j == e
+j == d
 j.size == e.size
 
 // recuperamos valores anteriores en el synthi

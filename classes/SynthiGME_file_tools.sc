@@ -22,9 +22,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Guarda el estado actual del Synthi de forma diferencial: los parámetros que se han modificado desde el inicio.
 	saveState { |path, fileName|
-		var archivo, exito = false;
-		var string = oscRecievedMessages.getPairs.collect({ |item| item.asString });
-		var extension = ".spatch";
+		var archivo, exito = false, state, string, extension;
+		state = Dictionary.newFrom(this.oscRecievedMessages);
+		string = state.getPairs.collect({ |item| item.asString });
+		extension = ".spatch";
 		if (path.isNil) {path = pathState} {pathState = path};
 
 		// Añadir la extensión .spatch si no está presente
@@ -59,7 +60,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		}
 	}
 
-
 	// Definir la función saveStateGUI
 	saveStateGUI {
 		var path = pathState; // Define un directorio inicial
@@ -77,6 +77,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			path: path  // Ruta inicial
 		);
 	}
+
 
 
 }
