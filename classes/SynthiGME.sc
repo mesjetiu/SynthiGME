@@ -176,10 +176,6 @@ SynthiGME {
 
 		generalVol = settings[\generalVol];
 		devicePort = settings[\OSCDevicePort];
-		if (thisProcess.openUDPPort(devicePort)) {
-			("Abierto puerto" + devicePort + "para OSC.").postln;} {
-			("No se ha podido abrir el puerto" + devicePort + "para OSC").postln;
-		};
 
 		server = serv;
 		this.verboseOSC = verboseOSC;
@@ -583,8 +579,6 @@ SynthiGME {
 						}
 					});
 
-					"SynthiGME en ejecución".postln;
-
 					/* No se ejecuta enableNodes ya que los nodos no implementados no están dibujados.
 					// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
 					if (guiSC != nil, {
@@ -592,10 +586,22 @@ SynthiGME {
 					guiSC.panels[5].enableNodes(true); // PatchbayVoltage
 					});
 					*/
+
+					// Se abre puerto para recibir mensajes OSC
+					if (thisProcess.openUDPPort(devicePort)) {
+						("Abierto puerto" + devicePort + "para OSC.").postln;} {
+						("No se ha podido abrir el puerto" + devicePort + "para OSC").postln;
+					};
+
+					// Se lanza todo el sistema gráfico de ventanas:
 					guiSC.makeWindow;
+
+
 					// Se almacena el estado inicial de todos los parámetros:
 					initState = this.getFullState;
 					(initState.size.asString + "parámetros iniciados a sus valores por defecto.").postln;
+
+					"\n***SynthiGME en ejecución***\n".postln;
 				},
 				onFailure: {
 					"No se ha podido arrancar el servidor de audio".error;
