@@ -23,7 +23,6 @@
 - Ver si se pueden hacer las ventanas resizables. Actualmente no lo están. Pero hay que ver si es compatible con los atajos actuales para Zoom.
 
 # Bugs y mejoras:
-- Cuando se envía un mensaje OSC "1" a un nodo, si éste es ya "1", deja de oirse. Tras otro mensaje, vuelve a sonar (el nodo se muestra encendido todo el tiempo en la ventana).
 - Evitar ejecuciones circulares de elementos de la GUI como ecos...
 - Limpiar variables no utilizadas en la clase principal y algunos de sus valores en settings.
 - Comprobar qué servidor usa por defecto, porque no se ve en los controles de SCIDE
