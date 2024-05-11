@@ -98,6 +98,9 @@ SGME_Patchbay {
 		var numFromSynth =  this.getNumSynth(fromSynth);
 		var numToSynth = this.getNumSynth(toSynth);
 
+		// Si el nodo ya tenía el valor solicitado, no se hace nada:
+		if (ganancy == nodeValues[stringOSC]) {^this};
+
 		//Se añade el valor del pin a nodeValue
 		nodeValues.put(stringOSC, ganancy);
 
@@ -128,7 +131,7 @@ SGME_Patchbay {
 							\coordenates, [ver, hor]
 						])
 					);
-					wait(0.05);
+					server.sync;
 					nodeSynths[[ver,hor].asString][\synth].set(\ganancy, ganancy);
 
 				}).play;
@@ -143,7 +146,7 @@ SGME_Patchbay {
 				toModul.inPlusOne(false);
 				Routine({
 					nodeSynths[[ver,hor].asString][\synth].set(\ganancy, 0);
-					wait(lag); // espera un tiempo para que el synt baje su ganancia a 0;
+					//wait(lag); // espera un tiempo para que el synt baje su ganancia a 0;
 					nodeSynths[[ver,hor].asString][\synth].free;
 					nodeSynths[[ver,hor].asString] = nil;
 				}).play;
