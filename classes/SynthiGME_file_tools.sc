@@ -115,7 +115,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			newState = Dictionary.newFrom(contenido);
 
 			// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
-			oscRecievedMessages = Dictionary.newFrom(oscRecievedMessages);
+			oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
 			oscRecievedMessagesCopy.keys.do {
 				|key|
 				var value = initState[key];
