@@ -32,6 +32,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			fileName = fileName ++ extension;
 		};
 
+
 		// Intenta abrir el archivo y escribir en él
 		try {
 			archivo = File.new(path +/+ fileName, "w");  // Abrir el archivo para escritura
@@ -58,6 +59,24 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		}
 	}
 
+
+	// Definir la función saveStateGUI
+	saveStateGUI {
+		var path = pathState; // Define un directorio inicial
+
+		FileDialog(
+			{ |path|
+				path.notNil.if {
+					this.saveState(path.dirname, path.basename);
+				}
+			},
+			{ "Cancelado por el usuario".postln },
+			fileMode: 0,  // Permite la selección de un nombre de archivo, existente o no
+			acceptMode: 1,  // Diálogo de guardado
+			stripResult: true,  // Pasa la ruta del archivo directamente
+			path: path  // Ruta inicial
+		);
+	}
 
 
 }
