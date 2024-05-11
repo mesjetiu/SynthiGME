@@ -147,7 +147,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			var string = nil;
 			var value = nil;
 			60.do({|h|
-				string = (h+67).asString +/+ (v+1).asString;
+				string = (h+67).asString ++ "/" ++ (v+1).asString;
 				value = modulPatchbayAudio.nodeValues[string].value;
 				if (value != nil) {
 					string = "/patchA/" ++ string;
@@ -161,7 +161,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			var string = nil;
 			var value = nil;
 			60.do({|h|
-				string = (h+67).asString +/+ (v+1).asString;
+				string = (h+67).asString ++ "/" ++ (v+1).asString;
 				value = modulPatchbayVoltage.nodeValues[string].value;
 				if (value != nil) {
 					string = "/patchV/" ++ string;
