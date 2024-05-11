@@ -39,9 +39,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			archivo = File.new(path +/+ fileName, "w");  // Abrir el archivo para escritura
 			string.do { |string, n|
 				if (n.even) {
-					archivo.write(string ++ "\t");
+					archivo.write(string ++ "\t"); // Entre clave y valor, tabulador
 				} {
-					archivo.write(string ++ "\n");
+					archivo.write(string ++ "\n"); // tras cada asociación, salto de línea
 				}
 			};
 			archivo.close();  // Cierra el archivo después de escribir
@@ -60,7 +60,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		}
 	}
 
-	// Definir la función saveStateGUI
+	// Guardado de estado desde un diálogo de usuario:
 	saveStateGUI {
 		var path = pathState; // Define un directorio inicial
 
@@ -78,6 +78,79 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		);
 	}
 
+	// Método de recuperación del estado desde archivo
+	loadState { |path, fileName|
+		var archivo, exito = false, newState, pairsArray, extension, contenido, oscRecievedMessagesCopy;
+		extension = ".spatch";
+		if (path.isNil) {path = pathState} {pathState = path};
 
+		// Intenta abrir el archivo y cargar desde él
+		try {
+			archivo = File.new(path +/+ fileName, "r");  // Abrir el archivo para lectura
+			contenido = archivo.readAllString;  // Lee todo el contenido del archivo como un solo string
+			archivo.close();  // Cierra el archivo después de leer
+			exito = true;
+		} {|error|
+			// En caso de error durante la apertura o lectura del archivo
+			archivo.notNil.if { archivo.close };  // Asegúrate de cerrar el archivo si se abrió
+			"Error al cargar el archivo: ".postln;
+			error.errorString.postln;  // Imprime el mensaje de error
+		};
+
+		// Verifica si el archivo se cargó con éxito
+		if (exito) {
+			"Archivo cargado correctamente desde: ".postln;
+			(path +/+ fileName).postln;
+
+			contenido = contenido.replace("\t", " ").replace("\n", " ").split($ );  // Divide el contenido en líneas
+
+			contenido = contenido.collect({ |item|
+				// item = item.stripWhiteSpace; // Usamos stripWhiteSpace para eliminar espacios al principio y al final
+				// Convertimos a entero o float si es un número, de lo contrario a símbolo
+				if (item[0] == $/) {item.asString} {
+					if (item.interpret.isFloat) {item.asFloat} {item.asInteger}
+				}
+			});
+
+			newState = Dictionary.newFrom(contenido);
+
+			// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
+			oscRecievedMessages = Dictionary.newFrom(oscRecievedMessages);
+			oscRecievedMessagesCopy.keys.do {
+				|key|
+				var value = initState[key];
+				this.setParameterOSC(key, value)
+			};
+
+			// reiniciamos oscRecievedMessages para comenzar de cero.
+			oscRecievedMessages = Dictionary();
+
+			// recuperamos valores anteriores en el synthi
+			newState.keysValuesDo {
+				|key, value|
+				this.setParameterOSC(key, value)
+			};
+
+			"Patch recuperado y ejecutado".postln;
+		}
+	}
+
+
+	loadStateGUI {
+		var path = pathState; // Define un directorio inicial
+
+		FileDialog(
+			{ |path|
+				path.notNil.if {
+					this.loadState(path.dirname, path.basename);
+				}
+			},
+			{ "Cancelado por el usuario".postln },
+			fileMode: 1,  // Modo para un archivo existente
+			acceptMode: 0,  // Modo de apertura
+			stripResult: true,  // Pasa la ruta del archivo directamente
+			path: path  // Ruta inicial
+		);
+	}
 
 }
