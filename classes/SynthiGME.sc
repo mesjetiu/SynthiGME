@@ -156,7 +156,7 @@ SynthiGME {
 		SynthDef(\connection2, {|outBusL, outBusR, inBusR1, inBusL1, inBusR2, inBusL2, inBusL3, inBusR3, inBusL4, inBusR4, inBusL5, inBusR5, inBusL6, inBusR6, inBusL7, inBusR7, inBusL8, inBusR8,  vol|
 			var sigL, sigR;
 			sigL = In.ar([inBusL1, inBusL2, inBusL3, inBusL4, inBusL5, inBusL6, inBusL7, inBusL8]);
-			sigR = In.ar([inBusR2, inBusR2, inBusR3, inBusR4, inBusR5, inBusR6, inBusR7, inBusR8]);
+			sigR = In.ar([inBusR1, inBusR2, inBusR3, inBusR4, inBusR5, inBusR6, inBusR7, inBusR8]);
 			Out.ar(outBusL, sigL.sum * vol);
 			Out.ar(outBusR, sigR.sum * vol);
 		}).add;
