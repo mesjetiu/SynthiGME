@@ -46,8 +46,8 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 			Rect(
 				Window.availableBounds.width/3.9,
 				Window.availableBounds.height/6.5,
-				450,
-				380
+				width: 450,
+				height: 390
 			),
 			resizable: false, scroll: true).userCanClose_(false);
 		row = VLayoutView.new(window, Rect(0, 0, 450, 380)); //cada una de las filas
