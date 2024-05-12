@@ -1,17 +1,9 @@
 # Implementar:
-- Grabación desde shortcuts y menú.
-- External Treatmen Device: terminar. Está hecha la GUI.
-- Envelope Followers: terminar. Está hecha la GUI.
+- Archivo de configuración personal de usuario (para recordar paths y otras variables personales).
+- Módulo External Treatmen Device: terminar. Está hecha la GUI.
+- Módulo Envelope Followers: terminar. Está hecha la GUI.
 - Explorar y mejorar la conectividad entre varios SynthiGME y otros dipositivos OSC.
-- Guardado de patches (autoguardado, archivo de guardado (JSON?), selección de patche...)
-    - Guardar el estado actual:
-	    + Con SynthiGME.getState() que estaba hecho pero hay que construirlo y testearlo.
-	    + La variable oscRecievedMessages almacena el último mensaje de cada variable de la GUI. Se puede revertir a un estado anterior con él.
-	    + Probar con todos los módulos.
-	    + Crear un diccionario con estado inicial.
-	    + Guardar en archivo y recuperar un estado (como un array que se agrupa en pares key-value).
-	    + Guardar estados automáticamente antes de salir o cada cierto tiempo, y poder volver a estado anterior al reiniciar.
-    - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables.
+- Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables).
 - Parpadeo de las views cuando se modifican, para ser vistas en la pantalla, especialmente si se modifican sus parámetros remotamente por OSC.
 - Módulo Joystick.
 - Módulo Osciloscopio.

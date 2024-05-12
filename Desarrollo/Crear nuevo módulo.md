@@ -34,5 +34,5 @@
 
 - Añadir views al panel correspondiente. Copiar alguno ya hecho y adaptarlo.
 
-- Añadir las variables en SynthiGME.getState() para poder ser recuperadas.
+- Añadir las variables en SynthiGME.getFullState() para poder ser recuperadas.
 	
