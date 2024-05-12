@@ -20,6 +20,19 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 + SynthiGME {
 
+	// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
+	restartState {
+		var oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
+		oscRecievedMessagesCopy.keys.do {
+			|key|
+			var value = initState[key];
+			this.setParameterOSC(key, value)
+		};
+
+		// reiniciamos oscRecievedMessages para comenzar de cero.
+		oscRecievedMessages = Dictionary();
+	}
+
 	// Guarda el estado actual del Synthi de forma diferencial: los parámetros que se han modificado desde el inicio.
 	saveState { |path, fileName|
 		var archivo, exito = false, state, string, extension;
@@ -80,7 +93,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Método de recuperación del estado desde archivo
 	loadState { |path, fileName|
-		var archivo, exito = false, newState, pairsArray, extension, contenido, oscRecievedMessagesCopy;
+		var archivo, exito = false, newState, pairsArray, extension, contenido;
 		extension = ".spatch";
 		if (path.isNil) {path = pathState} {pathState = path};
 
@@ -115,15 +128,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			newState = Dictionary.newFrom(contenido);
 
 			// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
-			oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
-			oscRecievedMessagesCopy.keys.do {
-				|key|
-				var value = initState[key];
-				this.setParameterOSC(key, value)
-			};
-
-			// reiniciamos oscRecievedMessages para comenzar de cero.
-			oscRecievedMessages = Dictionary();
+			this.restartState();
 
 			// recuperamos valores anteriores en el synthi
 			newState.keysValuesDo {
