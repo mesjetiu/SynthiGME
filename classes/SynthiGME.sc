@@ -749,4 +749,10 @@ SynthiGME {
 		});
 		thisProcess.recompile;
 	}
+
+	// Actualiza SynthiGME:
+	update {
+		Quark("SynthiGME").update;
+		"Para que la actualización tenga efecto, es necesario recompilar la biblioteca de clases, con Ctrl + Shift + L, o abriendo y cerrando SuperCollider.".postln;
+	}
 }
