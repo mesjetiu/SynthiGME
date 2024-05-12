@@ -372,35 +372,35 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				switch (splitted[2],
 					"63", {
 						modulFilterBank.setBand63(value);
-						//if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"125", {
 						modulFilterBank.setBand125(value);
-						//if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"250", {
 						modulFilterBank.setBand250(value);
-						//if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"500", {
 						modulFilterBank.setBand500(value);
-						//if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"1000", {
 						modulFilterBank.setBand1000(value);
-						//if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"2000", {
 						modulFilterBank.setBand2000(value);
-						//if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"4000", {
 						modulFilterBank.setBand4000(value);
-						//if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 					"8000", {
 						modulFilterBank.setBand8000(value);
-						//if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer(0)});
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
