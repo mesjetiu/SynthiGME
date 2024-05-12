@@ -80,6 +80,8 @@ SynthiGME {
 	// Otras opciones.
 	var <generalVol;
 
+	var <isRunning = false; // Indica si se ha ejecutado run(), para que no se le llame dos veces.
+
 	classvar settings;
 	classvar instance; // aquí se guardará la instancia del Synthi, ya que solo se podrá tener una abierta.
 
@@ -211,7 +213,9 @@ SynthiGME {
 
 	run {
 		var thisRoutine;
-		if (connectionOut != nil, {"SynthiGME en ejecución".error; ^this});
+
+		if (isRunning || (connectionOut != nil)) {"SynthiGME en ejecución".error; ^this};
+		isRunning = true;
 		thisRoutine = Routine({
 		/*  var <numStereoOutputChannels;
 			var <numInputChannels;
