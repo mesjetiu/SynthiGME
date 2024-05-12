@@ -119,6 +119,12 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 									synthiGME.server.record;
 								}
 							}),
+							MenuAction("Silenciar/Desilenciar", {
+								if (synthiGME.server.volume.isMuted,
+									{synthiGME.server.volume.unmute},
+									{synthiGME.server.volume.mute}
+								)
+							}),
 							MenuAction("Ver/ocultar atajos de teclado", {
 								if (synthiGME.guiSC.helpWindow.window.visible == true, {
 									synthiGME.guiSC.helpWindow.window.visible = false
