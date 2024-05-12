@@ -1,3 +1,19 @@
+## Version 1.7.0 
+2024/05/12
+
+### Importantes cambios
+- Se pueden guardar patches (estados del Synthi) en archivos y recuperarse.
+- La interfaz gráfica siempre se inicia.
+- La interfaz gráfica se inicia solo si el servidor ha iniciado correctamente.
+
+### Bugs corregidos
+- Corregido problema de cierre al inicio en Windows. Los nodos de los patchbays se han repartido en dos views en lugar de una sola.
+- Uso de "/" y "\" en paths en función del sistema operativo.
+- Error en la distribución del canal de salida 1 en derecho e izquierdo.
+
+### Otras mejoras
+- Reorganización y claridad en los mensajes de salida en Post window.
+
 ## Version 1.6.0
 
 ### Importantes cambios y mejoras
