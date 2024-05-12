@@ -81,7 +81,6 @@ SynthiGME {
 	var <generalVol;
 
 	classvar settings;
-
 	classvar instance; // aquí se guardará la instancia del Synthi, ya que solo se podrá tener una abierta.
 
 
@@ -600,8 +599,12 @@ SynthiGME {
 					// Se almacena el estado inicial de todos los parámetros:
 					initState = this.getFullState;
 					(initState.size.asString + "parámetros iniciados a sus valores por defecto.").postln;
+					// Preparación para la grabación:
+					server.prepareForRecord;
 
-					"\n***SynthiGME en ejecución***\n".postln;
+					"\n*** SynthiGME en ejecución ***\n".postln;
+
+
 				},
 				onFailure: {
 					"No se ha podido arrancar el servidor de audio".error;

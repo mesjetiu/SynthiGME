@@ -106,16 +106,25 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 					0, {}, // botón izquierdo
 					1, {
 						Menu(
-							MenuAction("Salir", { synthiGME.close }),
-							MenuAction("Zoom In", { this.resizePanel(factor) }),
-							MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
-							MenuAction("Invisible", { window.visible = false }),
-							MenuAction("Ayuda", {
+							//MenuAction("Zoom In", { this.resizePanel(factor) }),
+							//MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
+							//MenuAction("Invisible", { window.visible = false }),
+							MenuAction("Abrir patch", { synthiGME.loadStateGUI }),
+							MenuAction("Guardar patch", { synthiGME.saveStateGUI }),
+							MenuAction("Inicia/termina grabación", {
+								if (synthiGME.server.isRecording) {
+									synthiGME.server.stopRecording;
+								} {
+									synthiGME.server.record;
+								}
+							}),
+							MenuAction("Ver/ocultar atajos de teclado", {
 								if (synthiGME.guiSC.helpWindow.window.visible == true, {
 									synthiGME.guiSC.helpWindow.window.visible = false
 								}, {synthiGME.guiSC.helpWindow.window.visible = true
 								})
 							}),
+							MenuAction("Salir", { synthiGME.close })
 						).front;
 					}, // botón derecho
 				)

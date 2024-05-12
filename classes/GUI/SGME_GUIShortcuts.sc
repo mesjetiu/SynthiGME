@@ -27,7 +27,7 @@ SGME_GUIShortcuts {
 			//keycode.postln;
 			//[char, unicode, keycode, key, mod].postln;
 
-			unicode.switch(
+			unicode.switch( // usamos unicode
 				118, {// "v" Activa y desactiva la visibilidad de los mandos de la ventana en foco.
 					synthiGME.guiSC.panels.do({|panel|
 						panel.conmuteVisibility
@@ -48,13 +48,26 @@ SGME_GUIShortcuts {
 						panel.goToOrigin
 					})
 				},
-				15, {// Ctrl + O. Establece un nuevo origen de todas las ventanas
+				/*15, {// Ctrl + O. Establece un nuevo origen de todas las ventanas
 					synthiGME.guiSC.panels.do({|panel|
 						panel.saveOrigin;
 					})
-				},
+				},*/ // Funciona pero lo dejamos fuera en este momento
 				111, {// Tecla o: Panel a posición y tamaño original
 					this.goToOriginFocusedPanel
+				},
+				18, {// Tecla Ctrl + R: Comenzar a grabar o terminar de grabar
+					if (synthiGME.server.isRecording) {
+						synthiGME.server.stopRecording;
+					} {
+						synthiGME.server.record;
+					}
+				},
+				19, {// Tecla Ctrl + S: Guardar el patch actual
+					synthiGME.saveStateGUI();
+				},
+				15, {// Ctrl + O. Abrir un patch existente
+					synthiGME.loadStateGUI;
 				},
 
 
