@@ -211,7 +211,10 @@ SynthiGME {
 
 	// Métodos de instancia /////////////////////////////////////////////////////////////////////////
 
-	// run() en archivo aparte.
+	// EXTENSIONES DE LA CLASE **********************************************************
+	// run() en SynthiGME_run.sc
+	// getFullState() en SynthiGME_getFullState.sc
+	// Herramientas de guardado y recuperación de patches en archivos, en SynthiGME_file_tools.sc
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
 	pairDevice { arg searchTime = 10;
