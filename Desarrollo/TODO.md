@@ -1,4 +1,5 @@
 # Implementar:
+- Crear diálogo al cerrar aplicación, si se quiere guardar patch.
 - Archivo de configuración personal de usuario (para recordar paths y otras variables personales).
 - Módulo External Treatmen Device: terminar. Está hecha la GUI.
 - Módulo Envelope Followers: terminar. Está hecha la GUI.
