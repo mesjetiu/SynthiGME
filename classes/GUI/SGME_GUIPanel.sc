@@ -111,6 +111,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 							//MenuAction("Invisible", { window.visible = false }),
 							MenuAction("Abrir patch", { synthiGME.loadStateGUI }),
 							MenuAction("Guardar patch", { synthiGME.saveStateGUI }),
+							MenuAction("Reiniciar patch", { synthiGME.restartState }),
 							MenuAction("Inicia/termina grabación", {
 								if (synthiGME.server.isRecording) {
 									synthiGME.server.stopRecording;
