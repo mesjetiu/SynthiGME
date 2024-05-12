@@ -1,5 +1,4 @@
 # Implementar:
-- Crear función restartState() para poner a valores iniciales el Synthi. Poner en menú contextual.
 - Archivo de configuración personal de usuario (para recordar paths y otras variables personales).
 - Módulo External Treatmen Device: terminar. Está hecha la GUI.
 - Módulo Envelope Followers: terminar. Está hecha la GUI.
