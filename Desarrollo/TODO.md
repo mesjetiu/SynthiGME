@@ -1,4 +1,5 @@
 # Implementar:
+- save() ejecutará saveState() o saveStateGUI() en función de si hay un archivo recién guardado/cargado. Si se llama a saveAs() se llamará a siempre a saveStateGUI().
 - Crear diálogo al cerrar aplicación, si se quiere guardar patch.
 - Archivo de configuración personal de usuario (para recordar paths y otras variables personales).
 - Módulo External Treatmen Device: terminar. Está hecha la GUI.
