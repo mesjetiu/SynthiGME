@@ -67,12 +67,16 @@ SynthiGME {
 	// Puerto por defecto de envío de mensajes OSC (por defecto en TouchOSC)
 	var devicePort;
 
+
+	// ****** Variables para rastrear, guardar y recuperar estados (patches)
 	// Diccionario con todos los estados de todos los parámetros nada más iniciar. Se rellena con getFullState()
 	var initState;
 	// Diccionario que guarda el último valor de cada string recibido de OSC
 	var <oscRecievedMessages;
 	// Path donde se guardan los estados
 	var <pathState;
+	// será true en el momento que se haga un cambio en el patch. Utilizado para preguntar guardar antes de salir.
+	var modifiedState = false;
 
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC = nil;
@@ -341,13 +345,58 @@ SynthiGME {
 
 	// Libera todos los Synths del servidor y cierra la GUI
 	close {
-		{Window.closeAll}.defer(0);
-		server.freeAll;
-		modulRandomGenerator.randomRoutine.stop;
-		if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
-			0.exit;
-		});
-		thisProcess.recompile;
+		if (modifiedState) {
+			// Obtener las dimensiones de la pantalla
+			var screenBounds = Window.availableBounds;
+			// Definir el tamaño de la ventana
+			var windowWidth = 300;
+			var windowHeight = 100;
+			// Calcular la posición para centrar la ventana
+			var xPos = (screenBounds.width - windowWidth) / 2;
+			var yPos = (screenBounds.height - windowHeight) / 2;
+
+			var dialog = Window("Salir de SynthiGME", Rect(xPos, yPos, windowWidth, windowHeight));
+			var discardButton, cancelButton, saveButton;
+
+			dialog.layout = VLayout(
+				StaticText().string_("¿Desea guardar el patch actual?"),
+				HLayout(
+					discardButton = Button().states_([["Descartar", Color.black, Color.white]]).action_({
+						// Acción para descartar cambios y salir
+						"Descartando cambios y saliendo...".postln;
+						// Aquí iría la lógica para salir de la aplicación
+						dialog.close;
+						// Aquí puedes continuar con la función de salir existente
+					}),
+					cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
+						// Acción para cancelar el cierre
+						"Cancelando...".postln;
+						dialog.close;
+						// Salir de la función de cierre actual
+						^nil;
+					}),
+					saveButton = Button().states_([["Guardar", Color.black, Color.white]]).action_({
+						// Acción para guardar y salir
+						"Guardando y saliendo...".postln;
+						this.saveStateGUI;
+						dialog.close;
+						// Aquí puedes continuar con la función de salir existente
+					})
+				)
+			);
+
+			dialog.front;
+		} {
+			// Si no hay cambios, continuar con el cierre normalmente
+			"Saliendo...".postln;
+			{Window.closeAll}.defer(0);
+			server.freeAll;
+			modulRandomGenerator.randomRoutine.stop;
+			if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
+				0.exit;
+			});
+			thisProcess.recompile;
+		}
 	}
 
 	// Actualiza SynthiGME:

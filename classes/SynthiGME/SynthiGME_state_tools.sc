@@ -68,6 +68,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 		// Verifica si el archivo se guardó con éxito
 		if (exito) {
+			modifiedState = false;
 			"Archivo guardado correctamente en: ".postln;
 			(path +/+ fileName).postln;
 		}
@@ -149,6 +150,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				this.setParameterOSC(key, value)
 			};
 
+			modifiedState = false;
 			"Patch recuperado y ejecutado".postln;
 		}
 	}

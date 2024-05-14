@@ -24,6 +24,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	setParameterOSC {|string, value, addrForbidden|
 		var splitted = string.split($/);
 		//value = value.round(0.01); // El resto de decimales es ruido.
+		modifiedState = true;
 		switch (splitted[1],
 			"osc", { // Ejemplo: "/osc/1/pulse/level"
 				var index = splitted[2].asInteger - 1;
