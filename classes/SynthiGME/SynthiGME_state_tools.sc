@@ -93,7 +93,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Método de recuperación del estado desde archivo
 	loadState { |path, fileName|
-		var archivo, exito = false, newState, pairsArray, extension, contenido;
+		var archivo, exito, newState, pairsArray, extension, contenido, oscRecievedMessagesCopy;
+		exito = false;
 		extension = ".spatch";
 		if (path.isNil) {path = pathState} {pathState = path};
 
@@ -127,10 +128,22 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 			newState = Dictionary.newFrom(contenido);
 
-			// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
-			this.restartState();
+			// 1. En oscRecievedMessagesCopy, las claves que no estén en newState, se reinician a valores iniciales.
+			oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
+			oscRecievedMessagesCopy.keysValuesDo {
+				|key|
+				var initValue;
+				if (newState[key].isNil) {
+					initValue = initState[key];
+					this.setParameterOSC(key, initValue)
+				}
+			};
+			// Ahora newState contiene todas las claves a actualizar. El resto se han reiniciado a valor inicial en el paso anterior.
 
-			// recuperamos valores anteriores en el synthi
+			// 2. Reniciar diccionario oscRecievedMessages.
+			oscRecievedMessages = Dictionary();
+
+			// 3. Ejecutar todos los parámetros al nuevo estado.
 			newState.keysValuesDo {
 				|key, value|
 				this.setParameterOSC(key, value)
