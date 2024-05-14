@@ -345,58 +345,73 @@ SynthiGME {
 
 	// Libera todos los Synths del servidor y cierra la GUI
 	close {
+		var screenBounds = Window.availableBounds;
+		var windowWidth = 300;
+		var windowHeight = 100;
+		var xPos = (screenBounds.width - windowWidth) / 2;
+		var yPos = (screenBounds.height - windowHeight) / 2;
+
+		var dialog = Window("Salir de SynthiGME", Rect(xPos, yPos, windowWidth, windowHeight));
+		var mainText, buttonLayout;
+		var discardButton, cancelButton, saveButton, acceptButton;
+
 		if (modifiedState) {
-			// Obtener las dimensiones de la pantalla
-			var screenBounds = Window.availableBounds;
-			// Definir el tamaño de la ventana
-			var windowWidth = 300;
-			var windowHeight = 100;
-			// Calcular la posición para centrar la ventana
-			var xPos = (screenBounds.width - windowWidth) / 2;
-			var yPos = (screenBounds.height - windowHeight) / 2;
+			mainText = "¿Desea guardar el patch actual?";
+			buttonLayout = HLayout(
+				discardButton = Button().states_([["Descartar", Color.black, Color.white]]).action_({
+					// Acción para descartar cambios y salir
+					"Descartando cambios y saliendo...".postln;
+					// Aquí iría la lógica para salir de la aplicación
+					dialog.close;
+					// Aquí puedes continuar con la función de salir existente
+				}),
+				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
+					// Acción para cancelar el cierre
+					"Cancelando...".postln;
+					dialog.close;
+					// Salir de la función de cierre actual
+					^nil;
+				}),
+				saveButton = Button().states_([["Guardar", Color.black, Color.white]]).action_({
+					// Acción para guardar y salir
+					"Guardando y saliendo...".postln;
+					this.saveStateGUI;
+					dialog.close;
+					// Aquí puedes continuar con la función de salir existente
+				})
+			);
+		} {
+			mainText = "¿Desea salir?";
+			buttonLayout = HLayout(
+				acceptButton = Button().states_([["Aceptar", Color.black, Color.white]]).action_({
+					// Acción para aceptar y salir
 
-			var dialog = Window("Salir de SynthiGME", Rect(xPos, yPos, windowWidth, windowHeight));
-			var discardButton, cancelButton, saveButton;
-
-			dialog.layout = VLayout(
-				StaticText().string_("¿Desea guardar el patch actual?"),
-				HLayout(
-					discardButton = Button().states_([["Descartar", Color.black, Color.white]]).action_({
-						// Acción para descartar cambios y salir
-						"Descartando cambios y saliendo...".postln;
-						// Aquí iría la lógica para salir de la aplicación
-						dialog.close;
-						// Aquí puedes continuar con la función de salir existente
-					}),
-					cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
-						// Acción para cancelar el cierre
-						"Cancelando...".postln;
-						dialog.close;
-						// Salir de la función de cierre actual
-						^nil;
-					}),
-					saveButton = Button().states_([["Guardar", Color.black, Color.white]]).action_({
-						// Acción para guardar y salir
-						"Guardando y saliendo...".postln;
-						this.saveStateGUI;
-						dialog.close;
-						// Aquí puedes continuar con la función de salir existente
-					})
-				)
+					dialog.close;
+					"Saliendo...".postln;
+					{Window.closeAll}.defer(0);
+					server.freeAll;
+					modulRandomGenerator.randomRoutine.stop;
+					if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
+						0.exit;
+					});
+					thisProcess.recompile;
+				}),
+				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
+					// Acción para cancelar el cierre
+					"Cancelando...".postln;
+					dialog.close;
+					// Salir de la función de cierre actual
+					^nil;
+				})
 			);
 
-			dialog.front;
-		} {
-			// Si no hay cambios, continuar con el cierre normalmente
-			"Saliendo...".postln;
-			{Window.closeAll}.defer(0);
-			server.freeAll;
-			modulRandomGenerator.randomRoutine.stop;
-			if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
-				0.exit;
-			});
-			thisProcess.recompile;
-		}
+		};
+		dialog.layout = VLayout(
+			StaticText().string_(mainText),
+			buttonLayout
+		);
+
+		dialog.front;
 	}
 
 	// Actualiza SynthiGME:
