@@ -18,18 +18,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 
-SGME_Knob : Knob{
+Blink_view {
 
 	//*********************************************************************************************
 
-	*initClass {
-		// Inicializa otras clases antes de esta
-		Class.initClassTree(Knob);
-		Class.initClassTree(Blink_view);
-	}
-
-	*new {|parent, bounds|
-		^super.new(parent, bounds);
+	*new {
+		^super.new();
 	}
 
 	init {
