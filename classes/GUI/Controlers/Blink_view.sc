@@ -20,13 +20,31 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 Blink_view {
 
+	var
+	<view,
+	<defaultColor,
+	<blinkColor1,
+	<blinkColor2,
+	<blinkRate,
+	<blinkDuration,
+	<isBlinking,
+	<currentColor;
+
 	//*********************************************************************************************
 
-	*new {
-		^super.new();
+	*new {|view|
+		^super.new.init(view);
 	}
 
-	init {
+	init {|view|
+		// Configuración de colores y parpadeo
+		defaultColor = view.background; // Color predeterminado del slider
+		blinkColor1 = Color.red(alpha: 0.8); // Primer color de parpadeo
+		blinkColor2 = Color.green(alpha: 0.8); // Segundo color de parpadeo
+		blinkRate = 0.1; // Tiempo entre cambios de estado en el parpadeo
+		blinkDuration = 1.0; // Duración total del parpadeo
+		isBlinking = false; // Indicador de si el parpadeo está activo
+		currentColor = defaultColor; // Variable para rastrear el color actual de forma local
 	}
 
 }
