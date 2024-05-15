@@ -45,6 +45,32 @@ Blink_view {
 		blinkDuration = 1.0; // Duración total del parpadeo
 		isBlinking = false; // Indicador de si el parpadeo está activo
 		currentColor = defaultColor; // Variable para rastrear el color actual de forma local
-	}
 
+		view.action_({
+			if (isBlinking.not) { // Verificar si ya está parpadeando
+				isBlinking = true;
+				fork {
+					var startTime = Main.elapsedTime;
+					var endTime = startTime + blinkDuration;
+					while({ Main.elapsedTime < endTime }) {
+						defer {
+							// Alternar colores de forma segura utilizando la variable local
+							if (currentColor == blinkColor1) {
+								view.background = blinkColor2;
+								currentColor = blinkColor2; // Actualizar el estado local
+								"Changing to blinkColor2".postln;
+							} {
+								view.background = blinkColor1;
+								currentColor = blinkColor1; // Actualizar el estado local
+								"Changing to blinkColor1".postln;
+							}
+						};
+						(blinkRate).wait; // Esperar el tiempo definido antes de cambiar de nuevo
+					};
+					defer { view.background = defaultColor; currentColor = defaultColor; }; // Restablecer el color original de forma segura
+					isBlinking = false;
+				};
+			}
+		});
+	}
 }
