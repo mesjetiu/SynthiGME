@@ -21,6 +21,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_Knob : Knob {
 
 	var <blinkView = nil;
+	var actions;
 
 	//*********************************************************************************************
 
@@ -37,11 +38,29 @@ SGME_Knob : Knob {
 	}
 
 	init {
+		actions = [];
 		blinkView = Blink_view(this);
 	}
 
+/*	a = []
+a = a.add({"H".postln})
+a = a.add({"O".postln})
+a.do{|f| f.value}*/
+
+	action_ {|newAction|
+        actions = actions.add(newAction);
+		super.action = {
+			actions.do{|f|
+				f.value
+			}
+		}
+    }
+
 	value_ {|value|
 		super.value = value;
-		this.blinkView.blink;
+		//this.blinkView.blink;
+		actions.do{|f|
+			f.value
+		}
 	}
 }
