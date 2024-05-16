@@ -32,17 +32,17 @@ Blink_view {
 
 	//*********************************************************************************************
 
-	*new {|view|
-		^super.new.init(view);
+	*new {|view, rate|
+		^super.new.init(view, rate);
 	}
 
-	init {|v|
+	init {|v, rate|
 		view = v;
 		// Configuración de colores y parpadeo
 		//defaultColor = view.background; // Color predeterminado del slider
 		blinkColor1 = Color.red(alpha: 1); // Primer color de parpadeo
 		blinkColor2 = Color.green(alpha: 1); // Segundo color de parpadeo
-		blinkRate = 0.1; // Tiempo entre cambios de estado en el parpadeo
+		blinkRate = rate; // Tiempo entre cambios de estado en el parpadeo
 		blinkDuration = 2.0; // Duración total del parpadeo
 		isBlinking = true; // Indicador de si el parpadeo está activo
 		Routine({

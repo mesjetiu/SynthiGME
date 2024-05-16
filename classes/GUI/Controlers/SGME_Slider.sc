@@ -40,7 +40,7 @@ SGME_Slider : Slider {
 
 	init {
 		//actions = [];
-		blinkView = Blink_view(this);
+		blinkView = Blink_view(this, 0.1);
 	}
 
 	value_ {|val|
