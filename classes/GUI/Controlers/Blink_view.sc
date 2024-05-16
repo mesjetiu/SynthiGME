@@ -44,7 +44,11 @@ Blink_view {
 		blinkColor2 = Color.green(alpha: 0.8); // Segundo color de parpadeo
 		blinkRate = 0.1; // Tiempo entre cambios de estado en el parpadeo
 		blinkDuration = 2.0; // Duración total del parpadeo
-		isBlinking = false; // Indicador de si el parpadeo está activo
+		isBlinking = true; // Indicador de si el parpadeo está activo
+		Routine({
+			wait(blinkDuration);
+			isBlinking = false;
+		}).play(AppClock);
 		currentColor = defaultColor; // Variable para rastrear el color actual de forma local
 
 		// Pasar la función blink como referencia usando una función anónima
