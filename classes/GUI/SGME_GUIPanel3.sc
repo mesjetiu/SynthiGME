@@ -93,10 +93,10 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		viewSizes = viewSizes.add([pulseShape, rect]);
 
 		rect = Rect(left + (spacing-7), top - 27, 10, 15);
-		range = Button(parent, rect)
+		range = SGME_Button(parent, rect)
 		.states_([
-			[nil, nil, Color.black], // value 0
-			[nil, nil, Color.red] // value 1
+			["0", Color.white, Color.black], // value 0
+			["1", Color.white, Color.red] // value 1
 		]).
 		value_(1);
 		viewSizes = viewSizes.add([range, rect]);

@@ -5,9 +5,19 @@ k = SGME_Knob.new(window, Rect(20, 10, size, size)).background_(Color.red(alpha:
 //k.color[1] = Color.gray(alpha:0);
 )
 
+k.action = {"***loritooooooo***".postln}
+
+
+k.action = {"cagate, lorito".postln}
+
 k.value
 k.value = 0.25
 k.valueAction = 0.125
+
+a = []
+a = a.add({"H".postln})
+a = a.add({"O".postln})
+a.do{|f| f.value}
 
 // modes
 k.mode = \vert;
@@ -23,7 +33,9 @@ k.canFocus = false
 k.canFocus = true
 
 k.diHola
-(
+
+Button
+
 k.value = 0.2;
 k.value = 0.5;
 k.value = 0.3;
@@ -31,4 +43,5 @@ k.value = 0.1;
 k.value = 0.8;
 k.value = 0.9;
 k.value = 0.2;
-)
+
+SynthiGME().run
