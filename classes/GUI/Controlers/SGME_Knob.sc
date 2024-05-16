@@ -47,27 +47,4 @@ SGME_Knob : Knob {
 		super.value = val;
 		blinkView.blink;
 	}
-
-	//
-	// action_ {|newAction|
-	// 	actions = actions.add(newAction);
-	// 	super.action = {
-	// 		actions.do{|f|
-	// 			f.value;
-	// 		}
-	// 	}
-	// }
-
-/*	value_ {|v|
-		value = v;
-		//this.blinkView.blink;
-		actions.do{|f|
-			f.value
-		}
-		^this;
-	}
-
-	value {
-		^value;
-	}*/
 }
