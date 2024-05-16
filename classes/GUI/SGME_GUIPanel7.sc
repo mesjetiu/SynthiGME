@@ -61,7 +61,7 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 		var filter, pan, on, level;
 
 		rect = Rect(left, top, size, size);
-		filter = Knob(parent, rect)
+		filter = SGME_Knob(parent, rect)
 		.color_([blue, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -71,7 +71,7 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 
 		top = top + 48;
 		rect = Rect(left, top, size, size);
-		pan = Knob(parent, rect)
+		pan = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)

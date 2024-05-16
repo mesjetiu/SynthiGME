@@ -59,7 +59,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		var range1, range2;
 
 		rect = Rect(left, top, size, size);
-		range1 = Knob(parent, rect)
+		range1 = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -69,7 +69,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 
 		top = top + 72;
 		rect = Rect(left, top, size, size);
-		range2 = Knob(parent, rect)
+		range2 = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -108,7 +108,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 
 		3.do({|num|
 			rect = Rect(left, top, size, size);
-			slewRate = Knob(parent, rect)
+			slewRate = SGME_Knob(parent, rect)
 			.color_([red, black, white, nil])
 			.mode_(\vert)
 			.step_(step);

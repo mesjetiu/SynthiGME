@@ -52,7 +52,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 		8.do({|num|
 			var knob;
 			rect = Rect(left, top, size, size);
-			knob = Knob(parent, rect)
+			knob = SGME_Knob(parent, rect)
 			.color_([blue, black, white, nil])
 			.mode_(\vert)
 			.step_(step);
@@ -76,7 +76,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 		8.do({|num|
 			var knob;
 			rect = Rect(left, top, size, size);
-			knob = Knob(parent, rect)
+			knob = SGME_Knob(parent, rect)
 			.color_([white, black, white, nil])
 			.mode_(\vert)
 			.step_(step);
@@ -100,7 +100,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 		4.do({|num|
 			var knob;
 			rect = Rect(left, top, size, size);
-			knob = Knob(parent, rect)
+			knob = SGME_Knob(parent, rect)
 			.color_([white, black, white, nil])
 			.mode_(\vert)
 			.step_(step);
@@ -118,7 +118,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 		4.do({|num|
 			var knob;
 			rect = Rect(left, top, size, size);
-			knob = Knob(parent, rect)
+			knob = SGME_Knob(parent, rect)
 			.color_([white, black, white, nil])
 			.mode_(\vert)
 			.step_(step);
