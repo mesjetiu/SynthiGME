@@ -91,7 +91,7 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 
 		top = top + 40;
 		rect = Rect(left + 10, top, 15, 85);
-		level = Slider(parent, rect)
+		level = SGME_Slider(parent, rect)
 		.background_(white)
 		.knobColor_(black); // no funciona, al menos en mi versión de SuperCollider (3.8.0)
 		viewSizes = viewSizes.add([level, rect]);
