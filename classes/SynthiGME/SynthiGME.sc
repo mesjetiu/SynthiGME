@@ -210,6 +210,8 @@ SynthiGME {
 		SGME_OutputChannel.addSynthDef;
 		SGME_PatchbayAudio.addSynthDef;
 		SGME_PatchbayVoltage.addSynthDef;
+
+		this.run;
 	}
 
 
