@@ -36,9 +36,10 @@ Blink_view {
 		^super.new.init(view);
 	}
 
-	init {|view|
+	init {|v|
+		view = v;
 		// Configuración de colores y parpadeo
-		defaultColor = view.background; // Color predeterminado del slider
+		//defaultColor = view.background; // Color predeterminado del slider
 		blinkColor1 = Color.red(alpha: 0.8); // Primer color de parpadeo
 		blinkColor2 = Color.green(alpha: 0.8); // Segundo color de parpadeo
 		blinkRate = 0.1; // Tiempo entre cambios de estado en el parpadeo
@@ -46,31 +47,41 @@ Blink_view {
 		isBlinking = false; // Indicador de si el parpadeo está activo
 		currentColor = defaultColor; // Variable para rastrear el color actual de forma local
 
-		view.action_({
-			if (isBlinking.not) { // Verificar si ya está parpadeando
-				isBlinking = true;
-				fork {
-					var startTime = Main.elapsedTime;
-					var endTime = startTime + blinkDuration;
-					while({ Main.elapsedTime < endTime }) {
-						defer {
-							// Alternar colores de forma segura utilizando la variable local
-							if (currentColor == blinkColor1) {
-								view.background = blinkColor2;
-								currentColor = blinkColor2; // Actualizar el estado local
-								"Changing to blinkColor2".postln;
-							} {
-								view.background = blinkColor1;
-								currentColor = blinkColor1; // Actualizar el estado local
-								"Changing to blinkColor1".postln;
-							}
-						};
-						(blinkRate).wait; // Esperar el tiempo definido antes de cambiar de nuevo
+		// Pasar la función blink como referencia usando una función anónima
+		view.action_({ this.blink });
+
+	}
+
+	blink {
+		if (isBlinking.not) { // Verificar si ya está parpadeando
+			var defaultColor = view.background;
+			isBlinking = true;
+			fork {
+				var startTime = Main.elapsedTime;
+				var endTime = startTime + blinkDuration;
+				while({ Main.elapsedTime < endTime }) {
+					defer {
+						// Alternar colores de forma segura utilizando la variable local
+						if (currentColor == blinkColor1) {
+							view.background = blinkColor2;
+							currentColor = blinkColor2; // Actualizar el estado local
+							"Changing to blinkColor2".postln;
+						} {
+							view.background = blinkColor1;
+							currentColor = blinkColor1; // Actualizar el estado local
+							"Changing to blinkColor1".postln;
+						}
 					};
-					defer { view.background = defaultColor; currentColor = defaultColor; }; // Restablecer el color original de forma segura
-					isBlinking = false;
+					(blinkRate).wait; // Esperar el tiempo definido antes de cambiar de nuevo
 				};
-			}
-		});
+				defer { view.background = defaultColor; currentColor = defaultColor; }; // Restablecer el color original de forma segura
+				isBlinking = false;
+			};
+		}
+	}
+
+	setDefaultColor_ {|color|
+		defaultColor = color;
 	}
 }
+

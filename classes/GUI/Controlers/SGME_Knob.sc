@@ -20,7 +20,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 SGME_Knob : Knob {
 
-	var blinkView = nil;
+	var <blinkView = nil;
 
 	//*********************************************************************************************
 
@@ -38,5 +38,10 @@ SGME_Knob : Knob {
 
 	init {
 		blinkView = Blink_view(this);
+	}
+
+	value_ {|value|
+		super.value = value;
+		this.blinkView.blink;
 	}
 }
