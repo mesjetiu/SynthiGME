@@ -363,7 +363,7 @@ SynthiGME {
 					"Descartando cambios y saliendo...".postln;
 					// Aquí iría la lógica para salir de la aplicación
 					dialog.close;
-					// Aquí puedes continuar con la función de salir existente
+					this.exit;
 				}),
 				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
 					// Acción para cancelar el cierre
@@ -388,13 +388,7 @@ SynthiGME {
 
 					dialog.close;
 					"Saliendo...".postln;
-					{Window.closeAll}.defer(0);
-					server.freeAll;
-					modulRandomGenerator.randomRoutine.stop;
-					if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
-						0.exit;
-					});
-					thisProcess.recompile;
+					this.exit;
 				}),
 				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
 					// Acción para cancelar el cierre
@@ -412,6 +406,16 @@ SynthiGME {
 		);
 
 		dialog.front;
+	}
+
+	exit {
+		{Window.closeAll}.defer(0);
+		server.freeAll;
+		modulRandomGenerator.randomRoutine.stop;
+		if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
+			0.exit;
+		});
+		thisProcess.recompile;
 	}
 
 	// Actualiza SynthiGME:
