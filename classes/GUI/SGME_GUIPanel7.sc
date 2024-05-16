@@ -81,10 +81,10 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 
 		top = top + 43;
 		rect = Rect(left + 12.3, top, 10, 15);
-		on = Button(parent, rect)
+		on = SGME_Button(parent, rect)
 		.states_([
-			[nil, nil, Color.black], // value 0
-			[nil, nil, Color.red] // value 1
+			["0", Color.white, Color.black], // value 0
+			["1", Color.white, Color.red] // value 1
 		]).
 		value_(0);
 		viewSizes = viewSizes.add([on, rect]);
