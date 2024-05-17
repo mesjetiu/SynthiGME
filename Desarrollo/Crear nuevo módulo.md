@@ -1,33 +1,33 @@
 - Crear una nueva rama para desarrollo del módulo.
 
 - Crear la clase dummy. 
-	Copiar una clase existente con un comportamiento similar en cuanto a entradas y salidas. 
-	Adaptar nombre, nombre del synth, entradas y salidas, métodos.
-	Crear un bypass en el synth (para probar más adelante)
+	- Copiar una clase existente con un comportamiento similar en cuanto a entradas y salidas. 
+	- Adaptar nombre, nombre del synth, entradas y salidas, métodos.
+	- Crear un bypass en el synth (para probar más adelante)
 	Comprobar que compila.
 
 - Editar SynthiGME.sc
-	Añadir variable modul[...] al principio de la clase.
-	Añadir línea en *initClass.
-	Añadir declaración de [modul].addSynthDef en init.
-	En run():
-		Añadir instanciación de módulo en server.waitForBoot().
-		Arrancar synths de módulo.
-	En este punto debería poder compilar y ejecutarse sin fallos.
+	- Añadir variable modul[...] al principio de la clase.
+	- Añadir línea en *initClass.
+	- Añadir declaración de [modul].addSynthDef en init.
+	- En run():
+		- Añadir instanciación de módulo en server.waitForBoot().
+		- Arrancar synths de módulo.
+	- En este punto debería poder compilar y ejecutarse sin fallos.
 	
 - Editar SGME_PatchbayAudio (si procede):
-	Añadir módulo en ordenateIntputsOutputs() con el número que corresponde en el panel tanto de input como de output (si los hubiera)
-	Añadir entrada del módulo en connect().
+	- Añadir módulo en ordenateIntputsOutputs() con el número que corresponde en el panel tanto de input como de output (si los hubiera)
+	- Añadir entrada del módulo en connect().
 
 - Editar SynthiGME.sc
-	En run():
-		Arrancar synth de módulo.
-		Añadir entrada del módulo en "conexiones de entrada y salida de cada módulo en el patchbay de audio".
+	- En run():
+		- Arrancar synth de módulo.
+		- Añadir entrada del módulo en "conexiones de entrada y salida de cada módulo en el patchbay de audio".
 
 - Editar "synthiGME_setParameterOSC:
-		Añadir entrada del módulo con código OSC.
-		Forzar "level = 1" en el módulo para hacer bypass.
-	En este punto debería poder compilar, ejecutarse sin fallos. Debería poder utilizarse el módulo aunque sea dummy.
+	- Añadir entrada del módulo con código OSC.
+	- Forzar "level = 1" en el módulo para hacer bypass.
+	- En este punto debería poder compilar, ejecutarse sin fallos. Debería poder utilizarse el módulo aunque sea dummy.
 	
 - Editar forbidenRows y forbidenColumns en makeNodeTable() y makeRow() en Panel 5 y Panel 6 según corresponda para que estén habilitados los nodos.
 	
