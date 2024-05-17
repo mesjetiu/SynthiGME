@@ -23,6 +23,9 @@ SGME_Oscilloscope : SGME_Connectable {
 	var <synth = nil;
 	var <server;
 
+	// ScopeView
+	var view = nil;
+
 	// Buses de entrada y salida de audio
 	var <inputBusCH1;
 	var <inFeedbackBusCH1;
@@ -60,8 +63,8 @@ SGME_Oscilloscope : SGME_Connectable {
 			sigInCH1 = In.ar(inputBusCH1) + InFeedback.ar(inFeedbackBusCH1);
 			sigInCH2 = In.ar(inputBusCH2) + InFeedback.ar(inFeedbackBusCH2);
 
-			//ScopeOut2.ar([sigInCH1, sigInCH2], stereoBufferNum);
-			Out.ar(0, [sigInCH1, sigInCH2] );
+			ScopeOut2.ar([sigInCH1, sigInCH2], stereoBufferNum);
+			//Out.ar(0, [sigInCH1, sigInCH2] );
 			//Out.ar(0, PinkNoise.ar!2)
 		}).add
 	}
@@ -102,7 +105,7 @@ SGME_Oscilloscope : SGME_Connectable {
 				\inputBusCH2, inputBusCH2,
 				\inFeedbackBusCH2, inFeedbackBusCH2,
 				\stereoBufferNum, stereoBuffer.bufnum
-			], server).register;
+			], RootNode(server), \addToTail).register;
 		});
 		this.synthRun;
 	}
@@ -126,6 +129,8 @@ SGME_Oscilloscope : SGME_Connectable {
 		scopeView.bufnum = stereoBuffer.bufnum;
 		scopeView.server = server;
 		scopeView.background = fondoOscilloscope;
+		scopeView.start;
+		view = scopeView;
 		^scopeView;
 	}
 }
