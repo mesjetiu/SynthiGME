@@ -34,6 +34,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 		image = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "panels" +/+ "panel_2");
 		compositeView.setBackgroundImage(image,10);
 
+		this.makeOscilloscope(compositeView, 110, 60);
 		this.makeFilterBank(compositeView, 31.2, 312);
 		this.makeInputAmplifiers(compositeView, 31.2, 367);
 		this.makeExternalTreatmenDevices(compositeView, 31.2, 422);
@@ -43,6 +44,16 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 		this.resizePanel(Window.availableBounds.width/virtualWidth);
 		this.saveOrigin;
 		window.front;
+	}
+
+	makeOscilloscope {|parent, left, top|
+		var width = 102.2; // 100 102
+		var height = 82.7; // 84 83 82
+		var rect = Rect(left, top, width, height);
+		var oscilloscope;
+		oscilloscope = synthiGME.modulOscilloscope.makeOscilloscope(parent, rect);
+		viewSizes = viewSizes.add([oscilloscope, rect]);
+		parameterViews.put("/oscilloscope", oscilloscope); // Ejemplo: /oscilloscope
 	}
 
 	makeFilterBank {|parent, left, top|

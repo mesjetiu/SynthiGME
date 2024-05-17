@@ -119,4 +119,12 @@ SGME_Oscilloscope : SGME_Connectable {
 			synth.run(true);
 		});
 	}
+
+	makeOscilloscope {|parent, rect|
+		var scopeView;
+		scopeView = ScopeView(parent, rect);
+		scopeView.bufnum = stereoBuffer.bufnum;
+		scopeView.server = server;
+		^scopeView;
+	}
 }
