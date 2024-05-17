@@ -122,7 +122,7 @@ SGME_Echo : SGME_Connectable {
 				\level, this.convertLevel(level),
 			], server).register;
 		});
-		//	this.synthRun;
+		this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
