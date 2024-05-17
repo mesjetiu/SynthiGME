@@ -1,14 +1,16 @@
 # Implementar:
-- save() ejecutará saveState() o saveStateGUI() en función de si hay un archivo recién guardado/cargado. Si se llama a saveAs() se llamará a siempre a saveStateGUI().
-- Crear diálogo al cerrar aplicación, si se quiere guardar patch.
-- Archivo de configuración personal de usuario (para recordar paths y otras variables personales).
+- Módulo Osciloscopio (en proceso)
+	+ Creado hasta unión de patchbay audio. Falta:
+		* Unir a patchbay voltage.
+		* Añadir controles y knobs (ScopeView tiene star() y stop(), útil).
+		* Depurar el synth, el uso del buffer, del bus... sobran cosas.
+		* Retocar colores y apariencia final.
 - Módulo External Treatmen Device: terminar. Está hecha la GUI.
 - Módulo Envelope Followers: terminar. Está hecha la GUI.
 - Explorar y mejorar la conectividad entre varios SynthiGME y otros dipositivos OSC.
 - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables).
-- Parpadeo de las views cuando se modifican, para ser vistas en la pantalla, especialmente si se modifican sus parámetros remotamente por OSC.
+- Archivo de configuración personal de usuario (para recordar paths y otras variables personales).
 - Módulo Joystick.
-- Módulo Osciloscopio.
 - Send outputs (pensaba que estaban hechos, pero no aparecen en en panel de audio).
 - Poner variables relevantes de módulos en configuración.
 - Hacer el archivo de configuración en JSON.
