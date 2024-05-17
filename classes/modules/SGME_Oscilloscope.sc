@@ -60,7 +60,9 @@ SGME_Oscilloscope : SGME_Connectable {
 			sigInCH1 = In.ar(inputBusCH1) + InFeedback.ar(inFeedbackBusCH1);
 			sigInCH2 = In.ar(inputBusCH2) + InFeedback.ar(inFeedbackBusCH2);
 
-			ScopeOut2.ar([sigInCH1, sigInCH2], stereoBufferNum);
+			//ScopeOut2.ar([sigInCH1, sigInCH2], stereoBufferNum);
+			//Out.ar(0, [sigInCH1, sigInCH2] );
+			Out.ar(0, PinkNoise.ar!2)
 
 		}).add
 	}
@@ -95,7 +97,7 @@ SGME_Oscilloscope : SGME_Connectable {
 	// Crea el Synth en el servidor
 	createSynth {
 		if(synth.isPlaying==false, {
-			synth = Synth(\SGME_Reverb, [
+			synth = Synth(\SGME_Oscilloscope, [
 				\inputBusCH1, inputBusCH1,
 				\inFeedbackBusCH1, inFeedbackBusCH1,
 				\inputBusCH2, inputBusCH2,
@@ -103,7 +105,7 @@ SGME_Oscilloscope : SGME_Connectable {
 				\stereoBufferNum, stereoBuffer.bufnum
 			], server).register;
 		});
-		//	this.synthRun;
+		this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su entrada es 0 o no.

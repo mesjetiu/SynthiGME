@@ -147,14 +147,14 @@ SGME_PatchbayAudio : SGME_Patchbay{
 		array[index-1] = Dictionary.newFrom(List[
 			\modul, oscilloscope,
 			\synth, oscilloscope.synth,
-			\inputBus, oscilloscope.inputBusCH1,
+			\inBus, oscilloscope.inputBusCH1,
 			\inFeedbackBus, oscilloscope.inFeedbackBusCH1,
 		]);
 		index = 58;
 		array[index-1] = Dictionary.newFrom(List[
 			\modul, oscilloscope,
 			\synth, oscilloscope.synth,
-			\inputBus, oscilloscope.inputBusCH2,
+			\inBus, oscilloscope.inputBusCH2,
 			\inFeedbackBus, oscilloscope.inFeedbackBusCH2,
 		]);
 
