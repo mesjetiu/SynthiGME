@@ -122,9 +122,11 @@ SGME_Oscilloscope : SGME_Connectable {
 
 	makeOscilloscope {|parent, rect|
 		var scopeView;
+		var fondoOscilloscope = Color.new255(77, 118, 147); // Color de fondo del osciloscopio.
 		scopeView = ScopeView(parent, rect);
 		scopeView.bufnum = stereoBuffer.bufnum;
 		scopeView.server = server;
+		scopeView.background = fondoOscilloscope;
 		^scopeView;
 	}
 }
