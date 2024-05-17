@@ -61,9 +61,8 @@ SGME_Oscilloscope : SGME_Connectable {
 			sigInCH2 = In.ar(inputBusCH2) + InFeedback.ar(inFeedbackBusCH2);
 
 			//ScopeOut2.ar([sigInCH1, sigInCH2], stereoBufferNum);
-			//Out.ar(0, [sigInCH1, sigInCH2] );
-			Out.ar(0, PinkNoise.ar!2)
-
+			Out.ar(0, [sigInCH1, sigInCH2] );
+			//Out.ar(0, PinkNoise.ar!2)
 		}).add
 	}
 
