@@ -45,6 +45,7 @@ SynthiGME {
 	var <modulOutputChannels;
 	var <modulPatchbayAudio;
 	var <modulPatchbayVoltage;
+	var <modulOscilloscope;
 
 	// Almacena los Synths que conectan los canales de salida de SC con los de los módulos
 	var <connectionOut = nil;
@@ -110,6 +111,7 @@ SynthiGME {
 		Class.initClassTree(SGME_OutputChannel);
 		Class.initClassTree(SGME_PatchbayAudio);
 		Class.initClassTree(SGME_PatchbayVoltage);
+		Class.initClassTree(SGME_Oscilloscope);
 		Class.initClassTree(SGME_GUI);
 	}
 
@@ -210,6 +212,7 @@ SynthiGME {
 		SGME_OutputChannel.addSynthDef;
 		SGME_PatchbayAudio.addSynthDef;
 		SGME_PatchbayVoltage.addSynthDef;
+		SGME_Oscilloscope.addSynthDef;
 
 		this.run;
 	}

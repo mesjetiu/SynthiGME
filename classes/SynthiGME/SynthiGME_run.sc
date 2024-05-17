@@ -115,6 +115,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					modulOutputChannels = 8.collect({SGME_OutputChannel(server)});
 					modulPatchbayAudio = SGME_PatchbayAudio(server);
 					modulPatchbayVoltage = SGME_PatchbayVoltage(server);
+					modulPatchbayVoltage = SGME_Oscilloscope(server);
 
 					server.sync;
 
