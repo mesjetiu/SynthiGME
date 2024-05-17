@@ -147,11 +147,17 @@ SGME_PatchbayAudio : SGME_Patchbay{
 		array[index-1] = Dictionary.newFrom(List[
 			\modul, oscilloscope,
 			\synth, oscilloscope.synth,
-			\inputBusCH1, oscilloscope.inputBusCH1,
-			\inputBusCH2, oscilloscope.inputBusCH2,
-			\inFeedbackBusCH1, oscilloscope.inFeedbackBusCH1,
-			\inFeedbackBusCH2, oscilloscope.inFeedbackBusCH2,
+			\inputBus, oscilloscope.inputBusCH1,
+			\inFeedbackBus, oscilloscope.inFeedbackBusCH1,
 		]);
+		index = 58;
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, oscilloscope,
+			\synth, oscilloscope.synth,
+			\inputBus, oscilloscope.inputBusCH2,
+			\inFeedbackBus, oscilloscope.inFeedbackBusCH2,
+		]);
+
 
 		// Outputs verticales (67-126) ///////////////////////////////////////////////////////////////////////////////////////////
 		index = 67; // Inputs de Amplificador del 67-74
