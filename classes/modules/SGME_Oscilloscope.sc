@@ -80,6 +80,18 @@ SGME_Oscilloscope : SGME_Connectable {
 		});
 	}
 
+	setVarSensCH1 {|value|
+		varSensCH1 = value;
+	}
+
+	setVarSensCH2 {|value|
+		varSensCH2 = value;
+	}
+
+	setMode {|value|
+
+	}
+
 	// Crea el Synth en el servidor
 	createSynth {
 		if(synth.isPlaying==false, {

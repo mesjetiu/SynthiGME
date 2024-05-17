@@ -115,7 +115,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					modulOutputChannels = 8.collect({SGME_OutputChannel(server)});
 					modulPatchbayAudio = SGME_PatchbayAudio(server);
 					modulPatchbayVoltage = SGME_PatchbayVoltage(server);
-					modulPatchbayVoltage = SGME_Oscilloscope(server);
+					modulOscilloscope = SGME_Oscilloscope(server);
 
 					server.sync;
 
@@ -328,6 +328,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					});
 					"OK\n".post;
 
+					// Oscilloscope
+					"Oscilloscope...".post;
+					modulOscilloscope.createSynth;
+					server.sync;
+					"OK\n".post;
+
 					// conexiones de entrada y salida de cada módulo en el patchbay de audio
 					"Conexiones en Patchbay de audio...".post;
 					modulPatchbayAudio.connect(
@@ -342,6 +348,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						ringModulators: modulRingModulators,
 						echo: modulEcho,
 						outputChannels: modulOutputChannels,
+						oscilloscope: modulOscilloscope,
 					);
 					"OK\n".post;
 

@@ -21,6 +21,7 @@
 
 - Editar SynthiGME.sc
 	En run():
+		Arrancar synth de módulo.
 		Añadir entrada del módulo en "conexiones de entrada y salida de cada módulo en el patchbay de audio".
 
 - Editar "synthiGME_setParameterOSC:

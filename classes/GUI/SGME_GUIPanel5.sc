@@ -66,7 +66,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		window.front;
 	}
 
-	makeNodeTable { /////////BUG AQUÍ DENTRO... (WINDOWS)
+	makeNodeTable {
 		// Se crean los nodos (botones)
 		var left = 56.2;
 		var top = 55; // 55
@@ -99,7 +99,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		var nodeCountVer = 1;
 		var spacing = 5.75;
 		var numColumns = 67;
-		var forbidenColumns = (44..58) ++ [65, 66]; // Estas columnas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
+		var forbidenColumns = (44..56) ++ [65, 66]; // Estas columnas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
 
 		Platform.case(
 			\osx,       { },

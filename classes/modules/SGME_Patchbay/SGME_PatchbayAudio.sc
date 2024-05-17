@@ -21,7 +21,7 @@ SGME_PatchbayAudio : SGME_Patchbay{
 
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	connect {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, oscilloscope, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			reverb: reverb,
 			inputAmplifiers: inputAmplifiers,
@@ -33,13 +33,14 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			noiseGenerators: noiseGenerators,
 			ringModulators: ringModulators,
 			echo: echo,
+			oscilloscope: oscilloscope,
 			outputChannels: outputChannels,
 		);
 		this.makeValues(); // Pone valores de 0 a todos los nodos existentes.
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, outputChannels|
+	ordenateInputsOutputs {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, oscilloscope outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -141,6 +142,16 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		index = 57; // Entrada al Oscilloscope, números 57 y 58 horizontales
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, oscilloscope,
+			\synth, oscilloscope.synth,
+			\inputBusCH1, oscilloscope.inputBusCH1,
+			\inputBusCH2, oscilloscope.inputBusCH2,
+			\inFeedbackBusCH1, oscilloscope.inFeedbackBusCH1,
+			\inFeedbackBusCH2, oscilloscope.inFeedbackBusCH2,
+		]);
 
 		// Outputs verticales (67-126) ///////////////////////////////////////////////////////////////////////////////////////////
 		index = 67; // Inputs de Amplificador del 67-74
