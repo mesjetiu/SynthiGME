@@ -24,7 +24,7 @@ SGME_Oscilloscope : SGME_Connectable {
 	var <server;
 
 	// ScopeView
-	var view = nil;
+	var oscilloscope = nil;
 
 	// Buses de entrada y salida de audio
 	var <inputBusCH1;
@@ -116,21 +116,26 @@ SGME_Oscilloscope : SGME_Connectable {
 		if (inputTotal == 0, {
 			running = false;
 			synth.run(false);
+			oscilloscope.stop;
 		}, {
 			running = true;
 			synth.run(true);
+			oscilloscope.start;
 		});
 	}
 
 	makeOscilloscope {|parent, rect|
 		var scopeView;
 		var fondoOscilloscope = Color.new255(77, 118, 147); // Color de fondo del osciloscopio.
+		var oscilloscopeWave = Color.new255(0, 235, 253);
 		scopeView = ScopeView(parent, rect);
 		scopeView.bufnum = stereoBuffer.bufnum;
 		scopeView.server = server;
 		scopeView.background = fondoOscilloscope;
+		scopeView.waveColors = oscilloscopeWave!2; // un array de colores, uno color por canal.
+		scopeView.fill = false; // para que dibuje líneas sin rellenar
 		scopeView.start;
-		view = scopeView;
+		oscilloscope = scopeView;
 		^scopeView;
 	}
 }
