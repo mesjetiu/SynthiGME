@@ -40,7 +40,7 @@ SGME_PatchbayAudio : SGME_Patchbay{
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, oscilloscope outputChannels|
+	ordenateInputsOutputs {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, oscilloscope, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
