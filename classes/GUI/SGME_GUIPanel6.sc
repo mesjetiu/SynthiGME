@@ -79,7 +79,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var nodeCountVer = 1;
 		var spacing = 5.75;
 		var numColumns = 67;
-		var forbidenColumns = (60..66); // Estas columnas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
+		var forbidenColumns = (60..62) ++ [65, 66]; // Estas columnas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
 		Platform.case(
 			\osx,       { },
 			\linux,     { },

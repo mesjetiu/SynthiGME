@@ -21,7 +21,7 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, outputChannels|
+	connect {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels|
 		inputsOutputs = this.ordenateInputsOutputs(
 			reverb: reverb,
 			echo: echo,
@@ -31,13 +31,14 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			randomGenerator: randomGenerator,
 			slewLimiters: slewLimiters,
 			oscillators: oscillators,
+			oscilloscope: oscilloscope,
 			outputChannels: outputChannels,
 		);
 		this.makeValues(); // Pone valores de 0 a todos los nodos existentes.
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, outputChannels|
+	ordenateInputsOutputs {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -179,6 +180,21 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		index = 63; // Entrada al Oscilloscope, números 63 y 64 horizontales
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, oscilloscope,
+			\synth, oscilloscope.synth,
+			\inBus, oscilloscope.inputBusCH1,
+			\inFeedbackBus, oscilloscope.inFeedbackBusCH1,
+		]);
+		index = 64;
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, oscilloscope,
+			\synth, oscilloscope.synth,
+			\inBus, oscilloscope.inputBusCH2,
+			\inFeedbackBus, oscilloscope.inFeedbackBusCH2,
+		]);
 
 		// Outputs verticales (67-126) ////////////////////////////////////////////////////////////
 		index = 67; // Inputs de Amplificador 67-74

@@ -363,6 +363,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						oscillators: modulOscillators,
 						randomGenerator: modulRandomGenerator,
 						slewLimiters: modulSlewLimiters,
+						oscilloscope: modulOscilloscope,
 						outputChannels: modulOutputChannels,
 					);
 					"OK\n".post;
