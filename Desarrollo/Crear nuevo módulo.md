@@ -19,7 +19,7 @@
 	- Añadir módulo en ordenateIntputsOutputs() con el número que corresponde en el panel tanto de input como de output (si los hubiera)
 	- Añadir entrada del módulo en connect().
 
-4. Editar SynthiGME.sc
+4. Editar SynthiGME_run.sc
 	- En run():
 		- Arrancar synth de módulo.
 		- Añadir entrada del módulo en "conexiones de entrada y salida de cada módulo en el patchbay de audio".
