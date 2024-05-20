@@ -1,10 +1,9 @@
 # Implementar:
 - Módulo Osciloscopio (en proceso)
 	+ Creado hasta unión de patchbay audio. Falta:
-		* Unir a patchbay voltage.
 		* Añadir controles y knobs (ScopeView tiene star() y stop(), útil).
 		* Depurar el synth, el uso del buffer, del bus... sobran cosas.
-		* Retocar colores y apariencia final.
+		* Retocar apariencia final.
 - Módulo External Treatmen Device: terminar. Está hecha la GUI.
 - Módulo Envelope Followers: terminar. Está hecha la GUI.
 - Explorar y mejorar la conectividad entre varios SynthiGME y otros dipositivos OSC.
