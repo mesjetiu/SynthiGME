@@ -169,10 +169,20 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		synthiGME.guiSC.panels.do({|panel, i|
 			if (i == numPanel, {
 				panel.hasFocus = true;
+			//	panel.window.visible = false; // al hacer invisible y volver a hacer visible, se fuerza el foco, que con panel.window.view.focus(true) no parece conseguirse
+			//	panel.window.visible = true;
 			}, {
 				panel.hasFocus = false;
+			//	window.view.focus = false;
 			})
 		})
+	}
+
+	goFront {
+		var bounds = window.bounds;
+		window.alwaysOnTop = true;
+		window.alwaysOnTop = false;
+		this.focus;
 	}
 
 

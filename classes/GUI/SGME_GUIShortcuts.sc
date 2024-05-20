@@ -36,13 +36,13 @@ SGME_GUIShortcuts {
 				43, {this.resizeFocusedPanel(factor)}, // +
 				45, {this.resizeFocusedPanel(1/factor)}, // -
 				102, {synthiGME.guiSC.frontWindows}, // f (front) Todas las ventanas al frente
-				49, {synthiGME.guiSC.panels[0].window.front; synthiGME.guiSC.panels[0].focus(0)}, // Tecla 1: Panel 1 al frente
-				50, {synthiGME.guiSC.panels[1].window.front; synthiGME.guiSC.panels[0].focus(1)}, // Tecla 2: Panel 2 al frente
-				51, {synthiGME.guiSC.panels[2].window.front; synthiGME.guiSC.panels[0].focus(2)}, // Tecla 3: Panel 3 al frente
-				52, {synthiGME.guiSC.panels[3].window.front; synthiGME.guiSC.panels[0].focus(3)}, // Tecla 4: Panel 4 al frente
-				53, {synthiGME.guiSC.panels[4].window.front; synthiGME.guiSC.panels[0].focus(4)}, // Tecla 5: Panel 5 al frente
-				54, {synthiGME.guiSC.panels[5].window.front; synthiGME.guiSC.panels[0].focus(5)}, // Tecla 6: Panel 6 al frente
-				55, {synthiGME.guiSC.panels[6].window.front; synthiGME.guiSC.panels[0].focus(6)}, // Tecla 7: Panel 7 al frente
+				49, {synthiGME.guiSC.panels[0].window.front; synthiGME.guiSC.panels[0].focus(0); synthiGME.guiSC.panels[0].goFront;}, // Tecla 1: Panel 1 al frente
+				50, {synthiGME.guiSC.panels[1].window.front; synthiGME.guiSC.panels[1].focus(1); synthiGME.guiSC.panels[1].goFront;}, // Tecla 2: Panel 2 al frente
+				51, {synthiGME.guiSC.panels[2].window.front; synthiGME.guiSC.panels[2].focus(2); synthiGME.guiSC.panels[2].goFront;}, // Tecla 3: Panel 3 al frente
+				52, {synthiGME.guiSC.panels[3].window.front; synthiGME.guiSC.panels[3].focus(3); synthiGME.guiSC.panels[3].goFront;}, // Tecla 4: Panel 4 al frente
+				53, {synthiGME.guiSC.panels[4].window.front; synthiGME.guiSC.panels[4].focus(4); synthiGME.guiSC.panels[4].goFront;}, // Tecla 5: Panel 5 al frente
+				54, {synthiGME.guiSC.panels[5].window.front; synthiGME.guiSC.panels[5].focus(5); synthiGME.guiSC.panels[5].goFront;}, // Tecla 6: Panel 6 al frente
+				55, {synthiGME.guiSC.panels[6].window.front; synthiGME.guiSC.panels[6].focus(6); synthiGME.guiSC.panels[6].goFront;}, // Tecla 7: Panel 7 al frente
 				79, {// Shift + O: Todos los Paneles a posición y tamaño original
 					synthiGME.guiSC.panels.do({|panel|
 						panel.goToOrigin
