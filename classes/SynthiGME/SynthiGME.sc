@@ -19,6 +19,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 SynthiGME {
 
+	classvar <version;
+
 	// Opciones de inicio:
 	var <server; // Servidor de audio a utilizar
 	var <>verboseOSC; // true: se muestran en Post Window los mensajes OSC enviados al synthi.
@@ -172,6 +174,8 @@ SynthiGME {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ|
+		version = "1.7.0";
+
 		// Carga la configuración
 		settings = SGME_Settings.get;
 
