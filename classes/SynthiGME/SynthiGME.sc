@@ -256,7 +256,7 @@ SynthiGME {
 				oscDevices.do({|i|
 					netAddr.add(NetAddr(i[0], i[1]));
 				});
-				this.sendStateOSC;
+				//this.sendStateOSC;
 			});
 		}).play;
 	}
@@ -289,6 +289,19 @@ SynthiGME {
 				})
 			})
 		});
+	}
+
+	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
+	ping {|ip = "192.168.1.255", port = 9000, times = 10|
+		var netAddr = NetAddr(ip, port);
+		NetAddr.broadcastFlag = true;
+		fork {
+			times.do {
+				netAddr.sendMsg(\ping);
+				3.wait;
+			};
+			NetAddr.broadcastFlag = false;
+		}
 	}
 
 	// REVISAR SI HACE FALTA
