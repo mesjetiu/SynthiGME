@@ -174,7 +174,7 @@ SynthiGME {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ|
-		version = "1.7.0";
+		version = "1.8.rc.1";
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
