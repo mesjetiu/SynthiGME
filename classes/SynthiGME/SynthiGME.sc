@@ -304,7 +304,7 @@ SynthiGME {
 		}
 	}
 
-	// REVISAR SI HACE FALTA
+	// OBSOLETO. QUIZÁS APROVECHABLE...
 	// Envía el estado de todo el Synthi por OSC
 	// Para mejorarlo sería bueno mandar un bundle.
 	sendStateOSC {

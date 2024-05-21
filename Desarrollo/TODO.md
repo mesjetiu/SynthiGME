@@ -6,7 +6,13 @@
 		* Retocar apariencia final.
 - Módulo External Treatmen Device: terminar. Está hecha la GUI.
 - Módulo Envelope Followers: terminar. Está hecha la GUI.
-- Explorar y mejorar la conectividad entre varios SynthiGME y otros dipositivos OSC.
+- Rescribir conectividad OSC:
+	+ Los puertos por defecto estarán siempre abiertos (preparación inicial).
+	+ Se calcula la propia ip y se guarda (preparación inicial).
+	+ Cuando se mueve un mando: se envía (ECO) el mensaje broadcasting al puerto.
+	+ Cuando se recibe un mensaje:
+		- Si proviene de la propia ip, se ignora. Si no, se ejecuta SIN ECO.
+	+ setParameterOSC() ha de admitir: mensaje, valor, bool eco.
 - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables).
 - Archivo de configuración personal de usuario (para recordar paths y otras variables personales).
 - Módulo Joystick.
