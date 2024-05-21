@@ -176,7 +176,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				hor = splitted[1].asInteger + 32;
 				modulPatchbayAudio.administrateNode(ver, hor, value);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -204,7 +204,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -219,7 +219,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -234,7 +234,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -282,7 +282,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -297,7 +297,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -316,7 +316,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -345,7 +345,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -361,7 +361,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -384,7 +384,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -425,7 +425,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -443,7 +443,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -469,7 +469,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
@@ -491,7 +491,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				if (broadcast = false) {
+				if (broadcast == false) {
 					this.sendBroadcastMsg(string, value);
 				}
 			},
