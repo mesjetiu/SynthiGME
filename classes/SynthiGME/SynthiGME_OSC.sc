@@ -31,8 +31,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// se ejecuta la orden recibida por mensaje.
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
 			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip) && (msg[0].asString != "/ping")){
-				addr.ip.postln;
-				myIp.postln;
+				"recibido".postln;
 				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false)
 			};
 		};
