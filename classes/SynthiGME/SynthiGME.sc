@@ -68,7 +68,9 @@ SynthiGME {
 	// Función que se utiliza para escuchar todos los puertos OSC. Es variable de clase para poder añadirla y suprimirla desde cualquier instancia.
 	classvar functionOSC = nil;
 	// Puerto por defecto de envío de mensajes OSC (por defecto en TouchOSC)
-	var devicePort;
+	var <devicePort;
+	// ip de la red local para evitar ecos de mensajes OSC
+	var <myIp;
 
 
 	// ****** Variables para rastrear, guardar y recuperar estados (patches)
@@ -181,6 +183,9 @@ SynthiGME {
 
 		pathState = Platform.userHomeDir; // path por defecto donde guardar estados
 		oscRecievedMessages = Dictionary.new;
+
+		// Busca la IP de la red local:
+		//this.getLocalIP;
 
 		guiSC = SGME_GUI(this);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
