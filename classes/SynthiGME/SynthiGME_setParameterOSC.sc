@@ -71,7 +71,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				// Se envía el mismo mensaje a GUI si está abierta
 				//if(guiSC.running, {guiSC.parameterViews[string].value = value.linlin(0,10,0,1);});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				this.sendBroadcastMsg(string, value, addrForbidden);
+				if (broadcast) {
+					this.sendBroadcastMsg(string, value);
+				}
 			},
 
 			"patchA", { // Ejemplo "/patchA/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horizontal
