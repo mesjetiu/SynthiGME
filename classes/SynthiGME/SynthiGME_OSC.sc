@@ -110,6 +110,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	sendBroadcastMsg{|msg, value|
 		if(myIp.notNil) {
+			"enviando".postln;
 			netAddr.sendMsg(msg, value);
 		} {
 			"No está definida la dirección IP de este dispositivo. No se pueden enviar mensajes en broadcasting."
