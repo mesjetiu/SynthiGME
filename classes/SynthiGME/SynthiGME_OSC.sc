@@ -22,13 +22,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	prepareOSC {
 		NetAddr.broadcastFlag = true;
 		// Busca la IP de la red local:
-	//	this.getLocalIP;
+		this.getLocalIP; // no es necesario, es solo informativo
 		thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
 			// se ejecuta la orden recibida por mensaje.
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
-			if ((recvPort == devicePort) && (NetAddr.matchLangIP(addr))) {
+			if ((recvPort == devicePort) && (NetAddr.matchLangIP(addr.asString))) {
 				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false)
 			};
 		};
@@ -37,17 +37,17 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// No es necesario para operar con OSC, ya que la comprobación de la ip local se hace con NetAddr.matchLantIP()
 	getLocalIP {
+
+		var ipDifusion = "255.255.255.255"; // Dirección de difusión de tu red
 		// Encuentra la IP de este dispositivo en la red local haciendo un ping en broadcasting.
 		var functionGetIP = {
-			var ipDifusion = "255.255.255.255"; // Dirección de difusión de tu red
-			var port = devicePort;
 			var localIP;
-			var netAddr = NetAddr(ipDifusion, port);
 			var condition = Condition.new; // Crear una nueva condición
 
 			// Generar un identificador único usando Date.seed, para no entrar en conflicto con otros mensajes de \ping dentro de la misma red local.
 			var uniqueID = Date.seed; // número aleatorio dependiente de la hora.
 
+			netAddr = NetAddr(ipDifusion, devicePort);
 			// NetAddr.broadcastFlag = true;
 
 			// Definir un receptor OSC
@@ -58,7 +58,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					OSCdef.free(\captureIP); // Remover el receptor después de capturar la IP
 					condition.unhang; // Desbloquear la condición
 				}
-			}, \ping, recvPort: port);
+			}, \ping, recvPort: devicePort);
 
 			try {
 				// Enviar el mensaje de difusión con el identificador único
@@ -93,6 +93,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 
 	sendBroadcastMsg{|msg, value|
-
+		if(myIp.notNil) {
+			netAddr.sendMsg(msg, value);
+		} {
+			"No está definida la dirección IP de este dispositivo. No se pueden enviar mensajes en broadcasting."
+		}
 	}
 }

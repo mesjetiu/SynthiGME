@@ -63,7 +63,7 @@ SynthiGME {
 	var <inputAmplifiersBusses;
 	var <micAmpBusses;
 
-	// Array que almacena los dispositivos OSC con los que se comunica SynthiGME
+	// Network address
 	var <netAddr;
 	// Función que se utiliza para escuchar todos los puertos OSC. Es variable de clase para poder añadirla y suprimirla desde cualquier instancia.
 	classvar functionOSC = nil;
@@ -235,6 +235,7 @@ SynthiGME {
 	// Herramientas de guardado y recuperación de patches en archivos, en SynthiGME_file_tools.sc
 
 	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
+	/*
 	pairDevice { arg searchTime = 10;
 		var oscDevices = Dictionary.new;
 		NetAddr.broadcastFlag = true;
@@ -265,6 +266,7 @@ SynthiGME {
 			});
 		}).play;
 	}
+	*/
 
 /*
 	prepareOSC {
@@ -300,6 +302,7 @@ SynthiGME {
 */
 
 	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
+	/*
 	ping {|ip = "192.168.1.255", port = 9000, times = 10|
 		var netAddr = NetAddr(ip, port);
 		NetAddr.broadcastFlag = true;
@@ -311,6 +314,7 @@ SynthiGME {
 			NetAddr.broadcastFlag = false;
 		}
 	}
+	*/
 
 	// OBSOLETO. QUIZÁS APROVECHABLE...
 	// Envía el estado de todo el Synthi por OSC
