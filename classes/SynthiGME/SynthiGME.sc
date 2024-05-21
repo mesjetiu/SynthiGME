@@ -185,7 +185,7 @@ SynthiGME {
 		oscRecievedMessages = Dictionary.new;
 
 		// Busca la IP de la red local:
-		//this.getLocalIP;
+		this.getLocalIP;
 
 		guiSC = SGME_GUI(this);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
