@@ -20,54 +20,60 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 + SynthiGME {
 
 	getLocalIP {
-		// Encuentra la IP de este dispositivo en la red local haciendo un ping en broadcasting.
-		var functionGetIP = {
-			var ipDifusion = "255.255.255.255"; // Dirección de difusión de tu red
-			var port = devicePort;
-			var localIP;
-			var netAddr = NetAddr(ipDifusion, port);
-			var condition = Condition.new; // Crear una nueva condición
+    // Encuentra la IP de este dispositivo en la red local haciendo un ping en broadcasting.
+    var functionGetIP = {
+        var ipDifusion = "255.255.255.255"; // Dirección de difusión de tu red
+        var port = devicePort;
+        var localIP;
+        var netAddr = NetAddr(ipDifusion, port);
+        var condition = Condition.new; // Crear una nueva condición
 
-			NetAddr.broadcastFlag = true;
+        // Generar un identificador único usando Date.seed
+        var uniqueID = Date.seed;
 
-			// Definir un receptor OSC
-			OSCdef(\captureIP, { |msg, time, addr, recvPort|
-				localIP = addr.ip; // Capturar la dirección IP del remitente
-				NetAddr.broadcastFlag = false;
-				OSCdef.free(\captureIP); // Remover el receptor después de capturar la IP
-				condition.unhang; // Desbloquear la condición
-			}, \ping, recvPort: port);
+        NetAddr.broadcastFlag = true;
 
-			try {
-				// Enviar el mensaje de difusión
-				netAddr.sendMsg(\ping);
+        // Definir un receptor OSC
+        OSCdef(\captureIP, { |msg, time, addr, recvPort|
+            if (msg[1] == uniqueID) {
+                localIP = addr.ip; // Capturar la dirección IP del remitente
+                NetAddr.broadcastFlag = false;
+                OSCdef.free(\captureIP); // Remover el receptor después de capturar la IP
+                condition.unhang; // Desbloquear la condición
+            }
+        }, \ping, recvPort: port);
 
-				// Esperar hasta que la condición se desbloquee
-				condition.hang;
+        try {
+            // Enviar el mensaje de difusión con el identificador único
+            netAddr.sendMsg(\ping, uniqueID);
 
-				// Retornar la IP capturada
-				localIP;
-			} {
-				// Manejar la excepción y dar un mensaje inteligible
-				|err|
-				"Error: No se pudo enviar el mensaje de difusión. La red puede estar inaccesible.".postln;
-				nil; // Retornar nil en caso de error
-			}
-		};
+            // Esperar hasta que la condición se desbloquee
+            condition.hang;
 
-		// Usar una Routine para ejecutar el código y esperar la IP
-		Routine {
-			// Llamar a la función para obtener la IP local y asignarla a una variable
-			myIp = functionGetIP.();
+            // Retornar la IP capturada
+            localIP;
+        } {
+            // Manejar la excepción y dar un mensaje inteligible
+            |err|
+            "Error: No se pudo enviar el mensaje de difusión. La red puede estar inaccesible.".postln;
+            nil; // Retornar nil en caso de error
+        }
+    };
 
-			// Verificar si se obtuvo una IP o se produjo un error
-			if(myIp.notNil) {
-				("IP Local obtenida: " ++ myIp).postln;
-			} {
-				"No se pudo obtener la IP Local.".postln;
-			}
-		}.play;
-	}
+    // Usar una Routine para ejecutar el código y esperar la IP
+    Routine {
+        // Llamar a la función para obtener la IP local y asignarla a una variable
+        myIp = functionGetIP.();
+
+        // Verificar si se obtuvo una IP o se produjo un error
+        if(myIp.notNil) {
+            ("IP Local obtenida: " ++ myIp).postln;
+        } {
+            "No se pudo obtener la IP Local.".postln;
+        }
+    }.play;
+}
+
 
 
 
