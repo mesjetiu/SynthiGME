@@ -30,7 +30,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		functionOSC = {|msg, time, addr, recvPort|
 			// se ejecuta la orden recibida por mensaje.
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
-			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip)){
+			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip) && (msg[0].asString != "/ping")){
 				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false)
 			};
 		};
