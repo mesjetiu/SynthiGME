@@ -39,6 +39,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	getLocalIP {
 
 		var ipDifusion = "255.255.255.255"; // Dirección de difusión de tu red
+		var port = 8000;
 		// Encuentra la IP de este dispositivo en la red local haciendo un ping en broadcasting.
 		var functionGetIP = {
 			var localIP;
@@ -47,7 +48,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// Generar un identificador único usando Date.seed, para no entrar en conflicto con otros mensajes de \ping dentro de la misma red local.
 			var uniqueID = Date.seed; // número aleatorio dependiente de la hora.
 
-			netAddr = NetAddr(ipDifusion, devicePort);
+			netAddr = NetAddr(ipDifusion, port);
 			// NetAddr.broadcastFlag = true;
 
 			// Definir un receptor OSC
@@ -58,7 +59,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					OSCdef.free(\captureIP); // Remover el receptor después de capturar la IP
 					condition.unhang; // Desbloquear la condición
 				}
-			}, \ping, recvPort: devicePort);
+			}, \ping, recvPort: port);
 
 			try {
 				// Enviar el mensaje de difusión con el identificador único
