@@ -21,7 +21,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC.
 	// Separado en archivo aparte por su larga extensión.
-	setParameterOSC {|string, value, addrForbidden|
+	setParameterOSC {|string, value, addrForbidden, broadcast = true|
 		var splitted = string.split($/);
 		//value = value.round(0.01); // El resto de decimales es ruido.
 		modifiedState = true;
@@ -465,7 +465,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				this.sendBroadcastMsg(string, value, addrForbidden);
+				if (broadcast) {
+					this.sendBroadcastMsg(string, value);
+				}
 			},
 
 

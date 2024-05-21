@@ -419,6 +419,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					// Se almacena el estado inicial de todos los parámetros:
 					initState = this.getFullState;
 					(initState.size.asString + "parámetros iniciados a sus valores por defecto.").postln;
+
+					if (myIp.isNil == false) {
+						("La IP de la red local es:" + myIp).postln;
+					} {
+						"No se ha podido obtener la IP de red local".error;
+					};
+
 					// Preparación para la grabación:
 					server.prepareForRecord;
 

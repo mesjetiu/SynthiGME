@@ -184,8 +184,8 @@ SynthiGME {
 		pathState = Platform.userHomeDir; // path por defecto donde guardar estados
 		oscRecievedMessages = Dictionary.new;
 
-		// Busca la IP de la red local:
-		this.getLocalIP;
+		// Se prepara OSC
+		this.prepareOSC;
 
 		guiSC = SGME_GUI(this);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
@@ -266,7 +266,7 @@ SynthiGME {
 		}).play;
 	}
 
-
+/*
 	prepareOSC {
 		NetAddr.broadcastFlag = true;
 		thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
@@ -279,7 +279,9 @@ SynthiGME {
 		netAddr = NetAddr("255.255.255.255", devicePort);
 		thisProcess.addOSCRecvFunc(functionOSC);
 	}
+	*/
 
+	/*
 	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
 	sendBroadcastMsg{|msg, value, addrForbidden|
 		if(addrForbidden == \GUI, {
@@ -295,6 +297,7 @@ SynthiGME {
 			})
 		});
 	}
+*/
 
 	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
 	ping {|ip = "192.168.1.255", port = 9000, times = 10|
