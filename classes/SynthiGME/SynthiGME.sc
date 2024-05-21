@@ -184,14 +184,14 @@ SynthiGME {
 		pathState = Platform.userHomeDir; // path por defecto donde guardar estados
 		oscRecievedMessages = Dictionary.new;
 
-		// Se prepara OSC
-		this.prepareOSC;
-
 		guiSC = SGME_GUI(this);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
 
 		generalVol = settings[\generalVol];
 		devicePort = settings[\OSCDevicePort];
+
+		// Se prepara OSC
+		this.prepareOSC;
 
 		server = serv;
 		this.verboseOSC = verboseOSC;
