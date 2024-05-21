@@ -28,7 +28,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		functionOSC = {|msg, time, addr, recvPort|
 			// se ejecuta la orden recibida por mensaje.
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
-			if ((recvPort == devicePort) && (NetAddr.matchLangIP(addr.asString))) {
+			if ((recvPort == devicePort) && (addr == myIp)){
 				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false)
 			};
 		};
