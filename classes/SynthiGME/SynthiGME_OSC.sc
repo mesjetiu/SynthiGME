@@ -25,25 +25,27 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		netAddr = NetAddr(ipDifusion, devicePort);
 		// Busca la IP de la red local:
 		this.getLocalIP; // no es necesario, es solo informativo
-	/*	thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
+		thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
 			// se ejecuta la orden recibida por mensaje.
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
-			addr.ip.postln;
-			myIp.postln;
-			if ((recvPort == devicePort) && (addr == myIp)){
+			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip)){
 				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false)
 			};
 		};
 		thisProcess.addOSCRecvFunc(functionOSC);
-		*/
+
+		/*
 		// Definir un receptor OSC
 			OSCdef(\captureOSC, { |msg, time, addr, recvPort|
-				if ((recvPort == devicePort) && (addr.ip == myIp)) {
+			addr.ip.postln;
+			myIp.postln;
+				if ((recvPort == devicePort) && (addr.ip != myIp)) {
 					this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false)
 				}
-			}, \, recvPort: devicePort);
+		}, recvPort: devicePort);
+		*/
 	}
 
 	// No es necesario para operar con OSC, ya que la comprobación de la ip local se hace con NetAddr.matchLantIP()
@@ -105,7 +107,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 
 	sendBroadcastMsg{|msg, value|
-		"enviando...".postln;
 		if(myIp.notNil) {
 			netAddr.sendMsg(msg, value);
 		} {

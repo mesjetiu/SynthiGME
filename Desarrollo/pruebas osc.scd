@@ -2,6 +2,19 @@ o = SynthiGME()
 o.myIp
 o.getLocalIP
 
+thisProcess.openUDPPort(9000)
+
+OSCFunc.trace(true,true)
+
+
+if (thisProcess.openUDPPort(devicePort)) {
+						("Abierto puerto" + devicePort + "para OSC.").postln;} {
+						("No se ha podido abrir el puerto" + devicePort + "para OSC").postln;
+					};
+
+NetAddr.broadcastFlag
+
+
 NetAddr.matchLangIP("192.168.111.93")
 
 NetAddr.
