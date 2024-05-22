@@ -147,7 +147,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		selector = SGME_Knob(parent, rect)
 		.color_([yellow, white, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		//.enabled_(false)
 		//	.action_({|s| s.value.postln})
