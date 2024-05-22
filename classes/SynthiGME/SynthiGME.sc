@@ -68,9 +68,9 @@ SynthiGME {
 	// Función que se utiliza para escuchar todos los puertos OSC. Es variable de clase para poder añadirla y suprimirla desde cualquier instancia.
 	classvar functionOSC = nil;
 	// Puerto por defecto de envío de mensajes OSC (por defecto en TouchOSC)
-	var <devicePort;
+	var <>devicePort;
 	// ip de la red local para evitar ecos de mensajes OSC
-	var <myIp;
+	var <>myIp;
 
 
 	// ****** Variables para rastrear, guardar y recuperar estados (patches)
