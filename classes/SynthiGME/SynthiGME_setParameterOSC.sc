@@ -81,7 +81,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				modulPatchbayAudio.administrateNode(splitted[0].asInteger, splitted[1].asInteger, value);
 				if(guiSC.running, {{guiSC.parameterViews[string].value_(value)}.defer(0)});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				this.sendBroadcastMsg(string, value, addrForbidden);
+				if (broadcast) {
+					this.sendBroadcastMsg(string, value);
+				}
 			},
 
 			"patchV", { // Ejemplo "/patchV/91/36". Origen de coordenadas izquierda arriba / Orden: vertical y horizontal
@@ -89,7 +91,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				modulPatchbayVoltage.administrateNode(splitted[0].asInteger, splitted[1].asInteger, value);
 				if(guiSC.running, {{guiSC.parameterViews[string].value_(value)}.defer(0)});
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
-				this.sendBroadcastMsg(string, value, addrForbidden);
+				if (broadcast) {
+					this.sendBroadcastMsg(string, value);
+				}
 			},
 
 			"out", { // Ejemplo "/out/1/level"
