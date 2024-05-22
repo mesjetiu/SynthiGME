@@ -149,9 +149,32 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		.color_([yellow, white, white, nil])
 		.mode_(\vert)
 		.step_(step)
-		.enabled_(false)
-		.action_({|s| s.value.postln})
+		//.enabled_(false)
+		//	.action_({|s| s.value.postln})
 		.value_(SGME_GUIPanel1.selectorValuesConvert(3));
+		/*	selector.action = {|knob|
+		var index;
+		var closestValue = this.closestDiscreteValue(knob.value);
+		knob.value = closestValue;
+		index = this.selectorValueToIndex(closestValue);
+		synthiGME.setParameterOSC(
+		string: "/env/" ++ num ++ "/selector",
+		value: index,
+		addrForbidden: \GUI,
+		);
+		};*/
+		selector.mouseUpAction = {|knob, x, y, button|
+			var index;
+			var closestValue = this.closestDiscreteValue(knob.value);
+			knob.value = closestValue;
+			index = this.selectorValueToIndex(closestValue);
+			synthiGME.setParameterOSC(
+				string: "/env/" ++ num ++ "/selector",
+				value: index,
+				addrForbidden: \GUI,
+			);
+		};
+
 		viewSizes = viewSizes.add([selector, rect]);
 
 
@@ -559,5 +582,21 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 			)
 		};
 
+	}
+
+	closestDiscreteValue {|val|
+		var discreteValues = [0.293, 0.405, 0.5, 0.59, 0.691];
+		var closest = discreteValues[0];
+		discreteValues.do {|v|
+			if ((val - v).abs < (val - closest).abs) {
+				closest = v;
+			}
+		};
+		^closest;
+	}
+
+	selectorValueToIndex {|val|
+		var discreteValues = [0.293, 0.405, 0.5, 0.59, 0.691];
+		^discreteValues.indexOf(val) + 1;
 	}
 }
