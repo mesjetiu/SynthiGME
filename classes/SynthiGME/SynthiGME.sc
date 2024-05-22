@@ -71,6 +71,10 @@ SynthiGME {
 	var <>devicePort;
 	// ip de la red local para evitar ecos de mensajes OSC
 	var <>myIp;
+	// Puede o no enviar mensajes OSC a la red
+	var <>canSendOSC;
+	// Puede o no recibir mensajes OSC de la red
+	var <>canRecieveOSC;
 
 
 	// ****** Variables para rastrear, guardar y recuperar estados (patches)
@@ -192,6 +196,8 @@ SynthiGME {
 
 		// Se prepara OSC
 		this.prepareOSC;
+		canSendOSC = true;
+		canRecieveOSC = true;
 
 		server = serv;
 		this.verboseOSC = verboseOSC;

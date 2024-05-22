@@ -29,6 +29,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
 			// se ejecuta la orden recibida por mensaje.
+			// Para recibir mensajes ha de estar habilitada la opción.
+			if (canRecieveOSC == false) {^this};
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
 			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip) && (msg[0].asString != "/ping")){
 				//"recibido".postln;
@@ -36,17 +38,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			};
 		};
 		thisProcess.addOSCRecvFunc(functionOSC);
-
-		/*
-		// Definir un receptor OSC
-			OSCdef(\captureOSC, { |msg, time, addr, recvPort|
-			addr.ip.postln;
-			myIp.postln;
-				if ((recvPort == devicePort) && (addr.ip != myIp)) {
-					this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false)
-				}
-		}, recvPort: devicePort);
-		*/
 	}
 
 	// No es necesario para operar con OSC, ya que la comprobación de la ip local se hace con NetAddr.matchLantIP()
@@ -108,7 +99,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 
 	sendBroadcastMsg{|msg, value|
-		if(myIp.notNil) {
+		if(myIp.notNil && (canSendOSC == true)) {
 		//	"enviando".postln;
 			netAddr.sendMsg(msg, value);
 		} {
