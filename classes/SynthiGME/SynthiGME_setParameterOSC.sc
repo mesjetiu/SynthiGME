@@ -21,7 +21,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC.
 	// Separado en archivo aparte por su larga extensión.
-	setParameterOSC {|string, value, addrForbidden, broadcast = true|
+	setParameterOSC {|string, value, addrForbidden, broadcast = true, ipOrigin = "local"|
 		var splitted = string.split($/);
 		//value = value.round(0.01); // El resto de decimales es ruido.
 		modifiedState = true;
@@ -414,7 +414,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		oscRecievedMessages.put(string, value);
 		// Se imprime en Post window
 		if (this.verboseOSC,
-			{(string + value.round(0.01)).postln}
+			{("[" ++ ipOrigin ++ "]: " ++ string + value.round(0.01)).postln}
 		)
 	}
 }

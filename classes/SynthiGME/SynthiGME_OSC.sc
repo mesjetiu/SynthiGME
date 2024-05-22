@@ -34,7 +34,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
 			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip) && (msg[0].asString != "/ping")){
 				//"recibido".postln;
-				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false)
+				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false, ipOrigin: addr.ip)
 			};
 		};
 		thisProcess.addOSCRecvFunc(functionOSC);
