@@ -50,6 +50,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		// Intenta abrir el archivo y escribir en él
 		try {
 			archivo = File.new(path +/+ fileName, "w");  // Abrir el archivo para escritura
+			// Anotar la versión actual de SynthiGME
+			archivo.write("/version" ++ "\t");
+			archivo.write("\"" ++ version ++ "\"" ++ "\n");
 			string.do { |string, n|
 				if (n.even) {
 					archivo.write(string ++ "\t"); // Entre clave y valor, tabulador
@@ -122,12 +125,22 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			contenido = contenido.collect({ |item|
 				// item = item.stripWhiteSpace; // Usamos stripWhiteSpace para eliminar espacios al principio y al final
 				// Convertimos a entero o float si es un número, de lo contrario a símbolo
-				if (item[0] == $/) {item.asString} {
+				if ((item[0] == $/) || (item[0] == $" )) {
+					item.asString.replace("\"", "");
+				} {
 					if (item.interpret.isFloat) {item.asFloat} {item.asInteger}
 				}
 			});
 
 			newState = Dictionary.newFrom(contenido);
+
+			// Comprobamos si hay entrada de \version. Si la hay, la comparamos con la versión de esta instancia y se lanza mensaje de advertencia.
+			if (newState["/version"].notNil) {
+				if (newState["/version"].asString != version) {
+					("La versión del patch (" ++ newState["/version"].asString ++ ") difiere de la de la instancia de SynthiGME (" ++ version ++ ")").warn;
+				};
+				newState.removeAt("/version");
+			};
 
 			// 1. En oscRecievedMessagesCopy, las claves que no estén en newState, se reinician a valores iniciales.
 			oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
