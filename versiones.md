@@ -1,3 +1,22 @@
+## Version 1.8.0 
+
+### Importantes cambios
+- Guardar y cargar archivos con patches.
+- Mejor gestión de la salida del programa con diálogo.
+- Parpadeo de los mandos al variar su valor.
+- Módulo de osciloscopio creado (funcional, sin características modificables).
+- Comunicación OSC en red local de forma permanente y distribuida.
+
+### Bugs corregidos
+- Los paneles no tomaban foco al pulsar su atajo (1-7).
+- Otros bugs encontrados en el proceso.
+
+### Otras mejoras
+- Reorganización de código para mayor claridad.
+- Mutear y desmutear con el atajo "m".
+- Perilla de selección de envolvente es movible con el ratón.
+- Textos dinámicos en menú contextual.
+
 ## Version 1.7.0 
 2024/05/12
 
