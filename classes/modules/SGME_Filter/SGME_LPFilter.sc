@@ -39,7 +39,7 @@ SGME_LPFilter : SGME_Filter {
 			inVoltage = In.ar(inputBusVoltage) + InFeedback.ar(inFeedbackBusVoltage);
 
 			freq = inVoltage.linlin(-1, 1, -1000, 1000, nil);
-			freq = (freq + frequency).clip(5, 20000).poll;
+			freq = (freq + frequency).clip(5, 20000);
 
 			sigOut = BLowPass.ar(sigIn, freq, response) * level;
 
