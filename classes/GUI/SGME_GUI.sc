@@ -81,7 +81,7 @@ SGME_GUI {
 
 	makeWindow {
 		var waitTime = 0.1;
-		Window.closeAll; // Cierra todas las ventanas
+	//	Window.closeAll; // Cierra todas las ventanas
 
 		Routine({
 			panels.do({|panel|

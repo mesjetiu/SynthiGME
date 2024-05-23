@@ -98,6 +98,8 @@ SynthiGME {
 	classvar settings;
 	classvar instance; // aquí se guardará la instancia del Synthi, ya que solo se podrá tener una abierta.
 
+	var <postWindow; // Instancia única (singleton) de Post Window
+
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -131,13 +133,14 @@ SynthiGME {
 		numInputChannels = 2, // Mínimo 2 (del sistema por defecto) Máximo 8
 		numReturnChannels = 0, // Mínimo 0, Máximo 4
 		blockSize = 64,
-		alwaysRebootServer = false; // false: no se reinicia si se cumple la configuración del servidor.
+		alwaysRebootServer = false, // false: no se reinicia si se cumple la configuración del servidor.
+		postWin = true; // se abre una ventana para post window.
 
 		// Se guarda la instancia:
 		if (instance != nil) {"Ya existe una instancia"; ^this};
 		instance = this;
 
-		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer);
+		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin);
 	}
 
 
@@ -179,7 +182,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ|
+	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin|
 		version = "1.8.rc.2";
 
 		// Carga la configuración
@@ -228,6 +231,13 @@ SynthiGME {
 		SGME_PatchbayAudio.addSynthDef;
 		SGME_PatchbayVoltage.addSynthDef;
 		SGME_Oscilloscope.addSynthDef;
+
+
+		// Post window preparado y abierto:
+		postWindow = MessageRedirector.getInstance;
+		if (postWin) {
+			MessageRedirector.createWindow;
+		};
 
 		this.run;
 	}

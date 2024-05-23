@@ -102,8 +102,9 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 					1, {this.resizePanel(1/factor)}, // botón derecho
 				)
 			}, { // si se hace un solo click...
-				var silenciarString = switch(synthiGME.server.volume.isMuted) {true} {"Desilenciar"} {false} {"Silenciar"};
-				var grabarString = switch(synthiGME.server.isRecording) {true} {"Terminar grabación"} {false} {"Iniciar grabación"};
+				var silenciarString = switch (synthiGME.server.volume.isMuted) {true} {"Desilenciar"} {false} {"Silenciar"};
+				var grabarString = switch (synthiGME.server.isRecording) {true} {"Terminar grabación"} {false} {"Iniciar grabación"};
+				var postWindow = switch (MessageRedirector.window.isNil) {false} {"Cerrar Post Window"} {true} {"Abrir Post Window"};
 				buttonNumber.switch(
 					0, {}, // botón izquierdo
 					1, {
@@ -129,6 +130,13 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 							}),
 							MenuAction("Abrir controles del servidor de audio", {
 								synthiGME.server.makeGui;
+							}),
+							MenuAction(postWindow, {
+								if (MessageRedirector.window.isNil) {
+									MessageRedirector.createWindow;
+								} {
+									MessageRedirector.closeWindow;
+								}
 							}),
 							MenuAction("Ver/ocultar atajos de teclado", {
 								if (synthiGME.guiSC.helpWindow.window.visible == true, {

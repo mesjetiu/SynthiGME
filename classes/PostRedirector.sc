@@ -1,6 +1,9 @@
 
 MessageRedirector {
-	classvar instance, window, textView, storedText;
+	classvar instance,
+	<window,
+	textView,
+	storedText;
 
 	*initClass {
 		instance = nil;
@@ -24,7 +27,8 @@ MessageRedirector {
 	*createWindow {
 		if (window.isNil) {
 			var layout;
-			window = Window("Synthi GME Post window", Rect(100, 100, 400, 300)).front;
+			window = Window("Synthi GME Post window", Rect(100, 100, 400, 300)).front
+			.alwaysOnTop_(true);
 			layout = VLayout(8);
 			textView = TextView()
 			.string_(storedText) // Inicializar el TextView con el texto almacenado
@@ -59,6 +63,13 @@ MessageRedirector {
 			window.close;
 			window = nil;
 			textView = nil;
+		}
+	}
+
+	*closeWindow {
+		if (window.notNil) {
+			window.close;
+			window = nil;
 		}
 	}
 
