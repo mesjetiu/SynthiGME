@@ -51,7 +51,7 @@ MessageRedirector {
 				textView.scrollToEnd;
 			}.defer;
 		};
-		message.postln;  // También envía al Post Window estándar
+	//	message.postln;  // También envía al Post Window estándar
 	}
 
 	*endRedirect {
