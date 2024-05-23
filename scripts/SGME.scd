@@ -56,9 +56,9 @@ Routine({
 	if (time_answer == nil, { // Si en el puerto no hay un servidor de Supercollider no obtenemos respuesta. ¡está libre!
 		server = Server(name: \synthiGME_Server ++ "_" ++ address.hostname ++ "_" ++ address.port,
 			addr: address);
-		wait (0.1);
+		server.sync;
 		("Servidor creado en " + address).postln;
-		SynthiGME(server: server).run;
+		SynthiGME(server: server, numOutputChannels: inf, numInputChannels: inf, numReturnChannels: inf);
 	},{ // Si no se ha podido encontrar un puerto libre (cosa rara probando 1000)...
 		"No se ha podido encontrar un puerto libre donde crear un Servidor de SuperCollider".postln;
 		0.exit;
