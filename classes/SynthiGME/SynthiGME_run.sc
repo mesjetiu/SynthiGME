@@ -208,8 +208,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 					//"Conexión de salida de cada canal individual...".postln;
 					modulOutputChannels.do({|out, n|
-						if (//n+6 <= server.options.numOutputBusChannels
-							numOutputChannels >= (n+7))
+						if (n+7 <= numOutputChannels //server.options.numOutputBusChannels
+							//numOutputChannels >= (n+7)
+						)
 						{
 							connectionOut = connectionOut.add({
 								var result = nil;
@@ -371,7 +372,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 					//"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".postln;
 					connectionIn = inputAmplifiersBusses.collect({|item, i|
-						if (i+1 <= server.options.numInputBusChannels)
+						if (//i+1 <= server.options.numInputBusChannels
+							(i+1) <= numInputChannels
+						)
 						{
 							var result = Synth(\connectionInputAmplifier, [
 								\inBus, settings[\inputAmplifiersBusses][i],
@@ -386,7 +389,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 					//"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".postln;
 					connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
-						if (i+8 <= server.options.numInputBusChannels)
+						if (//i+8 <= server.options.numInputBusChannels
+							(i+1) <= numReturnChannels
+						)
 						{
 							var result = Synth(\connectionExternalTreatmentReturn, [
 								\inBus, settings[\returnFromDeviceBusses][i],
