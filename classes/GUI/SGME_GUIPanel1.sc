@@ -150,7 +150,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		.mode_(\round)
 		.step_(step)
 		//.enabled_(false)
-		//	.action_({|s| s.value.postln})
+		//	.action_({|s| s.value.sgmePostln})
 		.value_(SGME_GUIPanel1.selectorValuesConvert(3));
 		/*	selector.action = {|knob|
 		var index;

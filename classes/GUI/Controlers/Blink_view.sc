@@ -69,11 +69,11 @@ Blink_view {
 						if (currentColor == blinkColor1) {
 							view.background = blinkColor2;
 							currentColor = blinkColor2; // Actualizar el estado local
-							//"Changing to blinkColor2".postln;
+							//"Changing to blinkColor2".sgmePostln;
 						} {
 							view.background = blinkColor1;
 							currentColor = blinkColor1; // Actualizar el estado local
-							//"Changing to blinkColor1".postln;
+							//"Changing to blinkColor1".sgmePostln;
 						}
 					};
 					(blinkRate).wait; // Esperar el tiempo definido antes de cambiar de nuevo

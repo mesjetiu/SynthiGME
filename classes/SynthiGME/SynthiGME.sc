@@ -262,16 +262,16 @@ SynthiGME {
 					{
 						if(oscDevices.trueAt(addr.ip) == false, {
 							oscDevices.put(addr.ip, [addr.ip, recvPort]);
-							("Found device at " ++ addr.ip).postln;
+							("Found device at " ++ addr.ip).sgmePostln;
 						})
 				})
 			};
-			"Searching OSC devices...".postln;
+			"Searching OSC devices...".sgmePostln;
 			thisProcess.addOSCRecvFunc(functionOSC);
 			wait(searchTime);
 			thisProcess.removeOSCRecvFunc(functionOSC);
-			("Found " ++ oscDevices.size ++ " devices:").postln;
-			oscDevices.do({|i| i.postln});
+			("Found " ++ oscDevices.size ++ " devices:").sgmePostln;
+			oscDevices.do({|i| i.sgmePostln});
 			if (oscDevices.size > 0, {
 				this.prepareOSC;
 				netAddr = List.new;
@@ -304,7 +304,7 @@ SynthiGME {
 	sendBroadcastMsg{|msg, value, addrForbidden|
 		if(addrForbidden == \GUI, {
 			netAddr.do({|i|
-				i.sendMsg(msg, value).postln;
+				i.sendMsg(msg, value).sgmePostln;
 			})
 		}, {
 			// Poner aquí código de reenvío a GUI de los mensajes recibidos de otros dispositivos
@@ -379,7 +379,7 @@ SynthiGME {
 				})
 
 			});
-			"Dispositivos comunicados por OSC preparados OK".postln;
+			"Dispositivos comunicados por OSC preparados OK".sgmePostln;
 		}).play;
 	}
 
@@ -410,21 +410,21 @@ SynthiGME {
 			buttonLayout = HLayout(
 				discardButton = Button().states_([["Descartar", Color.black, Color.white]]).action_({
 					// Acción para descartar cambios y salir
-					"Descartando cambios y saliendo...".postln;
+					"Descartando cambios y saliendo...".sgmePostln;
 					// Aquí iría la lógica para salir de la aplicación
 					dialog.close;
 					this.exit;
 				}),
 				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
 					// Acción para cancelar el cierre
-					"Cancelando...".postln;
+					"Cancelando...".sgmePostln;
 					dialog.close;
 					// Salir de la función de cierre actual
 					^nil;
 				}),
 				saveButton = Button().states_([["Guardar", Color.black, Color.white]]).action_({
 					// Acción para guardar y salir
-					"Guardando y saliendo...".postln;
+					"Guardando y saliendo...".sgmePostln;
 					this.saveStateGUI;
 					dialog.close;
 					// Aquí puedes continuar con la función de salir existente
@@ -437,12 +437,12 @@ SynthiGME {
 					// Acción para aceptar y salir
 
 					dialog.close;
-					"Saliendo...".postln;
+					"Saliendo...".sgmePostln;
 					this.exit;
 				}),
 				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
 					// Acción para cancelar el cierre
-					"Cancelando...".postln;
+					"Cancelando...".sgmePostln;
 					dialog.close;
 					// Salir de la función de cierre actual
 					^nil;
@@ -471,10 +471,10 @@ SynthiGME {
 	// Actualiza SynthiGME:
 	update {
 		Quark("SynthiGME").update;
-		"Para que la actualización tenga efecto, es necesario recompilar la biblioteca de clases, con Ctrl + Shift + L, o abriendo y cerrando SuperCollider.".postln;
+		"Para que la actualización tenga efecto, es necesario recompilar la biblioteca de clases, con Ctrl + Shift + L, o abriendo y cerrando SuperCollider.".sgmePostln;
 	}
 
 	version {
-		Quark("SynthiGME").version.postln;
+		Quark("SynthiGME").version.sgmePostln;
 	}
 }

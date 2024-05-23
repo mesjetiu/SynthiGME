@@ -24,8 +24,8 @@ SGME_GUIShortcuts {
 	makeShortcuts {|win, synthiGME|
 		win.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
-			//keycode.postln;
-			//[char, unicode, keycode, key, mod].postln;
+			//keycode.sgmePostln;
+			//[char, unicode, keycode, key, mod].sgmePostln;
 
 			unicode.switch( // usamos unicode
 				118, {// "v" Activa y desactiva la visibilidad de los mandos de la ventana en foco.

@@ -33,7 +33,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			if (canRecieveOSC == false) {^this};
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
 			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip) && (msg[0].asString != "/ping")){
-				//"recibido".postln;
+				//"recibido".sgmePostln;
 				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false, ipOrigin: addr.ip)
 			};
 		};
@@ -78,7 +78,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			} {
 				// Manejar la excepción y dar un mensaje inteligible
 				|err|
-				"Error: No se pudo conseguir la dirección de IP local. La red puede estar inaccesible.".postln;
+				"Error: No se pudo conseguir la dirección de IP local. La red puede estar inaccesible.".sgmePostln;
 				nil; // Retornar nil en caso de error
 			}
 		};
@@ -90,9 +90,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 			// Verificar si se obtuvo una IP o se produjo un error
 			if(myIp.notNil) {
-				("IP Local obtenida: " ++ myIp).postln;
+				("IP Local obtenida: " ++ myIp).sgmePostln;
 			} {
-				"No se pudo obtener la IP Local.".postln;
+				"No se pudo obtener la IP Local.".sgmePostln;
 			}
 		}.play;
 	}
@@ -100,7 +100,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	sendBroadcastMsg{|msg, value|
 		if(myIp.notNil && (canSendOSC == true)) {
-		//	"enviando".postln;
+		//	"enviando".sgmePostln;
 			netAddr.sendMsg(msg, value);
 		} {
 			"No está definida la dirección IP de este dispositivo. No se pueden enviar mensajes en broadcasting."

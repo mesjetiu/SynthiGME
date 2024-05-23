@@ -102,7 +102,7 @@ SGME_GUI {
 			panel.window.close;
 		});
 		helpWindow.close;
-		"SynthiGME terminado".postln;
+		"SynthiGME terminado".sgmePostln;
 	}
 
 	frontWindows {

@@ -349,7 +349,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 			//this.synthRun();
 			group.set(\delayTime, this.convertTime(time))
 		}, {
-			("SGME_EnvelopeShaper/setDelayTime: " + time + " no es un valor entre 0 y 10").postln});
+			("SGME_EnvelopeShaper/setDelayTime: " + time + " no es un valor entre 0 y 10").sgmePostln});
 	}
 
 	setAttackTime {|time|
@@ -358,7 +358,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 			//this.synthRun();
 			group.set(\attackTime, this.convertTime(time))
 		}, {
-			("SGME_EnvelopeShaper/setAttackTime: " + time + " no es un valor entre 0 y 10").postln});
+			("SGME_EnvelopeShaper/setAttackTime: " + time + " no es un valor entre 0 y 10").sgmePostln});
 	}
 
 	setDecayTime {|time|
@@ -367,7 +367,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 			//this.synthRun();
 			group.set(\decayTime, this.convertTime(time))
 		}, {
-			("SGME_EnvelopeShaper/setDecayTime: " + time + " no es un valor entre 0 y 10").postln});
+			("SGME_EnvelopeShaper/setDecayTime: " + time + " no es un valor entre 0 y 10").sgmePostln});
 	}
 
 	setSustainLevel {|level|
@@ -376,7 +376,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 			//this.synthRun();
 			group.set(\sustainLevel, this.convertSustainLevel(level));
 		}, {
-			("SGME_EnvelopeShaper/setSustainLevel: " + level + " no es un valor entre 0 y 10").postln
+			("SGME_EnvelopeShaper/setSustainLevel: " + level + " no es un valor entre 0 y 10").sgmePostln
 		});
 	}
 
@@ -386,7 +386,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 			//this.synthRun();
 			group.set(\releaseTime, this.convertTime(time))
 		}, {
-			("SGME_EnvelopeShaper/setReleaseTime: " + time + " no es un valor entre 0 y 10").postln
+			("SGME_EnvelopeShaper/setReleaseTime: " + time + " no es un valor entre 0 y 10").sgmePostln
 		});
 	}
 
@@ -396,7 +396,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 			//this.synthRun();
 			group.set(\envelopeLevel, this.convertEnvelopeLevel(level))
 		}, {
-			("SGME_EnvelopeShaper/setEnvelopeLevel: " + level + " no es un valor entre -5 y 5").postln
+			("SGME_EnvelopeShaper/setEnvelopeLevel: " + level + " no es un valor entre -5 y 5").sgmePostln
 		});
 	}
 
@@ -406,7 +406,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 			//this.synthRun();
 			group.set(\signalLevel, this.convertSignalLevel(level))
 		}, {
-			("SGME_EnvelopeShaper/setSignalLevel: " + level + " no es un valor entre -5 y 5").postln
+			("SGME_EnvelopeShaper/setSignalLevel: " + level + " no es un valor entre -5 y 5").sgmePostln
 		});
 	}
 
@@ -414,7 +414,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 		if((gate==0).or(gate==1), {
 			gateSynth.set(\gate, gate);
 		}, {
-			("SGME_EnvelopeShaper/setGateButton: " + gate + " no es un valor 0 o 1").postln
+			("SGME_EnvelopeShaper/setGateButton: " + gate + " no es un valor 0 o 1").sgmePostln
 		});
 	}
 
@@ -456,7 +456,7 @@ SGME_EnvelopeShaper : SGME_Connectable{
 				envTriggered.synthRun(false);
 			},
 			{
-				("SGME_EnvelopeShaper/setSelector: " + value + " no es un valor válido").postln
+				("SGME_EnvelopeShaper/setSelector: " + value + " no es un valor válido").sgmePostln
 				^this; // si no es un valor válido la función acaba aquí.
 			}
 		);

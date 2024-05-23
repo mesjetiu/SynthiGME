@@ -418,7 +418,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		oscRecievedMessages.put(string, value);
 		// Se imprime en Post window
 		if (this.verboseOSC,
-			{("[" ++ ipOrigin ++ "]: " ++ string + value.round(0.01)).postln}
+			{("[" ++ ipOrigin ++ "]: " ++ string + value.round(0.01)).sgmePostln}
 		)
 	}
 }

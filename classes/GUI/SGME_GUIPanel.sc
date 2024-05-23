@@ -216,7 +216,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 			factorH = factorW;
 		});
 
-		//[factorH, factorW].postln;
+		//[factorH, factorW].sgmePostln;
 
 		viewSizes.do({|v|
 			if (v[0].class === Window, {

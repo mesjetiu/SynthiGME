@@ -65,15 +65,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		} {|error|
 			// En caso de error durante la apertura o escritura del archivo
 			archivo.notNil.if { archivo.close };  // Asegúrate de cerrar el archivo si se abrió
-			"Error al guardar el archivo: ".postln;
-			error.errorString.postln;  // Imprime el mensaje de error
+			"Error al guardar el archivo: ".sgmePostln;
+			error.errorString.sgmePostln;  // Imprime el mensaje de error
 		};
 
 		// Verifica si el archivo se guardó con éxito
 		if (exito) {
 			modifiedState = false;
-			"Archivo guardado correctamente en: ".postln;
-			(path +/+ fileName).postln;
+			"Archivo guardado correctamente en: ".sgmePostln;
+			(path +/+ fileName).sgmePostln;
 		}
 	}
 
@@ -87,7 +87,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					this.saveState(path.dirname, path.basename);
 				}
 			},
-			{ "Cancelado por el usuario".postln },
+			{ "Cancelado por el usuario".sgmePostln },
 			fileMode: 0,  // Permite la selección de un nombre de archivo, existente o no
 			acceptMode: 1,  // Diálogo de guardado
 			stripResult: true,  // Pasa la ruta del archivo directamente
@@ -111,14 +111,14 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		} {|error|
 			// En caso de error durante la apertura o lectura del archivo
 			archivo.notNil.if { archivo.close };  // Asegúrate de cerrar el archivo si se abrió
-			"Error al cargar el archivo: ".postln;
-			error.errorString.postln;  // Imprime el mensaje de error
+			"Error al cargar el archivo: ".sgmePostln;
+			error.errorString.sgmePostln;  // Imprime el mensaje de error
 		};
 
 		// Verifica si el archivo se cargó con éxito
 		if (exito) {
-			"Archivo cargado correctamente desde: ".postln;
-			(path +/+ fileName).postln;
+			"Archivo cargado correctamente desde: ".sgmePostln;
+			(path +/+ fileName).sgmePostln;
 
 			contenido = contenido.replace("\t", " ").replace("\n", " ").split($ );  // Divide el contenido en líneas
 
@@ -164,7 +164,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			};
 
 			modifiedState = false;
-			"Patch recuperado y ejecutado".postln;
+			"Patch recuperado y ejecutado".sgmePostln;
 		}
 	}
 
@@ -178,7 +178,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					this.loadState(path.dirname, path.basename);
 				}
 			},
-			{ "Cancelado por el usuario".postln },
+			{ "Cancelado por el usuario".sgmePostln },
 			fileMode: 1,  // Modo para un archivo existente
 			acceptMode: 0,  // Modo de apertura
 			stripResult: true,  // Pasa la ruta del archivo directamente

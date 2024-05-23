@@ -41,15 +41,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			if (
 				(server.serverRunning && (serverOptionsOK == false || alwaysRebootServer)),
 				{
-					"El servidor de audio está encendido. Apagando servidor...".postln;
+					"El servidor de audio está encendido. Apagando servidor...".sgmePostln;
 					server.quit;
 					//server.sync;
 					if (server.serverRunning, {
 						"Servidor no apagado correctamente".error;
-						"Saliendo del programa...".postln;
+						"Saliendo del programa...".sgmePostln;
 						thisRoutine.stop();
 					}, {
-						"Servidor apagado correctamente".postln;
+						"Servidor apagado correctamente".sgmePostln;
 					});
 			});
 
@@ -57,7 +57,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			if (
 				(serverOptionsOK == false) && (server.serverRunning == false),
 				{
-					"Estableciendo número correcto de canales de entrada y salida:".postln;
+					"Estableciendo número correcto de canales de entrada y salida:".sgmePostln;
 					server.options.device_("Synthi GME")
 					.numAudioBusChannels_(settings[\numAudioBusChannels])
 					//.numOutputBusChannels_(settings[\numOutputBusChannels])
@@ -66,10 +66,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					.blockSize_(blockSize); // Control rate. Si es hardware lo permite se puede aproximar a 1
 					//server.sync;
 
-					("Número de canales de Audio:" + server.options.numAudioBusChannels).postln;
-					("Número de canales de output:" + server.options.numOutputBusChannels).postln;
-					("Número de canales de input:" + server.options.numInputBusChannels).postln;
-					("Tamaño del bloque:" + server.options.blockSize).postln;
+					("Número de canales de Audio:" + server.options.numAudioBusChannels).sgmePostln;
+					("Número de canales de output:" + server.options.numOutputBusChannels).sgmePostln;
+					("Número de canales de input:" + server.options.numInputBusChannels).sgmePostln;
+					("Tamaño del bloque:" + server.options.blockSize).sgmePostln;
 
 					if(
 						server.options.numAudioBusChannels >= settings[\numAudioBusChannels]
@@ -78,10 +78,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						&& server.options.numInputBusChannels >= numInputChannels
 						&& server.options.blockSize >= blockSize
 					){
-						"Opciones actualizadas correctamente".postln;
+						"Opciones actualizadas correctamente".sgmePostln;
 					}{
 						"No se han podido establecer las opciones adecuadas del servidor".error;
-						"Saliendo del programa...".postln;
+						"Saliendo del programa...".sgmePostln;
 						thisRoutine.stop();
 					};
 
@@ -90,7 +90,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 
 			// Se anuncia que se arrancará el servidor (si no lo está)
-			if(server.serverRunning == false, {"Arrancando servidor...".postln});
+			if(server.serverRunning == false, {"Arrancando servidor...".sgmePostln});
 			// Arrancamos el servidor si aún no lo está
 			server.waitForBoot(
 				onComplete: {
@@ -119,12 +119,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 					server.sync;
 
-					2.do({"".postln}); // líneas en blanco para mostrar después todos los mensajes de arranque
+					2.do({"".sgmePostln}); // líneas en blanco para mostrar después todos los mensajes de arranque
 
 
 
 
-					"Conexión de salida stereo canales 1 a 8 mezclados a salidas 1 y 2".postln;
+					"Conexión de salida stereo canales 1 a 8 mezclados a salidas 1 y 2".sgmePostln;
 					connectionOut = [];
 					connectionOut = connectionOut.add({
 						var result = nil;
@@ -157,7 +157,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					if (
 						numOutputChannels >= 4,
 						{
-							"Conexión de salida stereo canales 1 - 4 a salidas 3 y 4".postln;
+							"Conexión de salida stereo canales 1 - 4 a salidas 3 y 4".sgmePostln;
 							connectionOut = connectionOut.add({
 								var result = nil;
 								var channels = modulOutputChannels[0..3];
@@ -183,7 +183,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					if (
 						numOutputChannels >= 6,
 						{
-							"Conexión de salida stereo canales 5 - 8 a salidas 5 y 6".postln;
+							"Conexión de salida stereo canales 5 - 8 a salidas 5 y 6".sgmePostln;
 							connectionOut = connectionOut.add({
 								var result = nil;
 								var channels = modulOutputChannels[4..7];
@@ -206,7 +206,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					);
 
 
-					//"Conexión de salida de cada canal individual...".postln;
+					//"Conexión de salida de cada canal individual...".sgmePostln;
 					modulOutputChannels.do({|out, n|
 						if (n+7 <= numOutputChannels //server.options.numOutputBusChannels
 							//numOutputChannels >= (n+7)
@@ -214,7 +214,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						{
 							connectionOut = connectionOut.add({
 								var result = nil;
-								("Output Channel" + (n+1) + "conectado a salida" + (n+7)).postln;
+								("Output Channel" + (n+1) + "conectado a salida" + (n+7)).sgmePostln;
 								result = Synth(\connectionMono, [
 									\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
 									\outputBus, settings[\individualChannelOutputsBusses][n-1],
@@ -370,7 +370,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					);
 					"OK\n".post;
 
-					//"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".postln;
+					//"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".sgmePostln;
 					connectionIn = inputAmplifiersBusses.collect({|item, i|
 						if (//i+1 <= server.options.numInputBusChannels
 							(i+1) <= numInputChannels
@@ -381,13 +381,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 								\outBus, item,
 								\vol, 1,
 							], server).register;
-							("Input Channel" + (i+1) + "conectado a entrada" + (i+1)).postln;
+							("Input Channel" + (i+1) + "conectado a entrada" + (i+1)).sgmePostln;
 							server.sync;
 							result
 						}
 					});
 
-					//"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".postln;
+					//"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".sgmePostln;
 					connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
 						if (//i+8 <= server.options.numInputBusChannels
 							(i+1) <= numReturnChannels
@@ -398,7 +398,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 								\outBus, item,
 								\vol, 1,
 							], server).register;
-							("External Input Channel" + (i+1) + "conectado a entrada" + (i+9)).postln;
+							("External Input Channel" + (i+1) + "conectado a entrada" + (i+9)).sgmePostln;
 							server.sync;
 							result
 						}
@@ -414,8 +414,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 					// Se abre puerto para recibir mensajes OSC
 					if (thisProcess.openUDPPort(devicePort)) {
-						("Abierto puerto" + devicePort + "para OSC.").postln;} {
-						("No se ha podido abrir el puerto" + devicePort + "para OSC").postln;
+						("Abierto puerto" + devicePort + "para OSC.").sgmePostln;} {
+						("No se ha podido abrir el puerto" + devicePort + "para OSC").sgmePostln;
 					};
 
 					// Se lanza todo el sistema gráfico de ventanas:
@@ -424,10 +424,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 					// Se almacena el estado inicial de todos los parámetros:
 					initState = this.getFullState;
-					(initState.size.asString + "parámetros iniciados a sus valores por defecto.").postln;
+					(initState.size.asString + "parámetros iniciados a sus valores por defecto.").sgmePostln;
 
 					if (myIp.isNil == false) {
-						("La IP de la red local es:" + myIp).postln;
+						("La IP de la red local es:" + myIp).sgmePostln;
 					} {
 						"No se ha podido obtener la IP de red local".error;
 					};
@@ -435,13 +435,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					// Preparación para la grabación:
 					server.prepareForRecord;
 
-					("\n*** SynthiGME (" ++ version ++ ") en ejecución ***\n").postln;
+					("\n*** SynthiGME (" ++ version ++ ") en ejecución ***\n").sgmePostln;
 
 
 				},
 				onFailure: {
 					"No se ha podido arrancar el servidor de audio".error;
-					"Saliendo del programa...".postln;
+					"Saliendo del programa...".sgmePostln;
 					this.close;
 					thisRoutine.stop();
 				}
