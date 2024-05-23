@@ -196,8 +196,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 									\inBusR3, channels[2].outBusR,
 									\inBusL4, channels[3].outBusL,
 									\inBusR4, channels[3].outBusR,
-									\outBusL, 2,
-									\outBusR, 3,
+									\outBusL, 4,
+									\outBusR, 5,
 									\vol, generalVol,
 								], server).register;
 							}.value);
@@ -208,14 +208,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 					//"Conexión de salida de cada canal individual...".postln;
 					modulOutputChannels.do({|out, n|
-						if (n+6 <= server.options.numOutputBusChannels)
+						if (//n+6 <= server.options.numOutputBusChannels
+							numOutputChannels >= (n+7))
 						{
 							connectionOut = connectionOut.add({
 								var result = nil;
 								("Output Channel" + (n+1) + "conectado a salida" + (n+7)).postln;
 								result = Synth(\connectionMono, [
 									\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
-									\outputBus, settings[\individualChannelOutputsBusses][n],
+									\outputBus, settings[\individualChannelOutputsBusses][n-1],
 									\vol, generalVol,
 								], server).register;
 								server.sync;

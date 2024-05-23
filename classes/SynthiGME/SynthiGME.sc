@@ -137,7 +137,7 @@ SynthiGME {
 		if (instance != nil) {"Ya existe una instancia"; ^this};
 		instance = this;
 
-		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,16), numInputChannels.clip(2,8), numReturnChannels.clip(0,4), blockSize, alwaysRebootServer);
+		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer);
 	}
 
 
