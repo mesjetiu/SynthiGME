@@ -10,6 +10,7 @@
 ### Bugs corregidos
 - Los paneles no tomaban foco al pulsar su atajo (1-7).
 - Otros bugs encontrados en el proceso.
+- Manejo de outputs al sistema en el innicio.
 
 ### Otras mejoras
 - Reorganización de código para mayor claridad.
