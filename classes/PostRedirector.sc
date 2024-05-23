@@ -44,15 +44,13 @@ MessageRedirector {
 
 	postMessage { |string|
 		//var timestamp = Date.getDate.asString("%H:%M:%S");  // Obtener la hora actual con formato de horas, minutos y segundos
-		var timestamp = Date.getDate.hourStamp.asString();
-
+		var timestamp = Date.getDate.hourStamp.format("%T").asString().split($.)[0];
 		var message = "[" ++ timestamp ++ "] " ++ string;   // Formatear el mensaje con la marca de tiempo
 
-		storedText = storedText ++ message ++ "\n";  // Almacenar el texto
+		storedText = message ++ "\n" ++ storedText;  // Almacenar el texto
 		if (textView.notNil) {
 			{
 				textView.string = storedText;  // Actualizar el TextView si existe
-				textView.scrollToEnd;
 			}.defer;
 		};
 	//	message.postln;  // También envía al Post Window estándar
