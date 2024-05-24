@@ -6,6 +6,7 @@
 - Parpadeo de los mandos al variar su valor.
 - Módulo de osciloscopio creado (funcional, sin características modificables).
 - Comunicación OSC en red local de forma permanente y distribuida.
+- Creada ventana Post Window para ver los mensajes fuera de la IDE de SC (solo funcional por ahora);
 
 ### Bugs corregidos
 - Los paneles no tomaban foco al pulsar su atajo (1-7).
