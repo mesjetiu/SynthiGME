@@ -20,6 +20,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SynthiGME {
 
 	classvar <version;
+	classvar <appName; // Nombre del Quark o extensión
 
 	// Opciones de inicio:
 	var <server; // Servidor de audio a utilizar
@@ -185,6 +186,7 @@ SynthiGME {
 
 	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin|
 		version = "1.8.0";
+		appName = "SynthiGME";
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
@@ -192,7 +194,7 @@ SynthiGME {
 		pathState = Platform.userHomeDir; // path por defecto donde guardar estados
 		oscRecievedMessages = Dictionary.new;
 
-		appPath = Quarks.quarkNameAsLocalPath("SynthiGME");
+		appPath = SynthiGME.getAppPath();
 		guiSC = SGME_GUI(this, appPath);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
 
@@ -252,87 +254,10 @@ SynthiGME {
 	// getFullState() en SynthiGME_getFullState.sc
 	// Herramientas de guardado y recuperación de patches en archivos, en SynthiGME_file_tools.sc
 
-	// Habilita el envío y recepción de mensajes OSC desde otros dispositivos.
-	/*
-	pairDevice { arg searchTime = 10;
-		var oscDevices = Dictionary.new;
-		NetAddr.broadcastFlag = true;
-		Routine({
-			var functionOSC = {|msg, time, addr, recvPort|
-				if(
-					"/ping".matchRegexp(msg[0].asString), // ...o si está activado el /ping en TouchOSC en menos de 4s
-					{
-						if(oscDevices.trueAt(addr.ip) == false, {
-							oscDevices.put(addr.ip, [addr.ip, recvPort]);
-							("Found device at " ++ addr.ip).sgmePostln;
-						})
-				})
-			};
-			"Searching OSC devices...".sgmePostln;
-			thisProcess.addOSCRecvFunc(functionOSC);
-			wait(searchTime);
-			thisProcess.removeOSCRecvFunc(functionOSC);
-			("Found " ++ oscDevices.size ++ " devices:").sgmePostln;
-			oscDevices.do({|i| i.sgmePostln});
-			if (oscDevices.size > 0, {
-				this.prepareOSC;
-				netAddr = List.new;
-				oscDevices.do({|i|
-					netAddr.add(NetAddr(i[0], i[1]));
-				});
-				//this.sendStateOSC;
-			});
-		}).play;
-	}
-	*/
 
-/*
-	prepareOSC {
-		NetAddr.broadcastFlag = true;
-		thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
-		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
-		functionOSC = {|msg, time, addr, recvPort|
-			// se ejecuta la orden recibida por mensaje.
-			//	{this.setParameterOSC(msg[0].asString, msg[1], addr)}.defer(0);
-			this.setParameterOSC(msg[0].asString, msg[1], addr)
-		};
-		netAddr = NetAddr("255.255.255.255", devicePort);
-		thisProcess.addOSCRecvFunc(functionOSC);
+	*getAppPath {
+		^Quarks.quarkNameAsLocalPath(appName);
 	}
-	*/
-
-	/*
-	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
-	sendBroadcastMsg{|msg, value, addrForbidden|
-		if(addrForbidden == \GUI, {
-			netAddr.do({|i|
-				i.sendMsg(msg, value).sgmePostln;
-			})
-		}, {
-			// Poner aquí código de reenvío a GUI de los mensajes recibidos de otros dispositivos
-			netAddr.do({|i|
-				if(addrForbidden.ip != i.ip, {
-					i.sendMsg(msg, value)
-				})
-			})
-		});
-	}
-*/
-
-	// Se envía el mismo mensaje a todas las direcciones menos a la de la dirección "addrForbidden"
-	/*
-	ping {|ip = "192.168.1.255", port = 9000, times = 10|
-		var netAddr = NetAddr(ip, port);
-		NetAddr.broadcastFlag = true;
-		fork {
-			times.do {
-				netAddr.sendMsg(\ping);
-				3.wait;
-			};
-			NetAddr.broadcastFlag = false;
-		}
-	}
-	*/
 
 	// OBSOLETO. QUIZÁS APROVECHABLE...
 	// Envía el estado de todo el Synthi por OSC
@@ -472,7 +397,7 @@ SynthiGME {
 
 	// Actualiza SynthiGME:
 	update {
-		Quark("SynthiGME").update;
+		Quark(appName).update;
 		"Para que la actualización tenga efecto, es necesario recompilar la biblioteca de clases, con Ctrl + Shift + L, o abriendo y cerrando SuperCollider.".sgmePostln;
 	}
 
