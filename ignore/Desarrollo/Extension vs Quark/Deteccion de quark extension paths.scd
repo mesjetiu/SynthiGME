@@ -22,3 +22,58 @@ if (~checkQuarkInstalled.value("SynthiGME")) {
     "El quark SynthiGME no está instalado.".postln;
 };
 )
+
+
+
+////////////////////////////////////////
+
+
+
+(
+~isQuarkInstalled = { |quarkName|
+    Quarks.installed.any { |quark|
+        quark.name == quarkName
+    }
+};
+
+~isExtensionInstalled = { |extensionName|
+	var userExtensions = Platform.userExtensionDir +/+ extensionName +/+ "SynthiGME.quark";
+    var systemExtensions = Platform.systemExtensionDir +/+ extensionName +/+ "SynthiGME.quark";
+
+    File.exists(userExtensions).postln ||  File.exists(systemExtensions).postln;
+};
+)
+
+~isExtensionInstalled.("MiClase")
+
+// hasta aquí funciona
+
+(
+~getResourcePath = { |name|
+    if (~isQuarkInstalled.value(name).isNil.not) {
+        var quarkPath = Quarks.quarkNameAsLocalPath(name);
+        "Quark encontrado en: %".format(quarkPath).postln;
+        quarkPath
+    } {
+        if (~isExtensionInstalled.value(name).isNil.not) {
+            var userExtensionPath = Platform.userExtensionDir +/+ name;
+            var systemExtensionPath = Platform.systemExtensionDir +/+ name;
+            var extensionPath = if (File.exists(userExtensionPath)) {
+                userExtensionPath
+            } {
+                systemExtensionPath
+            };
+            "Extensión encontrada en: %".format(extensionPath).postln;
+            extensionPath
+        } {
+            "Ni Quark ni Extensión encontrados con el nombre: %".format(name).postln;
+            nil
+        }
+    }
+};
+
+)
+
+// Ejemplo de uso
+~getResourcePath.value("SynthiGME");
+~getResourcePath.value("MiClase");
