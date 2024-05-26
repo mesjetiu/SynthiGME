@@ -40,7 +40,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 	var synthiGME;
 	var <parameterViews; // Views de los parámetros (widgets)
 
-	var installedPath;
+	var imagesPath;
 
 	// Colores de la intefaz (tomados de fotografías del Synthi 100)
 	var blue;
@@ -61,15 +61,15 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		Class.initClassTree(SGME_GUIShortcuts);
 	}
 
-	*new {|synthi, parameters|
-		^super.new.init(synthi, parameters);
+	*new {|synthi, parameters, appPath|
+		^super.new.init(synthi, parameters, appPath);
 	}
 
-	init {|synthi, parameters|
+	init {|synthi, parameters, appPath|
 		synthiGME = synthi;
 		hasFocus = false;
 		parameterViews = parameters;
-		installedPath = Quarks.quarkNameAsLocalPath("SynthiGME");
+		imagesPath = appPath.asString +/+ "classes" +/+ "GUI_classes" +/+ "images";
 
 		blue = Color.new255(61.8, 86.7, 118.4);
 		green = Color.new255(68.6, 107.2, 82.6);

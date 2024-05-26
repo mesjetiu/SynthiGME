@@ -30,7 +30,7 @@ SGME_GUI {
 
 	var <helpWindow; // Ventana de ayuda de atajos de teclado
 
-	var installedPath; // Dirección absoluta de instalación del Quark.
+	//var installedPath; // Dirección absoluta de instalación del Quark.
 	var <running; // Es true cuando se enciende la GUI. Sirve de semáforo para enviar o no mensajes desde fuera.
 
 
@@ -54,25 +54,25 @@ SGME_GUI {
 		Class.initClassTree(SGME_GUIAbout);
 	}
 
-	*new {arg synthi;
-		^super.new.init(synthi);
+	*new {arg synthi, appPath;
+		^super.new.init(synthi, appPath);
 	}
 
 
 	// Métodos de instancia ******************************************************************
 
-	init {|synthi|
+	init {|synthi, appPath|
 		parameterViews = Dictionary.new;
-		installedPath = Quarks.quarkNameAsLocalPath("SynthiGME"); // quizás equivalente a Quark("SynthiGME").localPath
+		//installedPath = Quarks.quarkNameAsLocalPath("SynthiGME"); // quizás equivalente a Quark("SynthiGME").localPath
 
 		panels = [];
-		panels = panels.add(SGME_GUIPanel1(synthi, parameterViews));
-		panels = panels.add(SGME_GUIPanel2(synthi, parameterViews));
-		panels = panels.add(SGME_GUIPanel3(synthi, parameterViews));
-		panels = panels.add(SGME_GUIPanel4(synthi, parameterViews));
-		panels = panels.add(SGME_GUIPanel5(synthi, parameterViews));
-		panels = panels.add(SGME_GUIPanel6(synthi, parameterViews));
-		panels = panels.add(SGME_GUIPanel7(synthi, parameterViews));
+		panels = panels.add(SGME_GUIPanel1(synthi, parameterViews, appPath));
+		panels = panels.add(SGME_GUIPanel2(synthi, parameterViews, appPath));
+		panels = panels.add(SGME_GUIPanel3(synthi, parameterViews, appPath));
+		panels = panels.add(SGME_GUIPanel4(synthi, parameterViews, appPath));
+		panels = panels.add(SGME_GUIPanel5(synthi, parameterViews, appPath));
+		panels = panels.add(SGME_GUIPanel6(synthi, parameterViews, appPath));
+		panels = panels.add(SGME_GUIPanel7(synthi, parameterViews, appPath));
 
 		helpWindow = SGME_GUIHelp(synthi);
 

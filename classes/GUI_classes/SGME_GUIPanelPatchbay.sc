@@ -22,12 +22,12 @@ SGME_GUIPanelPatchbay : SGME_GUIPanel {
 	var visibleNodes = true;
 	var topPanel, bottomPanel, halfHeight, topPanelBounds, bottomPanelBounds;
 
-	*new {|synthi, parameters|
-		^super.new.init(synthi, parameters);
+	*new {|synthi, parameters, appPath|
+		^super.new.init(synthi, parameters, appPath);
 	}
 
-	init {|synthi, parameters|
-		super.init(synthi, parameters);
+	init {|synthi, parameters, appPath|
+		super.init(synthi, parameters, appPath);
 	}
 
 	enableNodes { // Enable o disable los nodos según si el sintetizador los usa o no.

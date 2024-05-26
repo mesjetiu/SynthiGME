@@ -14,7 +14,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		);
 		window.name = "Panel 6";
 		window.bounds = rect;
-		image = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "panels" +/+ "panel_6");
+		image = Image(imagesPath +/+ "panels" +/+ "panel_6");
 		compositeView
 		.setBackgroundImage(image,10)
 		.background_(whiteBackground);
@@ -100,7 +100,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
 
-		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC);
+		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, imagesPath);
 
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchC/91/36

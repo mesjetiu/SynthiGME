@@ -21,20 +21,18 @@ SGME_GUINode {
 	var <view;
 	var <value;
 	classvar imageHole, imageWhite, imageYellow;
-	classvar installedPath;
 	classvar synthiGME;
 	var <visible; // atributo "dummy" para el cambio de visibilidad de los witches en los paneles. No afecta a los Nodos pero se incluye el atributo para cambios generales en la visibilidad de GUI.
 
-	*new {arg synthi, parent, bounds, stringOSC;
-		^super.new.init(synthi, parent, bounds, stringOSC);
+	*new {arg synthi, parent, bounds, stringOSC, imagesPath;
+		^super.new.init(synthi, parent, bounds, stringOSC, imagesPath);
 	}
 
-	init {|synthi, parent, bounds, stringOSC|
+	init {|synthi, parent, bounds, stringOSC, imagesPath|
 		synthiGME = synthi;
-		installedPath = Quarks.quarkNameAsLocalPath("SynthiGME");
-		imageHole = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_hole");
-		imageWhite = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_white_pin");
-		imageYellow = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "widgets" +/+ "patchbay_yellow_pin");
+		imageHole = Image(imagesPath +/+ "widgets" +/+ "patchbay_hole");
+		imageWhite = Image(imagesPath +/+ "widgets" +/+ "patchbay_white_pin");
+		imageYellow = Image(imagesPath +/+ "widgets" +/+ "patchbay_yellow_pin");
 		value = 0;
 		view = View(parent, bounds)
 		.setBackgroundImage(imageHole, 10)

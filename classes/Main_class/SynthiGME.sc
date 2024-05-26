@@ -89,6 +89,7 @@ SynthiGME {
 
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC = nil;
+	var appPath; // Path de la aplicación
 
 	// Otras opciones.
 	var <generalVol;
@@ -191,7 +192,8 @@ SynthiGME {
 		pathState = Platform.userHomeDir; // path por defecto donde guardar estados
 		oscRecievedMessages = Dictionary.new;
 
-		guiSC = SGME_GUI(this);
+		appPath = Quarks.quarkNameAsLocalPath("SynthiGME");
+		guiSC = SGME_GUI(this, appPath);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
 
 		generalVol = settings[\generalVol];

@@ -33,7 +33,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		);
 		window.name = "Panel 5";
 		window.bounds = rect;
-		image = Image(installedPath +/+ "classes" +/+ "GUI" +/+ "images" +/+ "panels" +/+ "panel_5");
+		image = Image(imagesPath +/+ "panels" +/+ "panel_5");
 		compositeView
 		.setBackgroundImage(image,10)
 		.background_(whiteBackground);
@@ -122,7 +122,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		var stringOSC = "/patchA/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
-		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC);
+		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, imagesPath);
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchA/91/36
 		parameterViews.put(stringOSC, node);
