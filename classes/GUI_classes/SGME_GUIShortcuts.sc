@@ -21,7 +21,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 // De esta clase heredan todas las clases de ventanas que aceptan los atajos de teclado de la aplicación. Simplemente añade una función para aplicar a las ventanas, con los atajos de teclado.
 SGME_GUIShortcuts {
 
-	makeShortcuts {|win, synthiGME|
+	*makeShortcuts {|win, synthiGME|
 		win.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
 			//keycode.sgmePostln;
