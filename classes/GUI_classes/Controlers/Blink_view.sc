@@ -22,13 +22,11 @@ Blink_view {
 
 	var
 	<view,
-	<defaultColor,
 	<blinkColor1,
 	<blinkColor2,
 	<blinkRate,
 	<blinkDuration,
-	<isBlinking,
-	<currentColor;
+	<isBlinking;
 
 	//*********************************************************************************************
 
@@ -49,8 +47,6 @@ Blink_view {
 			wait(blinkDuration);
 			isBlinking = false;
 		}).play(AppClock);
-		currentColor = defaultColor; // Variable para rastrear el color actual de forma local
-
 		// Pasar la función blink como referencia usando una función anónima
 		//view.action_({ this.blink });
 
@@ -58,20 +54,22 @@ Blink_view {
 
 	blink {
 		if (isBlinking.not) { // Verificar si ya está parpadeando
-			var defaultColor = view.background;
 			isBlinking = true;
 			fork {
+				var defaultColor;
+				var currentColor = defaultColor;
 				var startTime = Main.elapsedTime;
 				var endTime = startTime + blinkDuration;
+				defer {defaultColor = view.background};
 				while({ Main.elapsedTime < endTime }) {
 					defer {
 						// Alternar colores de forma segura utilizando la variable local
 						if (currentColor == blinkColor1) {
-							view.background = blinkColor2;
+							defer {view.background = blinkColor2};
 							currentColor = blinkColor2; // Actualizar el estado local
 							//"Changing to blinkColor2".sgmePostln;
 						} {
-							view.background = blinkColor1;
+							defer {view.background = blinkColor1};
 							currentColor = blinkColor1; // Actualizar el estado local
 							//"Changing to blinkColor1".sgmePostln;
 						}
@@ -82,10 +80,6 @@ Blink_view {
 				isBlinking = false;
 			};
 		}
-	}
-
-	setDefaultColor_ {|color|
-		defaultColor = color;
 	}
 }
 
