@@ -37,20 +37,20 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 	var stepDefault = 0.001;
 	var step = 0.001;
 
-	var synthiGME;
+	classvar synthiGME;
 	var <parameterViews; // Views de los parámetros (widgets)
 
-	var imagesPath;
+	classvar imagesPath;
 
 	// Colores de la intefaz (tomados de fotografías del Synthi 100)
-	var blue;
-	var green;
-	var yellow;
-	var red;
-	var white;
-	var black;
-	var whiteBackground;
-	var blackForniture;
+	classvar blue;
+	classvar green;
+	classvar yellow;
+	classvar red;
+	classvar white;
+	classvar black;
+	classvar whiteBackground;
+	classvar blackForniture;
 
 
 	//*********************************************************************************************
@@ -62,13 +62,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 	}
 
 	*new {|synthi, parameters, appPath|
-		^super.new.init(synthi, parameters, appPath);
-	}
-
-	init {|synthi, parameters, appPath|
 		synthiGME = synthi;
-		hasFocus = false;
-		parameterViews = parameters;
 		imagesPath = appPath.asString +/+ "classes" +/+ "GUI_classes" +/+ "images";
 
 		blue = Color.new255(61.8, 86.7, 118.4);
@@ -79,6 +73,13 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		red = Color.new255(183, 56, 66);
 		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
+
+		^super.new.init(synthi, parameters, appPath);
+	}
+
+	init {|synthi, parameters, appPath|
+		hasFocus = false;
+		parameterViews = parameters;
 	}
 
 	makeWindow { // Para sobrescribir desde clases que heredan
