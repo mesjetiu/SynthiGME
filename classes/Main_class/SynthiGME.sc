@@ -411,7 +411,7 @@ SynthiGME {
 		userExtensions = Platform.userExtensionDir +/+ extensionName +/+ "SynthiGME.quark";
 		systemExtensions = Platform.systemExtensionDir +/+ extensionName +/+ "SynthiGME.quark";
 
-		^(File.exists(userExtensions).postln ||  File.exists(systemExtensions))
+		^(File.exists(userExtensions) ||  File.exists(systemExtensions))
 	}
 
 	*getAppPath { |name|

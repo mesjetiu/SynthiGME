@@ -1,5 +1,7 @@
-Quarks.installed[7].name == "SynthiGME"
-
+// Comprobar con (ya está implementado pero no testeado en otros SO)
+SynthiGME.isExtensionInstalled
+SynthiGME.isQuarkInstalled
+SynthiGME.getAppPath
 
 
 (
