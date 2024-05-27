@@ -95,12 +95,6 @@ SGME_GUINode {
 			})
 		})
 	}
-/*
-	value_ {|valueIn| // Desde setParameterOSC() se cambia el valor del nodo
-		value = valueIn;
-		this.enable_(value == 1)
-	}
-	*/
 
 	bounds {
 		^view.bounds;
