@@ -25,14 +25,14 @@ SGME_GUINode {
 	var <visible; // atributo "dummy" para el cambio de visibilidad de los witches en los paneles. No afecta a los Nodos pero se incluye el atributo para cambios generales en la visibilidad de GUI.
 
 	*new {arg synthi, parent, bounds, stringOSC, imagesPath;
-		^super.new.init(synthi, parent, bounds, stringOSC, imagesPath);
-	}
-
-	init {|synthi, parent, bounds, stringOSC, imagesPath|
 		synthiGME = synthi;
 		imageHole = Image(imagesPath +/+ "widgets" +/+ "patchbay_hole");
 		imageWhite = Image(imagesPath +/+ "widgets" +/+ "patchbay_white_pin");
 		imageYellow = Image(imagesPath +/+ "widgets" +/+ "patchbay_yellow_pin");
+		^super.new.init(synthi, parent, bounds, stringOSC);
+	}
+
+	init {|synthi, parent, bounds, stringOSC|
 		value = 0;
 		view = View(parent, bounds)
 		.setBackgroundImage(imageHole, 10)
