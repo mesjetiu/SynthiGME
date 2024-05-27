@@ -19,8 +19,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 SynthiGME {
 
-	classvar <version;
-	classvar <appName; // Nombre del Quark o extensión
+	classvar <version = "1.8.0";
+	classvar <appName = "SynthiGME"; // Nombre del Quark o extensión
 
 	// Opciones de inicio:
 	var <server; // Servidor de audio a utilizar
@@ -90,7 +90,7 @@ SynthiGME {
 
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC = nil;
-	var appPath; // Path de la aplicación
+	var appPath = nil; // Path de la aplicación
 
 	// Otras opciones.
 	var <generalVol;
@@ -185,8 +185,8 @@ SynthiGME {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin|
-		version = "1.8.0";
-		appName = "SynthiGME";
+		//version = "1.8.0";
+		//appName = "SynthiGME";
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
@@ -195,6 +195,8 @@ SynthiGME {
 		oscRecievedMessages = Dictionary.new;
 
 		appPath = SynthiGME.getAppPath();
+		if (appPath.isNil) {"No se ha podido obtener el path de la aplicación".error; ^this};
+
 		guiSC = SGME_GUI(this, appPath);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
 
@@ -253,11 +255,6 @@ SynthiGME {
 	// run() en SynthiGME_run.sc
 	// getFullState() en SynthiGME_getFullState.sc
 	// Herramientas de guardado y recuperación de patches en archivos, en SynthiGME_file_tools.sc
-
-
-	*getAppPath {
-		^Quarks.quarkNameAsLocalPath(appName);
-	}
 
 	// OBSOLETO. QUIZÁS APROVECHABLE...
 	// Envía el estado de todo el Synthi por OSC
@@ -401,7 +398,43 @@ SynthiGME {
 		"Para que la actualización tenga efecto, es necesario recompilar la biblioteca de clases, con Ctrl + Shift + L, o abriendo y cerrando SuperCollider.".sgmePostln;
 	}
 
-	version {
-		Quark("SynthiGME").version.sgmePostln;
+	*isQuarkInstalled { |quarkName|
+		if (quarkName.isNil) {quarkName = appName};
+		^Quarks.installed.any { |quark|
+			quark.name == quarkName
+		}
+	}
+
+	*isExtensionInstalled { |extensionName|
+		var userExtensions, systemExtensions;
+		if (extensionName.isNil) {extensionName = appName};
+		userExtensions = Platform.userExtensionDir +/+ extensionName +/+ "SynthiGME.quark";
+		systemExtensions = Platform.systemExtensionDir +/+ extensionName +/+ "SynthiGME.quark";
+
+		^(File.exists(userExtensions).postln ||  File.exists(systemExtensions))
+	}
+
+	*getAppPath { |name|
+		if (name.isNil) {name = appName};
+		if (SynthiGME.isQuarkInstalled.(name)) {
+			var quarkPath = Quarks.quarkNameAsLocalPath(name);
+			"Quark encontrado en: %".format(quarkPath).postln;
+			^quarkPath
+		} {
+			if (SynthiGME.isExtensionInstalled.(name)) {
+				var userExtensionPath = Platform.userExtensionDir +/+ name;
+				var systemExtensionPath = Platform.systemExtensionDir +/+ name;
+				var extensionPath = if (File.exists(userExtensionPath +/+ "SynthiGME.quark")) {
+					userExtensionPath
+				} {
+					systemExtensionPath
+				};
+				"Extensión encontrada en: %".format(extensionPath).postln;
+				^extensionPath
+			} {
+				"Ni Quark ni Extensión encontrados con el nombre: %".format(name).postln;
+				nil
+			}
+		}
 	}
 }
