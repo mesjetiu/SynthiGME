@@ -400,11 +400,10 @@ SynthiGME {
 
 	*isQuarkInstalled { |quarkName|
 		if (quarkName.isNil) {quarkName = appName};
-		^Quarks.installed.any { |quark|
-			quark.name == quarkName
-		}
+		^Quarks.isInstalled(quarkName)
 	}
 
+	// No se llama esta función en principio
 	*isExtensionInstalled { |extensionName|
 		var userExtensions, systemExtensions;
 		if (extensionName.isNil) {extensionName = appName};
@@ -420,21 +419,21 @@ SynthiGME {
 			var quarkPath = Quarks.quarkNameAsLocalPath(name);
 			"Quark encontrado en: %".format(quarkPath).postln;
 			^quarkPath
-		} {
-			if (SynthiGME.isExtensionInstalled.(name)) {
+		} { // Si no es Quark, entonces es extensión
+			//if (SynthiGME.isExtensionInstalled.(name)) {
 				var userExtensionPath = Platform.userExtensionDir +/+ name;
 				var systemExtensionPath = Platform.systemExtensionDir +/+ name;
-				var extensionPath = if (File.exists(userExtensionPath +/+ "SynthiGME.quark")) {
+				var extensionPath = if (File.existsCaseSensitive(userExtensionPath +/+ "SynthiGME.quark")) {
 					userExtensionPath
 				} {
 					systemExtensionPath
 				};
 				"Extensión encontrada en: %".format(extensionPath).postln;
 				^extensionPath
-			} {
+			/*} {
 				"Ni Quark ni Extensión encontrados con el nombre: %".format(name).postln;
 				nil
-			}
+			}*/
 		}
 	}
 }
