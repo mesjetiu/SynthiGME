@@ -46,7 +46,15 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		topPanel = UserView(compositeView, topPanelBounds)
 		//.background_(Color.red)
 		.canFocus_(true);
-		topPanel.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|this.contextualMenu(view, x, y, modifiers, buttonNumber, clickCount)});
+		topPanel.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var factor = 2;
+			if(clickCount == 2) {
+				buttonNumber.switch(
+					0, {this.resizePanel(factor)}, // botón izquierdo
+					1, {this.resizePanel(1/factor)}, // botón derecho
+				)
+			} {SGME_GUIPanel.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
+		});
 		viewSizes = viewSizes.add([topPanel, topPanelBounds]);
 		//topPanel.setBackgroundImage(image,10);
 
@@ -55,7 +63,15 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		bottomPanel = UserView(compositeView, bottomPanelBounds)
 		//.background_(Color.blue)
 		.canFocus_(true);
-		bottomPanel.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|this.contextualMenu(view, x, y, modifiers, buttonNumber, clickCount)});
+		bottomPanel.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var factor = 2;
+			if(clickCount == 2) {
+				buttonNumber.switch(
+					0, {this.resizePanel(factor)}, // botón izquierdo
+					1, {this.resizePanel(1/factor)}, // botón derecho
+				)
+			} {SGME_GUIPanel.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
+		});
 		viewSizes = viewSizes.add([bottomPanel, bottomPanelBounds]);
 		//bottomPanel.setBackgroundImage(image,10,fromRect: Rect(0, 2995/2, 2997, 2995/2)); // 10, 7, 8, 5
 
