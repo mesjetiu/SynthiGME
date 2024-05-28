@@ -66,13 +66,13 @@ SGME_GUI {
 		//installedPath = Quarks.quarkNameAsLocalPath("SynthiGME"); // quizás equivalente a Quark("SynthiGME").localPath
 
 		panels = [];
-		panels = panels.add(SGME_GUIPanel1(synthi, parameterViews, appPath));
-		panels = panels.add(SGME_GUIPanel2(synthi, parameterViews, appPath));
-		panels = panels.add(SGME_GUIPanel3(synthi, parameterViews, appPath));
-		panels = panels.add(SGME_GUIPanel4(synthi, parameterViews, appPath));
-		panels = panels.add(SGME_GUIPanel5(synthi, parameterViews, appPath));
-		panels = panels.add(SGME_GUIPanel6(synthi, parameterViews, appPath));
-		panels = panels.add(SGME_GUIPanel7(synthi, parameterViews, appPath));
+		panels = panels.add(SGME_GUIPanel1(synthi, parameterViews));
+		panels = panels.add(SGME_GUIPanel2(synthi, parameterViews));
+		panels = panels.add(SGME_GUIPanel3(synthi, parameterViews));
+		panels = panels.add(SGME_GUIPanel4(synthi, parameterViews));
+		panels = panels.add(SGME_GUIPanel5(synthi, parameterViews));
+		panels = panels.add(SGME_GUIPanel6(synthi, parameterViews));
+		panels = panels.add(SGME_GUIPanel7(synthi, parameterViews));
 
 		helpWindow = SGME_GUIHelp(synthi);
 

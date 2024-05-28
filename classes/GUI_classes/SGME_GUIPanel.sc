@@ -57,13 +57,15 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 
 	*initClass {
 		// Inicializa otras clases antes de esta
+		Class.initClassTree(SGME_Path);
 		Class.initClassTree(SGME_GUINode);
 		Class.initClassTree(SGME_GUIShortcuts);
+		imagesPath = SGME_Path.imagesPath;
 	}
 
-	*new {|synthi, parameters, appPath|
+	*new {|synthi, parameters|
 		synthiGME = synthi;
-		imagesPath = appPath.asString +/+ "classes" +/+ "GUI_classes" +/+ "images";
+		//imagesPath = appPath.asString +/+ "classes" +/+ "GUI_classes" +/+ "images";
 
 		blue = Color.new255(61.8, 86.7, 118.4);
 		green = Color.new255(68.6, 107.2, 82.6);
@@ -74,10 +76,10 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
 
-		^super.new.init(synthi, parameters, appPath);
+		^super.new.init(synthi, parameters);
 	}
 
-	init {|synthi, parameters, appPath|
+	init {|synthi, parameters|
 		hasFocus = false;
 		parameterViews = parameters;
 	}
@@ -94,7 +96,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		.userCanClose_(false);
 		compositeView = CompositeView(window, rectCompositeView);
 
-		SGME_GUIPanel.makeShortcuts(window, synthiGME);
+		SGME_GUIShortcuts.makeShortcuts(window, synthiGME);
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var factor = 2;
 			if(clickCount == 2, {

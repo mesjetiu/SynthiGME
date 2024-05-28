@@ -21,14 +21,20 @@ SGME_GUINode {
 	var <view;
 	var <value;
 	classvar imageHole, imageWhite, imageYellow;
-	classvar synthiGME;
+	classvar synthiGME = nil;
+	classvar imagesPath = nil;
 	var <visible; // atributo "dummy" para el cambio de visibilidad de los witches en los paneles. No afecta a los Nodos pero se incluye el atributo para cambios generales en la visibilidad de GUI.
 
-	*new {arg synthi, parent, bounds, stringOSC, imagesPath;
-		synthiGME = synthi;
+	*initClass {
+		Class.initClassTree(SGME_Path);
+		imagesPath = SGME_Path.imagesPath;
 		imageHole = Image(imagesPath +/+ "widgets" +/+ "patchbay_hole");
 		imageWhite = Image(imagesPath +/+ "widgets" +/+ "patchbay_white_pin");
 		imageYellow = Image(imagesPath +/+ "widgets" +/+ "patchbay_yellow_pin");
+	}
+
+	*new {arg synthi, parent, bounds, stringOSC;
+		if (synthiGME.isNil) {synthiGME = synthi};
 		^super.new.init(synthi, parent, bounds, stringOSC);
 	}
 
@@ -111,5 +117,34 @@ SGME_GUINode {
 		{ 0 } { view.setBackgroundImage(imageHole, 10) }
 		{ (-1) } { view.setBackgroundImage(imageYellow, 10) }
 		{ view.setBackgroundImage(imageHole, 10) };
+	}
+
+	*isQuarkInstalled {
+		var quarkName = "SynthiGME";
+		^Quarks.isInstalled(quarkName)
+	}
+
+	*getAppPath {
+		var name = "SynthiGME";
+		if (SGME_GUINode.isQuarkInstalled(name)) {
+			var quarkPath = Quarks.quarkNameAsLocalPath(name);
+			"Quark encontrado en: %".format(quarkPath).postln;
+			^quarkPath
+		} { // Si no es Quark, entonces es extensión
+			//if (SynthiGME.isExtensionInstalled.(name)) {
+			var userExtensionPath = Platform.userExtensionDir +/+ name;
+			var systemExtensionPath = Platform.systemExtensionDir +/+ name;
+			var extensionPath = if (File.existsCaseSensitive(userExtensionPath +/+ "SynthiGME.quark")) {
+				userExtensionPath
+			} {
+				systemExtensionPath
+			};
+			"Extensión encontrada en: %".format(extensionPath).postln;
+			^extensionPath
+			/*} {
+			"Ni Quark ni Extensión encontrados con el nombre: %".format(name).postln;
+			nil
+			}*/
+		}
 	}
 }

@@ -90,7 +90,7 @@ SynthiGME {
 
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC = nil;
-	var appPath = nil; // Path de la aplicación
+	classvar appPath = nil; // Path de la aplicación
 
 	// Otras opciones.
 	var <generalVol;
@@ -125,6 +125,8 @@ SynthiGME {
 		Class.initClassTree(SGME_PatchbayVoltage);
 		Class.initClassTree(SGME_Oscilloscope);
 		Class.initClassTree(SGME_GUI);
+
+	//	appPath = SynthiGME.getAppPath();
 	}
 
 	*new {
@@ -194,10 +196,10 @@ SynthiGME {
 		pathState = Platform.userHomeDir; // path por defecto donde guardar estados
 		oscRecievedMessages = Dictionary.new;
 
-		appPath = SynthiGME.getAppPath();
+		appPath = SGME_Path.rootPath;
 		if (appPath.isNil) {"No se ha podido obtener el path de la aplicación".error; ^this};
 
-		guiSC = SGME_GUI(this, appPath);
+		guiSC = SGME_GUI(this);
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
 
 		generalVol = settings[\generalVol];
@@ -398,42 +400,4 @@ SynthiGME {
 		"Para que la actualización tenga efecto, es necesario recompilar la biblioteca de clases, con Ctrl + Shift + L, o abriendo y cerrando SuperCollider.".sgmePostln;
 	}
 
-	*isQuarkInstalled { |quarkName|
-		if (quarkName.isNil) {quarkName = appName};
-		^Quarks.isInstalled(quarkName)
-	}
-
-	// No se llama esta función en principio
-	*isExtensionInstalled { |extensionName|
-		var userExtensions, systemExtensions;
-		if (extensionName.isNil) {extensionName = appName};
-		userExtensions = Platform.userExtensionDir +/+ extensionName +/+ "SynthiGME.quark";
-		systemExtensions = Platform.systemExtensionDir +/+ extensionName +/+ "SynthiGME.quark";
-
-		^(File.exists(userExtensions) ||  File.exists(systemExtensions))
-	}
-
-	*getAppPath { |name|
-		if (name.isNil) {name = appName};
-		if (SynthiGME.isQuarkInstalled.(name)) {
-			var quarkPath = Quarks.quarkNameAsLocalPath(name);
-			"Quark encontrado en: %".format(quarkPath).postln;
-			^quarkPath
-		} { // Si no es Quark, entonces es extensión
-			//if (SynthiGME.isExtensionInstalled.(name)) {
-				var userExtensionPath = Platform.userExtensionDir +/+ name;
-				var systemExtensionPath = Platform.systemExtensionDir +/+ name;
-				var extensionPath = if (File.existsCaseSensitive(userExtensionPath +/+ "SynthiGME.quark")) {
-					userExtensionPath
-				} {
-					systemExtensionPath
-				};
-				"Extensión encontrada en: %".format(extensionPath).postln;
-				^extensionPath
-			/*} {
-				"Ni Quark ni Extensión encontrados con el nombre: %".format(name).postln;
-				nil
-			}*/
-		}
-	}
 }
