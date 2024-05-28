@@ -27,7 +27,13 @@ MessageRedirector {
 	*createWindow {
 		if (window.isNil) {
 			var layout;
-			window = Window("Synthi GME Post window", Rect(100, 100, 400, 300)).front;
+			var rect = Rect(
+				Window.availableBounds.width/3.9,
+				Window.availableBounds.height/20,
+				width: 450,
+				height: 400
+			);
+			window = Window("Synthi GME Post window", rect).front;
 			//	.alwaysOnTop_(true);
 			layout = VLayout(8);
 			textView = TextView()
