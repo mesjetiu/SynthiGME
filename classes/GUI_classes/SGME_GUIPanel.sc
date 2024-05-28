@@ -96,7 +96,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		compositeView = CompositeView(window, rectCompositeView);
 
 		SGME_GUIShortcuts.makeShortcuts(window, synthiGME);
-		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|this.menu(view, x, y, modifiers, buttonNumber, clickCount)});
+		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|this.contextualMenu(view, x, y, modifiers, buttonNumber, clickCount)});
 
 		window.toFrontAction = {
 			this.focus;
@@ -255,7 +255,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		}).play(AppClock)
 	}
 
-	menu {|view, x, y, modifiers, buttonNumber, clickCount|
+	contextualMenu {|view, x, y, modifiers, buttonNumber, clickCount|
 		var factor = 2;
 		if(clickCount == 2, {
 			buttonNumber.switch(
