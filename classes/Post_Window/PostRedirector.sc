@@ -53,7 +53,7 @@ MessageRedirector {
 				textView.string = storedText;  // Actualizar el TextView si existe
 			}.defer;
 		};
-	//	message.postln;  // También envía al Post Window estándar
+		message.postln;  // También envía al Post Window estándar
 	}
 
 	*endRedirect {
