@@ -27,8 +27,8 @@ MessageRedirector {
 	*createWindow {
 		if (window.isNil) {
 			var layout;
-			window = Window("Synthi GME Post window", Rect(100, 100, 400, 300)).front
-			.alwaysOnTop_(true);
+			window = Window("Synthi GME Post window", Rect(100, 100, 400, 300)).front;
+			//	.alwaysOnTop_(true);
 			layout = VLayout(8);
 			textView = TextView()
 			.string_(storedText) // Inicializar el TextView con el texto almacenado
@@ -44,8 +44,12 @@ MessageRedirector {
 
 	postMessage { |string|
 		//var timestamp = Date.getDate.asString("%H:%M:%S");  // Obtener la hora actual con formato de horas, minutos y segundos
+		var message = nil;
 		var timestamp = Date.getDate.hourStamp.format("%T").asString().split($.)[0];
-		var message = "[" ++ timestamp ++ "] " ++ string;   // Formatear el mensaje con la marca de tiempo
+		if (MessageRedirector.containsPrintableChars(string)) {
+			message = "[" ++ timestamp ++ "] " ++ string;   // Formatear el mensaje con la marca de tiempo
+		} {message = string}; // No se muestra la hora en líneas vacías.
+
 
 		storedText = message ++ "\n" ++ storedText;  // Almacenar el texto
 		if (textView.notNil) {
@@ -53,7 +57,15 @@ MessageRedirector {
 				textView.string = storedText;  // Actualizar el TextView si existe
 			}.defer;
 		};
-		message.postln;  // También envía al Post Window estándar
+		string.postln;  // También envía al Post Window estándar (solo string, sin la hora)
+	}
+
+	*containsPrintableChars { |stringToCheck|
+		// La expresión regular para caracteres imprimibles
+		var regexp = "[\\x21-\\x7E]";
+
+		// Utilizar .matchRegexp para verificar si hay caracteres imprimibles en la cadena
+		^regexp.matchRegexp(stringToCheck)
 	}
 
 	*endRedirect {
