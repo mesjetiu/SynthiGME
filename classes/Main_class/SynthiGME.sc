@@ -138,7 +138,7 @@ SynthiGME {
 		numReturnChannels = 0, // Mínimo 0, Máximo 4
 		blockSize = 64,
 		alwaysRebootServer = false, // false: no se reinicia si se cumple la configuración del servidor.
-		postWin = false; // se abre una ventana para post window.
+		postWin = true; // se abre una ventana para post window.
 
 		// Se guarda la instancia:
 		if (instance != nil) {"Ya existe una instancia"; ^this};
