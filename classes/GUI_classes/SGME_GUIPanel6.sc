@@ -34,7 +34,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 					0, {this.resizePanel(factor)}, // botón izquierdo
 					1, {this.resizePanel(1/factor)}, // botón derecho
 				)
-			} {SGME_GUIPanel.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
+			} {SGME_ContextualMenu.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
 		});
 		viewSizes = viewSizes.add([topPanel, topPanelBounds]);
 		//topPanel.setBackgroundImage(image,10);
@@ -50,7 +50,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 					0, {this.resizePanel(factor)}, // botón izquierdo
 					1, {this.resizePanel(1/factor)}, // botón derecho
 				)
-			} {SGME_GUIPanel.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
+			} {SGME_ContextualMenu.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
 		});
 		viewSizes = viewSizes.add([bottomPanel, bottomPanelBounds]);
 		//bottomPanel.setBackgroundImage(image,10,fromRect: Rect(0, 2995/2, 2997, 2995/2)); // 10, 7, 8, 5
