@@ -85,7 +85,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 			StaticText.new(columns, Rect(0, 0, 400, 20)).string_(textRow[1]);
 		});
 
-		this.makeShortcuts(window, synthiGME);
+		SGME_GUIShortcuts.makeShortcuts(window, synthiGME);
 		window.alwaysOnTop = false;
 
 		window.asView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
