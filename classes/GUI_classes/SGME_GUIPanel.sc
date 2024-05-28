@@ -61,12 +61,6 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		Class.initClassTree(SGME_GUINode);
 		Class.initClassTree(SGME_GUIShortcuts);
 		imagesPath = SGME_Path.imagesPath;
-	}
-
-	*new {|synthi, parameters|
-		synthiGME = synthi;
-		//imagesPath = appPath.asString +/+ "classes" +/+ "GUI_classes" +/+ "images";
-
 		blue = Color.new255(61.8, 86.7, 118.4);
 		green = Color.new255(68.6, 107.2, 82.6);
 		white = Color.new255(172.7, 166.6, 160.3);
@@ -75,6 +69,11 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		red = Color.new255(183, 56, 66);
 		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
+	}
+
+	*new {|synthi, parameters|
+		synthiGME = synthi;
+		//imagesPath = appPath.asString +/+ "classes" +/+ "GUI_classes" +/+ "images";
 
 		^super.new.init(synthi, parameters);
 	}
@@ -97,63 +96,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		compositeView = CompositeView(window, rectCompositeView);
 
 		SGME_GUIShortcuts.makeShortcuts(window, synthiGME);
-		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
-			var factor = 2;
-			if(clickCount == 2, {
-				buttonNumber.switch(
-					0, {this.resizePanel(factor)}, // botón izquierdo
-					1, {this.resizePanel(1/factor)}, // botón derecho
-				)
-			}, { // si se hace un solo click...
-				var silenciarString = switch (synthiGME.server.volume.isMuted) {true} {"Desilenciar"} {false} {"Silenciar"};
-				var grabarString = switch (synthiGME.server.isRecording) {true} {"Terminar grabación"} {false} {"Iniciar grabación"};
-				var postWindow = switch (MessageRedirector.window.isNil) {false} {"Cerrar Post Window"} {true} {"Abrir Post Window"};
-				buttonNumber.switch(
-					0, {}, // botón izquierdo
-					1, {
-						Menu(
-							//MenuAction("Zoom In", { this.resizePanel(factor) }),
-							//MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
-							//MenuAction("Invisible", { window.visible = false }),
-							MenuAction("Abrir patch", { synthiGME.loadStateGUI }),
-							MenuAction("Guardar patch", { synthiGME.saveStateGUI }),
-							MenuAction("Reiniciar patch", { synthiGME.restartState }),
-							MenuAction(grabarString, {
-								if (synthiGME.server.isRecording) {
-									synthiGME.server.stopRecording;
-								} {
-									synthiGME.server.record;
-								}
-							}),
-							MenuAction(silenciarString, {
-								if (synthiGME.server.volume.isMuted,
-									{synthiGME.server.volume.unmute},
-									{synthiGME.server.volume.mute}
-								)
-							}),
-							MenuAction("Abrir controles del servidor de audio", {
-								synthiGME.server.makeGui;
-							}),
-							MenuAction(postWindow, {
-								if (MessageRedirector.window.isNil) {
-									MessageRedirector.createWindow;
-								} {
-									MessageRedirector.closeWindow;
-								}
-							}),
-							MenuAction("Ver/ocultar atajos de teclado", {
-								if (synthiGME.guiSC.helpWindow.window.visible == true, {
-									synthiGME.guiSC.helpWindow.window.visible = false
-								}, {synthiGME.guiSC.helpWindow.window.visible = true
-								})
-							}),
-							MenuAction("Salir", { synthiGME.close })
-						).front;
-					}, // botón derecho
-				)
-			}
-			)
-		});
+		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|this.menu(view, x, y, modifiers, buttonNumber, clickCount)});
 
 		window.toFrontAction = {
 			this.focus;
@@ -185,11 +128,11 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		synthiGME.guiSC.panels.do({|panel, i|
 			if (i == numPanel, {
 				panel.hasFocus = true;
-			//	panel.window.visible = false; // al hacer invisible y volver a hacer visible, se fuerza el foco, que con panel.window.view.focus(true) no parece conseguirse
-			//	panel.window.visible = true;
+				//	panel.window.visible = false; // al hacer invisible y volver a hacer visible, se fuerza el foco, que con panel.window.view.focus(true) no parece conseguirse
+				//	panel.window.visible = true;
 			}, {
 				panel.hasFocus = false;
-			//	window.view.focus = false;
+				//	window.view.focus = false;
 			})
 		})
 	}
@@ -310,5 +253,63 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 			while({window.bounds != rect}, {wait(0.01)}); // Nos aseguramos que se realiza la primera operación antes de seguir
 			this.resizePanel(factor);
 		}).play(AppClock)
+	}
+
+	menu {|view, x, y, modifiers, buttonNumber, clickCount|
+		var factor = 2;
+		if(clickCount == 2, {
+			buttonNumber.switch(
+				0, {this.resizePanel(factor)}, // botón izquierdo
+				1, {this.resizePanel(1/factor)}, // botón derecho
+			)
+		}, { // si se hace un solo click...
+			var silenciarString = switch (synthiGME.server.volume.isMuted) {true} {"Desilenciar"} {false} {"Silenciar"};
+			var grabarString = switch (synthiGME.server.isRecording) {true} {"Terminar grabación"} {false} {"Iniciar grabación"};
+			var postWindow = switch (MessageRedirector.window.isNil) {false} {"Cerrar Post Window"} {true} {"Abrir Post Window"};
+			buttonNumber.switch(
+				0, {}, // botón izquierdo
+				1, {
+					Menu(
+						//MenuAction("Zoom In", { this.resizePanel(factor) }),
+						//MenuAction("Zoom Out", { this.resizePanel(1/factor) }),
+						//MenuAction("Invisible", { window.visible = false }),
+						MenuAction("Abrir patch", { synthiGME.loadStateGUI }),
+						MenuAction("Guardar patch", { synthiGME.saveStateGUI }),
+						MenuAction("Reiniciar patch", { synthiGME.restartState }),
+						MenuAction(grabarString, {
+							if (synthiGME.server.isRecording) {
+								synthiGME.server.stopRecording;
+							} {
+								synthiGME.server.record;
+							}
+						}),
+						MenuAction(silenciarString, {
+							if (synthiGME.server.volume.isMuted,
+								{synthiGME.server.volume.unmute},
+								{synthiGME.server.volume.mute}
+							)
+						}),
+						MenuAction("Abrir controles del servidor de audio", {
+							synthiGME.server.makeGui;
+						}),
+						MenuAction(postWindow, {
+							if (MessageRedirector.window.isNil) {
+								MessageRedirector.createWindow;
+							} {
+								MessageRedirector.closeWindow;
+							}
+						}),
+						MenuAction("Ver/ocultar atajos de teclado", {
+							if (synthiGME.guiSC.helpWindow.window.visible == true, {
+								synthiGME.guiSC.helpWindow.window.visible = false
+							}, {synthiGME.guiSC.helpWindow.window.visible = true
+							})
+						}),
+						MenuAction("Salir", { synthiGME.close })
+					).front;
+				}, // botón derecho
+			)
+		}
+		)
 	}
 }

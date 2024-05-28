@@ -46,6 +46,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		topPanel = UserView(compositeView, topPanelBounds)
 		//.background_(Color.red)
 		.canFocus_(true);
+		topPanel.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|this.menu(view, x, y, modifiers, buttonNumber, clickCount)});
 		viewSizes = viewSizes.add([topPanel, topPanelBounds]);
 		//topPanel.setBackgroundImage(image,10);
 
@@ -54,6 +55,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		bottomPanel = UserView(compositeView, bottomPanelBounds)
 		//.background_(Color.blue)
 		.canFocus_(true);
+		bottomPanel.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|this.menu(view, x, y, modifiers, buttonNumber, clickCount)});
 		viewSizes = viewSizes.add([bottomPanel, bottomPanelBounds]);
 		//bottomPanel.setBackgroundImage(image,10,fromRect: Rect(0, 2995/2, 2997, 2995/2)); // 10, 7, 8, 5
 
