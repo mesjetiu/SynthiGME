@@ -231,113 +231,99 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
 
 					// Output Channels
-					"Output Channels...".post;
+					"Output Channels...".sgmePostln;
 					modulOutputChannels.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Reverb
-					"Reverb...".post;
+					"Reverb...".sgmePostln;
 					modulReverb.createSynth;
 					server.sync;
-					"OK\n".post;
 
 					// Filters
-					"Filters...".post;
+					"Filters...".sgmePostln;
 					modulFilters.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Filters
-					"Octave Filter Bank...".post;
+					"Octave Filter Bank...".sgmePostln;
 					modulFilterBank.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Ring Modulators
-					"Ring Modulators...".post;
+					"Ring Modulators...".sgmePostln;
 					modulRingModulators.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Echo A. D. L.
-					"Echo A.D.L...".post;
+					"Echo A.D.L...".sgmePostln;
 					modulEcho.createSynth;
 					server.sync;
-					"OK\n".post;
 
 					// Noise Generators
-					"Noise Generators...".post;
+					"Noise Generators...".sgmePostln;
 					modulNoiseGenerators.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Random Generator
-					"Random Voltage Generator...".post;
+					"Random Voltage Generator...".sgmePostln;
 					modulRandomGenerator.createSynth;
 					server.sync;
-					"OK\n".post;
 
 					// Slew Limiters
-					"Slew Limiters...".post;
+					"Slew Limiters...".sgmePostln;
 					modulSlewLimiters.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Oscillators
-					"Oscillators...".post;
+					"Oscillators...".sgmePostln;
 					modulOscillators.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Envelope Shapers
-					"Envelope Shapers...".post;
+					"Envelope Shapers...".sgmePostln;
 					modulEnvelopeShapers.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Input Amplifier
 					inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
-					"Input Amplifiers Level...".post;
+					"Input Amplifiers Level...".sgmePostln;
 					modulInputAmplifiers.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// External Treatment Returns
 					returnFromDeviceBusses = modulExternalTreatmentReturns.collect({|i| i.inputBus});
-					"External Treatment Returns...".post;
+					"External Treatment Returns...".sgmePostln;
 					modulExternalTreatmentReturns.do({|i|
 						i.createSynth;
 						server.sync;
 					});
-					"OK\n".post;
 
 					// Oscilloscope
-					"Oscilloscope...".post;
+					"Oscilloscope...".sgmePostln;
 					modulOscilloscope.createSynth;
 					server.sync;
-					"OK\n".post;
 
 					// conexiones de entrada y salida de cada módulo en el patchbay de audio
-					"Conexiones en Patchbay de audio...".post;
+					"Conexiones en Patchbay de audio...".sgmePostln;
 					modulPatchbayAudio.connect(
 						reverb: modulReverb,
 						inputAmplifiers: modulInputAmplifiers,
@@ -352,10 +338,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						outputChannels: modulOutputChannels,
 						oscilloscope: modulOscilloscope,
 					);
-					"OK\n".post;
 
 					// conecta cada entrada y salida de cada módulo en el patchbay de voltaje
-					"Conexiones en Patchbay de voltage...".post;
+					"Conexiones en Patchbay de voltage...".sgmePostln;
 					modulPatchbayVoltage.connect(
 						reverb: modulReverb,
 						echo: modulEcho,
@@ -368,7 +353,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						oscilloscope: modulOscilloscope,
 						outputChannels: modulOutputChannels,
 					);
-					"OK\n".post;
 
 					//"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".sgmePostln;
 					connectionIn = inputAmplifiersBusses.collect({|item, i|
