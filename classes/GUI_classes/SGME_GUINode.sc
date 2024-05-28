@@ -35,10 +35,10 @@ SGME_GUINode {
 
 	*new {arg synthi, parent, bounds, stringOSC;
 		if (synthiGME.isNil) {synthiGME = synthi};
-		^super.new.init(synthi, parent, bounds, stringOSC);
+		^super.new.init(parent, bounds, stringOSC);
 	}
 
-	init {|synthi, parent, bounds, stringOSC|
+	init {|parent, bounds, stringOSC|
 		value = 0;
 		view = View(parent, bounds)
 		.setBackgroundImage(imageHole, 10)
