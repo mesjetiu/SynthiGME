@@ -65,11 +65,11 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 			["f", "Trae al frente todos los paneles"],
 			["v", "Conmuta visibilidad de las views"],
 
-		//	["e", "Activa o desactiva los pines sin función de las matrices"],
+			//	["e", "Activa o desactiva los pines sin función de las matrices"],
 
 			["o", "Lleva al tamaño y posición original el panel en foco"],
 			["Shift+O", "Lleva al tamaño y posición original todas las ventanas"],
-		//	["Ctrl+O", "Establece una nueva posición \"origen\" de ventanas"],
+			//	["Ctrl+O", "Establece una nueva posición \"origen\" de ventanas"],
 			["+", "Zoom in (también con doble click izquierdo)"],
 			["-", "Zoom out (también con doble click derecho)"],
 			["Ctrl + R", "Inicia o termina una grabación de audio"],
@@ -96,35 +96,14 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 					1, {}, // botón derecho
 				)
 			}, { // si se hace un solo click...
-				buttonNumber.switch(
-					0, {}, // botón izquierdo
-					1, {
-						var onTopText;
-						if (window.alwaysOnTop == true, {
-							onTopText = "No poner sobre las demás"
-						},{
-							onTopText = "Poner sobre las demás"
-						});
-						Menu(
-							MenuAction("Salir", { synthiGME.close }),
-							MenuAction(onTopText, {
-								if (window.alwaysOnTop == true, {
-									window.alwaysOnTop = false
-								},{
-									window.alwaysOnTop = true
-								});
-							}),
-							MenuAction("Cerrar ayuda", { window.visible = false }),
-						).front;
-					}, // botón derecho
-				)
+				SGME_ContextualMenu.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)
 			}
 			)
 		});
 
 		window.front;
-	//	window.visible = false; // Comento esto porque tras volverse invisible no es posible volverlo visible... en cambio cuando se vuelve invisible más adelante, todo funciona bien.
-	//	window.alwaysOnTop = true; // posible configuración... aunque es posible que en Windows no funcione.
+		//	window.visible = false; // Comento esto porque tras volverse invisible no es posible volverlo visible... en cambio cuando se vuelve invisible más adelante, todo funciona bien.
+		//	window.alwaysOnTop = true; // posible configuración... aunque es posible que en Windows no funcione.
 	}
 
 
@@ -136,14 +115,14 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 		})
 	}
 
-/*	focus {arg numPanel;
-		synthiGME.guiSC.panels.do({|panel, i|
-			if (i == numPanel, {
-				panel.hasFocus = true;
-			}, {
-				panel.hasFocus = false;
-			})
-		})
+	/*	focus {arg numPanel;
+	synthiGME.guiSC.panels.do({|panel, i|
+	if (i == numPanel, {
+	panel.hasFocus = true;
+	}, {
+	panel.hasFocus = false;
+	})
+	})
 	} */
 
 }
