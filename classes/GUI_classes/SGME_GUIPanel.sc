@@ -99,7 +99,7 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		.userCanClose_(false);
 		compositeView = CompositeView(window, rectCompositeView);
 
-		SGME_GUIShortcuts.makeShortcuts(window, synthiGME);
+		SGME_GUIShortcuts.makeShortcuts(this, window, synthiGME);
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var factor = 2;
 			if(clickCount == 2) {

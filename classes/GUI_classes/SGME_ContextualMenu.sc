@@ -44,7 +44,7 @@ SGME_ContextualMenu {
 						})
 					}),
 					MenuAction("Salir", { synthiGME.close }),
-					MenuAction("Acerca de...", { SGME_GUIAbout.makeWindow }),
+					MenuAction("Acerca de Synthi GME", { SGME_GUIAbout.makeWindow }),
 				).front;
 			}, // botón derecho
 		)

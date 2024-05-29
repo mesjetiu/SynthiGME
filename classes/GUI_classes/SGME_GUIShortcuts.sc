@@ -21,7 +21,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 // De esta clase heredan todas las clases de ventanas que aceptan los atajos de teclado de la aplicación. Simplemente añade una función para aplicar a las ventanas, con los atajos de teclado.
 SGME_GUIShortcuts {
 
-	*makeShortcuts {|win, synthiGME|
+	*makeShortcuts {|objectCaller, win, synthiGME|
 		win.view.keyDownAction = { |view, char, mod, unicode, keycode, key|
 			var factor = 2;
 			//keycode.sgmePostln;
@@ -33,8 +33,8 @@ SGME_GUIShortcuts {
 						panel.conmuteVisibility
 					})
 				},
-				43, {this.resizeFocusedPanel(factor)}, // +
-				45, {this.resizeFocusedPanel(1/factor)}, // -
+				43, {objectCaller.resizeFocusedPanel(factor)}, // +
+				45, {objectCaller.resizeFocusedPanel(1/factor)}, // -
 				102, {synthiGME.guiSC.frontWindows}, // f (front) Todas las ventanas al frente
 				49, {synthiGME.guiSC.panels[0].window.front; synthiGME.guiSC.panels[0].focus(0); synthiGME.guiSC.panels[0].goFront;}, // Tecla 1: Panel 1 al frente
 				50, {synthiGME.guiSC.panels[1].window.front; synthiGME.guiSC.panels[1].focus(1); synthiGME.guiSC.panels[1].goFront;}, // Tecla 2: Panel 2 al frente

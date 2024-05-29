@@ -85,7 +85,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 			StaticText.new(columns, Rect(0, 0, 400, 20)).string_(textRow[1]);
 		});
 
-		SGME_GUIShortcuts.makeShortcuts(window, synthiGME);
+		SGME_GUIShortcuts.makeShortcuts(this, window, synthiGME);
 		window.alwaysOnTop = false;
 
 		window.asView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
@@ -125,4 +125,8 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 	})
 	} */
 
+	// método vacíos a propósito. Se llama desde shortcuts
+	resizeFocusedPanel{
+
+	}
 }
