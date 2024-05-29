@@ -18,11 +18,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 
-// Ventana "Acerca de Synthi GME" (Por hacer)
-SGME_GUIAbout{
-
-	var <window;
-	var <synthiGME;
+SGME_GUIAbout {
+	classvar <window;
 
 	//*********************************************************************************************
 
@@ -31,17 +28,43 @@ SGME_GUIAbout{
 		// Class.initClassTree(SGME_GUIShortcuts);
 	}
 
-	*new {|synthi|
-		^super.new.init(synthi);
+	*new {
+		^super.new.init();
 	}
 
-	init {|synthi|
-		synthiGME = synthi;
+	init {
 	}
 
 	// Crea una ventana con la información de atajos de teclado
-	makeWindow {
+	*makeWindow {
+		if (window.notNil and: { window.visible }) {
+			window.front;
+		} {
+			var aboutText;
+			var windowWidth = 400;
+			var windowHeight = 200;
+			var screenWidth = Window.availableBounds.width;
+			var screenHeight = Window.availableBounds.height;
+			var xPos = (screenWidth - windowWidth) / 2;
+			var yPos = (screenHeight - windowHeight) / 2;
 
+			window = Window("Acerca de Synthi GME", Rect(xPos, yPos, windowWidth, windowHeight));
+
+			aboutText = "Synthi GME\n\n" ++
+				"Desarrollador: Carlos Arturo Guerra\n" ++
+				"Correo: carlosarturoguerra@gmail.com";
+
+			StaticText(window, Rect(10, 10, 380, 180))
+			.string_(aboutText)
+			.align_(\center)
+			.font_(Font("Helvetica", 12));
+
+			window.onClose = { window = nil };
+
+			window.front;
+		}
 	}
-
 }
+
+
+
