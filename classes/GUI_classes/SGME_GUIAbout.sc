@@ -51,8 +51,14 @@ SGME_GUIAbout {
 			window = Window("Acerca de Synthi GME", Rect(xPos, yPos, windowWidth, windowHeight));
 
 			aboutText = "Synthi GME\n\n" ++
-				"Desarrollador: Carlos Arturo Guerra\n" ++
-				"Correo: carlosarturoguerra@gmail.com";
+			"Desarrollador: Carlos Arturo Guerra Parra\n" ++
+			"Correo: carlosarturoguerra@gmail.com\n\n" ++
+			"Licencia: GPL 3.0\n" ++
+			"© 2024\n\n" ++
+			"Repositorio en GitHub:\n" ++
+			"https://github.com/mesjetiu/SynthiGME";
+
+
 
 			StaticText(window, Rect(10, 10, 380, 180))
 			.string_(aboutText)
