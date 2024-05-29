@@ -3,7 +3,7 @@ SGME_Path {
 	classvar <rootPath = nil;
 	classvar <imagesPath = nil;
 
-	*initClass {
+	*initPath {
 		rootPath = SGME_Path.getAppPath;
 		imagesPath = rootPath.asString +/+ "classes" +/+ "GUI_classes" +/+ "images";
 	}

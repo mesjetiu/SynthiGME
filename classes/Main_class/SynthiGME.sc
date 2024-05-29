@@ -196,10 +196,13 @@ SynthiGME {
 		pathState = Platform.userHomeDir; // path por defecto donde guardar estados
 		oscRecievedMessages = Dictionary.new;
 
+		// Pasos para cargar imágenes en las clases que las necesitan:
+		SGME_Path.initPath; // Se consigue el Path de aplicación (Quark o Extension)
 		appPath = SGME_Path.rootPath;
 		if (appPath.isNil) {"No se ha podido obtener el path de la aplicación".error; ^this};
-
-		guiSC = SGME_GUI(this);
+		SGME_GUIPanel.loadImages; // Se cargan las imágenes desde el Path adecuado
+		SGME_GUINode.loadImages; // ídem
+		guiSC = SGME_GUI(this); // Se arranca finalmente la GUI
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
 
 		generalVol = settings[\generalVol];

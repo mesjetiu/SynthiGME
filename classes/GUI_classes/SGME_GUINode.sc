@@ -27,6 +27,9 @@ SGME_GUINode {
 
 	*initClass {
 		Class.initClassTree(SGME_Path);
+	}
+
+	*loadImages {
 		imagesPath = SGME_Path.imagesPath;
 		imageHole = Image(imagesPath +/+ "widgets" +/+ "patchbay_hole");
 		imageWhite = Image(imagesPath +/+ "widgets" +/+ "patchbay_white_pin");

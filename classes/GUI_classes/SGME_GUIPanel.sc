@@ -61,7 +61,6 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		Class.initClassTree(SGME_ContextualMenu);
 		Class.initClassTree(SGME_GUINode);
 		Class.initClassTree(SGME_GUIShortcuts);
-		imagesPath = SGME_Path.imagesPath;
 		blue = Color.new255(61.8, 86.7, 118.4);
 		green = Color.new255(68.6, 107.2, 82.6);
 		white = Color.new255(172.7, 166.6, 160.3);
@@ -70,6 +69,10 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 		red = Color.new255(183, 56, 66);
 		whiteBackground = Color.new255(191, 180, 176); // Color de los paneles del Synthi 100
 		blackForniture = Color.new255(18, 18, 19.2); // Color negro del mueble.
+	}
+
+	*loadImages {
+		imagesPath = SGME_Path.imagesPath;
 	}
 
 	*new {|synthi, parameters|
