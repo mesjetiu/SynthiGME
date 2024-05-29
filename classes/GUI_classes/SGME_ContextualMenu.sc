@@ -43,7 +43,8 @@ SGME_ContextualMenu {
 						}, {synthiGME.guiSC.helpWindow.window.visible = true
 						})
 					}),
-					MenuAction("Salir", { synthiGME.close })
+					MenuAction("Salir", { synthiGME.close }),
+					MenuAction("Acerca de...", { SGME_GUIAbout.makeWindow }),
 				).front;
 			}, // botón derecho
 		)
