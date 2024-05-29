@@ -419,7 +419,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					// Preparación para la grabación:
 					server.prepareForRecord;
 
-					("\n*** SynthiGME (" ++ version ++ ") en ejecución ***\n").sgmePostln;
+					"\n".postln;
+					("*** SynthiGME (" ++ version ++ ") en ejecución ***\n").sgmePostln;
 
 
 				},
