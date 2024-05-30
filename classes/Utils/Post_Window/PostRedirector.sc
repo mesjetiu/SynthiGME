@@ -42,7 +42,7 @@ MessageRedirector {
 		^this
 	}
 
-	*createWindow {
+	*createWindow {|synthi|
 		if (window.isNil) {
 			var layout;
 			var rect = Rect(
@@ -59,6 +59,8 @@ MessageRedirector {
 			.editable_(false);
 			layout.add(textView);
 			window.layout = layout;
+
+			SGME_GUIShortcuts.makeShortcuts(instance, window, synthi);
 
 			window.onClose = {
 				MessageRedirector.endRedirect();
@@ -119,5 +121,10 @@ MessageRedirector {
 		if (window.notNil) {
 			window.visible = false;
 		}
+	}
+
+	// método vacíos a propósito. Se llama desde shortcuts
+	resizeFocusedPanel{
+
 	}
 }

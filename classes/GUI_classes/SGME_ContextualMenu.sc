@@ -32,7 +32,7 @@ SGME_ContextualMenu {
 					}),
 					MenuAction(postWindow, {
 						if (MessageRedirector.window.isNil) {
-							MessageRedirector.createWindow;
+							MessageRedirector.createWindow(synthiGME);
 						} {
 							MessageRedirector.closeWindow;
 						}

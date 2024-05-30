@@ -18,7 +18,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 
-SGME_GUIAbout {
+SGME_GUIAbout : SGME_GUIShortcuts{
 	classvar <window;
 
 	//*********************************************************************************************
@@ -48,7 +48,7 @@ SGME_GUIAbout {
 			var xPos = (screenWidth - windowWidth) / 2;
 			var yPos = (screenHeight - windowHeight) / 2;
 
-			window = Window("Acerca de Synthi GME", Rect(xPos, yPos, windowWidth, windowHeight));
+			window = Window("Acerca de Synthi GME", Rect(xPos, yPos, windowWidth, windowHeight), resizable: false, scroll: false);
 
 			aboutText = "Synthi GME\n\n" ++
 			"Version" + SynthiGME.version ++ "\n\n" ++
@@ -65,6 +65,8 @@ SGME_GUIAbout {
 			.string_(aboutText)
 			.align_(\center)
 			.font_(Font("Helvetica", 12));
+
+			SGME_GUIShortcuts.makeShortcuts(this, window, SynthiGME.instance);
 
 			window.onClose = { window = nil };
 

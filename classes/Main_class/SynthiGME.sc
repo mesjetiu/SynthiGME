@@ -97,8 +97,8 @@ SynthiGME {
 
 	var <isRunning = false; // Indica si se ha ejecutado run(), para que no se le llame dos veces.
 
-	classvar settings;
-	classvar instance; // aquí se guardará la instancia del Synthi, ya que solo se podrá tener una abierta.
+	classvar <settings;
+	classvar <instance; // aquí se guardará la instancia del Synthi, ya que solo se podrá tener una abierta.
 
 	var <postWindow; // Instancia única (singleton) de Post Window
 
@@ -202,7 +202,11 @@ SynthiGME {
 		if (appPath.isNil) {"No se ha podido obtener el path de la aplicación".error; ^this};
 		SGME_GUIPanel.loadImages; // Se cargan las imágenes desde el Path adecuado
 		SGME_GUINode.loadImages; // ídem
-		guiSC = SGME_GUI(this); // Se arranca finalmente la GUI
+
+		// Post window preparado y abierto:
+		postWindow = MessageRedirector.getInstance;
+
+		guiSC = SGME_GUI(this, postWin); // Se arranca finalmente la GUI
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
 
 		generalVol = settings[\generalVol];
@@ -244,11 +248,7 @@ SynthiGME {
 		SGME_Oscilloscope.addSynthDef;
 
 
-		// Post window preparado y abierto:
-		postWindow = MessageRedirector.getInstance;
-		if (postWin) {
-			MessageRedirector.createWindow;
-		};
+
 
 		this.run;
 	}

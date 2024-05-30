@@ -54,17 +54,20 @@ SGME_GUI {
 		Class.initClassTree(SGME_GUIAbout);
 	}
 
-	*new {arg synthi, appPath;
-		^super.new.init(synthi, appPath);
+	*new {arg synthi, postWin;
+		^super.new.init(synthi, postWin);
 	}
 
 
 	// Métodos de instancia ******************************************************************
 
-	init {|synthi, appPath|
+	init {|synthi, postWin|
 		parameterViews = Dictionary.new;
 		//installedPath = Quarks.quarkNameAsLocalPath("SynthiGME"); // quizás equivalente a Quark("SynthiGME").localPath
 
+		if (postWin) {
+			MessageRedirector.createWindow(synthi);
+		};
 		panels = [];
 		panels = panels.add(SGME_GUIPanel1(synthi, parameterViews));
 		panels = panels.add(SGME_GUIPanel2(synthi, parameterViews));
