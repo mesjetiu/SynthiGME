@@ -38,10 +38,7 @@ SGME_ContextualMenu {
 						}
 					}),
 					MenuAction("Ver/ocultar atajos de teclado", {
-						if (synthiGME.guiSC.helpWindow.window.visible == true, {
-							synthiGME.guiSC.helpWindow.window.visible = false
-						}, {synthiGME.guiSC.helpWindow.window.visible = true
-						})
+						synthiGME.guiSC.helpWindow.conmuteVisibility;
 					}),
 					MenuAction("Salir", { synthiGME.close }),
 					MenuAction("Acerca de Synthi GME", { SGME_GUIAbout.makeWindow }),

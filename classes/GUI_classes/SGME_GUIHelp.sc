@@ -111,6 +111,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 
 
 	conmuteVisibility {
+		if (window.isNil) {this.makeWindow; ^this};
 		if (window.visible, {
 			window.visible_(false);
 		}, {

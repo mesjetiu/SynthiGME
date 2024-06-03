@@ -2,6 +2,7 @@
 
 import subprocess
 import time
+import os
 
 def iniciar_supercollider(sclang_path):
     """
@@ -10,9 +11,22 @@ def iniciar_supercollider(sclang_path):
     :return: Proceso de SuperCollider.
     """
     try:
-        # Inicia sclang sin cargar ningún archivo
-        process_SC = subprocess.Popen([sclang_path], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                      stderr=subprocess.PIPE, text=True, bufsize=1, universal_newlines=True)
+        # Configuración específica para Windows para evitar abrir una ventana de terminal
+        startupinfo = None
+        if os.name == 'nt':  # Configuración específica para Windows
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        process_SC = subprocess.Popen(
+            [sclang_path],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1,
+            universal_newlines=True,
+            startupinfo=startupinfo  # Agregar startupinfo para evitar ventana
+        )
         return process_SC
     except Exception as e:
         print(f"Error al iniciar SuperCollider: {e}")
@@ -65,4 +79,3 @@ if process_SC:
     # Enviar el comando SynthiGME() a SuperCollider
     enviar_comando(process_SC, "SynthiGME(numOutputChannels: inf, numInputChannels: inf, numReturnChannels: inf);")
     process_SC.terminate()  # Termina el proceso después de enviar el comando
-
