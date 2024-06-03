@@ -26,7 +26,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 		rect = Rect(
 			left: Window.availableBounds.width/4,
 			top: Window.availableBounds.height/1.9,
-			width: window.bounds.width.postln,
+			width: window.bounds.width,
 			height: window.bounds.height,
 		);
 		window.name = "Panel 2";

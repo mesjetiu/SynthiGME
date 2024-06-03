@@ -28,7 +28,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 			top: (Window.availableBounds.height/2.1)
 			-(window.bounds.height
 				* (Window.availableBounds.width/virtualWidth)),//0,
-			width: window.bounds.width.postln,
+			width: window.bounds.width,
 			height: window.bounds.height,
 		);
 		window.name = "Panel 5";
