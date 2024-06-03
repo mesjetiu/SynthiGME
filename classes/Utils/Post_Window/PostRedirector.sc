@@ -56,7 +56,8 @@ MessageRedirector {
 			layout = VLayout(8);
 			textView = TextView()
 			.string_(storedText) // Inicializar el TextView con el texto almacenado
-			.editable_(false);
+			.editable_(false)
+			.palette_(QPalette.dark);
 			layout.add(textView);
 			window.layout = layout;
 
