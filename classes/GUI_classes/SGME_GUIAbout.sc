@@ -64,7 +64,10 @@ SGME_GUIAbout : SGME_GUIShortcuts{
 			StaticText(window, Rect(10, 10, 380, 180))
 			.string_(aboutText)
 			.align_(\center)
-			.font_(Font("Helvetica", 12));
+			.font_(Font("Helvetica", 12))
+			.palette_(QPalette.dark);
+
+			window.view.palette_(QPalette.dark);
 
 			SGME_GUIShortcuts.makeShortcuts(this, window, SynthiGME.instance);
 

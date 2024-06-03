@@ -50,6 +50,7 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 				height: 390
 			),
 			resizable: false, scroll: true).userCanClose_(false);
+		window.view.palette_(QPalette.dark);
 		row = VLayoutView.new(window, Rect(0, 0, 450, 380)); //cada una de las filas
 
 		allTexts = [
@@ -81,8 +82,10 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 		allTexts.do({|textRow|
 			var columns = HLayoutView.new(row, Rect(0, 0, 485, 20));
 			CompositeView.new(columns, Rect(0, 0, 10, 20));
-			StaticText.new(columns, Rect(0, 0, 60, 20)).string_(textRow[0]);
-			StaticText.new(columns, Rect(0, 0, 400, 20)).string_(textRow[1]);
+			StaticText.new(columns, Rect(0, 0, 60, 20)).string_(textRow[0])
+			.palette_(QPalette.dark);
+			StaticText.new(columns, Rect(0, 0, 400, 20)).string_(textRow[1])
+			.palette_(QPalette.dark);
 		});
 
 		SGME_GUIShortcuts.makeShortcuts(this, window, synthiGME);

@@ -51,7 +51,9 @@ MessageRedirector {
 				width: 450,
 				height: 400
 			);
-			window = Window("Synthi GME Post window", rect).front;
+			window = Window("Synthi GME Post window", rect);
+			window.view.palette_(QPalette.dark);
+			window.front;
 			//	.alwaysOnTop_(true);
 			layout = VLayout(8);
 			textView = TextView()
