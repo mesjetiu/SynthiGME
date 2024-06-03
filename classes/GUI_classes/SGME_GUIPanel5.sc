@@ -79,8 +79,8 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		this.makeNodeTable;
 
 		this.saveOrigin;
-		//this.resizePanel(Window.availableBounds.width/virtualWidth);
-		//this.saveOrigin;
+		this.resizePanel(Window.availableBounds.width/virtualWidth);
+		this.saveOrigin;
 		window.front;
 	}
 
