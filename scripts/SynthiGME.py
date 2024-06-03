@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Compilar en binario con pyinstaller --onefile ./SynthiGME.py 
+
 import subprocess
 import time
 import os
