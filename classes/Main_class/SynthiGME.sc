@@ -133,9 +133,9 @@ SynthiGME {
 		arg server = Server.local,
 		/*gui = true,*/
 		verboseOSC = true, // Muestra en Post window todo mensaje OSC procesado
-		numOutputChannels = 2, // Número de canales de salida unidos a salidas de SC. Mínimo 2 (2 canales por defecto del sistema) Máximo 16
-		numInputChannels = 2, // Mínimo 2 (del sistema por defecto) Máximo 8
-		numReturnChannels = 0, // Mínimo 0, Máximo 4
+		numOutputChannels = inf, // Número de canales de salida unidos a salidas de SC. Mínimo 2 (2 canales por defecto del sistema) Máximo 16
+		numInputChannels = inf, // Mínimo 2 (del sistema por defecto) Máximo 8
+		numReturnChannels = inf, // Mínimo 0, Máximo 4
 		blockSize = 64,
 		alwaysRebootServer = false, // false: no se reinicia si se cumple la configuración del servidor.
 		postWin = true; // se abre una ventana para post window.
