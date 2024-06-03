@@ -98,8 +98,13 @@ SGME_Patchbay {
 		var numFromSynth =  this.getNumSynth(fromSynth);
 		var numToSynth = this.getNumSynth(toSynth);
 
+		var oldGanancy = nodeValues[stringOSC];
+
+		ganancy = ganancy.clip(0,1); // clip con máximo 1 y mínimo 0
+
+
 		// Si el nodo ya tenía el valor solicitado, no se hace nada:
-		if (ganancy == nodeValues[stringOSC]) {^this};
+		if (ganancy == oldGanancy) {^this};
 
 		//Se añade el valor del pin a nodeValue
 		nodeValues.put(stringOSC, ganancy);
@@ -110,10 +115,10 @@ SGME_Patchbay {
 			toBus = inputsOutputs[hor-1].at(\inFeedbackBus);
 		});
 
-		if(ganancy > 0, {
+		if((ganancy > 0) && (oldGanancy == 0), {
+			fromModul.outPlusOne;
+			toModul.inPlusOne;
 			if(nodeSynths[[hor,ver].asString] == nil, {
-				fromModul.outPlusOne;
-				toModul.inPlusOne;
 				Routine({
 					nodeSynths.put(
 						[ver,hor].asString,
@@ -141,16 +146,24 @@ SGME_Patchbay {
 				nodeSynths[[ver,hor].asString][\ganancy] = ganancy;
 			})
 		},{
-			if(nodeSynths[[ver,hor].asString] != nil, {
-				fromModul.outPlusOne(false);
-				toModul.inPlusOne(false);
-				Routine({
-					nodeSynths[[ver,hor].asString][\synth].set(\ganancy, 0);
-					//wait(lag); // espera un tiempo para que el synt baje su ganancia a 0;
-					nodeSynths[[ver,hor].asString][\synth].free;
-					nodeSynths[[ver,hor].asString] = nil;
-				}).play;
-			})
+			if ((ganancy > 0) && (oldGanancy > 0)){
+				nodeSynths[[ver,hor].asString][\synth].set(\ganancy, ganancy);
+				nodeSynths[[ver,hor].asString][\ganancy] = ganancy;
+			}{
+				if (ganancy == 0) {
+					if(nodeSynths[[ver,hor].asString] != nil, {
+						fromModul.outPlusOne(false);
+						toModul.inPlusOne(false);
+						Routine({
+							nodeSynths[[ver,hor].asString][\synth].set(\ganancy, 0);
+							//wait(lag); // espera un tiempo para que el synt baje su ganancia a 0;
+							nodeSynths[[ver,hor].asString][\synth].free;
+							nodeSynths[[ver,hor].asString] = nil;
+						}).play;
+					})
+				}
+			}
+
 		})
 	}
 }
