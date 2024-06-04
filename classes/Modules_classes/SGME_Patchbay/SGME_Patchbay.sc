@@ -115,7 +115,8 @@ SGME_Patchbay {
 			toBus = inputsOutputs[hor-1].at(\inFeedbackBus);
 		});
 
-		if((ganancy > 0) && (oldGanancy == 0), {
+		case
+		{(oldGanancy == 0) && (ganancy > 0)} { // Pasa de 0 a conectado...
 			fromModul.outPlusOne;
 			toModul.inPlusOne;
 			if(nodeSynths[[hor,ver].asString] == nil, {
@@ -127,7 +128,7 @@ SGME_Patchbay {
 								\SGME_patchNode, [
 									\fromBus, fromBus,
 									\toBus, toBus,
-									\ganancy, 0
+									\ganancy, ganancy
 								],
 								fromSynth,
 								\addAfter
@@ -145,25 +146,23 @@ SGME_Patchbay {
 				nodeSynths[[ver,hor].asString][\synth].set(\ganancy, ganancy);
 				nodeSynths[[ver,hor].asString][\ganancy] = ganancy;
 			})
-		},{
-			if ((ganancy > 0) && (oldGanancy > 0)){
-				nodeSynths[[ver,hor].asString][\synth].set(\ganancy, ganancy);
-				nodeSynths[[ver,hor].asString][\ganancy] = ganancy;
-			}{
-				if (ganancy == 0) {
-					if(nodeSynths[[ver,hor].asString] != nil, {
-						fromModul.outPlusOne(false);
-						toModul.inPlusOne(false);
-						Routine({
-							nodeSynths[[ver,hor].asString][\synth].set(\ganancy, 0);
-							//wait(lag); // espera un tiempo para que el synt baje su ganancia a 0;
-							nodeSynths[[ver,hor].asString][\synth].free;
-							nodeSynths[[ver,hor].asString] = nil;
-						}).play;
-					})
-				}
-			}
+		}
+		{(oldGanancy > 0) && (ganancy > 0)} { // Pasa de conectado a conectado...
 
-		})
+			nodeSynths[[ver,hor].asString][\synth].set(\ganancy, ganancy);
+			nodeSynths[[ver,hor].asString][\ganancy] = ganancy;
+		}
+		{(oldGanancy > 0) && (ganancy == 0)} { // Pasa de conectado a 0...
+			fromModul.outPlusOne(false);
+			toModul.inPlusOne(false);
+			if(nodeSynths[[ver,hor].asString] != nil, {
+				Routine({
+					nodeSynths[[ver,hor].asString][\synth].set(\ganancy, 0);
+					//wait(lag); // espera un tiempo para que el synt baje su ganancia a 0;
+					nodeSynths[[ver,hor].asString][\synth].free;
+					nodeSynths[[ver,hor].asString] = nil;
+				}).play;
+			})
+		};
 	}
 }
