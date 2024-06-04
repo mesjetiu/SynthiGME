@@ -1,3 +1,30 @@
+## Version 1.8.1 
+
+### Importantes cambios
+- Aplicación funcionando como Quark y como Extension de SuperCollider.
+- Optimizaciones en eficiencia y uso de memoria.
+- Mayor unidad de las diferentes ventanas.
+- Ejecutable binario para Linux.
+- Creada ventana de inicio o bienvenida al cargar la aplicación (splash window).
+
+
+### Bugs corregidos
+- Funcionamiento de + y - para cambiar de tamaño las ventanas.
+- Problema de tamaño de paneles 5 y 6 por defecto.
+- Cambio de patch más seguro por defecto (evitando artefactos).
+
+
+### Otras mejoras
+- Script de Linux mejorado y funcionando.
+- Mejoras de escritura de código.
+- Menú contextual disponible en todas las ventanas.
+- Modo oscuro por defecto en las ventanas.
+- Creada ventana "About" o "Acerca de...".
+- Optimización de guardado de patches.
+- Los nodos de Panel 5 y 6 aceptan valores intermedios entre 0 y 1, simulando la resistencia de los pines.
+- Mayor seguridad y más comprobaciones en la ejecución de diálogos de usuario.
+- Creación de algunos patchs de ejemplo.
+
 ## Version 1.8.0 
 
 ### Importantes cambios
