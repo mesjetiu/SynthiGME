@@ -48,7 +48,7 @@ SGME_GUINode {
 		.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			buttonNumber.switch(
 				0, {
-					if ((value==1) && modifiers.isCtrl.not, { // Se hace clic en un nodo encendido
+					if ((value>0) && modifiers.isCtrl.not, { // Se hace clic en un nodo encendido
 						value=0;
 						view.setBackgroundImage(imageHole, 10);
 					}, {
@@ -56,7 +56,7 @@ SGME_GUINode {
 							value=1;
 							view.setBackgroundImage(imageWhite, 10);
 						}, {
-							if ((value==1) && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo encendido
+							if ((value>0) && modifiers.isCtrl, { // Se hace Ctrl+click en un nodo encendido
 								value=(-1);
 								view.setBackgroundImage(imageYellow, 10);
 							}, {
@@ -114,11 +114,11 @@ SGME_GUINode {
 	}
 
 	value_ {|val|
-		value = val;
-		switch(val)
-		{ 1 } { view.setBackgroundImage(imageWhite, 10) }
-		{ 0 } { view.setBackgroundImage(imageHole, 10) }
-		{ (-1) } { view.setBackgroundImage(imageYellow, 10) }
+		value = val.clip(-1,1);
+		case
+		{ val>0 } { view.setBackgroundImage(imageWhite, 10) }
+		{ val==0 } { view.setBackgroundImage(imageHole, 10) }
+		{ val<0 } { value = -1; view.setBackgroundImage(imageYellow, 10) }
 		{ view.setBackgroundImage(imageHole, 10) };
 	}
 
