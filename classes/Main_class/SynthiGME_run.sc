@@ -430,6 +430,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					// Se lanza todo el sistema gráfico de ventanas:
 					guiSC.makeWindow;
 
+					wait (0.1); // Para que le de tiempo a iniciarse correctamente antes de guardar el estado.
 
 					// Se almacena el estado inicial de todos los parámetros:
 					initState = this.getFullState;
