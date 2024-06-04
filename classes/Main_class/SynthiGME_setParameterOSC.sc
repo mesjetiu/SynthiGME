@@ -423,6 +423,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		)
 	}
 
+
+	// Función en pruebas. La idea es crear transiciones entre diferentes patches. Funciona pero arroja muchas advertencias de Qt, y se bloquea la interfaz demasiado tiempo.
 	setParameterSmoothedOSC { |string, value, addrForbidden, broadcast = true, ipOrigin = "local", lagTime = 0, intervalo = 0.2, oldValue|
     if(lagTime <= 0) { // Si lagTime es cero o negativo, establecer el valor directamente sin suavizado
         this.setParameterOSC(string, value, addrForbidden, broadcast, ipOrigin);
