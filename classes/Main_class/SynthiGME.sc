@@ -87,6 +87,7 @@ SynthiGME {
 	var <pathState;
 	// será true en el momento que se haga un cambio en el patch. Utilizado para preguntar guardar antes de salir.
 	var modifiedState = false;
+	var openDialog = false; //Si hay diálogo abierto, no es nil.
 
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC = nil;
@@ -335,6 +336,9 @@ SynthiGME {
 		var mainText, buttonLayout;
 		var discardButton, cancelButton, saveButton, acceptButton;
 
+		if (openDialog) {^this};
+		openDialog = true;
+
 		if (modifiedState) {
 			mainText = "¿Desea guardar el patch actual?";
 			buttonLayout = HLayout(
@@ -347,14 +351,14 @@ SynthiGME {
 				}),
 				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
 					// Acción para cancelar el cierre
-					"Cancelando...".sgmePostln;
+					openDialog = false;
 					dialog.close;
 					// Salir de la función de cierre actual
 					^nil;
 				}),
 				saveButton = Button().states_([["Guardar", Color.black, Color.white]]).action_({
 					// Acción para guardar y salir
-					"Guardando y saliendo...".sgmePostln;
+					openDialog = false;
 					this.saveStateGUI;
 					dialog.close;
 					// Aquí puedes continuar con la función de salir existente
@@ -365,14 +369,13 @@ SynthiGME {
 			buttonLayout = HLayout(
 				acceptButton = Button().states_([["Aceptar", Color.black, Color.white]]).action_({
 					// Acción para aceptar y salir
-
+					openDialog = false;
 					dialog.close;
-					"Saliendo...".sgmePostln;
 					this.exit;
 				}),
 				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
 					// Acción para cancelar el cierre
-					"Cancelando...".sgmePostln;
+					openDialog = false;
 					dialog.close;
 					// Salir de la función de cierre actual
 					^nil;

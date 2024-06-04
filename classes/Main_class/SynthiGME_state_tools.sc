@@ -80,14 +80,16 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	// Guardado de estado desde un diálogo de usuario:
 	saveStateGUI {
 		var path = pathState; // Define un directorio inicial
-
+		if (openDialog) {^this};
+		openDialog = true;
 		FileDialog(
 			{ |path|
+				openDialog = false;
 				path.notNil.if {
 					this.saveState(path.dirname, path.basename);
 				}
 			},
-			{ "Cancelado por el usuario".sgmePostln },
+			{ openDialog = false },
 			fileMode: 0,  // Permite la selección de un nombre de archivo, existente o no
 			acceptMode: 1,  // Diálogo de guardado
 			stripResult: true,  // Pasa la ruta del archivo directamente
@@ -171,14 +173,16 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	loadStateGUI {
 		var path = pathState; // Define un directorio inicial
-
+		if (openDialog) {^this};
+		openDialog = true;
 		FileDialog(
 			{ |path|
+				openDialog = false;
 				path.notNil.if {
 					this.loadState(path.dirname, path.basename);
 				}
 			},
-			{ "Cancelado por el usuario".sgmePostln },
+			{ openDialog = false },
 			fileMode: 1,  // Modo para un archivo existente
 			acceptMode: 0,  // Modo de apertura
 			stripResult: true,  // Pasa la ruta del archivo directamente
