@@ -19,10 +19,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 + SynthiGME {
 	run {
-		var thisRoutine;
+		var thisRoutine, splashWindow;
 
 		if (isRunning || (connectionOut != nil)) {"SynthiGME en ejecución".error; ^this};
 		isRunning = true;
+
+		splashWindow = SGME_SplashWindow();
+		splashWindow.showSplashWindow;
+		splashWindow.numSteps = 21;
+
 		thisRoutine = Routine({
 			/*  var <numStereoOutputChannels;
 			var <numInputChannels;
@@ -152,7 +157,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						], server).register;
 					}.value);
 					server.sync;
-
+					splashWindow.progress();
 
 					if (
 						numOutputChannels >= 4,
@@ -179,6 +184,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						}
 					);
 
+					splashWindow.progress();
 
 					if (
 						numOutputChannels >= 6,
@@ -205,6 +211,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						}
 					);
 
+					splashWindow.progress();
 
 					//"Conexión de salida de cada canal individual...".sgmePostln;
 					modulOutputChannels.do({|out, n|
@@ -226,6 +233,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						}
 					});
 
+					splashWindow.progress();
 
 
 					// Se arrancan todos los Synths de todos los módulos //////////////////////////////////
@@ -236,11 +244,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// Reverb
 					"Reverb...".sgmePostln;
 					modulReverb.createSynth;
 					server.sync;
+					splashWindow.progress();
 
 					// Filters
 					"Filters...".sgmePostln;
@@ -248,6 +258,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// Filters
 					"Octave Filter Bank...".sgmePostln;
@@ -255,6 +266,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// Ring Modulators
 					"Ring Modulators...".sgmePostln;
@@ -262,11 +274,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// Echo A. D. L.
 					"Echo A.D.L...".sgmePostln;
 					modulEcho.createSynth;
 					server.sync;
+					splashWindow.progress();
 
 					// Noise Generators
 					"Noise Generators...".sgmePostln;
@@ -279,6 +293,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					"Random Voltage Generator...".sgmePostln;
 					modulRandomGenerator.createSynth;
 					server.sync;
+					splashWindow.progress();
 
 					// Slew Limiters
 					"Slew Limiters...".sgmePostln;
@@ -286,6 +301,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// Oscillators
 					"Oscillators...".sgmePostln;
@@ -293,6 +309,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// Envelope Shapers
 					"Envelope Shapers...".sgmePostln;
@@ -300,6 +317,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// Input Amplifier
 					inputAmplifiersBusses = modulInputAmplifiers.collect({|i| i.inputBus});
@@ -308,6 +326,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// External Treatment Returns
 					returnFromDeviceBusses = modulExternalTreatmentReturns.collect({|i| i.inputBus});
@@ -316,11 +335,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						i.createSynth;
 						server.sync;
 					});
+					splashWindow.progress();
 
 					// Oscilloscope
 					"Oscilloscope...".sgmePostln;
 					modulOscilloscope.createSynth;
 					server.sync;
+					splashWindow.progress();
 
 					// conexiones de entrada y salida de cada módulo en el patchbay de audio
 					"Conexiones en Patchbay de audio...".sgmePostln;
@@ -338,6 +359,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						outputChannels: modulOutputChannels,
 						oscilloscope: modulOscilloscope,
 					);
+					splashWindow.progress();
 
 					// conecta cada entrada y salida de cada módulo en el patchbay de voltaje
 					"Conexiones en Patchbay de voltage...".sgmePostln;
@@ -353,6 +375,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						oscilloscope: modulOscilloscope,
 						outputChannels: modulOutputChannels,
 					);
+					splashWindow.progress();
 
 					//"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".sgmePostln;
 					connectionIn = inputAmplifiersBusses.collect({|item, i|
@@ -370,6 +393,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 							result
 						}
 					});
+					splashWindow.progress();
 
 					//"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".sgmePostln;
 					connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
@@ -387,6 +411,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 							result
 						}
 					});
+					splashWindow.progress();
 
 					/* No se ejecuta enableNodes ya que los nodos no implementados no están dibujados.
 					// Se ocultan en GUI los nodos que no tienen conexión entre módulos.
