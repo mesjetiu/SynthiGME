@@ -422,4 +422,26 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			{("[" ++ ipOrigin ++ "]: " ++ string + value.round(0.01)).sgmePostln}
 		)
 	}
+
+	setParameterSmoothedOSC { |string, value, addrForbidden, broadcast = true, ipOrigin = "local", lagTime = 0, intervalo = 0.2, oldValue|
+    if(lagTime <= 0) { // Si lagTime es cero o negativo, establecer el valor directamente sin suavizado
+        this.setParameterOSC(string, value, addrForbidden, broadcast, ipOrigin);
+    } {
+        var steps = lagTime / intervalo.max(0.001); // Mínimo intervalo para evitar divisiones por cero
+        var stepValue = (value - oldValue) / steps; // Incremento en cada paso
+        var currentValue = oldValue;
+
+        Routine.run({
+            while({currentValue.absdif(value) > stepValue.abs}) {
+                currentValue = currentValue + stepValue;
+					{this.setParameterOSC(string, currentValue, addrForbidden, broadcast, ipOrigin)}.defer(0);
+                intervalo.wait;
+            };
+            // Asegurarse de que el valor final sea exactamente 'value'
+				{this.setParameterOSC(string, value, addrForbidden, broadcast, ipOrigin)}.defer(0);
+        });
+    }
+}
+
+
 }

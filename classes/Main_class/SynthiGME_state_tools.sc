@@ -147,11 +147,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// 1. En oscRecievedMessagesCopy, las claves que no estén en newState, se reinician a valores iniciales.
 			oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
 			oscRecievedMessagesCopy.keysValuesDo {
-				|key|
+				|key, oldValue|
 				var initValue;
 				if (newState[key].isNil) {
 					initValue = initState[key];
 					this.setParameterOSC(key, initValue)
+					//this.setParameterSmoothedOSC(key, initValue, lagTime: 10, intervalo: 0.5, oldValue: oldValue);
 				}
 			};
 			// Ahora newState contiene todas las claves a actualizar. El resto se han reiniciado a valor inicial en el paso anterior.
@@ -162,6 +163,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// 3. Ejecutar todos los parámetros al nuevo estado.
 			newState.keysValuesDo {
 				|key, value|
+				var oldValue = initState[key];
+				//this.setParameterSmoothedOSC(key, value, lagTime: 10, intervalo: 0.5, oldValue: oldValue);
 				this.setParameterOSC(key, value)
 			};
 
