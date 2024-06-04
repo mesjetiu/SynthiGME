@@ -19,6 +19,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 MessageRedirector {
 	classvar instance,
+	synthiGME,
 	<window,
 	textView,
 	storedText;
@@ -39,6 +40,7 @@ MessageRedirector {
 	}
 
 	init {
+		synthiGME = SynthiGME.instance;
 		^this
 	}
 
@@ -129,5 +131,12 @@ MessageRedirector {
 	// método vacíos a propósito. Se llama desde shortcuts
 	resizeFocusedPanel{
 
+	}
+
+	goFront {
+		if (window.isNil.not){
+			window.alwaysOnTop = true;
+			window.alwaysOnTop = false;
+		}
 	}
 }
