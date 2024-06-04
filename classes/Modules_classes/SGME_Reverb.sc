@@ -64,8 +64,9 @@ SGME_Reverb : SGME_Connectable {
 			var sigIn, sigOut, inMix;
 			sigIn = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 			inMix = In.ar(inputBusMix) + InFeedback.ar(inFeedbackBusMix);
-			inMix = inMix.linlin(-1, 1, -1, 1) + mix;
-			inMix = inMix.clip(0, 1);
+			//inMix = inMix.linlin(-1, 1, -1, 1) + mix;
+			//inMix = inMix.clip(0, 1);
+			inMix = inMix + mix;
 
 			sigOut = FreeVerb.ar(sigIn, mix: inMix, room: 1); // Ajustar valores...
 
