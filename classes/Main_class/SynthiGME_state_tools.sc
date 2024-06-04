@@ -98,7 +98,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	}
 
 	// Método de recuperación del estado desde archivo
-	loadState { |path, fileName|
+	loadState { |path, fileName, secure = true|
 		var archivo, exito, newState, pairsArray, extension, contenido, oscRecievedMessagesCopy;
 		exito = false;
 		extension = ".spatch";
@@ -143,6 +143,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				};
 				newState.removeAt("/version");
 			};
+
+			if (secure) {this.restartState}; // por seguridad, se reinicia antes de cambiar de patch, ya que pueden producirse artefactos sonoros indeseados.
 
 			// 1. En oscRecievedMessagesCopy, las claves que no estén en newState, se reinician a valores iniciales.
 			oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
