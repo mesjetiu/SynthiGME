@@ -150,7 +150,6 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 	}
 
 	goFront {
-		var bounds = window.bounds;
 		window.alwaysOnTop = true;
 		window.alwaysOnTop = false;
 		this.focus;
