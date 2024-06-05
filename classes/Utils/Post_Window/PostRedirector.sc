@@ -135,8 +135,7 @@ MessageRedirector {
 
 	goFront {
 		if (window.isNil.not){
-			window.alwaysOnTop = true;
-			window.alwaysOnTop = false;
+			window.front
 		}
 	}
 }
