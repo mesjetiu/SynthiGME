@@ -143,7 +143,6 @@ SynthiGME {
 
 		// Se guarda la instancia:
 		if (instance != nil) {"Ya existe una instancia"; ^this};
-		instance = this;
 
 		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin);
 	}
@@ -188,6 +187,8 @@ SynthiGME {
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
 	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin|
+
+		instance = this;
 		//version = "1.8.0";
 		//appName = "SynthiGME";
 
