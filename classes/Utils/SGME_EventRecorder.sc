@@ -20,10 +20,12 @@ SGME_EventRecorder {
 		lastTime = 0;
 		player = nil;
 		record = true;
+		"Grabación de eventos iniciada...".sgmePostln;
 	}
 
 	*stopRecording {
 		record = false;
+		"Grabación de eventos terminada.".sgmePostln;
 	}
 
 	// Function to push events with timestamp
@@ -41,13 +43,8 @@ SGME_EventRecorder {
 
 	// Function to execute events
 	*play {
+		"Reproducción de eventos iniciada...".sgmePostln;
 		isPlaying = true;
-		if (events.size == 0) {
-			"No events to execute.".postln;
-			isPlaying = false;
-			^nil;
-		};
-
 		player = Routine {
 			events.do { |event, i|
 				var time, string, value;
@@ -57,16 +54,16 @@ SGME_EventRecorder {
 				{SynthiGME.instance.setParameterOSC(string, value)}.defer(0);
 				//("Time: %.3f, String: %s, Value: %s".format(time, string, value)).postln;
 			};
-
 			isPlaying = false;
+			"Reproducción de eventos terminada.".sgmePostln;
 		}.play;
 	}
 
 	*stop {
 		player.stop;
 		isPlaying = false;
+		"Reproducción de eventos terminada por el usuario.".sgmePostln;
 	}
-
 
 	*totalDur {
 		var dur = 0;
