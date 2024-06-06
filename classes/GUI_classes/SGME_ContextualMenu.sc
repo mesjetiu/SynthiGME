@@ -25,19 +25,22 @@ SGME_ContextualMenu {
 					MenuAction("Abrir patch", { synthiGME.loadStateGUI }),
 					MenuAction("Guardar patch", { synthiGME.saveStateGUI }),
 					MenuAction("Reiniciar Synthi", { synthiGME.restartState }),
-					MenuAction(grabarEvents, {
+					/*MenuAction(grabarEvents, {
 						if (synthiGME.eventRecorder.isRecording) {
 							synthiGME.eventRecorder.stopRecording;
 						} {
-							synthiGME.eventRecorder.initRecording;
+							synthiGME.eventRecorder.startRecording;
 						}
-					}),
-					MenuAction(playEvents, {
+					}),*/
+					/*MenuAction(playEvents, {
 						if (synthiGME.eventRecorder.isPlaying) {
 							synthiGME.eventRecorder.stop;
 						} {
 							synthiGME.eventRecorder.play;
 						}
+					}),*/
+					MenuAction("Grabación de eventos", {
+						synthiGME.eventRecorder.makeWindow;
 					}),
 					MenuAction(grabarAudio, {
 						if (synthiGME.server.isRecording) {
