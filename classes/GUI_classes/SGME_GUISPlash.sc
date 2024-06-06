@@ -50,8 +50,8 @@ SGME_SplashWindow  {
 		// Establecer el color de fondo de la ventana
 		//window.view.background = color;
 
-		window.front
-		.alwaysOnTop_(true);
+		window.front;
+		//window.alwaysOnTop_(true);
 
 		// Crear una vista personalizada para la barra de progreso
 		progressBarView = UserView(window, Rect(50, windowHeight - 50, windowWidth - 100, 20))
