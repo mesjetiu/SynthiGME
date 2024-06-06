@@ -1,11 +1,13 @@
-// Define a class for the event recorder
+// Define a class for the event isRecordinger
 SGME_EventRecorder {
 	var <events; // Class variable to store events
-	var <lastTime;
+	var <lastTime = 0;
 	var <player;
-	var <record;
-	var <isPlaying;
+	var <isRecording = false;
+	var <isPlaying = false;
 	var <synthiGME;
+	// variables propias de GUI
+	var <window, <playButton, <recordButton;
 
 
 	*new {|synt|
@@ -15,29 +17,25 @@ SGME_EventRecorder {
 	init {|synt|
 		synthiGME = synt;
 		events = List.new;
-		lastTime = 0;
-		player = nil;
-		record = false;
-		isPlaying = false;
 	}
 
 	initRecording {
 		events = List.new;
 		lastTime = 0;
 		player = nil;
-		record = true;
+		isRecording = true;
 		"Grabación de eventos iniciada...".sgmePostln;
 	}
 
 	stopRecording {
-		record = false;
+		isRecording = false;
 		"Grabación de eventos terminada.".sgmePostln;
 	}
 
 	// Function to push events with timestamp
 	push { |string, value|
 		var time;
-		if (record == false) {^this};
+		if (isRecording == false) {^this};
 		time = Main.elapsedTime;
 		if (events.size == 0) {
 			lastTime = time;
