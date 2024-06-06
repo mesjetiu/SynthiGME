@@ -417,7 +417,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		// Si el mensaje es correcto y no contiene "gate" se guarda el último valor de cada cadena en el diccionario
 		if ("/gate".matchRegexp(string).not){oscRecievedMessages.put(string, value)};
 		// Se almacena en la grabación de eventos
-		SGME_EventRecorder.push(string, value);
+		eventRecorder.push(string, value);
 
 		// Se imprime en Post window
 		if (this.verboseOSC,

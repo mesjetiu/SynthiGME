@@ -7,11 +7,11 @@ SGME_ContextualMenu {
 		var postWindow = switch (MessageRedirector.window.isNil) {false} {"Cerrar Post Window"} {true} {"Abrir Post Window"};
 		var playEvents = "";
 
-		if (SGME_EventRecorder.record) {grabarEvents = "Terminar grabación de eventos"};
-		if (SGME_EventRecorder.record.not && SGME_EventRecorder.isPlaying) {
+		if (synthiGME.eventRecorder.record) {grabarEvents = "Terminar grabación de eventos"};
+		if (synthiGME.eventRecorder.record.not && synthiGME.eventRecorder.isPlaying) {
 			playEvents = "Stop eventos";
 		};
-		if (SGME_EventRecorder.record.not && SGME_EventRecorder.isPlaying.not) {
+		if (synthiGME.eventRecorder.record.not && synthiGME.eventRecorder.isPlaying.not) {
 			playEvents = "Play eventos";
 			grabarEvents = "Iniciar grabación de eventos"
 		};
@@ -26,17 +26,17 @@ SGME_ContextualMenu {
 					MenuAction("Guardar patch", { synthiGME.saveStateGUI }),
 					MenuAction("Reiniciar Synthi", { synthiGME.restartState }),
 					MenuAction(grabarEvents, {
-						if (SGME_EventRecorder.record) {
-							SGME_EventRecorder.stopRecording;
+						if (synthiGME.eventRecorder.record) {
+							synthiGME.eventRecorder.stopRecording;
 						} {
-							SGME_EventRecorder.initRecording;
+							synthiGME.eventRecorder.initRecording;
 						}
 					}),
 					MenuAction(playEvents, {
-						if (SGME_EventRecorder.isPlaying) {
-							SGME_EventRecorder.stop;
+						if (synthiGME.eventRecorder.isPlaying) {
+							synthiGME.eventRecorder.stop;
 						} {
-							SGME_EventRecorder.play;
+							synthiGME.eventRecorder.play;
 						}
 					}),
 					MenuAction(grabarAudio, {

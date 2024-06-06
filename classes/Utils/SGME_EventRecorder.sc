@@ -1,13 +1,19 @@
 // Define a class for the event recorder
 SGME_EventRecorder {
-	classvar <events; // Class variable to store events
-	classvar <lastTime;
-	classvar <player;
-	classvar <record;
-	classvar <isPlaying;
+	var <events; // Class variable to store events
+	var <lastTime;
+	var <player;
+	var <record;
+	var <isPlaying;
+	var <synthiGME;
 
 
-	*initClass {
+	*new {|synt|
+		^super.new.init(synt)
+	}
+
+	init {|synt|
+		synthiGME = synt;
 		events = List.new;
 		lastTime = 0;
 		player = nil;
@@ -15,7 +21,7 @@ SGME_EventRecorder {
 		isPlaying = false;
 	}
 
-	*initRecording {
+	initRecording {
 		events = List.new;
 		lastTime = 0;
 		player = nil;
@@ -23,13 +29,13 @@ SGME_EventRecorder {
 		"Grabación de eventos iniciada...".sgmePostln;
 	}
 
-	*stopRecording {
+	stopRecording {
 		record = false;
 		"Grabación de eventos terminada.".sgmePostln;
 	}
 
 	// Function to push events with timestamp
-	*push { |string, value|
+	push { |string, value|
 		var time;
 		if (record == false) {^this};
 		time = Main.elapsedTime;
@@ -42,7 +48,7 @@ SGME_EventRecorder {
 	}
 
 	// Function to execute events
-	*play {
+	play {
 		"Reproducción de eventos iniciada...".sgmePostln;
 		isPlaying = true;
 		player = Routine {
@@ -51,7 +57,7 @@ SGME_EventRecorder {
 				#time, string, value = event;
 				// Wait for the adjusted time for subsequent events
 				time.wait;
-				{SynthiGME.instance.setParameterOSC(string, value)}.defer(0);
+				{synthiGME.setParameterOSC(string, value)}.defer(0);
 				//("Time: %.3f, String: %s, Value: %s".format(time, string, value)).postln;
 			};
 			isPlaying = false;
@@ -59,13 +65,13 @@ SGME_EventRecorder {
 		}.play;
 	}
 
-	*stop {
+	stop {
 		player.stop;
 		isPlaying = false;
 		"Reproducción de eventos terminada por el usuario.".sgmePostln;
 	}
 
-	*totalDur {
+	totalDur {
 		var dur = 0;
 		events.do{|event|
 			dur = dur + event[0];

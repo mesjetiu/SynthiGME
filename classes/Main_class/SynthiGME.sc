@@ -103,6 +103,8 @@ SynthiGME {
 
 	var <postWindow; // Instancia única (singleton) de Post Window
 
+	var <eventRecorder;
+
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
@@ -208,6 +210,8 @@ SynthiGME {
 
 		// Post window preparado y abierto:
 		postWindow = MessageRedirector.getInstance;
+
+		eventRecorder = SGME_EventRecorder(this);
 
 		guiSC = SGME_GUI(this, postWin); // Se arranca finalmente la GUI
 		// if(gui == true, {guiSC.makeWindow}); // por ahora la GUI es obligatoria. No funciona bien sin ella.
