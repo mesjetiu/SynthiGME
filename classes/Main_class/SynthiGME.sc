@@ -129,11 +129,11 @@ SynthiGME {
 		Class.initClassTree(SGME_Oscilloscope);
 		Class.initClassTree(SGME_GUI);
 
-	//	appPath = SynthiGME.getAppPath();
+		//	appPath = SynthiGME.getAppPath();
 	}
 
 	*new {
-		arg server = Server.local,
+		arg server, // = Server.local,
 		/*gui = true,*/
 		verboseOSC = true, // Muestra en Post window todo mensaje OSC procesado
 		numOutputChannels = inf, // Número de canales de salida unidos a salidas de SC. Mínimo 2 (2 canales por defecto del sistema) Máximo 16
@@ -143,8 +143,29 @@ SynthiGME {
 		alwaysRebootServer = false, // false: no se reinicia si se cumple la configuración del servidor.
 		postWin = true; // se abre una ventana para post window.
 
-		// Se guarda la instancia:
 		if (instance != nil) {"Ya existe una instancia"; ^this};
+
+		if (server.isNil) {
+			var port = 57110;
+			var ports;
+			var address;
+
+			ports = Server.allRunningServers.collect {|server|
+				server.addr.port
+			};
+
+			// Calcula el siguiente puerto libre
+			while ({ports.includes(port)}) {
+				port = port + 1;
+			};
+
+			address = NetAddr.new("127.0.0.1", port);
+
+			server = Server(name: \synthiGME_Server ++ "_" ++ address.hostname ++ "_" ++ address.port,
+				addr: address);
+		//	server.sync;
+			("Servidor creado en " + address).postln;
+		};
 
 		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin);
 	}
