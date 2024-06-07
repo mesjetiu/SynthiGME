@@ -24,7 +24,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		NetAddr.broadcastFlag = true;
 		netAddr = NetAddr(ipDifusion, devicePort);
 		// Busca la IP de la red local:
-		this.getLocalIP; // no es necesario, es solo informativo
+	//	this.getLocalIP; // no es necesario, es solo informativo
 		thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|

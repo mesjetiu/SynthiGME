@@ -35,7 +35,47 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			var alwaysRebootServer;
 			*/
 			// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
-			var serverOptionsOK; // true si lo pedido coincide con las opciones actuales
+			var serverOptionsOK = false; // true si lo pedido coincide con las opciones actuales
+
+			if (server.isNil) {
+				var address, port, remoteServer, isFree, serverOptions, serverName;
+				"Buscando puertos libres para un nuevo servidor de audio".sgmePostln;
+				port = 57200;
+
+				// Rutina para encontrar un puerto libre
+				isFree = false;
+				while ({ isFree.not && (port < 58000) }, {
+					address = NetAddr.new("127.0.0.1", port);
+					serverName = ("synthiGME_" ++ Date.seed.asString).asSymbol;
+					serverOptions = ServerOptions();
+					serverOptions.maxLogins = 2;
+
+					// Intentar conectar a un servidor remoto
+					remoteServer = Server.remote(serverName, address, serverOptions);
+					//remoteServer.connect;
+
+					wait(2);
+
+					// Verificar si el servidor remoto está corriendo
+					if (remoteServer.serverRunning.not) {
+						isFree = true;
+					} {
+						remoteServer.notify = false;
+						port = port + 1;
+					}
+				});
+
+				if (isFree) {
+					server = remoteServer;
+					("Servidor creado en " + address).sgmePostln;
+				} {
+					("No se encontró un puerto libre para crear un nuevo servidor.").error;
+					^this
+				}
+			};
+
+			if (server.isNil) {"No se ha encontrado un puerto libre para crear un nuevo servidor".sgmePostln; this.close};
+
 			if (
 				server.options.numOutputBusChannels == numOutputChannels,
 				{serverOptionsOK = true},
@@ -68,7 +108,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					//.numOutputBusChannels_(settings[\numOutputBusChannels])
 					.numOutputBusChannels_(numOutputChannels)
 					.numInputBusChannels_(numInputChannels)
-					.blockSize_(blockSize); // Control rate. Si es hardware lo permite se puede aproximar a 1
+					.blockSize_(blockSize) // Control rate. Si es hardware lo permite se puede aproximar a 1
+					.bindAddress_("0.0.0.0")
+					.maxLogins_(2);
 					//server.sync;
 
 					("Número de canales de Audio:" + server.options.numAudioBusChannels).sgmePostln;
