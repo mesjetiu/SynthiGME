@@ -24,7 +24,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		NetAddr.broadcastFlag = true;
 		netAddr = NetAddr(ipDifusion, devicePort);
 		// Busca la IP de la red local:
-	//	this.getLocalIP; // no es necesario, es solo informativo
+		this.getLocalIP; // no es necesario, es solo informativo
 		thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
@@ -44,7 +44,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	getLocalIP {
 
 		var ipDifusion = "255.255.255.255"; // Dirección de difusión de tu red
-		var port = 8000;
+		var port = rrand(8000, 8999);
 		// Encuentra la IP de este dispositivo en la red local haciendo un ping en broadcasting.
 		var functionGetIP = {
 			var localIP;
@@ -80,7 +80,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				|err|
 				"Error: No se pudo conseguir la dirección de IP local. La red puede estar inaccesible.".sgmePostln;
 				nil; // Retornar nil en caso de error
-			}
+			};
 		};
 
 		// Usar una Routine para ejecutar el código y esperar la IP
@@ -100,7 +100,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	sendBroadcastMsg{|msg, value|
 		if(myIp.notNil && (canSendOSC == true)) {
-		//	"enviando".sgmePostln;
+			//	"enviando".sgmePostln;
 			netAddr.sendMsg(msg, value);
 		} {
 			"No está definida la dirección IP de este dispositivo. No se pueden enviar mensajes en broadcasting."
