@@ -6,7 +6,7 @@ a.boot
 
 b.boot
 
-
+rand(3)
 
 address = NetAddr.new("127.0.0.1", port);
 
@@ -18,7 +18,15 @@ Server.all
 
 SynthiGME()
 
+s.ping
+(
+fork {
+	s.wait();
+	"hola".postln
+}.play
+)
 
+OSCdef(\captureIP)
 
 // example usage:
 // on machine running the server

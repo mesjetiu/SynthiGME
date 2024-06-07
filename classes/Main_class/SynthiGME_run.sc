@@ -38,13 +38,14 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			var serverOptionsOK = false; // true si lo pedido coincide con las opciones actuales
 
 			if (server.isNil) {
-				var address, port, remoteServer, isFree, serverOptions, serverName;
+				var address, port, remoteServer, isFree, serverOptions, serverName, numIntentos;
 				"Buscando puertos libres para un nuevo servidor de audio".sgmePostln;
 				port = 57200;
+				numIntentos = 5; // Además del número de intentos, representa el número máximo de instancias en la misma máquina.
 
 				// Rutina para encontrar un puerto libre
 				isFree = false;
-				while ({ isFree.not && (port < 58000) }, {
+				while ({ isFree.not && (port < (port+numIntentos)) }, {
 					address = NetAddr.new("127.0.0.1", port);
 					serverName = ("synthiGME_" ++ Date.seed.asString).asSymbol;
 					serverOptions = ServerOptions();
