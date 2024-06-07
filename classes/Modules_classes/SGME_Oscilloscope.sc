@@ -81,6 +81,7 @@ SGME_Oscilloscope : SGME_Connectable {
 		pauseRoutine = Routine({
 			1.wait;
 			synth.run(false);
+			oscilloscope.stop;
 		});
 	}
 
@@ -115,10 +116,10 @@ SGME_Oscilloscope : SGME_Connectable {
 		var inputTotal = inCount;
 		if (inputTotal == 0, {
 			running = false;
-			synth.run(false);
-			oscilloscope.stop;
+			pauseRoutine.play;
 		}, {
 			running = true;
+			pauseRoutine.reset;
 			synth.run(true);
 			oscilloscope.start;
 		});
