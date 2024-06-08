@@ -81,7 +81,7 @@ SGME_Oscilloscope : SGME_Connectable {
 		pauseRoutine = Routine({
 			1.wait;
 			synth.run(false);
-			oscilloscope.stop;
+			{oscilloscope.stop}.defer(0);
 		});
 	}
 
