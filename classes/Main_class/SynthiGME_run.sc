@@ -108,7 +108,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					.numAudioBusChannels_(settings[\numAudioBusChannels])
 					//.numOutputBusChannels_(settings[\numOutputBusChannels])
 					.numOutputBusChannels_(numOutputChannels)
-					.numInputBusChannels_(numInputChannels)
+					.numInputBusChannels_(numInputChannels + numReturnChannels)
 					.blockSize_(blockSize) // Control rate. Si es hardware lo permite se puede aproximar a 1
 					.bindAddress_("0.0.0.0")
 					.maxLogins_(2);
@@ -441,7 +441,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					//"Conexión de entrada External Treatment Returns, canales 1 a 4 a puertos de SC...".sgmePostln;
 					connectionIn = connectionIn ++ returnFromDeviceBusses.collect({|item, i|
 						if (//i+8 <= server.options.numInputBusChannels
-							(i+1) <= numReturnChannels
+							i <= numReturnChannels
 						)
 						{
 							var result = Synth(\connectionExternalTreatmentReturn, [
