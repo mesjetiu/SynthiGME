@@ -233,4 +233,65 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 			window.front
 		}
 	}
+
+	// Save events to a file
+	saveEvents { |path, fileName|
+		var archivo, exito;
+		exito = false;
+		try {
+			archivo = File.new(path +/+ fileName, "w");  // Abrir el archivo para escritura
+			events.do { |event|
+				archivo.write(event.join(" ") + "\n");
+			};
+			archivo.close();  // Cerrar el archivo después de escribir
+			exito = true;
+		} {|error|
+			// En caso de error durante la apertura o escritura del archivo
+			archivo.notNil.if { archivo.close };  // Asegúrate de cerrar el archivo si se abrió
+			"Error al guardar el archivo: ".sgmePostln;
+			error.errorString.sgmePostln;  // Imprime el mensaje de error
+		};
+
+		if (exito) {
+			"Eventos guardados correctamente en: ".sgmePostln;
+			(path +/+ fileName).sgmePostln;
+		};
+	}
+
+	// Load events from a file
+	loadEvents { |path, fileName|
+		var archivo, exito, contenido;
+		exito = false;
+		try {
+			archivo = File.new(path +/+ fileName, "r");  // Abrir el archivo para lectura
+			contenido = archivo.readAllString;  // Lee todo el contenido del archivo como un solo string
+			archivo.close();  // Cierra el archivo después de leer
+			exito = true;
+		} {|error|
+			// En caso de error durante la apertura o lectura del archivo
+			archivo.notNil.if { archivo.close };  // Asegúrate de cerrar el archivo si se abrió
+			"Error al cargar el archivo: ".sgmePostln;
+			error.errorString.sgmePostln;  // Imprime el mensaje de error
+		};
+
+		if (exito) {
+			"Archivo cargado correctamente desde: ".sgmePostln;
+			(path +/+ fileName).sgmePostln;
+
+			contenido = contenido.split($\n);  // Divide el contenido en líneas
+
+			events = List.new;
+			contenido.do { |line|
+				var event;
+				if (line.notEmpty) {
+					event = line.split($ ).collect { |item|
+						if (item[0] == $/) {item.asString} {item.asFloat}
+					};
+					events.add(event);
+				}
+			};
+
+			"Eventos cargados correctamente.".sgmePostln;
+		}
+	}
 }
