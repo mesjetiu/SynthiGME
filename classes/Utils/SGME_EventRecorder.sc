@@ -7,9 +7,8 @@ SGME_EventRecorder {
 	var <isPlaying = false;
 	var <synthiGME;
 	// variables propias de GUI
-	var <window, <playButton, <recordButton;
+	var <window, <playButton, <recordButton, <statusText;
 	var <imagePlay, <imageStop, <imageRecord;
-
 
 	*new {|synt|
 		^super.new.init(synt)
@@ -18,12 +17,12 @@ SGME_EventRecorder {
 	init {|synt|
 		var imagesPath = SGME_Path.imagesPath +/+ "player";
 		synthiGME = synt;
-		imagePlay = imagesPath +/+ "play";
-		imageStop = imagesPath +/+ "stop";
-		imageRecord = imagesPath +/+ "record";
+		imagePlay = Image(imagesPath +/+ "play");
+		imageStop = Image(imagesPath +/+ "stop");
+		imageRecord = Image(imagesPath +/+ "record");
 		events = List.new;
 		player = Routine {};
-	//	this.makeWindow;
+		//	this.makeWindow;
 	}
 
 	startRecording {
@@ -68,6 +67,8 @@ SGME_EventRecorder {
 			isPlaying = false;
 			if (window.isNil.not) {
 				{this.updateButtons}.defer(0);
+				{playButton.icon = imagePlay}.defer(0);
+				{statusText.string = "Reproducción terminada"}.defer(0);
 			};
 			"Reproducción de eventos terminada.".sgmePostln;
 		}.play;
@@ -90,120 +91,128 @@ SGME_EventRecorder {
 
 	// Métodos de GUI
 	// Create the window and its components
-    makeWindow {
+	makeWindow {
 		// Get available screen bounds
-        var screenBounds = Window.availableBounds;
+		var screenBounds = Window.availableBounds;
 
-        // Calculate the center position
-        var windowWidth = 300;
-        var windowHeight = 100;
-        var xPos = (screenBounds.width - windowWidth) / 2 + screenBounds.left;
-        var yPos = (screenBounds.height - windowHeight) / 2 + screenBounds.top;
+		// Calculate the center position
+		var windowWidth = 400;
+		var windowHeight = 100;
+		var xPos = (screenBounds.width - windowWidth) / 2 + screenBounds.left;
+		var yPos = (screenBounds.height - windowHeight) / 2 + screenBounds.top;
 
-        if (window.notNil) {
-            window.close;
-        };
+		if (window.notNil) {
+			window.close;
+		};
 
-        // Create the window
-        window = Window("Grabador de eventos", Rect(xPos, yPos, windowWidth, windowHeight), resizable: false)
+		// Create the window
+		window = Window("Grabador de eventos", Rect(xPos, yPos, windowWidth, windowHeight), resizable: false)
 		.front;
 
-        // Create the Play/Stop button
-        playButton = Button(window, Rect(10, 10, 80, 30))
-            .states_([
-                ["Play"], // Default color
-                ["Stop"]  // Default color
-            ])
-            .action_({
-                this.togglePlay;
-            });
+		// Create the Play/Stop button
+		playButton = Button(window, Rect(10, 10, 80, 80))
+		.icon_(imagePlay)
+		.iconSize_(80)
+		.action_({
+			this.togglePlay;
+		});
 
-        // Create the Record/Stop Record button
-        recordButton = Button(window, Rect(110, 10, 80, 30))
-            .states_([
-                ["Record"], // Default color
-                ["Stop Rec"] // Default color
-            ])
-            .action_({
-                this.toggleRecord;
-            });
+		// Create the Record/Stop Record button
+		recordButton = Button(window, Rect(110, 10, 80, 80))
+		.icon_(imageRecord)
+		.iconSize_(80)
+		.action_({
+			this.toggleRecord;
+		});
 
-        // Initial state setup
-        this.updateButtons;
-    }
+		// Create the status text
+		statusText = StaticText(window, Rect(220, 10, 160, 80))
+		.string_("Preparado")
+		.align_(\center);
 
-    // Toggle play/stop functionality
-    togglePlay {
-        if (isPlaying) {
-            this.stopPlayingGUI;
-        } {
-            this.startPlayingGUI;
-        };
-    }
+		// Initial state setup
+		this.updateButtons;
+	}
 
-    // Toggle record/stop record functionality
-    toggleRecord {
-        if (isRecording) {
-            this.stopRecordingGUI;
-        } {
-            this.startRecordingGUI;
-        };
-    }
+	// Toggle play/stop functionality
+	togglePlay {
+		if (isPlaying) {
+			this.stopPlayingGUI;
+			playButton.icon = imagePlay;
+		} {
+			this.startPlayingGUI;
+			playButton.icon = imageStop;
+		};
+	}
 
-    // Start playing (stub function)
-    startPlayingGUI {
+	// Toggle record/stop record functionality
+	toggleRecord {
+		if (isRecording) {
+			this.stopRecordingGUI;
+			recordButton.icon = imageRecord;
+		} {
+			this.startRecordingGUI;
+			recordButton.icon = imageStop;
+		};
+	}
+
+	// Start playing (stub function)
+	startPlayingGUI {
+		statusText.string = "Reproduciendo...";
 		this.play;
-        this.updateButtons; // Update buttons after starting to play
-    }
+		this.updateButtons; // Update buttons after starting to play
+	}
 
-    // Stop playing (stub function)
-    stopPlayingGUI {
+	// Stop playing (stub function)
+	stopPlayingGUI {
+		statusText.string = "Reproducción terminada";
 		this.stop;
-        this.updateButtons; // Update buttons after stopping playing
-    }
+		this.updateButtons; // Update buttons after stopping playing
+	}
 
-    // Start recording (stub function)
-    startRecordingGUI {
+	// Start recording (stub function)
+	startRecordingGUI {
+		statusText.string = "Grabando...";
 		this.startRecording;
-        this.updateButtons; // Update buttons after starting to record
-    }
+		this.updateButtons; // Update buttons after starting to record
+	}
 
-    // Stop recording (stub function)
-    stopRecordingGUI {
+	// Stop recording (stub function)
+	stopRecordingGUI {
+		statusText.string = "Grabación terminada";
 		this.stopRecording;
-        this.updateButtons; // Update buttons after stopping recording
-    }
+		this.updateButtons; // Update buttons after stopping recording
+	}
 
-    // Update the buttons' enabled/disabled states
-    updateButtons {
-        // Disable action temporarily to avoid triggering toggle actions
-        playButton.action_({ }); // Disable action to prevent looping
-        recordButton.action_({ }); // Disable action to prevent looping
+	// Update the buttons' enabled/disabled states
+	updateButtons {
+		// Disable action temporarily to avoid triggering toggle actions
+		playButton.action_({ }); // Disable action to prevent looping
+		recordButton.action_({ }); // Disable action to prevent looping
 
-        // Update the button states
-        playButton.valueAction_(isPlaying.if(1, 0));
-        recordButton.valueAction_(isRecording.if(1, 0));
+		// Update the button states
+		playButton.valueAction_(isPlaying.if(1, 0));
+		recordButton.valueAction_(isRecording.if(1, 0));
 
-        // Enable or disable buttons based on current state
-        if (isRecording) {
-            playButton.enabled = false;
-        } {
-            playButton.enabled = true;
-        };
+		// Enable or disable buttons based on current state
+		if (isRecording) {
+			playButton.enabled = false;
+		} {
+			playButton.enabled = true;
+		};
 
-        if (isPlaying) {
-            recordButton.enabled = false;
-        } {
-            recordButton.enabled = true;
-        };
+		if (isPlaying) {
+			recordButton.enabled = false;
+		} {
+			recordButton.enabled = true;
+		};
 
-        // Re-enable actions
-        playButton.action_({
-            this.togglePlay;
-        });
-        recordButton.action_({
-            this.toggleRecord;
-        });
-    }
+		// Re-enable actions
+		playButton.action_({
+			this.togglePlay;
+		});
+		recordButton.action_({
+			this.toggleRecord;
+		});
+	}
 }
-
