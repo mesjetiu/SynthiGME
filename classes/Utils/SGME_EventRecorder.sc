@@ -6,6 +6,7 @@ SGME_EventRecorder {
 	var <isRecording = false;
 	var <isPlaying = false;
 	var <synthiGME;
+	var <>maxPlaybackInterval;
 	// variables propias de GUI
 	var <window, <playButton, <recordButton, <statusText;
 	var <imagePlay, <imageStop, <imageRecord;
@@ -22,7 +23,7 @@ SGME_EventRecorder {
 		imageRecord = Image(imagesPath +/+ "record");
 		events = List.new;
 		player = Routine {};
-		//	this.makeWindow;
+		maxPlaybackInterval = 3; // 3 segundos de ejemplo
 	}
 
 	startRecording {
@@ -60,7 +61,7 @@ SGME_EventRecorder {
 				var time, string, value;
 				#time, string, value = event;
 				// Wait for the adjusted time for subsequent events
-				time.wait;
+				time.clip(0, maxPlaybackInterval).wait;
 				{synthiGME.setParameterOSC(string, value)}.defer(0);
 				//("Time: %.3f, String: %s, Value: %s".format(time, string, value)).postln;
 			};
