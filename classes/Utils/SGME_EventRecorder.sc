@@ -6,9 +6,9 @@ SGME_EventRecorder {
 	var <isRecording = false;
 	var <isPlaying = false;
 	var <synthiGME;
-	var <>maxPlaybackInterval;
+	var <maxPlaybackInterval = 3; // 3 segundos por defecto de máximo intervalo temporal entre eventos.
 	// variables propias de GUI
-	var <window, <playButton, <recordButton, <statusText;
+	var <window, <playButton, <recordButton, <statusText, <intervalControl;
 	var <imagePlay, <imageStop, <imageRecord;
 
 	*new {|synt|
@@ -23,7 +23,6 @@ SGME_EventRecorder {
 		imageRecord = Image(imagesPath +/+ "record");
 		events = List.new;
 		player = Routine {};
-		maxPlaybackInterval = 3; // 3 segundos de ejemplo
 	}
 
 	startRecording {
@@ -97,7 +96,7 @@ SGME_EventRecorder {
 		var screenBounds = Window.availableBounds;
 
 		// Calculate the center position
-		var windowWidth = 400;
+		var windowWidth = 500;
 		var windowHeight = 100;
 		var xPos = (screenBounds.width - windowWidth) / 2 + screenBounds.left;
 		var yPos = (screenBounds.height - windowHeight) / 2 + screenBounds.top;
@@ -130,6 +129,12 @@ SGME_EventRecorder {
 		statusText = StaticText(window, Rect(220, 10, 160, 80))
 		.string_("Preparado")
 		.align_(\center);
+
+		// Create the interval control
+		intervalControl = EZNumber(window, Rect(390, 40, 100, 20), "Max (s)", ControlSpec(0.1, 3600.0, \lin, 0.1), {|ez|
+			maxPlaybackInterval = ez.value;
+		}, maxPlaybackInterval);
+		intervalControl.setColors(Color.grey, Color.white);
 
 		// Initial state setup
 		this.updateButtons;
