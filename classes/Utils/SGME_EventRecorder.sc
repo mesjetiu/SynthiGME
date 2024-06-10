@@ -102,7 +102,11 @@ SGME_EventRecorder {
 		var yPos = (screenBounds.height - windowHeight) / 2 + screenBounds.top;
 
 		if (window.notNil) {
-			window.close;
+			if (window.isClosed.not){
+				^this
+			} {
+				window.close;
+			}
 		};
 
 		// Create the window
