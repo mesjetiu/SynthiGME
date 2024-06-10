@@ -208,7 +208,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 							"Conexión de salida stereo canales 1 - 4 a salidas 3 y 4".sgmePostln;
 							connectionOut = connectionOut.add({
 								var result = nil;
-								var channels = modulOutputChannels[0..3];
+								var channels = modulOutputChannels[0..3]; // canales 1-4 para mezclar
 								result = Synth(\connection4, [
 									\inBusL1, channels[0].outBusL,
 									\inBusR1, channels[0].outBusR,
@@ -267,7 +267,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 								("Output Channel" + (n+1) + "conectado a salida" + (n+7)).sgmePostln;
 								result = Synth(\connectionMono, [
 									\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
-									\outputBus, settings[\individualChannelOutputsBusses][n-1],
+									\outputBus, settings[\individualChannelOutputsBusses][n]-1,
 									\vol, generalVol,
 								], server).register;
 								server.sync;
