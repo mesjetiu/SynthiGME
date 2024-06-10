@@ -138,4 +138,6 @@ MessageRedirector {
 			window.front
 		}
 	}
+
+	goToOriginFocusedPanel {}
 }

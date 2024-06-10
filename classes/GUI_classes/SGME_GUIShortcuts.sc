@@ -35,7 +35,11 @@ SGME_GUIShortcuts {
 				},
 				43, {objectCaller.resizeFocusedPanel(factor)}, // +
 				45, {objectCaller.resizeFocusedPanel(1/factor)}, // -
-				102, {synthiGME.guiSC.frontWindows; MessageRedirector.getInstance.goFront}, // f (front) Todas las ventanas al frente
+				102, {
+					synthiGME.guiSC.frontWindows;
+					MessageRedirector.getInstance.goFront;
+					synthiGME.eventRecorder.goFront;
+				}, // f (front) Todas las ventanas al frente
 				49, {synthiGME.guiSC.panels[0].window.front; synthiGME.guiSC.panels[0].focus(0); synthiGME.guiSC.panels[0].goFront;}, // Tecla 1: Panel 1 al frente
 				50, {synthiGME.guiSC.panels[1].window.front; synthiGME.guiSC.panels[1].focus(1); synthiGME.guiSC.panels[1].goFront;}, // Tecla 2: Panel 2 al frente
 				51, {synthiGME.guiSC.panels[2].window.front; synthiGME.guiSC.panels[2].focus(2); synthiGME.guiSC.panels[2].goFront;}, // Tecla 3: Panel 3 al frente
@@ -49,9 +53,9 @@ SGME_GUIShortcuts {
 					})
 				},
 				/*15, {// Ctrl + O. Establece un nuevo origen de todas las ventanas
-					synthiGME.guiSC.panels.do({|panel|
-						panel.saveOrigin;
-					})
+				synthiGME.guiSC.panels.do({|panel|
+				panel.saveOrigin;
+				})
 				},*/ // Funciona pero lo dejamos fuera en este momento
 				111, {// Tecla o: Panel a posición y tamaño original
 					this.goToOriginFocusedPanel
@@ -73,8 +77,8 @@ SGME_GUIShortcuts {
 
 				/* No se ejecuta enableNodes porque de hecho los nodos no implementados no están dibujados.
 				101, { // Tecla e: Hace visibles o invisibles todos los nodos dependiendo de si son posibles de usar en el SynthiGME
-					synthiGME.guiSC.panels[4].enableNodes;
-					synthiGME.guiSC.panels[5].enableNodes;
+				synthiGME.guiSC.panels[4].enableNodes;
+				synthiGME.guiSC.panels[5].enableNodes;
 				},
 				*/
 

@@ -1,5 +1,5 @@
 // Define a class for the event isRecordinger
-SGME_EventRecorder {
+SGME_EventRecorder : SGME_GUIShortcuts{
 	var <events; // Class variable to store events
 	var <lastTime = 0;
 	var <player;
@@ -113,6 +113,8 @@ SGME_EventRecorder {
 		window = Window("Grabador de eventos", Rect(xPos, yPos, windowWidth, windowHeight), resizable: false)
 		.front;
 
+		SGME_GUIShortcuts.makeShortcuts(this, window, synthiGME);
+
 		// Create the Play/Stop button
 		playButton = Button(window, Rect(10, 10, 80, 80))
 		.icon_(imagePlay)
@@ -225,4 +227,12 @@ SGME_EventRecorder {
 			this.toggleRecord;
 		});
 	}
+
+	goFront {
+		if (window.isNil.not){
+			window.front
+		}
+	}
+
+	goToOriginFocusedPanel {^this}
 }
