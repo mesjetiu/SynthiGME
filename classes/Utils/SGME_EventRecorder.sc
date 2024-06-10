@@ -6,7 +6,7 @@ SGME_EventRecorder {
 	var <isRecording = false;
 	var <isPlaying = false;
 	var <synthiGME;
-	var <maxPlaybackInterval = 3; // 3 segundos por defecto de máximo intervalo temporal entre eventos.
+	var <maxPlaybackInterval = 0; // segundos de máximo intervalo temporal entre eventos. 0 == infinito
 	// variables propias de GUI
 	var <window, <playButton, <recordButton, <statusText, <intervalControl;
 	var <imagePlay, <imageStop, <imageRecord;
@@ -60,7 +60,7 @@ SGME_EventRecorder {
 				var time, string, value;
 				#time, string, value = event;
 				// Wait for the adjusted time for subsequent events
-				time.clip(0, maxPlaybackInterval).wait;
+				time.clip(0, if (maxPlaybackInterval == 0) {inf} {maxPlaybackInterval}).wait;
 				{synthiGME.setParameterOSC(string, value)}.defer(0);
 				//("Time: %.3f, String: %s, Value: %s".format(time, string, value)).postln;
 			};
@@ -131,7 +131,7 @@ SGME_EventRecorder {
 		.align_(\center);
 
 		// Create the interval control
-		intervalControl = EZNumber(window, Rect(390, 40, 100, 20), "Max (s)", ControlSpec(0.1, 3600.0, \lin, 0.1), {|ez|
+		intervalControl = EZNumber(window, Rect(390, 40, 100, 20), "Max (s)", ControlSpec(0, 3600.0, \lin, 0.1), {|ez|
 			maxPlaybackInterval = ez.value;
 		}, maxPlaybackInterval);
 		intervalControl.setColors(Color.grey, Color.white);
