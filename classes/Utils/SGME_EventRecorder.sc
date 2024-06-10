@@ -8,6 +8,7 @@ SGME_EventRecorder {
 	var <synthiGME;
 	// variables propias de GUI
 	var <window, <playButton, <recordButton;
+	var <imagePlay, <imageStop, <imageRecord;
 
 
 	*new {|synt|
@@ -15,7 +16,11 @@ SGME_EventRecorder {
 	}
 
 	init {|synt|
+		var imagesPath = SGME_Path.imagesPath +/+ "player";
 		synthiGME = synt;
+		imagePlay = imagesPath +/+ "play";
+		imageStop = imagesPath +/+ "stop";
+		imageRecord = imagesPath +/+ "record";
 		events = List.new;
 		player = Routine {};
 	//	this.makeWindow;
