@@ -233,6 +233,4 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 			window.front
 		}
 	}
-
-	goToOriginFocusedPanel {^this}
 }

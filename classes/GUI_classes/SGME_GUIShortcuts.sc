@@ -58,7 +58,7 @@ SGME_GUIShortcuts {
 				})
 				},*/ // Funciona pero lo dejamos fuera en este momento
 				111, {// Tecla o: Panel a posición y tamaño original
-					this.goToOriginFocusedPanel
+				//	this.goToOriginFocusedPanel
 				},
 				18, {// Tecla Ctrl + R: Comenzar a grabar o terminar de grabar
 					if (synthiGME.server.isRecording) {
