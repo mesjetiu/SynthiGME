@@ -8,8 +8,8 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 	var <synthiGME;
 	var <maxPlaybackInterval = 0; // segundos de máximo intervalo temporal entre eventos. 0 == infinito
 	// variables propias de GUI
-	var <window, <playButton, <recordButton, <statusText, <intervalControl;
-	var <imagePlay, <imageStop, <imageRecord;
+	var <window, <playButton, <recordButton, <openButton, <saveButton, <statusText, <intervalControl;
+	var <imagePlay, <imageStop, <imageRecord, <imageOpen, <imageSave;
 	var pathEvents;
 
 	*new {|synt|
@@ -22,6 +22,8 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		imagePlay = Image(imagesPath +/+ "play");
 		imageStop = Image(imagesPath +/+ "stop");
 		imageRecord = Image(imagesPath +/+ "record");
+		imageOpen = Image(imagesPath +/+ "open");
+		imageSave = Image(imagesPath +/+ "save");
 		events = List.new;
 		pathEvents = SGME_Path.rootPath +/+ "Events";
 		player = Routine {
@@ -98,7 +100,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 
 		// Calculate the center position
 		var windowWidth = 500;
-		var windowHeight = 100;
+		var windowHeight = 200;
 		var xPos = (screenBounds.width - windowWidth) / 2 + screenBounds.left;
 		var yPos = (screenBounds.height - windowHeight) / 2 + screenBounds.top;
 
@@ -136,6 +138,22 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		statusText = StaticText(window, Rect(220, 10, 160, 80))
 		.string_("Preparado")
 		.align_(\center);
+
+		// Create de Open button
+		openButton = Button(window, Rect(10, 110, 80, 80))
+		.icon_(imageOpen)
+		.iconSize_(80)
+		.action_({
+			this.loadEventsGUI;
+		});
+
+		// Create de Open button
+		saveButton = Button(window, Rect(110, 110, 80, 80))
+		.icon_(imageSave)
+		.iconSize_(80)
+		.action_({
+			this.saveEventsGUI;
+		});
 
 		// Create the interval control
 		intervalControl = EZNumber(window, Rect(390, 40, 100, 20), "Max (s)", ControlSpec(0, 3600.0, \lin, 0.1), {|ez|
