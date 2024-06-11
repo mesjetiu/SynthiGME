@@ -29,11 +29,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		splashWindow.numSteps = 21;
 
 		thisRoutine = Routine({
-			/*  var <numStereoOutputChannels;
-			var <numInputChannels;
-			var <numReturnChannels;
-			var alwaysRebootServer;
-			*/
 			// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
 			var serverOptionsOK = false; // true si lo pedido coincide con las opciones actuales
 
