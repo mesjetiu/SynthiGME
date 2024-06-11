@@ -145,12 +145,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 
 		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var factor = 2;
-			if(clickCount == 2) {
-				buttonNumber.switch(
-					0, {this.resizePanel(factor)}, // botón izquierdo
-					1, {this.resizePanel(1/factor)}, // botón derecho
-				)
-			} {SGME_ContextualMenu.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
+			SGME_ContextualMenu.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)
 		});
 
 		// Create the Play/Stop button
