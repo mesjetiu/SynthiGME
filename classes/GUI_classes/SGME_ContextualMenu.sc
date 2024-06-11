@@ -69,7 +69,7 @@ SGME_ContextualMenu {
 						synthiGME.guiSC.helpWindow.conmuteVisibility;
 					}),
 					MenuAction("Acerca de Synthi GME", { SGME_GUIAbout.makeWindow }),
-					MenuAction.separator("separador");
+					MenuAction.separator(),
 					MenuAction("Salir", { synthiGME.close }),
 				).palette_(QPalette.dark).front;
 			}, // botón derecho
