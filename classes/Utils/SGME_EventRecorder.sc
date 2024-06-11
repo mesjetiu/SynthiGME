@@ -1,3 +1,22 @@
+/*
+This file is part of SynthiGME.
+
+SynthiGME is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SynthiGME is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
+
+Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
+*/
+
 // Define a class for the event isRecordinger
 SGME_EventRecorder : SGME_GUIShortcuts{
 	var <events; // Class variable to store events
@@ -8,7 +27,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 	var <synthiGME;
 	var <maxPlaybackInterval = 0; // segundos de máximo intervalo temporal entre eventos. 0 == infinito
 	// variables propias de GUI
-	var <window, <playButton, <recordButton, <openButton, <saveButton, <statusText, <intervalControl;
+	var <window, <compositeView, <playButton, <recordButton, <openButton, <saveButton, <statusText, <intervalControl;
 	var <imagePlay, <imageStop, <imageRecord, <imageOpen, <imageSave;
 	var pathEvents;
 
@@ -103,6 +122,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		var windowHeight = 200;
 		var xPos = (screenBounds.width - windowWidth) / 2 + screenBounds.left;
 		var yPos = (screenBounds.height - windowHeight) / 2 + screenBounds.top;
+		var rectWindow, rectCompositeView;
 
 		if (window.notNil) {
 			if (window.isClosed.not){
@@ -112,11 +132,26 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 			}
 		};
 
+		rectWindow = Rect(xPos, yPos, windowWidth, windowHeight);
+		rectCompositeView = Rect(0, 0, rectWindow.width, rectWindow.height);
+
 		// Create the window
-		window = Window("Grabador de eventos", Rect(xPos, yPos, windowWidth, windowHeight), resizable: false)
+		window = Window("Grabador de eventos", rectWindow, resizable: false)
 		.front;
 
+		compositeView = CompositeView(window, rectCompositeView);
+
 		SGME_GUIShortcuts.makeShortcuts(this, window, synthiGME);
+
+		compositeView.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
+			var factor = 2;
+			if(clickCount == 2) {
+				buttonNumber.switch(
+					0, {this.resizePanel(factor)}, // botón izquierdo
+					1, {this.resizePanel(1/factor)}, // botón derecho
+				)
+			} {SGME_ContextualMenu.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
+		});
 
 		// Create the Play/Stop button
 		playButton = Button(window, Rect(10, 10, 80, 80))
