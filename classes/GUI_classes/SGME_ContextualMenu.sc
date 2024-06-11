@@ -39,7 +39,7 @@ SGME_ContextualMenu {
 							synthiGME.eventRecorder.play;
 						}
 					}),*/
-					MenuAction("Grabación de eventos", {
+					MenuAction("Abrir grabadora de eventos", {
 						synthiGME.eventRecorder.makeWindow;
 					}),
 					MenuAction(grabarAudio, {
@@ -68,8 +68,9 @@ SGME_ContextualMenu {
 					MenuAction("Ver/ocultar atajos de teclado", {
 						synthiGME.guiSC.helpWindow.conmuteVisibility;
 					}),
-					MenuAction("Salir", { synthiGME.close }),
 					MenuAction("Acerca de Synthi GME", { SGME_GUIAbout.makeWindow }),
+					MenuAction.separator("separador");
+					MenuAction("Salir", { synthiGME.close }),
 				).palette_(QPalette.dark).front;
 			}, // botón derecho
 		)
