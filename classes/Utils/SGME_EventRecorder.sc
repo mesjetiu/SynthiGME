@@ -23,8 +23,24 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		imageStop = Image(imagesPath +/+ "stop");
 		imageRecord = Image(imagesPath +/+ "record");
 		events = List.new;
-		player = Routine {};
 		pathEvents = SGME_Path.rootPath +/+ "Events";
+		player = Routine {
+			events.do { |event, i|
+				var time, string, value;
+				#time, string, value = event;
+				// Wait for the adjusted time for subsequent events
+				time.clip(0, if (maxPlaybackInterval == 0) {inf} {maxPlaybackInterval}).wait;
+				{synthiGME.setParameterOSC(string, value)}.defer(0);
+				//("Time: %.3f, String: %s, Value: %s".format(time, string, value)).postln;
+			};
+			isPlaying = false;
+			if (window.isNil.not) {
+				{this.updateButtons}.defer(0);
+				{playButton.icon = imagePlay}.defer(0);
+				{statusText.string = "Reproducción terminada"}.defer(0);
+			};
+			"Reproducción de eventos terminada.".sgmePostln;
+		};
 	}
 
 	startRecording {
@@ -55,30 +71,14 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 
 	// Function to execute events
 	play {
+		player.reset;
 		"Reproducción de eventos iniciada...".sgmePostln;
 		isPlaying = true;
-		player = Routine {
-			events.do { |event, i|
-				var time, string, value;
-				#time, string, value = event;
-				// Wait for the adjusted time for subsequent events
-				time.clip(0, if (maxPlaybackInterval == 0) {inf} {maxPlaybackInterval}).wait;
-				{synthiGME.setParameterOSC(string, value)}.defer(0);
-				//("Time: %.3f, String: %s, Value: %s".format(time, string, value)).postln;
-			};
-			isPlaying = false;
-			if (window.isNil.not) {
-				{this.updateButtons}.defer(0);
-				{playButton.icon = imagePlay}.defer(0);
-				{statusText.string = "Reproducción terminada"}.defer(0);
-			};
-			"Reproducción de eventos terminada.".sgmePostln;
-		}.play;
+		player.play;
 	}
 
 	stop {
 		player.stop;
-		player.reset;
 		isPlaying = false;
 		"Reproducción de eventos terminada por el usuario.".sgmePostln;
 	}
