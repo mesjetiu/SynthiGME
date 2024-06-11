@@ -21,4 +21,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
     sgmePostln {
         MessageRedirector.getInstance.postMessage(this);
     }
+
+	sgmeWarn {
+		MessageRedirector.getInstance.postWarn(this);
+	}
 }

@@ -91,6 +91,24 @@ MessageRedirector {
 		string.postln;  // También envía al Post Window estándar (solo string, sin la hora)
 	}
 
+	postWarn { |string|
+		//var timestamp = Date.getDate.asString("%H:%M:%S");  // Obtener la hora actual con formato de horas, minutos y segundos
+		var message = nil;
+		var timestamp = Date.getDate.hourStamp.format("%T").asString().split($.)[0];
+		if (MessageRedirector.containsPrintableChars(string)) {
+			message = "[" ++ timestamp ++ "] " ++ string;   // Formatear el mensaje con la marca de tiempo
+		} {message = string}; // No se muestra la hora en líneas vacías.
+
+
+		storedText = "WARNING:" + message ++ "\n" ++ storedText;  // Almacenar el texto
+		if (textView.notNil) {
+			{
+				textView.string = storedText;  // Actualizar el TextView si existe
+			}.defer;
+		};
+		string.warn;  // También envía al Post Window estándar (solo string, sin la hora)
+	}
+
 	*containsPrintableChars { |stringToCheck|
 		// La expresión regular para caracteres imprimibles
 		var regexp = "[\\x21-\\x7E]";
