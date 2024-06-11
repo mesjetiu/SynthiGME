@@ -89,12 +89,8 @@ SGME_GUIPanel : SGME_GUIShortcuts{
 
 	makeWindow { // Para sobrescribir desde clases que heredan
 		rectWindow = Rect(0, 0,  virtualWidth/4,  virtualWidth/4);
-		rectCompositeView = Rect(
-			0,
-			0,
-			rectWindow.width,
-			rectWindow.height,
-		);
+		rectCompositeView = Rect(0, 0, rectWindow.width, rectWindow.height);
+
 		window =  Window("", rectWindow, false, true, scroll: true)
 		.userCanClose_(false);
 		compositeView = CompositeView(window, rectCompositeView);
