@@ -47,7 +47,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				isFree = false;
 				while ({ isFree.not && (port < (port+numIntentos)) }, {
 					address = NetAddr.new("127.0.0.1", port);
-					serverName = ("synthiGME_" ++ Date.seed.asString).asSymbol;
+					serverName = ("synthiGME_" ++ Date.seed.asHexString).asSymbol;
 					serverOptions = ServerOptions();
 					serverOptions.maxLogins = 2;
 
