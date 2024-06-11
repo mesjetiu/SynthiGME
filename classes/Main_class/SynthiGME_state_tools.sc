@@ -39,7 +39,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		state = Dictionary.newFrom(this.oscRecievedMessages);
 		string = state.getPairs.collect({ |item| item.asString });
 		extension = ".spatch";
+
 		if (path.isNil) {path = pathState} {pathState = path};
+
+		if (File.exists(path).not) {File.mkdir(path)};
 
 		// Añadir la extensión .spatch si no está presente
 		if (fileName.endsWith(extension).not) {
@@ -174,7 +177,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			"Patch recuperado y ejecutado".sgmePostln;
 		}
 	}
-
 
 	loadStateGUI {
 		var path = pathState; // Define un directorio inicial

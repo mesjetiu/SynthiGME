@@ -29,7 +29,7 @@ SynthiGME {
 	var <numInputChannels;
 	var <numReturnChannels;
 	var <blockSize;
-	var alwaysRebootServer;
+	var <alwaysRebootServer;
 	// fin opciones de inicio.
 
 	// Módulos que incluye:
@@ -86,12 +86,12 @@ SynthiGME {
 	// Path donde se guardan los estados
 	var <pathState;
 	// será true en el momento que se haga un cambio en el patch. Utilizado para preguntar guardar antes de salir.
-	var modifiedState = false;
-	var openDialog = false; //Si hay diálogo abierto, no es nil.
+	var <modifiedState = false;
+	var <>openDialog = false; //Si hay diálogo abierto, no es nil.
 
 	// Interfáz gráfica de SuperCollider (GUI)
 	var <guiSC = nil;
-	classvar appPath = nil; // Path de la aplicación
+	classvar <appPath = nil; // Path de la aplicación
 
 	// Otras opciones.
 	var <generalVol;

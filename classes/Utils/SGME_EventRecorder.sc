@@ -10,6 +10,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 	// variables propias de GUI
 	var <window, <playButton, <recordButton, <statusText, <intervalControl;
 	var <imagePlay, <imageStop, <imageRecord;
+	var pathEvents;
 
 	*new {|synt|
 		^super.new.init(synt)
@@ -23,6 +24,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		imageRecord = Image(imagesPath +/+ "record");
 		events = List.new;
 		player = Routine {};
+		pathEvents = SGME_Path.rootPath +/+ "Events";
 	}
 
 	startRecording {
@@ -236,8 +238,19 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 
 	// Save events to a file
 	saveEvents { |path, fileName|
-		var archivo, exito;
+		var archivo, exito, extension;
+		extension = ".seq"; // "seq" de "Sequence"
 		exito = false;
+
+		if (path.isNil) {path = pathEvents} {pathEvents = path};
+
+		if (File.exists(path).not) {File.mkdir(path)};
+
+		// Añadir la extensión .seq si no está presente
+		if (fileName.endsWith(extension).not) {
+			fileName = fileName ++ extension;
+		};
+
 		try {
 			archivo = File.new(path +/+ fileName, "w");  // Abrir el archivo para escritura
 			events.do { |event|
@@ -292,6 +305,48 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 			};
 
 			"Eventos cargados correctamente.".sgmePostln;
+			^exito;
 		}
+	}
+
+	// Guardado de estado desde un diálogo de usuario:
+	saveEventsGUI {
+		var path = pathEvents; // Define un directorio inicial
+		if (synthiGME.openDialog) {^this};
+		synthiGME.openDialog = true;
+		FileDialog(
+			{ |path|
+				synthiGME.openDialog = false;
+				path.notNil.if {
+					this.saveEvents(path.dirname, path.basename);
+				}
+			},
+			{ synthiGME.openDialog = false },
+			fileMode: 0,  // Permite la selección de un nombre de archivo, existente o no
+			acceptMode: 1,  // Diálogo de guardado
+			stripResult: true,  // Pasa la ruta del archivo directamente
+			path: path  // Ruta inicial
+		);
+	}
+
+	loadEventsGUI {
+		var path = pathEvents; // Define un directorio inicial
+		var exit = false;
+		if (synthiGME.openDialog) {^this};
+		synthiGME.openDialog = true;
+		FileDialog(
+			{ |path|
+				synthiGME.openDialog = false;
+				path.notNil.if {
+					exit = this.loadEvents(path.dirname, path.basename);
+					if (exit) { this.makeWindow; }
+				}
+			},
+			{ synthiGME.openDialog = false },
+			fileMode: 1,  // Modo para un archivo existente
+			acceptMode: 0,  // Modo de apertura
+			stripResult: true,  // Pasa la ruta del archivo directamente
+			path: path  // Ruta inicial
+		);
 	}
 }
