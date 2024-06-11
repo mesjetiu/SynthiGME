@@ -46,7 +46,6 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 	startRecording {
 		events = List.new;
 		lastTime = 0;
-		player = nil;
 		isRecording = true;
 		"Grabación de eventos iniciada...".sgmePostln;
 	}
@@ -64,7 +63,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		if (events.size == 0) {
 			lastTime = time;
 		};
-		events.add([(time - lastTime), string, value]);
+		events.add([(time - lastTime).round(0.001), string, value.round(0.01)]);
 		//"Event added: [%, %, %]".format((time - lastTime), string, value).postln;
 		lastTime = time;
 	}
@@ -339,7 +338,8 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 				synthiGME.openDialog = false;
 				path.notNil.if {
 					exit = this.loadEvents(path.dirname, path.basename);
-					if (exit) { this.makeWindow; }
+					if (exit) { this.makeWindow; };
+					statusText.string = "Secuencia cargada";
 				}
 			},
 			{ synthiGME.openDialog = false },
