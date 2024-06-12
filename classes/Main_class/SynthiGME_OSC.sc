@@ -28,13 +28,20 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		thisProcess.removeOSCRecvFunc(functionOSC); // Elimina la función anterior para volverla a introducir
 		// función que escuchará la recepción de mensajes OSC de cualquier dispositivo
 		functionOSC = {|msg, time, addr, recvPort|
+			var prefix, message;
+			message = msg[0].asString;
 			// se ejecuta la orden recibida por mensaje.
 			// Para recibir mensajes ha de estar habilitada la opción.
 			if (canRecieveOSC == false) {^this};
 			// Calcular las condiciones en las que se ha de ejecutar el comando y las que no.
-			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip) && (msg[0].asString != "/ping")){
+			if ((recvPort == devicePort) && (addr.ip != myIp) && (addr.ip != NetAddr.localAddr.ip) && (message != "/ping")){
 				//"recibido".sgmePostln;
-				this.setParameterOSC(msg[0].asString, msg[1], addr, broadcast: false, ipOrigin: addr.ip)
+				prefix = "/" ++ oscGroup;
+				if (message.beginsWith(prefix)) {
+					message = message[prefix.size..]; // Eliminar el prefijo
+					// ejecutar el mensaje si coincide con el nombre del grupo
+					this.setParameterOSC(message, msg[1], addr, broadcast: false, ipOrigin: addr.ip)
+				};
 			};
 		};
 		thisProcess.addOSCRecvFunc(functionOSC);
@@ -101,9 +108,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	sendBroadcastMsg{|msg, value|
 		if(myIp.notNil && (canSendOSC == true)) {
 			//	"enviando".sgmePostln;
-			netAddr.sendMsg(msg, value);
+			var message = "/" ++ oscGroup ++ msg; // Se añade un prefijo de grupo de OSC
+			netAddr.sendMsg(message, value);
 		} {
-			"No está definida la dirección IP de este dispositivo. No se pueden enviar mensajes en broadcasting."
+			"No está definida la dirección IP de este dispositivo. No se pueden enviar mensajes en broadcasting.".sgmeWarn;
 		}
 	}
 }
