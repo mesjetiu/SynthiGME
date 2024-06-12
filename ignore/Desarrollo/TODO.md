@@ -1,18 +1,6 @@
 # Implementar:
-- Módulo Osciloscopio (en proceso)
-	+ Creado hasta unión de patchbay audio. Falta:
-		* Añadir controles y knobs (ScopeView tiene star() y stop(), útil).
-		* Depurar el synth, el uso del buffer, del bus... sobran cosas.
-		* Retocar apariencia final.
 - Módulo External Treatmen Device: terminar. Está hecha la GUI.
 - Módulo Envelope Followers: terminar. Está hecha la GUI.
-- Rescribir conectividad OSC:
-	+ Los puertos por defecto estarán siempre abiertos (preparación inicial).
-	+ Se calcula la propia ip y se guarda (preparación inicial).
-	+ Cuando se mueve un mando: se envía (ECO) el mensaje broadcasting al puerto.
-	+ Cuando se recibe un mensaje:
-		- Si proviene de la propia ip, se ignora. Si no, se ejecuta SIN ECO.
-	+ setParameterOSC() ha de admitir: mensaje, valor, bool eco.
 - Grabar comandos OSC en el tiempo: guardar una lista de eventos. Cada evento consistirá en el comando OSC recibido más la marca temporal. Todo puede después reproducirse (velocidad, sentido variables).
 - Archivo de configuración personal de usuario (para recordar paths y otras variables personales).
 - Módulo Joystick.
@@ -20,7 +8,6 @@
 - Poner variables relevantes de módulos en configuración.
 - Hacer el archivo de configuración en JSON.
 - Crear hints al poner el ratón sobre un view.
-- Crear tabla de OSC actualizada y accesible.
 - Ver si se pueden hacer las ventanas resizables. Actualmente no lo están. Pero hay que ver si es compatible con los atajos actuales para Zoom.
 
 # Bugs y mejoras:
