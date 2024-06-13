@@ -51,14 +51,14 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 				#time, string, value = event;
 				// Wait for the adjusted time for subsequent events
 				time.clip(0, if (maxPlaybackInterval == 0) {inf} {maxPlaybackInterval}).wait;
-				{synthiGME.setParameterOSC(string, value)}.defer(0);
+				{synthiGME.setParameterOSC(string, value)}.defer();
 				//("Time: %.3f, String: %s, Value: %s".format(time, string, value)).postln;
 			};
 			isPlaying = false;
 			if (window.isNil.not) {
-				{this.updateButtons}.defer(0);
-				{playButton.icon = imagePlay}.defer(0);
-				{statusText.string = "Reproducción terminada"}.defer(0);
+				{this.updateButtons}.defer();
+				{playButton.icon = imagePlay}.defer();
+				{statusText.string = "Reproducción terminada"}.defer();
 			};
 			"Reproducción de eventos terminada.".sgmePostln;
 		};

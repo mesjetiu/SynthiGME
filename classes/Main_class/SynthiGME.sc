@@ -398,7 +398,7 @@ SynthiGME {
 	}
 
 	exit {
-		{Window.closeAll}.defer(0);
+		{Window.closeAll}.defer();
 		server.freeAll;
 		modulRandomGenerator.randomRoutine.stop;
 		if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
