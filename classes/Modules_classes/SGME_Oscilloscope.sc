@@ -108,12 +108,12 @@ SGME_Oscilloscope : SGME_Connectable {
 				\stereoBufferNum, stereoBuffer.bufnum
 			], RootNode(server), \addToTail).register;
 		});
-		this.synthRun;
+	//	this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su entrada es 0 o no.
 	synthRun {
-		var inputTotal = inCount;
+		/*var inputTotal = inCount;
 		if (inputTotal == 0, {
 			running = false;
 			pauseRoutine.play;
@@ -122,7 +122,7 @@ SGME_Oscilloscope : SGME_Connectable {
 			pauseRoutine.reset;
 			synth.run(true);
 			oscilloscope.start;
-		});
+		});*/
 	}
 
 	makeOscilloscope {|parent, rect|
