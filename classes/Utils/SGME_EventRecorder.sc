@@ -29,6 +29,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 	// variables propias de GUI
 	var <window, <compositeView, <playButton, <recordButton, <openButton, <saveButton, <statusText, <intervalControl;
 	var <imagePlay, <imageStop, <imageRecord, <imageOpen, <imageSave;
+	var <messageDisplay = "Preparado";
 	var pathEvents;
 
 	*new {|synt|
@@ -58,7 +59,8 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 			if (window.isNil.not) {
 				{this.updateButtons}.defer();
 				{playButton.icon = imagePlay}.defer();
-				{statusText.string = "Reproducción terminada"}.defer();
+				messageDisplay = "Reproducción terminada";
+				{statusText.string = messageDisplay}.defer();
 			};
 			"Reproducción de eventos terminada.".sgmePostln;
 		};
@@ -150,23 +152,25 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 
 		// Create the Play/Stop button
 		playButton = Button(window, Rect(10, 10, 80, 80))
-		.icon_(imagePlay)
+		.icon_(if(isPlaying){imageStop}{imagePlay})
 		.iconSize_(80)
 		.action_({
 			this.togglePlay;
-		});
+		})
+		.enabled_(if(isRecording){false}{true});
 
 		// Create the Record/Stop Record button
 		recordButton = Button(window, Rect(110, 10, 80, 80))
-		.icon_(imageRecord)
+		.icon_(if(isRecording){imageStop}{imageRecord})
 		.iconSize_(80)
 		.action_({
 			this.toggleRecord;
-		});
+		})
+		.enabled_(if(isPlaying){false}{true});
 
 		// Create the status text
 		statusText = StaticText(window, Rect(220, 10, 160, 80))
-		.string_("Preparado")
+		.string_(messageDisplay)
 		.align_(\center);
 
 		// Create de Open button
@@ -219,28 +223,32 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 
 	// Start playing (stub function)
 	startPlayingGUI {
-		statusText.string = "Reproduciendo...";
+		messageDisplay = "Reproduciendo...";
+		statusText.string = messageDisplay;
 		this.play;
 		this.updateButtons; // Update buttons after starting to play
 	}
 
 	// Stop playing (stub function)
 	stopPlayingGUI {
-		statusText.string = "Reproducción terminada";
+		messageDisplay = "Reproducción terminada";
+		statusText.string = messageDisplay;
 		this.stop;
 		this.updateButtons; // Update buttons after stopping playing
 	}
 
 	// Start recording (stub function)
 	startRecordingGUI {
-		statusText.string = "Grabando...";
+		messageDisplay = "Grabando...";
+		statusText.string = messageDisplay;
 		this.startRecording;
 		this.updateButtons; // Update buttons after starting to record
 	}
 
 	// Stop recording (stub function)
 	stopRecordingGUI {
-		statusText.string = "Grabación terminada";
+		messageDisplay = "Grabación terminada";
+		statusText.string = messageDisplay;
 		this.stopRecording;
 		this.updateButtons; // Update buttons after stopping recording
 	}
@@ -387,7 +395,8 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 				path.notNil.if {
 					exit = this.loadEvents(path.dirname, path.basename);
 					if (exit) { this.makeWindow; };
-					statusText.string = "Secuencia cargada";
+					messageDisplay = "Secuencia cargada";
+					statusText.string = messageDisplay;
 				}
 			},
 			{ synthiGME.openDialog = false },
