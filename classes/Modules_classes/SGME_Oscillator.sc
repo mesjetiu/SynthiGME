@@ -46,6 +46,7 @@ SGME_Oscillator : SGME_Connectable {
 	var <server;
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
+	var resumeRoutine;
 	classvar settings = nil;
 	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	var outVol; // Entre 0 y 1;
@@ -172,8 +173,20 @@ SGME_Oscillator : SGME_Connectable {
 		inputBusPulseMod = Bus.audio(server);
 		inFeedbackBusPulseMod = Bus.audio(server);
 		pauseRoutine = Routine({
+			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
+			running = false;
 			1.wait;
 			synth.run(false);
+			1.wait;
+			//{oscilloscope.stop}.defer();
+		});
+		resumeRoutine = Routine({
+			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
+			running = true;
+			1.wait;
+			synth.run(true);
+			1.wait;
+			//{oscilloscope.stop}.defer();
 		});
 	}
 
@@ -209,13 +222,11 @@ SGME_Oscillator : SGME_Connectable {
 	synthRun {
 		var outputTotal = (pulseLevel + sineLevel + triangleLevel + sawtoothLevel) * outVol * outCount;
 		if (outputTotal==0, {
-			running = false;
-			pauseRoutine.reset;
+			pauseRoutine.play;
 			pauseRoutine.play;
 		}, {
-			pauseRoutine.stop;
-			running = true;
-			synth.run(true);
+			resumeRoutine.reset;
+			resumeRoutine.play;
 		});
 	}
 
