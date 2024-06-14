@@ -41,6 +41,7 @@ SGME_Oscilloscope : SGME_Connectable {
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
+	var resumeRoutine;
 	classvar settings;
 
 
@@ -79,9 +80,20 @@ SGME_Oscilloscope : SGME_Connectable {
 		inFeedbackBusCH2 = Bus.audio(server);
 		stereoBuffer = Buffer.alloc(server,1024,2);
 		pauseRoutine = Routine({
+			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
+			running = false;
 			1.wait;
 			synth.run(false);
-			{oscilloscope.stop}.defer();
+			1.wait;
+			//{oscilloscope.stop}.defer();
+		});
+		resumeRoutine = Routine({
+			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
+			running = true;
+			1.wait;
+			synth.run(true);
+			1.wait;
+			//{oscilloscope.stop}.defer();
 		});
 	}
 
@@ -108,21 +120,21 @@ SGME_Oscilloscope : SGME_Connectable {
 				\stereoBufferNum, stereoBuffer.bufnum
 			], RootNode(server), \addToTail).register;
 		});
-	//	this.synthRun;
+		this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su entrada es 0 o no.
 	synthRun {
-		/*var inputTotal = inCount;
+		var inputTotal = inCount;
 		if (inputTotal == 0, {
-			running = false;
+			pauseRoutine.play;
 			pauseRoutine.play;
 		}, {
-			running = true;
-			pauseRoutine.reset;
-			synth.run(true);
-			oscilloscope.start;
-		});*/
+			resumeRoutine.reset;
+			resumeRoutine.play;
+			//synth.run(true);
+			//oscilloscope.start;
+		});
 	}
 
 	makeOscilloscope {|parent, rect|
