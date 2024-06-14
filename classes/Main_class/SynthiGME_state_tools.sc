@@ -21,16 +21,21 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 + SynthiGME {
 
 	// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
-	restartState {
-		var oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
-		oscRecievedMessagesCopy.keys.do {
-			|key|
-			var value = initState[key];
-			this.setParameterOSC(key, value)
-		};
+	restartState {|condition = nil|
+		var waitTime = 0;
+		Routine {
+			var oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
+			oscRecievedMessagesCopy.keys.do {
+				|key|
+				var value = initState[key];
+				{this.setParameterOSC(key, value)}.defer;
+				if (key.beginsWith("/patch")) {wait(waitTime)};
+			};
 
-		// reiniciamos oscRecievedMessages para comenzar de cero.
-		oscRecievedMessages = Dictionary();
+			// reiniciamos oscRecievedMessages para comenzar de cero.
+			oscRecievedMessages = Dictionary();
+			if (condition.isNil.not) {condition.unhang}
+		}.play
 	}
 
 	// Guarda el estado actual del Synthi de forma diferencial: los parámetros que se han modificado desde el inicio.
@@ -103,6 +108,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 	// Método de recuperación del estado desde archivo
 	loadState { |path, fileName, secure = true|
 		var archivo, exito, newState, pairsArray, extension, contenido, oscRecievedMessagesCopy;
+		var condition = Condition(false);
 		exito = false;
 		extension = ".spatch";
 		if (path.isNil) {path = pathState} {pathState = path};
@@ -122,6 +128,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 		// Verifica si el archivo se cargó con éxito
 		if (exito) {
+			var waitTime = 0;
 			"Archivo cargado correctamente desde: ".sgmePostln;
 			(path +/+ fileName).sgmePostln;
 
@@ -139,6 +146,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 			newState = Dictionary.newFrom(contenido);
 
+
 			// Comprobamos si hay entrada de \version. Si la hay, la comparamos con la versión de esta instancia y se lanza mensaje de advertencia.
 			if (newState["/version"].notNil) {
 				if (newState["/version"].asString != version) {
@@ -147,34 +155,38 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				newState.removeAt("/version");
 			};
 
-			if (secure) {this.restartState}; // por seguridad, se reinicia antes de cambiar de patch, ya que pueden producirse artefactos sonoros indeseados.
 
-			// 1. En oscRecievedMessagesCopy, las claves que no estén en newState, se reinician a valores iniciales.
-			oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
-			oscRecievedMessagesCopy.keysValuesDo {
-				|key, oldValue|
-				var initValue;
-				if (newState[key].isNil) {
-					initValue = initState[key];
-					this.setParameterOSC(key, initValue)
-					//this.setParameterSmoothedOSC(key, initValue, lagTime: 10, intervalo: 0.5, oldValue: oldValue);
-				}
-			};
-			// Ahora newState contiene todas las claves a actualizar. El resto se han reiniciado a valor inicial en el paso anterior.
+			Routine {
+				if (secure) {this.restartState(condition); condition.hang}; // por seguridad, se reinicia antes de cambiar de patch, ya que pueden producirse artefactos sonoros indeseados.
+				// 1. En oscRecievedMessagesCopy, las claves que no estén en newState, se reinician a valores iniciales.
+				oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
+				oscRecievedMessagesCopy.keysValuesDo {
+					|key, oldValue|
+					var initValue;
+					if (newState[key].isNil) {
+						initValue = initState[key];
+						{this.setParameterOSC(key, initValue)}.defer;
+						if (key.beginsWith("/patch")) {wait(waitTime)};
+						//this.setParameterSmoothedOSC(key, initValue, lagTime: 10, intervalo: 0.5, oldValue: oldValue);
+					}
+				};
+				// Ahora newState contiene todas las claves a actualizar. El resto se han reiniciado a valor inicial en el paso anterior.
 
-			// 2. Reniciar diccionario oscRecievedMessages.
-			oscRecievedMessages = Dictionary();
+				// 2. Reniciar diccionario oscRecievedMessages.
+				oscRecievedMessages = Dictionary();
 
-			// 3. Ejecutar todos los parámetros al nuevo estado.
-			newState.keysValuesDo {
-				|key, value|
-				var oldValue = initState[key];
-				//this.setParameterSmoothedOSC(key, value, lagTime: 10, intervalo: 0.5, oldValue: oldValue);
-				this.setParameterOSC(key, value)
-			};
+				// 3. Ejecutar todos los parámetros al nuevo estado.
+				newState.keysValuesDo {
+					|key, value|
+					var oldValue = initState[key];
+					//this.setParameterSmoothedOSC(key, value, lagTime: 10, intervalo: 0.5, oldValue: oldValue);
+					{this.setParameterOSC(key, value)}.defer;
+					if (key.beginsWith("/patch")) {wait(waitTime)};
+				};
 
-			modifiedState = false;
-			"Patch recuperado y ejecutado".sgmePostln;
+				modifiedState = false;
+				"Patch recuperado y ejecutado".sgmePostln;
+			}.play;
 		}
 	}
 
