@@ -82,17 +82,17 @@ SGME_Oscilloscope : SGME_Connectable {
 		pauseRoutine = Routine({
 			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
 			running = false;
-			1.wait;
+		//	1.wait;
 			synth.run(false);
-			1.wait;
+		//	1.wait;
 			//{oscilloscope.stop}.defer();
 		});
 		resumeRoutine = Routine({
 			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
 			running = true;
-			1.wait;
+		//	1.wait;
 			synth.run(true);
-			1.wait;
+		//	1.wait;
 			//{oscilloscope.stop}.defer();
 		});
 	}
