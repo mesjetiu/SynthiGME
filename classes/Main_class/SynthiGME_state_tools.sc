@@ -27,9 +27,11 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			var oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
 			oscRecievedMessagesCopy.keys.do {
 				|key|
-				var value = initState[key];
-				{this.setParameterOSC(key, value)}.defer;
-				if (key.beginsWith("/patch")) {wait(waitTime)};
+				if (oscRecievedMessages[key] != initState[key]){
+					var value = initState[key];
+					{this.setParameterOSC(key, value)}.defer;
+					if (key.beginsWith("/patch")) {wait(waitTime)};
+				}
 			};
 
 			// reiniciamos oscRecievedMessages para comenzar de cero.
