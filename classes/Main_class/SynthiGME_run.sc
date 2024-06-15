@@ -50,7 +50,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					remoteServer = Server.remote(serverName, address, serverOptions);
 					//remoteServer.connect;
 
-					wait(2);
+					wait(1); //este tiempo de espera es indispensable para que el Server se comunique con el eventual server que está en el puerto dado. Menor tiempo da serverRunning == false, aunque no sea cierto.
+
 
 					// Verificar si el servidor remoto está corriendo
 					if (remoteServer.serverRunning.not) {
