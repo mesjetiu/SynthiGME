@@ -21,7 +21,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Setter de los diferentes parámetros de los módulos en formato OSC.
 	// Separado en archivo aparte por su larga extensión.
-	setParameterOSC {|string, value, addrForbidden, broadcast = true, ipOrigin = "local"|
+	setParameterOSC {|string, value, addrForbidden, broadcast = true, ipOrigin = "local", saveEvent = true|
 		var splitted = string.split($/);
 		//value = value.round(0.01); // El resto de decimales es ruido.
 		modifiedState = true;
@@ -415,7 +415,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			{^this}
 		);
 		// Si el mensaje es correcto y no contiene "gate" se guarda el último valor de cada cadena en el diccionario
-		if ("/gate".matchRegexp(string).not){oscRecievedMessages.put(string, value)};
+		if ("/gate".matchRegexp(string).not && saveEvent){oscRecievedMessages.put(string, value.round(0.01))};
 		// Se almacena en la grabación de eventos
 		eventRecorder.push(string, value);
 

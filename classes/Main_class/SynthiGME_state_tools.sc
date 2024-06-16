@@ -22,20 +22,19 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
 	restartState {|condition = nil|
-		var waitTime = 0;
+		//var waitTime = 0;
 		Routine {
 			var oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
-			oscRecievedMessagesCopy.keys.do {
-				|key|
-				if (oscRecievedMessages[key] != initState[key]){
-					var value = initState[key];
-					{this.setParameterOSC(key, value)}.defer;
-					if (key.beginsWith("/patch")) {wait(waitTime)};
-				}
-			};
-
 			// reiniciamos oscRecievedMessages para comenzar de cero.
 			oscRecievedMessages = Dictionary();
+			oscRecievedMessagesCopy.keys.do {
+				|key|
+				if (oscRecievedMessagesCopy[key].isNil.not && (oscRecievedMessagesCopy[key] != initState[key])){
+					var value = initState[key];
+					{this.setParameterOSC(key, value, saveEvent: false)}.defer;
+					//if (key.beginsWith("/patch")) {wait(waitTime)};
+				}
+			};
 			if (condition.isNil.not) {condition.unhang}
 		}.play
 	}
@@ -130,7 +129,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 		// Verifica si el archivo se cargó con éxito
 		if (exito) {
-			var waitTime = 0;
+			//var waitTime = 0;
 			"Archivo cargado correctamente desde: ".sgmePostln;
 			(path +/+ fileName).sgmePostln;
 
@@ -159,17 +158,16 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 
 			Routine {
-				if (secure) {this.restartState(condition); condition.hang}; // por seguridad, se reinicia antes de cambiar de patch, ya que pueden producirse artefactos sonoros indeseados.
+				//	if (secure) {this.restartState(condition); condition.hang}; // por seguridad, se reinicia antes de cambiar de patch, ya que pueden producirse artefactos sonoros indeseados.
 				// 1. En oscRecievedMessagesCopy, las claves que no estén en newState, se reinician a valores iniciales.
 				oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
 				oscRecievedMessagesCopy.keysValuesDo {
-					|key, oldValue|
-					var initValue;
-					if (newState[key].isNil) {
-						initValue = initState[key];
-						{this.setParameterOSC(key, initValue)}.defer;
-						if (key.beginsWith("/patch")) {wait(waitTime)};
+					|key, value|
+					if (newState[key].isNil && (value != initState[key])) {
+						{this.setParameterOSC(key, initState[key], saveEvent: false)}.defer;
+						//if (key.beginsWith("/patch")) {wait(waitTime)};
 						//this.setParameterSmoothedOSC(key, initValue, lagTime: 10, intervalo: 0.5, oldValue: oldValue);
+
 					}
 				};
 				// Ahora newState contiene todas las claves a actualizar. El resto se han reiniciado a valor inicial en el paso anterior.
@@ -180,10 +178,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				// 3. Ejecutar todos los parámetros al nuevo estado.
 				newState.keysValuesDo {
 					|key, value|
-					var oldValue = initState[key];
+					//var oldValue = initState[key];
 					//this.setParameterSmoothedOSC(key, value, lagTime: 10, intervalo: 0.5, oldValue: oldValue);
-					{this.setParameterOSC(key, value)}.defer;
-					if (key.beginsWith("/patch")) {wait(waitTime)};
+
+					{this.setParameterOSC(key, value.round(0.01))}.defer;
+					//	if (key.beginsWith("/patch")) {wait(waitTime)};
+
 				};
 
 				modifiedState = false;

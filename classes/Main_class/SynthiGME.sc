@@ -80,7 +80,7 @@ SynthiGME {
 
 	// ****** Variables para rastrear, guardar y recuperar estados (patches)
 	// Diccionario con todos los estados de todos los parámetros nada más iniciar. Se rellena con getFullState()
-	var initState;
+	var <initState;
 	// Diccionario que guarda el último valor de cada string recibido de OSC
 	var <oscRecievedMessages;
 	// Grupo de OSC con el que se comparten mensajes y se reciben. Todos los dispositivos de la red que tengan el mismo nombre de grupo pueden compartir mensajes OSC. Funciona de algún modo como una contraseña.
