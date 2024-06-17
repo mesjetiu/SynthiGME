@@ -43,6 +43,7 @@ SGME_Echo : SGME_Connectable {
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var <outVol = 1;
 	var pauseRoutine; // Rutina de pausado del Synth
+	var resumeRoutine;
 	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar settings;
 
@@ -100,8 +101,18 @@ SGME_Echo : SGME_Connectable {
 		inFeedbackBusDelay = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
+			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
+			running = false;
 			1.wait;
 			synth.run(false);
+		//	1.wait;
+		});
+		resumeRoutine = Routine({
+			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
+			running = true;
+		//	1.wait;
+			synth.run(true);
+		//	1.wait;
 		});
 	}
 
@@ -129,11 +140,11 @@ SGME_Echo : SGME_Connectable {
 	synthRun { // Dejo esta función aunque no se va a usar. Por ahora no hay manera de saber que no hay output.
 		var outputTotal = level * inCount * outCount;
 		if (outputTotal == 0, {
-			running = false;
-			synth.run(false);
+			pauseRoutine.reset;
+			pauseRoutine.play;
 		}, {
-			running = true;
-			synth.run(true);
+			resumeRoutine.reset;
+			resumeRoutine.play;
 		});
 	}
 

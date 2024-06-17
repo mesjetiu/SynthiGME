@@ -220,7 +220,7 @@ SGME_Oscillator : SGME_Connectable {
 	synthRun {
 		var outputTotal = (pulseLevel + sineLevel + triangleLevel + sawtoothLevel) * outVol * outCount;
 		if (outputTotal==0, {
-			pauseRoutine.play;
+			pauseRoutine.reset;
 			pauseRoutine.play;
 		}, {
 			resumeRoutine.reset;

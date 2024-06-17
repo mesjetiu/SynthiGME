@@ -34,6 +34,7 @@ SGME_ExternalTreatmentReturn : SGME_Connectable  {
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var <outVol = 1;
 	var pauseRoutine; // Rutina de pausado del Synth
+	var resumeRoutine;
 	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar settings;
 
@@ -70,8 +71,18 @@ SGME_ExternalTreatmentReturn : SGME_Connectable  {
 		inputBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
+			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
+			running = false;
 			1.wait;
 			synth.run(false);
+		//	1.wait;
+		});
+		resumeRoutine = Routine({
+			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
+			running = true;
+		//	1.wait;
+			synth.run(true);
+		//	1.wait;
 		});
 	}
 
@@ -92,11 +103,11 @@ SGME_ExternalTreatmentReturn : SGME_Connectable  {
 	synthRun {
 		var outputTotal = outVol * level * outCount;
 		if (outputTotal == 0, {
-			running = false;
-			synth.run(false);
+			pauseRoutine.reset;
+			pauseRoutine.play;
 		}, {
-			running = true;
-			synth.run(true);
+			resumeRoutine.reset;
+			resumeRoutine.play;
 		});
 	}
 
