@@ -43,6 +43,7 @@ SGME_RandomGenerator : SGME_Connectable {
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
+	var resumeRoutine;
 	classvar lag = 0.2; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar settings;
 
@@ -78,8 +79,18 @@ SGME_RandomGenerator : SGME_Connectable {
 		outputBusVoltage2 = Bus.audio(server);
 		outputBusKey = Bus.audio(server);
 		pauseRoutine = Routine({
+			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
+			running = false;
 			1.wait;
 			synth.run(false);
+			//	1.wait;
+		});
+		resumeRoutine = Routine({
+			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
+			running = true;
+			//	1.wait;
+			synth.run(true);
+			//	1.wait;
 		});
 		randomRoutine = Routine({
 			var time; // tiempo entre cambios
@@ -125,13 +136,11 @@ SGME_RandomGenerator : SGME_Connectable {
 		if ((voltage1 * outCount ==0)
 			.and(voltage2==0)
 			.and(key==0), {
-				running = false;
 				pauseRoutine.reset;
 				pauseRoutine.play;
 			}, {
-				pauseRoutine.stop;
-				running = true;
-				synth.run(true);
+				resumeRoutine.reset;
+				resumeRoutine.play;
 		});
 	}
 

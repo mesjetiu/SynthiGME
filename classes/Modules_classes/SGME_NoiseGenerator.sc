@@ -33,6 +33,7 @@ SGME_NoiseGenerator : SGME_Connectable {
 	// Otros atributos de instancia
 	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Rutina de pausado del Synth
+	var resumeRoutine;
 	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar settings;
 
@@ -76,8 +77,18 @@ SGME_NoiseGenerator : SGME_Connectable {
 		server = serv;
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
+			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
+			running = false;
 			1.wait;
 			synth.run(false);
+		//	1.wait;
+		});
+		resumeRoutine = Routine({
+			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
+			running = true;
+		//	1.wait;
+			synth.run(true);
+		//	1.wait;
 		});
 	}
 
@@ -98,13 +109,11 @@ SGME_NoiseGenerator : SGME_Connectable {
 	synthRun {
 		var outputTotal = level * outCount;
 		if (outputTotal==0, {
-			running = false;
 			pauseRoutine.reset;
 			pauseRoutine.play;
 		}, {
-			pauseRoutine.stop;
-			running = true;
-			synth.run(true);
+			resumeRoutine.reset;
+			resumeRoutine.play;
 		});
 	}
 

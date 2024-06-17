@@ -178,7 +178,6 @@ SGME_Oscillator : SGME_Connectable {
 			1.wait;
 			synth.run(false);
 		//	1.wait;
-			//{oscilloscope.stop}.defer();
 		});
 		resumeRoutine = Routine({
 			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
@@ -186,7 +185,6 @@ SGME_Oscillator : SGME_Connectable {
 		//	1.wait;
 			synth.run(true);
 		//	1.wait;
-			//{oscilloscope.stop}.defer();
 		});
 	}
 

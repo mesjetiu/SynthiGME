@@ -127,7 +127,7 @@ SGME_Oscilloscope : SGME_Connectable {
 	synthRun {
 		var inputTotal = inCount;
 		if (inputTotal == 0, {
-			pauseRoutine.play;
+			pauseRoutine.reset;
 			pauseRoutine.play;
 		}, {
 			resumeRoutine.reset;

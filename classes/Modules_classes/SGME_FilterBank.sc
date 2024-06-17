@@ -34,7 +34,9 @@ SGME_FilterBank : SGME_Connectable {
 
 	// Otros atributos de instancia
 	var <outVol = 2;
+	var <running; // true o false: Si el sintetizador está activo o pausado
 	var pauseRoutine; // Array de rutinas de pausado de los Synths
+	var resumeRoutine;
 	classvar lag; // Tiempo que dura la transición en los cambios de parámetros en el Synth
 	classvar settings;
 
@@ -74,13 +76,26 @@ SGME_FilterBank : SGME_Connectable {
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
 		outputBus = Bus.audio(server);
-		pauseRoutine = 8.do({|i|
-			Routine({
-				1.wait;
-				synths[i].run(false);
-			});
+		pauseRoutine = Routine({
+			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
+			running = false;
+			1.wait;
+			synths.do {|i|
+				i.run(false);
+			}
+			//	1.wait;
+		});
+		resumeRoutine = Routine({
+			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
+			running = true;
+			//	1.wait;
+			synths.do {|i|
+				i.run(true);
+			}
+			//	1.wait;
 		});
 	}
+
 
 	// Crea el Synth en el servidor
 	createSynth {
@@ -114,11 +129,13 @@ SGME_FilterBank : SGME_Connectable {
 		if (i == nil,{
 			8.do{|j| this.synthRun(j)}
 		}, {
-			var outputTotal = outVol * bands[i];
+			var outputTotal = outVol * outCount;
 			if (outputTotal == 0, {
-				synths[i].run(false);
+				pauseRoutine.reset;
+				pauseRoutine.play;
 			}, {
-				synths[i].run(true);
+				resumeRoutine.reset;
+				resumeRoutine.play;
 			});
 		})
 	}
