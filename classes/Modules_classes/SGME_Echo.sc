@@ -140,11 +140,9 @@ SGME_Echo : SGME_Connectable {
 	synthRun { // Dejo esta función aunque no se va a usar. Por ahora no hay manera de saber que no hay output.
 		var outputTotal = level * inCount * outCount;
 		if (outputTotal == 0, {
-			pauseRoutine.reset;
-			pauseRoutine.play;
+			synth.run(false);
 		}, {
-			resumeRoutine.reset;
-			resumeRoutine.play;
+			synth.run(true);
 		});
 	}
 

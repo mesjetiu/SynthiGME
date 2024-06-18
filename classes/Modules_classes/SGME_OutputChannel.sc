@@ -121,18 +121,16 @@ SGME_OutputChannel : SGME_Connectable {
 		outBusL = Bus.audio(server);
 		outBusR = Bus.audio(server);
 		pauseRoutine = Routine({
-			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
-			running = false;
+			//running = false;
 			1.wait;
 			synth.run(false);
-		//	1.wait;
+			//	1.wait;
 		});
 		resumeRoutine = Routine({
-			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
-			running = true;
-		//	1.wait;
+			//running = true;
+			//	1.wait;
 			synth.run(true);
-		//	1.wait;
+			//	1.wait;
 		});
 	}
 
@@ -175,12 +173,10 @@ SGME_OutputChannel : SGME_Connectable {
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
 		var outputTotal = level * on * inCount;
-		if (outputTotal==0, {
-			pauseRoutine.reset;
-			pauseRoutine.play;
+		if (outputTotal == 0, {
+			synth.run(false);
 		}, {
-			resumeRoutine.reset;
-			resumeRoutine.play;
+			synth.run(true);
 		});
 	}
 

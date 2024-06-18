@@ -103,11 +103,9 @@ SGME_ExternalTreatmentReturn : SGME_Connectable  {
 	synthRun {
 		var outputTotal = outVol * level * outCount;
 		if (outputTotal == 0, {
-			pauseRoutine.reset;
-			pauseRoutine.play;
+			synth.run(false);
 		}, {
-			resumeRoutine.reset;
-			resumeRoutine.play;
+			synth.run(true);
 		});
 	}
 

@@ -218,13 +218,11 @@ SGME_Oscillator : SGME_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = (pulseLevel + sineLevel + triangleLevel + sawtoothLevel) * outVol * outCount;
-		if (outputTotal==0, {
-			pauseRoutine.reset;
-			pauseRoutine.play;
+		var outputTotal = /*(pulseLevel + sineLevel + triangleLevel + sawtoothLevel) **/ outVol * outCount;
+		if (outputTotal == 0, {
+			synth.run(false);
 		}, {
-			resumeRoutine.reset;
-			resumeRoutine.play;
+			synth.run(true);
 		});
 	}
 

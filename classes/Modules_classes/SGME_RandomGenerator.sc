@@ -136,11 +136,9 @@ SGME_RandomGenerator : SGME_Connectable {
 		if ((voltage1 * outCount ==0)
 			.and(voltage2==0)
 			.and(key==0), {
-				pauseRoutine.reset;
-				pauseRoutine.play;
+				synth.run(false);
 			}, {
-				resumeRoutine.reset;
-				resumeRoutine.play;
+				synth.run(true);
 		});
 	}
 

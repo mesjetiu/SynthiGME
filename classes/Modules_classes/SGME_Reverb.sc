@@ -89,15 +89,13 @@ SGME_Reverb : SGME_Connectable {
 		inFeedbackBusMix = Bus.audio(server);
 		outputBus = Bus.audio(server);
 		pauseRoutine = Routine({
-			if (resumeRoutine.isPlaying) {resumeRoutine.stop};
-			running = false;
+			//running = false;
 			1.wait;
 			synth.run(false);
 			//	1.wait;
 		});
 		resumeRoutine = Routine({
-			if(pauseRoutine.isPlaying) {pauseRoutine.stop};
-			running = true;
+			//running = true;
 			//	1.wait;
 			synth.run(true);
 			//	1.wait;
@@ -124,11 +122,9 @@ SGME_Reverb : SGME_Connectable {
 	synthRun { // Dejo esta función aunque no se va a usar. Por ahora no hay manera de saber que no hay output.
 		var outputTotal = level * inCount * outCount;
 		if (outputTotal == 0, {
-			pauseRoutine.reset;
-			pauseRoutine.play;
+			synth.run(false);
 		}, {
-			resumeRoutine.reset;
-			resumeRoutine.play;
+			synth.run(true);
 		});
 	}
 

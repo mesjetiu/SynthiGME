@@ -126,11 +126,13 @@ SGME_FilterBank : SGME_Connectable {
 	synthRun {
 		var outputTotal = outVol * outCount * inCount;
 		if (outputTotal == 0, {
-			pauseRoutine.reset;
-			pauseRoutine.play;
+			synths.do {|i|
+				i.run(false);
+			}
 		}, {
-			resumeRoutine.reset;
-			resumeRoutine.play;
+			synths.do {|i|
+				i.run(true);
+			}
 		});
 	}
 

@@ -58,7 +58,8 @@ SGME_Oscilloscope : SGME_Connectable {
 			inFeedbackBusCH1,
 			inputBusCH2,
 			inFeedbackBusCH2,
-			stereoBufferNum;
+			stereoBufferNum,
+			gateCH1, gateCH2; // para abrir y cerrar el paso de entrada.
 
 			var sigInCH1, sigInCH2;
 			sigInCH1 = In.ar(inputBusCH1) + InFeedback.ar(inFeedbackBusCH1);
@@ -117,7 +118,9 @@ SGME_Oscilloscope : SGME_Connectable {
 				\inFeedbackBusCH1, inFeedbackBusCH1,
 				\inputBusCH2, inputBusCH2,
 				\inFeedbackBusCH2, inFeedbackBusCH2,
-				\stereoBufferNum, stereoBuffer.bufnum
+				\stereoBufferNum, stereoBuffer.bufnum,
+				\gateCH1, 1,
+				\gateCH2, 1
 			], RootNode(server), \addToTail).register;
 		});
 		this.synthRun;
@@ -125,16 +128,14 @@ SGME_Oscilloscope : SGME_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su entrada es 0 o no.
 	synthRun {
-		var inputTotal = inCount;
+		/*var inputTotal = inCount;
 		if (inputTotal == 0, {
-			pauseRoutine.reset;
-			pauseRoutine.play;
+			synth.set(\gateCH1, 0, \gateCH2, 0);
+			synth.run(false)
 		}, {
-			resumeRoutine.reset;
-			resumeRoutine.play;
-			//synth.run(true);
-			//oscilloscope.start;
-		});
+			synth.run(true);
+			synth.set(\gateCH1, 1, \gateCH2, 1);
+		});*/
 	}
 
 	makeOscilloscope {|parent, rect|

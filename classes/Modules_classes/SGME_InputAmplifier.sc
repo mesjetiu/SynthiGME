@@ -101,13 +101,11 @@ SGME_InputAmplifier : SGME_Connectable  {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = outVol * level * outCount;
+		var outputTotal = outVol /** level*/ * outCount;
 		if (outputTotal == 0, {
-			pauseRoutine.reset;
-			pauseRoutine.play;
+			synth.run(false);
 		}, {
-			resumeRoutine.reset;
-			resumeRoutine.play;
+			synth.run(true);
 		});
 	}
 
