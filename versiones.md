@@ -19,7 +19,7 @@
 ### Otras mejoras
 - Script de Linux mejorado y funcionando.
 - Mejoras de escritura de código.
-- Se pueden crear grupos en la L
+- Se pueden crear grupos en la LAN añadiendo un mismo prefijo a los mensajes OSC.
 - Menú contextual disponible en todas las ventanas.
 - Modo oscuro por defecto en las ventanas.
 - Creada ventana "About" o "Acerca de...".

@@ -19,7 +19,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 SynthiGME {
 
-	classvar <version = "1.8.1";
+	classvar <version = "1.9";
 	classvar <appName = "SynthiGME"; // Nombre del Quark o extensión
 
 	// Opciones de inicio:
