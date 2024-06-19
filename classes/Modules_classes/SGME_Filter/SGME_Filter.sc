@@ -77,10 +77,10 @@ SGME_Filter : SGME_Connectable {
 	synthRun {
 		var outputTotal = outVol * level * outCount;
 		if (outputTotal == 0, {
-			running = false;
+		//	running = false;
 			synth.run(false);
 		}, {
-			running = true;
+		//	running = true;
 			synth.run(true);
 		});
 	}
