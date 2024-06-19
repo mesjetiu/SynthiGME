@@ -1,11 +1,13 @@
-## Version 1.8.1 
+## Version 1.9 
 
 ### Importantes cambios
 - Aplicación funcionando como Quark y como Extension de SuperCollider.
 - Optimizaciones en eficiencia y uso de memoria.
-- Mayor unidad de las diferentes ventanas.
+- Mayor unidad e integración entre las diferentes ventanas.
+- Creada grabadora de eventos con marcas de tiempo.
 - Ejecutable binario para Linux.
 - Creada ventana de inicio o bienvenida al cargar la aplicación (splash window).
+- Cada instancia de SynthiGME tiene su propio servidor de audio por defecto.
 
 
 ### Bugs corregidos
@@ -17,6 +19,7 @@
 ### Otras mejoras
 - Script de Linux mejorado y funcionando.
 - Mejoras de escritura de código.
+- Se pueden crear grupos en la L
 - Menú contextual disponible en todas las ventanas.
 - Modo oscuro por defecto en las ventanas.
 - Creada ventana "About" o "Acerca de...".
