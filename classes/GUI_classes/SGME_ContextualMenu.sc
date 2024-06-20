@@ -24,7 +24,7 @@ SGME_ContextualMenu {
 					//MenuAction("Invisible", { window.visible = false }),
 					MenuAction("Abrir patch", { synthiGME.loadStateGUI }),
 					MenuAction("Guardar patch", { synthiGME.saveStateGUI }),
-					MenuAction("Reiniciar Synthi", { synthiGME.restartState }),
+					MenuAction("Resetear patch", { synthiGME.resetState }),
 					/*MenuAction(grabarEvents, {
 						if (synthiGME.eventRecorder.isRecording) {
 							synthiGME.eventRecorder.stopRecording;

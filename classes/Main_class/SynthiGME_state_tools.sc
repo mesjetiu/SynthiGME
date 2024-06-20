@@ -21,7 +21,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 + SynthiGME {
 
 	// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
-	restartState {|condition = nil, waitTime = 0.1|
+	resetState {|condition = nil, waitTime = 0.1|
 		Routine {
 			var oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
 			// reiniciamos oscRecievedMessages para comenzar de cero.
