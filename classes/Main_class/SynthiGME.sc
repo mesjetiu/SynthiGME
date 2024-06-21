@@ -89,6 +89,7 @@ SynthiGME {
 	var <pathState;
 	// será true en el momento que se haga un cambio en el patch. Utilizado para preguntar guardar antes de salir.
 	var <modifiedState = false;
+	var <changingStateRoutine; // Routine que se está ejecutando si está cargando un patch o reseteando el patch.
 	var <>openDialog = false; //Si hay diálogo abierto, no es nil.
 
 	// Interfáz gráfica de SuperCollider (GUI)

@@ -22,7 +22,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Reiniciamos valores de los parámetros del synthi a los valores iniciales almacenados en initState.
 	resetState {|condition = nil, waitTime = 0.1|
-		Routine {
+		if (changingStateRoutine.isPlaying) {changingStateRoutine.stop};
+		changingStateRoutine = Routine {
 			var oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
 			// reiniciamos oscRecievedMessages para comenzar de cero.
 			oscRecievedMessages = Dictionary();
@@ -30,7 +31,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				|key|
 				if (oscRecievedMessagesCopy[key].isNil.not && (oscRecievedMessagesCopy[key] != initState[key])){
 					var value = initState[key];
-					{this.setParameterOSC(key, value, saveEvent: false)}.defer;
+					{this.setParameterOSC(key, value/*, saveEvent: false*/)}.defer;
 					wait(waitTime);
 					//if (key.beginsWith("/patch")) {wait(waitTime)};
 				}
@@ -157,14 +158,16 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			};
 
 
-			Routine {
-			//	if (secure) {this.restartState(condition); condition.hang}; // por seguridad, se reinicia antes de cambiar de patch, ya que pueden producirse artefactos sonoros indeseados.
+			if (changingStateRoutine.isPlaying) {changingStateRoutine.stop};
+			changingStateRoutine = Routine {
+				//	if (secure) {this.restartState(condition); condition.hang}; // por seguridad, se reinicia antes de cambiar de patch, ya que pueden producirse artefactos sonoros indeseados.
 				// 1. En oscRecievedMessagesCopy, las claves que no estén en newState, se reinician a valores iniciales.
 				oscRecievedMessagesCopy = Dictionary.newFrom(oscRecievedMessages);
 				oscRecievedMessagesCopy.keysValuesDo {
 					|key, value|
 					if (newState[key].isNil && (value != initState[key])) {
 						{this.setParameterOSC(key, initState[key], saveEvent: false)}.defer;
+						oscRecievedMessages.removeAt(key);
 						wait(waitTime);
 						//if (key.beginsWith("/patch")) {wait(waitTime)};
 						//{this.setParameterSmoothedOSC(key, initState[key], lagTime: 10, intervalo: 0.5, oldValue: oscRecievedMessagesCopy[key])}.defer;
