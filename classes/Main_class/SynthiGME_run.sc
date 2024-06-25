@@ -160,6 +160,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					modulPatchbayAudio = SGME_PatchbayAudio(server);
 					modulPatchbayVoltage = SGME_PatchbayVoltage(server);
 					modulOscilloscope = SGME_Oscilloscope(server);
+					modulKeyboards = 2.collect({SGME_Keyboard(server)});
 
 					server.sync;
 
@@ -382,6 +383,14 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					server.sync;
 					splashWindow.progress();
 
+					// keyboards
+					"Keyboards...".sgmePostln;
+					modulKeyboards.do({|i|
+						i.createSynth;
+						server.sync;
+					});
+					splashWindow.progress();
+
 					// conexiones de entrada y salida de cada módulo en el patchbay de audio
 					"Conexiones en Patchbay de audio...".sgmePostln;
 					modulPatchbayAudio.connect(
@@ -413,8 +422,10 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						slewLimiters: modulSlewLimiters,
 						oscilloscope: modulOscilloscope,
 						outputChannels: modulOutputChannels,
+						keyboards: modulKeyboards,
 					);
 					splashWindow.progress();
+
 
 					//"Conexión de entrada Input Amplifiers, canales 1 a 8 a puertos de SC...".sgmePostln;
 					connectionIn = inputAmplifiersBusses.collect({|item, i|

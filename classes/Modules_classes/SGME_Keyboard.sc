@@ -28,14 +28,15 @@ SGME_Keyboard : SGME_Connectable {
 	}
 
 	*addSynthDef {
-		SynthDef(\SGME_Reverb, {
+		SynthDef(\SGME_Keyboard, {
 			arg outBusPitch, outBusVelocity, outBusGate;
-			var sigPitch = SinOsc.ar(200);
-			var sigVelocity = SinOsc.ar(300);
-			var sigGate = SinOsc.ar(400);
+			var sigPitch = SinOsc.ar(200)*0.1;
+			var sigVelocity = SinOsc.ar(300)*0.1;
+			var sigGate = SinOsc.ar(400)*0.1;
 			Out.ar(outBusPitch, sigPitch);
 			Out.ar(outBusVelocity, sigVelocity);
 			Out.ar(outBusGate, sigGate);
+		//	Out.ar(0, PinkNoise.ar(0.1!2)); // bypass
 		}).add
 		}
 
@@ -63,7 +64,7 @@ SGME_Keyboard : SGME_Connectable {
 		// Crea el Synth en el servidor
 		createSynth {
 			if(synth.isPlaying==false, {
-				synth = Synth(\SGME_Reverb, [
+				synth = Synth(\SGME_Keyboard, [
 					\outBusPitch, outBusPitch,
 					\outBusVelocity, outBusVelocity,
 					\outBusGate, outBusGate,

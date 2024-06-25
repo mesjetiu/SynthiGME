@@ -49,6 +49,7 @@ SynthiGME {
 	var <modulPatchbayAudio;
 	var <modulPatchbayVoltage;
 	var <modulOscilloscope;
+	var <modulKeyboards;
 
 	// Almacena los Synths que conectan los canales de salida de SC con los de los módulos
 	var <connectionOut = nil;
@@ -131,6 +132,7 @@ SynthiGME {
 		Class.initClassTree(SGME_PatchbayVoltage);
 		Class.initClassTree(SGME_Oscilloscope);
 		Class.initClassTree(SGME_GUI);
+		Class.initClassTree(SGME_Keyboard);
 
 		//	appPath = SynthiGME.getAppPath();
 	}
@@ -255,9 +257,7 @@ SynthiGME {
 		SGME_PatchbayAudio.addSynthDef;
 		SGME_PatchbayVoltage.addSynthDef;
 		SGME_Oscilloscope.addSynthDef;
-
-
-
+		SGME_Keyboard.addSynthDef;
 
 		this.run;
 	}

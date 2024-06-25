@@ -72,7 +72,7 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var nodeCountHor = 67;
 		var numRows = 63;
 		var panel;
-		var forbidenRows = [25, 26] ++ (36..62); // Estas filas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
+		var forbidenRows = [25, 26] ++ (36..46) ++ (53..62); // Estas filas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
 
 		Platform.case(
 			\osx,       { },
