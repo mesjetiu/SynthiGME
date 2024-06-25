@@ -91,7 +91,7 @@ SGME_Echo : SGME_Connectable {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init { arg serv = Server.local;
+	init { arg serv;
 		server = serv;
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
