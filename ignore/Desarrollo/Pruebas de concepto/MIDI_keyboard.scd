@@ -25,6 +25,7 @@ amp: veloc * 0.003  // Amplitud basada en la velocidad de la tecla
 
 // Inicialización de MIDI
 MIDIClient.init;
+MIDIClient.init(2);
 MIDIIn.connectAll;
 
 // Definición de la acción al recibir notas MIDI
@@ -32,15 +33,18 @@ MIDIIn.connectAll;
 MIDIdef.noteOn(\midiNoteOn, { |veloc, note, chan, src|
 	// Crea y toca un evento sonoro
 	[veloc, note, chan, src].postln;
-	(
-		type: \note,  // Tipo de evento 'note' que incluye una envolvente por defecto
-		midinote: note,  // Número MIDI de la nota
-		dur: 0.5,  // Duración del sonido en segundos
-		amp: veloc * 0.003  // Amplitud basada en la velocidad de la tecla
-	).play;
+	if (chan==0) {
+		(
+			type: \note,  // Tipo de evento 'note' que incluye una envolvente por defecto
+			midinote: note,  // Número MIDI de la nota
+			dur: 0.5,  // Duración del sonido en segundos
+			amp: veloc * 0.003  // Amplitud basada en la velocidad de la tecla
+		).play;
+	}
 }
 )
 )
+s.latency = 0.03 // modificar a voluntad. Se puede modificar con el servidor arrancado...
 
 
 // Por seguridad, se puede agregar una definición para cuando la nota se apague
@@ -50,3 +54,8 @@ MIDIdef.noteOff(\midiNoteOff, { |veloc, note, chan, src|
 	// Aquí podrías definir alguna acción cuando la nota se libere, si es necesario
 });
 )
+
+
+MIDIClient.destinations.do{|d| d.postln; d.uid.postln}
+
+MIDIClient.myinports
