@@ -10,9 +10,9 @@ SGME_Keyboard : SGME_Connectable {
 	var <outBusGate;
 
 	// Parámetros del teclado en términos de las perillas
-	var <pitch = 9; // 0-10 . Al valor de 9 aprox. el factor ha de ser 1, una octava.
-	var <velocity = 0; // -5-5
-	var <gate = 0; // -5-5
+	var <pitch = 9; // 0 - 10 . Al valor de 9 aprox. el factor ha de ser 1, una octava.
+	var <velocity = 0; // -5 - 5
+	var <gate = 0; // -5 - 5
 	// Parámetros del teclado en sí que van a estar dirigiendo las señales que se envían.
 	var <midiPitch = nil;
 	var <midiVelocity = 0;
@@ -98,7 +98,7 @@ SGME_Keyboard : SGME_Connectable {
 		^velocity.linlin(-5, 5, -1, 1); // factor de -1 a 1 para la velocidad del teclado.
 	}
 
-	convertEnv {
+	convertGate {
 		^gate.linlin(-5, 5, -1, 1); // factor de -1 a 1 para la envolvente o gate del teclado.
 	}
 
@@ -109,11 +109,10 @@ SGME_Keyboard : SGME_Connectable {
 		^(midiPitch - 36) / 12; //36 es C1, valor 0. Una octava más aguda (12), dará 1 V. A 1V/octava.
 	}
 
-	convertMIDIvel {|vel|
+	convertMIDIvel {
 		// vel tiene 128 valores desde 0 a 127. El synthi da desde -3V a 4V, es decir, 7 V de rango.
-		var velocity = (vel / 128) * 7;
-		velocity = velocity.linlin(0,7, (-3.5), 3.5); // así situamos el valor dentro del rango -3.5 y 3.5.
-		^velocity + (this.convertVelocity*3.5); // Añadimos el factor dado por la perilla, que va de -1 a 1
+		var vel = (midiVelocity / 128) * 7;
+		^vel.linlin(0,7, (-3.5), 3.5); // así situamos el valor dentro del rango -3.5 y 3.5.
 	}
 
 	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
@@ -132,13 +131,22 @@ SGME_Keyboard : SGME_Connectable {
 		synth.set(\pitch, synthPitch.postln);
 	}
 
-	/*velocity_ {|v|
+	velocity_ {|v|
+		var synthVelocity;
 		velocity = v;
-		synth.set(\velocity, this.convertLevel(v));
+		synthVelocity = this.convertMIDIvel + (this.convertVelocity * 3.5); // Añadimos el factor dado por la perilla, que va de -1 a 1
+		synth.set(\velocity, synthVelocity);
+	}
+
+	midiVelocity_ {|v|
+		var synthVelocity;
+		midiVelocity = v;
+		synthVelocity = this.convertMIDIvel + (this.convertVelocity * 3.5); // Añadimos el factor dado por la perilla, que va de -1 a 1
+		synth.set(\velocity, synthVelocity);
 	}
 
 	gate_ {|g|
 		gate = g;
-		synth.set(\gate, this.convertLevel(v));
-	}*/
+		synth.set(\gate, this.convertGate);
+	}
 }
