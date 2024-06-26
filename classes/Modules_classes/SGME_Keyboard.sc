@@ -16,7 +16,7 @@ SGME_Keyboard : SGME_Connectable {
 	// Parámetros del teclado en sí que van a estar dirigiendo las señales que se envían.
 	var <midiPitch = nil;
 	var <midiVelocity = 0;
-	var <keyGate = 0;
+	var <keyGate = 0; // rango 0 - 1.
 
 
 	// Otros atributos de instancia
@@ -99,7 +99,7 @@ SGME_Keyboard : SGME_Connectable {
 	}
 
 	convertGate {
-		^gate.linlin(-5, 5, -1, 1); // factor de -1 a 1 para la envolvente o gate del teclado.
+		^gate.linlin(-5, 5, -1, 1) * keyGate; // factor de -1 a 1 para la envolvente o gate del teclado.
 	}
 
 
@@ -147,6 +147,11 @@ SGME_Keyboard : SGME_Connectable {
 
 	gate_ {|g|
 		gate = g;
+		synth.set(\gate, this.convertGate);
+	}
+
+	keyGate_ {|g|
+		keyGate = g;
 		synth.set(\gate, this.convertGate);
 	}
 }
