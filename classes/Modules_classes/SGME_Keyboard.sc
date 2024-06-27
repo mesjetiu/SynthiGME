@@ -215,6 +215,7 @@ SGME_Keyboard : SGME_Connectable {
 		// Definición de la acción al recibir notas MIDI
 		MIDIdef.noteOn(\midiNoteOn, { |veloc, note, chan, src|
 			var keyboards = SynthiGME.instance.modulKeyboards;
+			chan.postln;
 			case
 			{keyboards[0].midiChannel == chan}
 			{SynthiGME.instance.setParameterOSC("/keyboard/1/midiNote", [note, veloc, 1])}

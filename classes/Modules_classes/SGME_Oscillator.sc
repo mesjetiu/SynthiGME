@@ -86,7 +86,7 @@ SGME_Oscillator : SGME_Connectable {
 
 			voltIn = In.ar(inputBusVoltage) + InFeedback.ar(inFeedbackBusVoltage);
 			scaledFreq = freq.linexp(0, 10, freqMin, freqMax); // frecuencia del oscilador
-			scaledFreq = scaledFreq * (2**(voltIn * 4)); // Ajustar la influencia del control de voltaje correctamente...
+			scaledFreq = scaledFreq * (2**(voltIn)); // Ajustar la influencia del control de voltaje correctamente...
 			scaledFreq = scaledFreq.clip(0, 20000); // Se evita que pueda tener una frecuencia superior a 20000.
 			syncIn = In.ar(inputBusSync) + InFeedback.ar(inFeedbackBusSync);
 			pulseMod = (In.ar(inputBusPulseMod) + InFeedback.ar(inFeedbackBusPulseMod));
