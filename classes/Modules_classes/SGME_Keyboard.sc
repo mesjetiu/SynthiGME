@@ -16,7 +16,10 @@ SGME_Keyboard : SGME_Connectable {
 	// Parámetros del teclado en sí que van a estar dirigiendo las señales que se envían.
 	var <midiPitch = nil;
 	var <midiVelocity = 0;
-	var <keyGate = 0; // rango 0 - 1.
+	var <keyGate = -3; // rango -3V - 3V.
+
+	// Set para la administración de teclas del teclado
+	var <keysPressed;
 
 
 	// Otros atributos de instancia
@@ -52,6 +55,7 @@ SGME_Keyboard : SGME_Connectable {
 		outBusPitch = Bus.audio(server);
 		outBusVelocity = Bus.audio(server);
 		outBusGate = Bus.audio(server);
+		keysPressed = Set();
 		pauseRoutine = Routine({
 			//running = false;
 			1.wait;
@@ -88,6 +92,7 @@ SGME_Keyboard : SGME_Connectable {
 		});*/
 	}
 
+
 	// Conversores de unidades de las perillas.
 
 	convertPitch {
@@ -115,7 +120,8 @@ SGME_Keyboard : SGME_Connectable {
 		^vel.linlin(0,7, (-3.5), 3.5); // así situamos el valor dentro del rango -3.5 y 3.5.
 	}
 
-	// Setters de los parámetros ///////////////////////////////////////////////////////////////////////
+	// Setters de los parámetros con sus efectos en el synth. Estos métodos se usan internamente desde otro método "inteligente" que lleva recuento de teclas pulsadas, etc.
+	///////////////////////////////////////////////////////////////////////
 
 	pitch_ {|p|
 		var synthPitch;
@@ -153,5 +159,38 @@ SGME_Keyboard : SGME_Connectable {
 	keyGate_ {|g|
 		keyGate = g;
 		synth.set(\gate, this.convertGate);
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// Lógica de administración de teclas y modos del teclado
+	// Método para presionar o liberar una tecla
+	pressRelease {|midiNote, midiVel, onOff|
+		// aquí se realiza toda la lógica de lo que el teclado ha de hacer con el output de pitch, gate y velocity
+		var maxKeyPressed;
+		var lastPitch = pitch;
+
+		case // Actualizamos base de datos de teclas pulsadas
+		{ onOff == \on } {
+			keysPressed.add(midiNote);
+		}
+		{ onOff == \off } {
+			keysPressed.remove(midiNote);
+		};
+
+		if (keysPressed.size > 0) {
+			maxKeyPressed = keysPressed.maxItem;
+			"Tecla más aguda presionada: %".format(maxKeyPressed).postln;
+			// Enviar pitch y gate al sintetizador
+			this.midiPitch_(maxKeyPressed);
+			this.keyGate_(3);
+			if (pitch > lastPitch) { // si se ha añadido una nueva tecla hacia el agudo
+				this.midiVelocity_(midiVel); // Se toma la nueva velocidad
+			}
+		}  {
+			"No hay teclas presionadas".postln;
+			// Enviar gate off al sintetizador
+			this.keyGate_(-3);
+			// pitch y velocity no se actualizan porque guardan memoria
+		}
 	}
 }
