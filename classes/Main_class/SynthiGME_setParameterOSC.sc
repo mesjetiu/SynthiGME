@@ -264,7 +264,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				}
 			},
 
-
 			"slew", { // Ejemplo "/slew/1/range"
 				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
@@ -279,6 +278,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					this.sendBroadcastMsg(string, value);
 				}
 			},
+
 
 			"filter", { // Ejemplo "/filter/1/response"
 				var index = splitted[2].asInteger - 1;
@@ -407,6 +407,22 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				if (broadcast) {
 					this.sendBroadcastMsg(string, value);
+				}
+			},
+
+
+			"keyboard", { // Ejemplo "/keyboard/1/midiNote" Value: [midinote, velocity, 1/0] 1=on, 0=off
+				var index = splitted[2].asInteger - 1;
+				var valueArray = Int8Array.newFrom(value);
+				3.do({splitted.removeAt(0)});
+				switch (splitted[0],
+					"midiNote", {
+						modulKeyboards[index].pressRelease(valueArray[0], valueArray[1], valueArray[2]);
+					},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				if (broadcast) {
+					this.sendBroadcastMsg(string, valueArray);
 				}
 			},
 

@@ -174,10 +174,10 @@ SGME_Keyboard : SGME_Connectable {
 		if (lastMIDIPitch.isNil) {lastMIDIPitch = 0};
 
 		case // Actualizamos base de datos de teclas pulsadas
-		{ onOff == \on } {
+		{ onOff == 1 } {
 			keysPressed.add(midiNote);
 		}
-		{ onOff == \off } {
+		{ onOff == 0 } {
 			keysPressed.remove(midiNote);
 		};
 
