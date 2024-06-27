@@ -413,16 +413,28 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 			"keyboard", { // Ejemplo "/keyboard/1/midiNote" Value: [midinote, velocity, 1/0] 1=on, 0=off
 				var index = splitted[2].asInteger - 1;
-				var valueArray = Int8Array.newFrom(value);
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
 					"midiNote", {
-						modulKeyboards[index].pressRelease(valueArray[0], valueArray[1], valueArray[2]);
+						value = Int8Array.newFrom(value);
+						modulKeyboards[index].pressRelease(value[0], value[1], value[2]);
 					},
+					"pitch", {
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer()});
+						modulKeyboards[index].pitch_(value);
+					},
+					"velocity", {
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer()});
+						modulKeyboards[index].velocity_(value);
+					},
+					"env", {
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer()});
+						modulKeyboards[index].env_(value);
+					}
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				if (broadcast) {
-					this.sendBroadcastMsg(string, valueArray);
+					this.sendBroadcastMsg(string, value);
 				}
 			},
 
@@ -444,24 +456,24 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	// Función en pruebas. La idea es crear transiciones entre diferentes patches. Funciona pero arroja muchas advertencias de Qt, y se bloquea la interfaz demasiado tiempo.
 	setParameterSmoothedOSC { |string, value, addrForbidden, broadcast = true, ipOrigin = "local", lagTime = 0, intervalo = 0.2, oldValue|
-    if(lagTime <= 0) { // Si lagTime es cero o negativo, establecer el valor directamente sin suavizado
-        this.setParameterOSC(string, value, addrForbidden, broadcast, ipOrigin);
-    } {
-        var steps = lagTime / intervalo.max(0.001); // Mínimo intervalo para evitar divisiones por cero
-        var stepValue = (value - oldValue) / steps; // Incremento en cada paso
-        var currentValue = oldValue;
+		if(lagTime <= 0) { // Si lagTime es cero o negativo, establecer el valor directamente sin suavizado
+			this.setParameterOSC(string, value, addrForbidden, broadcast, ipOrigin);
+		} {
+			var steps = lagTime / intervalo.max(0.001); // Mínimo intervalo para evitar divisiones por cero
+			var stepValue = (value - oldValue) / steps; // Incremento en cada paso
+			var currentValue = oldValue;
 
-        Routine.run({
-            while({currentValue.absdif(value) > stepValue.abs}) {
-                currentValue = currentValue + stepValue;
+			Routine.run({
+				while({currentValue.absdif(value) > stepValue.abs}) {
+					currentValue = currentValue + stepValue;
 					{this.setParameterOSC(string, currentValue, addrForbidden, broadcast, ipOrigin)}.defer();
-                intervalo.wait;
-            };
-            // Asegurarse de que el valor final sea exactamente 'value'
+					intervalo.wait;
+				};
+				// Asegurarse de que el valor final sea exactamente 'value'
 				{this.setParameterOSC(string, value, addrForbidden, broadcast, ipOrigin)}.defer();
-        });
-    }
-}
+			});
+		}
+	}
 
 
 }

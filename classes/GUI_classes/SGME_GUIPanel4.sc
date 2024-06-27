@@ -36,14 +36,21 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		compositeView.setBackgroundImage(image,10);
 
 		// Se crean los módulos
+		// Envelope Followers
 		left = 57;
 		top = 329;
-		// Envelope Followers
 		this.makeEnvolopeFollowers(compositeView, left, top);
 
+		// Keyboards controls
+		left = 112;
+		top = 258;
+		this.makeKeyboard(compositeView, left, top, 1);
+		left = 166;
+		this.makeKeyboard(compositeView, left, top, 2);
+
 		// Slew Limiters
-		left = left + 164.3;
-		top = 329 + 80;
+		left = 221.3;
+		top = 409;
 		this.makeSlewLimiters(compositeView, left, top);
 
 		this.saveOrigin;
@@ -94,6 +101,71 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		range2.action = {|knob|
 			synthiGME.setParameterOSC(
 				string: "/envFollower/" ++ 2 ++ "/range",
+				value: knob.value.linlin(0,1,-5,5),
+				addrForbidden: \GUI,
+			)
+		};
+	}
+
+	makeKeyboard{|parent, left, top, n|
+		var size = 35;
+		var rect;
+		var pitch, velocity, env;
+		var space = 48;
+
+		rect = Rect(left, top, size, size);
+		pitch = SGME_Knob(parent, rect)
+		.color_([black, black, white, nil])
+		.mode_(\vert)
+		.step_(step)
+		.centered_(true)
+		.value_(0.9);
+		viewSizes = viewSizes.add([pitch, rect]);
+
+		top = top + space;
+		rect = Rect(left, top, size, size);
+		velocity = SGME_Knob(parent, rect)
+		.color_([yellow, black, white, nil])
+		.mode_(\vert)
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
+		viewSizes = viewSizes.add([velocity, rect]);
+
+		top = top + space;
+		rect = Rect(left, top, size, size);
+		env = SGME_Knob(parent, rect)
+		.color_([white, black, white, nil])
+		.mode_(\vert)
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
+		viewSizes = viewSizes.add([env, rect]);
+
+		// Se añaden al diccionario todos sendos mandos de Envelope Followers para poder cambiar su valor.
+		parameterViews
+		.put("/keyboard/" ++ n ++ "/pitch", pitch)
+		.put("/keyboard/" ++ n ++ "/velocity", velocity)
+		.put("/keyboard/" ++ n ++ "/env", env);
+
+		// Acciones a realizar al cambiar manualmente el valor de cada mando
+		pitch.action = {|knob|
+			synthiGME.setParameterOSC(
+				string: "/keyboard/" ++ n ++ "/pitch",
+				value: knob.value.linlin(0,1,0,10),
+				addrForbidden: \GUI,
+			)
+		};
+		velocity.action = {|knob|
+			synthiGME.setParameterOSC(
+				string: "/keyboard/" ++ n ++ "/velocity",
+				value: knob.value.linlin(0,1,-5,5),
+				addrForbidden: \GUI,
+			)
+		};
+		env.action = {|knob|
+			synthiGME.setParameterOSC(
+				string: "/keyboard/" ++ n ++ "/env",
 				value: knob.value.linlin(0,1,-5,5),
 				addrForbidden: \GUI,
 			)
