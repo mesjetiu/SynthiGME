@@ -26,7 +26,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 		splashWindow = SGME_SplashWindow();
 		splashWindow.showSplashWindow;
-		splashWindow.numSteps = 21;
+		splashWindow.numSteps = 23;
 
 		thisRoutine = Routine({
 			// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
@@ -108,12 +108,14 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					.blockSize_(blockSize) // Control rate. Si es hardware lo permite se puede aproximar a 1
 					.bindAddress_("0.0.0.0")
 					.maxLogins_(2);
+					server.latency = 0.03;
 					//server.sync;
 
 					("Número de canales de Audio:" + server.options.numAudioBusChannels).sgmePostln;
 					("Número de canales de output:" + server.options.numOutputBusChannels).sgmePostln;
 					("Número de canales de input:" + server.options.numInputBusChannels).sgmePostln;
 					("Tamaño del bloque:" + server.options.blockSize).sgmePostln;
+					("Latencia del servidor:" + server.latency).sgmePostln;
 
 					if(
 						server.options.numAudioBusChannels >= settings[\numAudioBusChannels]
@@ -476,6 +478,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						("Abierto puerto" + devicePort + "para OSC.").sgmePostln;} {
 						("No se ha podido abrir el puerto" + devicePort + "para OSC").sgmePostln;
 					};
+					splashWindow.progress();
+
+					modulKeyboards[0].initMIDI;
+					"Inicializados puertos y funciones MIDI".sgmePostln;
+					2.do {|n|
+						("Escuchando Keyboard" + n + "por puerto" + modulKeyboards[n].midiChannel).sgmePostln;
+					};
+					splashWindow.progress();
+
 
 					// Se lanza todo el sistema gráfico de ventanas:
 					guiSC.makeWindow;

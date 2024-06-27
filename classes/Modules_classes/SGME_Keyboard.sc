@@ -28,12 +28,14 @@ SGME_Keyboard : SGME_Connectable {
 	var resumeRoutine;
 
 	classvar settings;
+	classvar midiInitialized; // true o false. Para no inicializarse más de una vez.
 
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
 	*new { |server, midiCh|
 		settings = SGME_Settings.get;
+		midiInitialized = false;
 		^super.new.init(server, midiCh);
 	}
 
@@ -199,4 +201,38 @@ SGME_Keyboard : SGME_Connectable {
 			// pitch y velocity no se actualizan porque guardan memoria
 		}
 	}
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// Inicialización del MIDI y funciones MIDI
+	initMIDI {
+		if (midiInitialized) {^this};
+
+		// Inicialización de MIDI
+		MIDIClient.init;
+		MIDIIn.connectAll;
+
+		// Definición de la acción al recibir notas MIDI
+		MIDIdef.noteOn(\midiNoteOn, { |veloc, note, chan, src|
+			var keyboards = SynthiGME.instance.modulKeyboards;
+			case
+			{keyboards[0].midiChannel == chan}
+			{SynthiGME.instance.setParameterOSC("/keyboard/1/midiNote", [note, veloc, 1])}
+			{keyboards[1].midiChannel == chan}
+			{SynthiGME.instance.setParameterOSC("/keyboard/2/midiNote", [note, veloc, 1])}
+		}
+		);
+
+		MIDIdef.noteOff(\midiNoteOff, { |veloc, note, chan, src|
+			var keyboards = SynthiGME.instance.modulKeyboards;
+			case
+			{keyboards[0].midiChannel == chan}
+			{SynthiGME.instance.setParameterOSC("/keyboard/1/midiNote", [note, veloc, 0])}
+			{keyboards[1].midiChannel == chan}
+			{SynthiGME.instance.setParameterOSC("/keyboard/2/midiNote", [note, veloc, 0])}
+		});
+
+		midiInitialized = true;
+	}
+
 }
