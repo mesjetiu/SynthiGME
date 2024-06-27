@@ -126,33 +126,36 @@ SGME_Keyboard : SGME_Connectable {
 	pitch_ {|p|
 		var synthPitch;
 		pitch = p;
+		if (midiPitch.isNil) {^this};
 		synthPitch = this.convertPitch * this.convertMIDInote;
-		synth.set(\pitch, synthPitch.postln);
+		synth.set(\pitch, synthPitch);
 	}
 
 	midiPitch_ {|n|
 		var synthPitch;
 		midiPitch = n;
 		synthPitch = this.convertPitch * this.convertMIDInote;
-		synth.set(\pitch, synthPitch.postln);
+		synth.set(\pitch, synthPitch);
 	}
 
 	velocity_ {|v|
 		var synthVelocity;
 		velocity = v;
-		synthVelocity = this.convertMIDIvel + (this.convertVelocity * 3.5); // Añadimos el factor dado por la perilla, que va de -1 a 1
+		if (midiPitch.isNil) {^this};
+		synthVelocity = this.convertMIDIvel * (this.convertVelocity); // Añadimos el factor dado por la perilla, que va de -1 a 1
 		synth.set(\velocity, synthVelocity);
 	}
 
 	midiVelocity_ {|v|
 		var synthVelocity;
 		midiVelocity = v;
-		synthVelocity = this.convertMIDIvel + (this.convertVelocity * 3.5); // Añadimos el factor dado por la perilla, que va de -1 a 1
+		synthVelocity = this.convertMIDIvel * this.convertVelocity; // Añadimos el factor dado por la perilla, que va de -1 a 1
 		synth.set(\velocity, synthVelocity);
 	}
 
 	gate_ {|g|
 		gate = g;
+		if (midiPitch.isNil) {^this};
 		synth.set(\gate, this.convertGate);
 	}
 
@@ -167,7 +170,8 @@ SGME_Keyboard : SGME_Connectable {
 	pressRelease {|midiNote, midiVel, onOff|
 		// aquí se realiza toda la lógica de lo que el teclado ha de hacer con el output de pitch, gate y velocity
 		var maxKeyPressed;
-		var lastPitch = pitch;
+		var lastMIDIPitch = midiPitch;
+		if (lastMIDIPitch.isNil) {lastMIDIPitch = 0};
 
 		case // Actualizamos base de datos de teclas pulsadas
 		{ onOff == \on } {
@@ -179,15 +183,15 @@ SGME_Keyboard : SGME_Connectable {
 
 		if (keysPressed.size > 0) {
 			maxKeyPressed = keysPressed.maxItem;
-			"Tecla más aguda presionada: %".format(maxKeyPressed).postln;
+			//"Tecla más aguda presionada: %".format(maxKeyPressed).postln;
 			// Enviar pitch y gate al sintetizador
 			this.midiPitch_(maxKeyPressed);
 			this.keyGate_(3);
-			if (pitch > lastPitch) { // si se ha añadido una nueva tecla hacia el agudo
+			if (keysPressed.size == 1 || (maxKeyPressed > lastMIDIPitch)) { // si se ha añadido una nueva tecla hacia el agudo o se se acaba de pulsar una tecla aislada.
 				this.midiVelocity_(midiVel); // Se toma la nueva velocidad
 			}
 		}  {
-			"No hay teclas presionadas".postln;
+			//"No hay teclas presionadas".postln;
 			// Enviar gate off al sintetizador
 			this.keyGate_(-3);
 			// pitch y velocity no se actualizan porque guardan memoria
