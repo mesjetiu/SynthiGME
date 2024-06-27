@@ -24,16 +24,18 @@
 	- En run():
 		- Añadir entrada del módulo en "conexiones de entrada y salida de cada módulo en el patchbay de audio/voltage".
 
-5. Editar "synthiGME_setParameterOSC:
+5. Añadir mandos en el panel correspondiente, con los códigos OSC de cada parámetro.
+
+6. Editar "synthiGME_setParameterOSC:
 	- Añadir entrada del módulo con código OSC.
 	- Forzar "level = 1" (si procede) en el módulo para hacer bypass.
 	- En este punto debería poder compilar, ejecutarse sin fallos. Debería poder utilizarse el módulo aunque sea dummy.
 	
-6. Editar forbidenRows y forbidenColumns en makeNodeTable() y makeRow() en Panel 5 y Panel 6 según corresponda para que estén habilitados los nodos.
+7. Editar forbidenRows y forbidenColumns en makeNodeTable() y makeRow() en Panel 5 y Panel 6 según corresponda para que estén habilitados los nodos.
 	
-7. Editar SGME_PatchbayVoltage (si procede): (hacer lo equivalente de SGME_PatchbayAudio) y editar SynthiGME del mismo modo. Debería compilar y poder ser conectado en Voltage (desde el punto 4).
+8. Editar SGME_PatchbayVoltage (si procede): (hacer lo equivalente de SGME_PatchbayAudio) y editar SynthiGME del mismo modo. Debería compilar y poder ser conectado en Voltage (desde el punto 4).
 
-8. Añadir views al panel correspondiente. Copiar alguno ya hecho y adaptarlo.
+9. Añadir views al panel correspondiente. Copiar alguno ya hecho y adaptarlo.
 
-9. Añadir las variables en SynthiGME.getFullState() para poder ser recuperadas.
+10. Añadir las variables en SynthiGME.getFullState() para poder ser recuperadas.
 	
