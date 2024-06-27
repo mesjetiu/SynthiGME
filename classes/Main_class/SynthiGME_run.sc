@@ -160,7 +160,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					modulPatchbayAudio = SGME_PatchbayAudio(server);
 					modulPatchbayVoltage = SGME_PatchbayVoltage(server);
 					modulOscilloscope = SGME_Oscilloscope(server);
-					modulKeyboards = 2.collect({SGME_Keyboard(server)});
+					modulKeyboards = 2.collect({|n| SGME_Keyboard(server, n)});
 
 					server.sync;
 

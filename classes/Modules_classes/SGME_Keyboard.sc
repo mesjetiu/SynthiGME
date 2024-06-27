@@ -3,6 +3,7 @@ SGME_Keyboard : SGME_Connectable {
 	// Synth de la instancia
 	var <synth = nil;
 	var <server;
+	var <>midiChannel; // se inicializa al instanciarse en SynthiGME.run()
 
 	// Buses de salida de audio
 	var <outBusPitch;
@@ -31,9 +32,9 @@ SGME_Keyboard : SGME_Connectable {
 
 	// Métodos de clase //////////////////////////////////////////////////////////////////
 
-	*new { |server|
+	*new { |server, midiCh|
 		settings = SGME_Settings.get;
-		^super.new.init(server);
+		^super.new.init(server, midiCh);
 	}
 
 	*addSynthDef {
@@ -50,12 +51,13 @@ SGME_Keyboard : SGME_Connectable {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init { arg serv;
+	init { arg serv, midiCh;
 		server = serv;
 		outBusPitch = Bus.audio(server);
 		outBusVelocity = Bus.audio(server);
 		outBusGate = Bus.audio(server);
 		keysPressed = Set();
+		midiChannel = midiCh;
 		pauseRoutine = Routine({
 			//running = false;
 			1.wait;
