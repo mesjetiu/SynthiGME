@@ -100,7 +100,7 @@ SGME_Keyboard : SGME_Connectable {
 	// Conversores de unidades de las perillas.
 
 	convertPitch {
-		^pitch * 1/9; // factor entre 0 y 1.22 para aplicar a pitch del teclado. Según el manual, al valor de 9 la octava es justa (1V), aunque la rueda tiene un rango de 0-10.
+		^pitch / 9; // factor entre 0 y 1.22 para aplicar a pitch del teclado. Según el manual, al valor de 9 la octava es justa (1V), aunque la rueda tiene un rango de 0-10.
 	}
 
 	convertVelocity {
@@ -115,7 +115,7 @@ SGME_Keyboard : SGME_Connectable {
 	// Conversores de unidades de valores MIDI.
 
 	convertMIDInote {
-		^(midiPitch - 36) / 12; //36 es C1, valor 0. Una octava más aguda (12), dará 1 V. A 1V/octava.
+		^(midiPitch - 66) / 12; //66 es F# central de los teclados del synthi, valor 0. Una octava más aguda (12), dará 1 V. A 1V/octava. Así, el F# no aporta voltaje alguno. Para afinar, se tiene como referencia.
 	}
 
 	convertMIDIvel {
