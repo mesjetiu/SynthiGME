@@ -165,7 +165,10 @@ SGME_Keyboard : SGME_Connectable {
 	}
 
 	keyGate_ {|g|
-		case {g == 0} {keyGate = -3}
+		case {g == 0} {
+			keyGate = -3;
+			synth.set(\gate, this.convertGate);
+		}
 		{g == 1} {
 			if (retrigger==1) {
 				Routine {
