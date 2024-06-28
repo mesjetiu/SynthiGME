@@ -21,7 +21,7 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels, keyboards|
+	connect {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels, keyboards, invertor|
 		inputsOutputs = this.ordenateInputsOutputs(
 			reverb: reverb,
 			echo: echo,
@@ -34,12 +34,13 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			oscilloscope: oscilloscope,
 			outputChannels: outputChannels,
 			keyboards: keyboards,
+			invertor: invertor,
 		);
 		this.makeValues(); // Pone valores de 0 a todos los nodos existentes.
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels, keyboards|
+	ordenateInputsOutputs {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels, keyboards, invertor|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -197,6 +198,14 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			\inFeedbackBus, oscilloscope.inFeedbackBusCH2,
 		]);
 
+		index = 65; // Entrada a Invertor
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, invertor,
+			\synth, invertor.synth,
+			\inBus, invertor.inBus,
+			\inFeedbackBus, invertor.inFeedbackBus,
+		]);
+
 		// Outputs verticales (67-126) ////////////////////////////////////////////////////////////
 		index = 67; // Inputs de Amplificador 67-74
 		inputAmplifiers.do({|i|
@@ -295,6 +304,13 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		index = 122; // Invertor
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, invertor,
+			\synth, invertor.synth,
+			\outBus, invertor.outBus,
+		]);
 
 		^array;
 	}

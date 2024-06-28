@@ -28,7 +28,7 @@ SGME_Invertor : SGME_Connectable {
 	}
 
 	*addSynthDef {
-		SynthDef(\SGME_Keyboard, {
+		SynthDef(\SGME_Invertor, {
 			arg outBus, inBus, inFeedbackBus,
 			gain, offset;
 			var sig;
@@ -37,7 +37,7 @@ SGME_Invertor : SGME_Connectable {
 			sig = inBus + inFeedbackBus;
 
 			//Out.ar(outBus, sig);
-			Out.ar(0, PinkNoise.ar(0.1!2)); // bypass
+			Out.ar(outBus, PinkNoise.ar(0.1)); // bypass
 		}).add
 	}
 
@@ -71,7 +71,7 @@ SGME_Invertor : SGME_Connectable {
 				\inFeedbackBus, inFeedbackBus,
 			], server).register;
 		});
-		this.synthRun;
+		//this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
