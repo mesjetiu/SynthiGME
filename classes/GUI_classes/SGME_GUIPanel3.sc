@@ -95,8 +95,8 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left + (spacing-7), top - 27, 10, 15);
 		range = SGME_Button(parent, rect)
 		.states_([
-			["0", Color.white, Color.black], // value 0
-			["1", Color.white, Color.red] // value 1
+			["Lo", Color.white, Color.black], // value 0
+			["Hi", Color.white, Color.red] // value 1
 		]).
 		value_(1);
 		viewSizes = viewSizes.add([range, rect]);
