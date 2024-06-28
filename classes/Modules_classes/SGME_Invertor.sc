@@ -30,15 +30,16 @@ SGME_Invertor : SGME_Connectable {
 	*addSynthDef {
 		SynthDef(\SGME_Invertor, {
 			arg outBus, inBus, inFeedbackBus,
-			gain, offset;
+			gain = 0, offset = 0;
 			var sig;
 			inBus = In.ar(inBus);
-			inFeedbackBus = InFeedback.ar(inBus);
+			inFeedbackBus = InFeedback.ar(inFeedbackBus);
 			sig = inBus + inFeedbackBus;
+			sig = (sig * gain) + offset;
 
-			//Out.ar(outBus, sig);
-			Out.ar(outBus, PinkNoise.ar(0.1)); // bypass
-		}).add
+			Out.ar(outBus, sig);
+			//Out.ar(outBus, PinkNoise.ar(0.1)); // bypass
+		},[nil, nil, nil, 0.2, 0.2]).add
 	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
@@ -90,13 +91,13 @@ SGME_Invertor : SGME_Connectable {
 
 	gain_ {|g|
 		gain = g;
-		g = linlin(-5, 5, -1, 1); // gain no es otra cosa que un factor de multiplicación por 1 y -1 en sus valores extremos.
+		g = g.linlin(-5, 5, -1, 1); // gain no es otra cosa que un factor de multiplicación por 1 y -1 en sus valores extremos.
 		synth.set(\gain, g);
 	}
 
 	offset_ {|o|
 		offset = o;
-		o = linlin(-5, 5, -2, 2); // los valores de -2 y 2 son arbitrarios. Buscar unos valores más adecuados a la realidad.
-		synth.set(\pitch, o);
+		o = o.linlin(-5, 5, -2, 2); // los valores de -2 y 2 son arbitrarios. Buscar unos valores más adecuados a la realidad.
+		synth.set(\offset, o);
 	}
 }

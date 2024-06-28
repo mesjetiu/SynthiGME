@@ -147,6 +147,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			data.put(string ++ "retrigger", item.retrigger);
 		});
 
+		// Invertor:
+		modulInvertor.do({|item, num|
+			var string = "/invertor/";
+			data.put(string ++ "gain", item.gain.round(0.01));
+			data.put(string ++ "offset", item.offset.round(0.01));
+		});
+
 
 		// Patchbay Audio:
 		66.do({|v|

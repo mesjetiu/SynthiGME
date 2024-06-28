@@ -392,15 +392,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			"oscilloscope", { // Ejemplo "/oscilloscope/sensCH1"
 				switch (splitted[2],
 					"sensCH1", {
-						modulEcho.setVarSensCH1(value);
+						modulOscilloscope.setVarSensCH1(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer()});
 					},
 					"sensCH2", {
-						modulEcho.setVarSensCH2(value);
+						modulOscilloscope.setVarSensCH2(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer()});
 					},
 					"mode", {
-						modulEcho.setMode(value);
+						modulOscilloscope.setMode(value);
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(0,10,0,1)}.defer()});
 					},
 				);
@@ -434,6 +434,23 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					},
 					"retrigger", {
 						modulKeyboards[index].retrigger_(value);
+					},
+				);
+				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
+				if (broadcast) {
+					this.sendBroadcastMsg(string, value);
+				}
+			},
+
+			"invertor", { // Ejemplo "/oscilloscope/sensCH1"
+				switch (splitted[2],
+					"gain", {
+						modulInvertor.gain_(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer()});
+					},
+					"offset", {
+						modulInvertor.offset_(value);
+						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer()});
 					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente

@@ -48,6 +48,11 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		left = 166;
 		this.makeKeyboard(compositeView, left, top, 2);
 
+		// Invertor
+		left = 386;
+		top = 256;
+		this.makeInvertor(compositeView, left, top);
+
 		// Slew Limiters
 		left = 221.3;
 		top = 409;
@@ -166,6 +171,53 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		gate.action = {|knob|
 			synthiGME.setParameterOSC(
 				string: "/keyboard/" ++ n ++ "/gate",
+				value: knob.value.linlin(0,1,-5,5),
+				addrForbidden: \GUI,
+			)
+		};
+	}
+
+	makeInvertor{|parent, left, top|
+		var size = 35;
+		var rect;
+		var gain, offset;
+		var space = 50;
+
+		rect = Rect(left, top, size, size);
+		gain = SGME_Knob(parent, rect)
+		.color_([blue, black, white, nil])
+		.mode_(\vert)
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
+		viewSizes = viewSizes.add([gain, rect]);
+
+		top = top + space;
+		rect = Rect(left, top, size, size);
+		offset = SGME_Knob(parent, rect)
+		.color_([blue, black, white, nil])
+		.mode_(\vert)
+		.step_(step)
+		.centered_(true)
+		.value_(0.5);
+		viewSizes = viewSizes.add([offset, rect]);
+
+		// Se añaden al diccionario todos los mandos del Invertor para poder cambiar su valor.
+		parameterViews
+		.put("/invertor/gain", gain)
+		.put("/invertor/offset", offset);
+
+		// Acciones a realizar al cambiar manualmente el valor de cada mando
+		gain.action = {|knob|
+			synthiGME.setParameterOSC(
+				string: "/invertor/gain",
+				value: knob.value.linlin(0,1,-5,5),
+				addrForbidden: \GUI,
+			)
+		};
+		offset.action = {|knob|
+			synthiGME.setParameterOSC(
+				string: "/invertor/offset",
 				value: knob.value.linlin(0,1,-5,5),
 				addrForbidden: \GUI,
 			)
