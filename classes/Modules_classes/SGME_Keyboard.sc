@@ -14,6 +14,7 @@ SGME_Keyboard : SGME_Connectable {
 	var <pitch = 9; // 0 - 10 . Al valor de 9 aprox. el factor ha de ser 1, una octava.
 	var <velocity = 0; // -5 - 5
 	var <gate = 0; // -5 - 5
+	var <>retrigger = 1; // dos valores: 1 == "KEY RELEASE OR NEW PITCH" y 0 == "KEY RELEASE"
 	// Parámetros del teclado en sí que van a estar dirigiendo las señales que se envían.
 	var <midiPitch = nil;
 	var <midiVelocity = 0;
@@ -164,7 +165,18 @@ SGME_Keyboard : SGME_Connectable {
 	}
 
 	keyGate_ {|g|
-		keyGate = g;
+		case {g == 0} {keyGate = -3}
+		{g == 1} {
+			if (retrigger==1) {
+				Routine {
+					keyGate = -3;
+					wait(0.2);
+					keyGate = 3;
+				}.play
+			} {
+				keyGate = 3;
+			};
+		};
 		synth.set(\gate, this.convertGate);
 	}
 
@@ -190,14 +202,15 @@ SGME_Keyboard : SGME_Connectable {
 			//"Tecla más aguda presionada: %".format(maxKeyPressed).postln;
 			// Enviar pitch y gate al sintetizador
 			this.midiPitch_(maxKeyPressed);
-			this.keyGate_(3);
+			this.keyGate_(1);
+
 			if (keysPressed.size == 1 || (maxKeyPressed > lastMIDIPitch)) { // si se ha añadido una nueva tecla hacia el agudo o se se acaba de pulsar una tecla aislada.
 				this.midiVelocity_(midiVel); // Se toma la nueva velocidad
 			}
 		}  {
 			//"No hay teclas presionadas".postln;
 			// Enviar gate off al sintetizador
-			this.keyGate_(-3);
+			this.keyGate_(0);
 			// pitch y velocity no se actualizan porque guardan memoria
 		}
 	}
@@ -215,22 +228,21 @@ SGME_Keyboard : SGME_Connectable {
 		// Definición de la acción al recibir notas MIDI
 		MIDIdef.noteOn(\midiNoteOn, { |veloc, note, chan, src|
 			var keyboards = SynthiGME.instance.modulKeyboards;
-			chan.postln;
 			case
-			{keyboards[0].midiChannel == chan}
-			{SynthiGME.instance.setParameterOSC("/keyboard/1/midiNote", [note, veloc, 1])}
-			{keyboards[1].midiChannel == chan}
-			{SynthiGME.instance.setParameterOSC("/keyboard/2/midiNote", [note, veloc, 1])}
+			{keyboards[0].midiChannel == (chan+1)}
+			{SynthiGME.instance.setParameterOSC("/keyboard/1/midiEvent", [note, veloc, 1].postln)}
+			{keyboards[1].midiChannel == (chan+1)}
+			{SynthiGME.instance.setParameterOSC("/keyboard/2/midiEvent", [note, veloc, 1].postln)}
 		}
 		);
 
 		MIDIdef.noteOff(\midiNoteOff, { |veloc, note, chan, src|
 			var keyboards = SynthiGME.instance.modulKeyboards;
 			case
-			{keyboards[0].midiChannel == chan}
-			{SynthiGME.instance.setParameterOSC("/keyboard/1/midiNote", [note, veloc, 0])}
-			{keyboards[1].midiChannel == chan}
-			{SynthiGME.instance.setParameterOSC("/keyboard/2/midiNote", [note, veloc, 0])}
+			{keyboards[0].midiChannel == (chan+1)}
+			{SynthiGME.instance.setParameterOSC("/keyboard/1/midiEvent", [note, veloc, 0].postln)}
+			{keyboards[1].midiChannel == (chan+1)}
+			{SynthiGME.instance.setParameterOSC("/keyboard/2/midiEvent", [note, veloc, 0].postln)}
 		});
 
 		midiInitialized = true;

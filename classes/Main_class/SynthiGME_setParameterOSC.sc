@@ -411,11 +411,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			},
 
 
-			"keyboard", { // Ejemplo "/keyboard/1/midiNote" Value: [midinote, velocity, 1/0] 1=on, 0=off
+			"keyboard", { // Ejemplo "/keyboard/1/midiEvent" Value: [midinote, velocity, 1/0] 1=on, 0=off
 				var index = splitted[2].asInteger - 1;
 				3.do({splitted.removeAt(0)});
 				switch (splitted[0],
-					"midiNote", {
+					"midiEvent", {
+						var nKeyboard = (index + 1).asString; // para imprimirse correctamente el número
 						value = Int8Array.newFrom(value);
 						modulKeyboards[index].pressRelease(value[0], value[1], value[2]);
 					},
@@ -427,10 +428,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer()});
 						modulKeyboards[index].velocity_(value);
 					},
-					"env", {
+					"gate", {
 						if(guiSC.running, {{guiSC.parameterViews[string].value = value.linlin(-5,5,0,1)}.defer()});
-						modulKeyboards[index].env_(value);
-					}
+						modulKeyboards[index].gate_(value);
+					},
+					"retrigger", {
+						modulKeyboards[index].retrigger_(value);
+					},
 				);
 				// Se envía el mismo mensaje a todas las direcciones menos a la remitente
 				if (broadcast) {
@@ -442,10 +446,17 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// Si el mensaje es distinto a los casos anteriores, se sale de la función
 			{^this}
 		);
-		// Si el mensaje es correcto y no contiene "gate" se guarda el último valor de cada cadena en el diccionario
-		if ("/gate".matchRegexp(string).not && saveEvent){oscRecievedMessages.put(string, value.round(0.01))};
+		// Si el mensaje es correcto se guarda el último valor de cada cadena en el diccionario
+		if (saveEvent){
+			if (value.isCollection.not){
+				oscRecievedMessages.put(string, value.round(0.01))
+			}
+		};
 		// Se almacena en la grabación de eventos
-		eventRecorder.push(string, value);
+		if (value.isCollection.not && eventRecorder.isRecording){
+			eventRecorder.push(string, value);
+		};
+
 
 		// Se imprime en Post window
 		if (this.verboseOSC,

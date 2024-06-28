@@ -22,14 +22,12 @@ amp: veloc * 0.003  // Amplitud basada en la velocidad de la tecla
 
 
 
-
+(
 // Inicialización de MIDI
 MIDIClient.init;
-MIDIClient.init(2);
 MIDIIn.connectAll;
 
 // Definición de la acción al recibir notas MIDI
-(
 MIDIdef.noteOn(\midiNoteOn, { |veloc, note, chan, src|
 	// Crea y toca un evento sonoro
 	[veloc, note, chan, src].postln;
@@ -42,13 +40,13 @@ MIDIdef.noteOn(\midiNoteOn, { |veloc, note, chan, src|
 		).play;
 	}
 }
-)
-)
-s.latency = 0.03 // modificar a voluntad. Se puede modificar con el servidor arrancado...
+);
+
+s.latency = 0.03; // modificar a voluntad. Se puede modificar con el servidor arrancado...
 
 
 // Por seguridad, se puede agregar una definición para cuando la nota se apague
-(
+
 MIDIdef.noteOff(\midiNoteOff, { |veloc, note, chan, src|
 	[veloc, note, chan, src].postln;
 	// Aquí podrías definir alguna acción cuando la nota se libere, si es necesario

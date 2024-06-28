@@ -162,7 +162,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					modulPatchbayAudio = SGME_PatchbayAudio(server);
 					modulPatchbayVoltage = SGME_PatchbayVoltage(server);
 					modulOscilloscope = SGME_Oscilloscope(server);
-					modulKeyboards = 2.collect({|n| SGME_Keyboard(server, n)});
+					modulKeyboards = 2.collect({|n| SGME_Keyboard(server, n+1)});
 
 					server.sync;
 
@@ -482,9 +482,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 					modulKeyboards[0].initMIDI;
 					"Inicializados puertos y funciones MIDI".sgmePostln;
-					2.do {|n|
-						("Escuchando Keyboard" + n + "por puerto" + modulKeyboards[n].midiChannel).sgmePostln;
-					};
+					("Escuchando Upper Manual por canal MIDI" + modulKeyboards[0].midiChannel).sgmePostln;
+					("Escuchando Lower Manual por canal MIDI" + modulKeyboards[1].midiChannel).sgmePostln;
 					splashWindow.progress();
 
 

@@ -138,9 +138,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			data.put(string ++ "selector",  item.selector.round(0.01));
 		});
 
+		// Keyboards:
+		modulKeyboards.do({|item, num|
+			var string = "/keyboard/" ++ (num + 1) ++ "/";
+			data.put(string ++ "pitch", item.pitch.round(0.01));
+			data.put(string ++ "velocity", item.velocity.round(0.01));
+			data.put(string ++ "gate", item.gate.round(0.01));
+			data.put(string ++ "retrigger", item.retrigger);
+		});
 
-/*	var <modulPatchbayAudio;
-	var <modulPatchbayVoltage;*/
 
 		// Patchbay Audio:
 		66.do({|v|

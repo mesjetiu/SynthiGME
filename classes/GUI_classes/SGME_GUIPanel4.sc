@@ -110,7 +110,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 	makeKeyboard{|parent, left, top, n|
 		var size = 35;
 		var rect;
-		var pitch, velocity, env;
+		var pitch, velocity, gate;
 		var space = 48;
 
 		rect = Rect(left, top, size, size);
@@ -134,19 +134,19 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 
 		top = top + space;
 		rect = Rect(left, top, size, size);
-		env = SGME_Knob(parent, rect)
+		gate = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
-		viewSizes = viewSizes.add([env, rect]);
+		viewSizes = viewSizes.add([gate, rect]);
 
-		// Se añaden al diccionario todos sendos mandos de Envelope Followers para poder cambiar su valor.
+		// Se añaden al diccionario todos los mandos de los Keyboards para poder cambiar su valor.
 		parameterViews
 		.put("/keyboard/" ++ n ++ "/pitch", pitch)
 		.put("/keyboard/" ++ n ++ "/velocity", velocity)
-		.put("/keyboard/" ++ n ++ "/env", env);
+		.put("/keyboard/" ++ n ++ "/gate", gate);
 
 		// Acciones a realizar al cambiar manualmente el valor de cada mando
 		pitch.action = {|knob|
@@ -163,9 +163,9 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 				addrForbidden: \GUI,
 			)
 		};
-		env.action = {|knob|
+		gate.action = {|knob|
 			synthiGME.setParameterOSC(
-				string: "/keyboard/" ++ n ++ "/env",
+				string: "/keyboard/" ++ n ++ "/gate",
 				value: knob.value.linlin(0,1,-5,5),
 				addrForbidden: \GUI,
 			)
