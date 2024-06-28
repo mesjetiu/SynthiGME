@@ -84,7 +84,7 @@ SGME_OutputChannel : SGME_Connectable {
 			sig = LPF.ar(sig, freqLP);
 
 			// Se aplica el nivel (level)
-			sig = sig * (level+inLevel);
+			sig = (sig * level) * (2**inLevel);
 
 			// Se aplica el paneo
 			#sigPannedL, sigPannedR = Pan2.ar(sig, pan) * on;
@@ -172,7 +172,7 @@ SGME_OutputChannel : SGME_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = level * on * inCount;
+		var outputTotal = on * inCount;
 		if (outputTotal == 0, {
 			synth.run(false);
 		}, {
