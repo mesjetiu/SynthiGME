@@ -503,7 +503,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					};
 
 					// Preparación para la grabación:
-					server.prepareForRecord;
+				//	server.prepareForRecord;
 
 					"\n".postln;
 					("*** SynthiGME (" ++ version ++ ") en ejecución ***\n").sgmePostln;
