@@ -49,7 +49,7 @@ SGME_Keyboard : SGME_Connectable {
 			Out.ar(outBusVelocity, K2A.ar(velocity));
 			Out.ar(outBusGate, K2A.ar(gate));
 			//	Out.ar(0, PinkNoise.ar(0.1!2)); // bypass
-		}).add
+		},[nil, nil, 0.005]).add
 	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
@@ -204,7 +204,7 @@ SGME_Keyboard : SGME_Connectable {
 			//"Tecla más aguda presionada: %".format(maxKeyPressed).postln;
 			// Enviar pitch y gate al sintetizador
 			this.midiPitch_(maxKeyPressed);
-			this.keyGate_(1);
+			if ((onOff==1) && (midiNote == maxKeyPressed)) {this.keyGate_(1)};
 
 			if ((onOff==1) && (keysPressed.size == 1 || (maxKeyPressed > lastMIDIPitch))) { // si se ha añadido una nueva tecla hacia el agudo o se se acaba de pulsar una tecla aislada.
 				this.midiVelocity_(midiVel); // Se toma la nueva velocidad
