@@ -62,22 +62,23 @@ SGME_TooltipHandler {
     }
 
     showTooltip { |x, y, text|
+		var rect = Rect(x, y, text.size * 6, 20);
         hideTooltipTask.notNil.if({ hideTooltipTask.stop });  // Detener cualquier tarea de ocultar tooltip en curso
         ("Attempting to show tooltip at: " ++ x ++ ", " ++ y).postln;
         tooltipWindow.isNil.not.if({
             "Tooltip exists, updating position...".postln;
-            tooltipWindow.bounds = Rect(x, y, text.size * 8 + 20, 20);
+            tooltipWindow.bounds = rect;
             tooltipText.string = text;
             tooltipWindow.front;
         }, {
             "Creating new tooltip window...".postln;
-            tooltipWindow = Window("Tooltip", Rect(x, y, text.size * 8 + 20, 20), resizable: false, border: false)
+            tooltipWindow = Window("Tooltip", rect, resizable: false, border: false)
                 .alwaysOnTop_(true)
                 .drawFunc_({
                     Pen.fillColor = Color.red;  // Color de fondo rojo para asegurar que se ve
                     Pen.fillRect(tooltipWindow.bounds);
                 });
-            tooltipText = StaticText(tooltipWindow, Rect(5, 2, text.size * 8 + 10, 16))
+            tooltipText = StaticText(tooltipWindow, Rect(5, 2, text.size * 10, 16))
                 .string_(text)
                 .align_(\left)
                 .background_(Color.grey(0.9))
@@ -95,10 +96,11 @@ SGME_TooltipHandler {
         }
     }
 
-    updateTooltip { |text|
+    updateTooltip { |val|
         if (tooltipWindow.notNil) {
-            ("Updating tooltip text to: " ++ text).postln;
-            tooltipText.string = text;
+			var string = "Valor actual: " ++ val.round(0.01).asString("%.2f");
+            ("Updating tooltip text to: " ++ string).postln;
+            tooltipText.string = string;
         }
     }
 }

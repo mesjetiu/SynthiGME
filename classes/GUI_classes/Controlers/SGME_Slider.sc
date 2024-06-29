@@ -45,6 +45,6 @@ SGME_Slider : Slider {
 	value_ {|val|
 		super.value = val;
 		blinkView.blink;
-        tooltipHandler.updateTooltip("Valor actual: " ++ val.round(0.01).asString("%.2f"));
+        tooltipHandler.updateTooltip(val);
 	}
 }
