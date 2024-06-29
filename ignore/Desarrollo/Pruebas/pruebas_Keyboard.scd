@@ -1,6 +1,14 @@
 o = SynthiGME()
+o.server.record
+o.server.isRecording
+o.server.stopRecording
 
-o.modulKeyboards[0].pitch
+r = Recorder(o.server)
+r.record
+r.isRecording
+r.stopRecording
+
+o.modulKeyboards[0].pitchm
 o.modulKeyboards[0].velocity
 o.modulKeyboards[0].gate
 
@@ -8,8 +16,8 @@ o.modulKeyboards[0].midiPitch
 o.modulKeyboards[0].midiVelocity
 o.modulKeyboards[0].keyGate
 o.modulKeyboards[1].midiChannel
-
-
+o.modulKeyboards[0].retrigger = 1
+Knob
 
 o.modulKeyboards[0].pitch = 2.35
 
