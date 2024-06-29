@@ -72,7 +72,7 @@ SGME_Invertor : SGME_Connectable {
 				\inFeedbackBus, inFeedbackBus,
 			], server).register;
 		});
-		//this.synthRun;
+		this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.

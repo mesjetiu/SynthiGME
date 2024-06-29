@@ -84,17 +84,17 @@ SGME_Keyboard : SGME_Connectable {
 				\outBusGate, outBusGate,
 			], server).register;
 		});
-		//	this.synthRun;
+		this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun { // Dejo esta función aunque no se va a usar. Por ahora no hay manera de saber que no hay output.
-		/*var outputTotal = outCount;
+		var outputTotal = outCount;
 		if (outputTotal == 0, {
 		synth.run(false);
 		}, {
 		synth.run(true);
-		});*/
+		});
 	}
 
 
