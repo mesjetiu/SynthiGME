@@ -21,12 +21,14 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_Slider : Slider {
 
 	var <blinkView = nil;
+    var <tooltipHandler;
 	//*********************************************************************************************
 
 	*initClass {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(Slider);
 		Class.initClassTree(Blink_view);
+		Class.initClassTree(SGME_TooltipHandler);
 	}
 
 	*new {|parent, bounds|
@@ -37,6 +39,7 @@ SGME_Slider : Slider {
 
 	init {
 		blinkView = Blink_view(this, 1, 0.1);
+        tooltipHandler = SGME_TooltipHandler.new(this);
 	}
 
 	value_ {|val|

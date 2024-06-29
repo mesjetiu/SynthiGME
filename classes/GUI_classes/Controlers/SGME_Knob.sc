@@ -19,11 +19,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 SGME_Knob : Knob {
     var <blinkView = nil;
-    var tooltipHandler;
+    var <tooltipHandler;
 
     *initClass {
         Class.initClassTree(Knob);
         Class.initClassTree(Blink_view);
+		Class.initClassTree(SGME_TooltipHandler);
     }
 
     *new {|parent, bounds|
