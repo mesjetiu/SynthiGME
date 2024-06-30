@@ -1,15 +1,17 @@
 SGME_TooltipHandler {
-	var <view, <tooltipWindow, <tooltipText, hideTooltipTask;
-	var <minVal, <maxVal;
+	var <view, <tooltipWindow, <tooltipText, hideTooltipTask, funcParam;
 
-	*new { |view, min = 0, max = 10|
-		^super.new.init(view, min, max);
+	*new { |view, min = 0, max = 10, funcParam = nil|
+		^super.new.init(view, min, max, funcParam);
 	}
 
-	init { |v, min, max|
+	init { |v, min, max, function|
 		view = v;
-		minVal = min;
-		maxVal = max;
+		if (function.isNil) {
+			funcParam = {|v| v.linlin(0, 1, min, max)};
+		} {
+			funcParam = function;
+		};
 		this.setupTooltip;
 		^this;
 	}
@@ -54,9 +56,7 @@ SGME_TooltipHandler {
 		};
 
 		("Updated tooltip position: " ++ x ++ ", " ++ y).postln;
-		value = {
-			|p| p.linlin(0, 1, minVal, maxVal)
-		}.value(view.value).round(0.01).asString("%.2f");
+		value = funcParam.value(view.value).round(0.01).asString("%.2f");
 		this.showTooltip(x, y, "Valor actual: " ++ value);
 	}
 
@@ -97,9 +97,7 @@ SGME_TooltipHandler {
 
 	updateTooltip { |val|
 		if (tooltipWindow.notNil) {
-			var string = "Valor actual: " ++ {
-				|p| p.linlin(0, 1, minVal, maxVal)
-			}.value(view.value).round(0.01).asString("%.2f");
+			var string = "Valor actual: " ++ funcParam.value(view.value).round(0.01).asString("%.2f");
 			("Updating tooltip text to: " ++ string).postln;
 			tooltipText.string = string;
 		}
