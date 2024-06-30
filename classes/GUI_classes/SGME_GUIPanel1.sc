@@ -145,7 +145,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		var gatedFR, freeRun, gated, triggered, hold; // Opciones del selector
 
 		rect = Rect(left, top, size, size);
-		selector = SGME_Knob(parent, rect)
+		selector = SGME_Knob(parent, rect, tooltipEnable: false)
 		.color_([yellow, white, white, nil])
 		.mode_(\round)
 		.step_(step)
@@ -247,7 +247,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 
 		left = left + spacing;
 		rect = Rect(left, top, size, size);
-		envelopeLevel = SGME_Knob(parent, rect)
+		envelopeLevel = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -257,7 +257,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 
 		left = left + spacing;
 		rect = Rect(left, top, size, size);
-		signalLevel = SGME_Knob(parent, rect)
+		signalLevel = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
