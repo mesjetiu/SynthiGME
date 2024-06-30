@@ -21,30 +21,35 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_Slider : Slider {
 
 	var <blinkView = nil;
-    var <tooltipHandler;
+	var <tooltipHandler;
+	var <tooltip; // true o false
 	//*********************************************************************************************
 
 	*initClass {
-		// Inicializa otras clases antes de esta
 		Class.initClassTree(Slider);
 		Class.initClassTree(Blink_view);
 		Class.initClassTree(SGME_TooltipHandler);
 	}
 
-	*new {|parent, bounds, min, max|
+	*new {|parent, bounds, min = 0, max = 10, tooltipEnable = true|
 		var instance = super.new(parent, bounds);
-		instance.init();
+		instance.init(min, max, tooltipEnable);
 		^instance
 	}
 
-	init {|min, max|
+	init {|min, max, tooltipEnable|
 		blinkView = Blink_view(this, 1, 0.1);
-        tooltipHandler = SGME_TooltipHandler.new(this, min, max);
+		tooltip = tooltipEnable;
+		if (tooltip) {
+			tooltipHandler = SGME_TooltipHandler.new(this, min, max);
+		}
 	}
 
 	value_ {|val|
 		super.value = val;
 		blinkView.blink;
-        tooltipHandler.updateTooltip(val);
+		if (tooltip) {
+			tooltipHandler.updateTooltip(val);
+		}
 	}
 }
