@@ -31,15 +31,15 @@ SGME_Slider : Slider {
 		Class.initClassTree(SGME_TooltipHandler);
 	}
 
-	*new {|parent, bounds|
+	*new {|parent, bounds, min, max|
 		var instance = super.new(parent, bounds);
 		instance.init();
 		^instance
 	}
 
-	init {
+	init {|min, max|
 		blinkView = Blink_view(this, 1, 0.1);
-        tooltipHandler = SGME_TooltipHandler.new(this);
+        tooltipHandler = SGME_TooltipHandler.new(this, min, max);
 	}
 
 	value_ {|val|

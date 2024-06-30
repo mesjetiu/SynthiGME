@@ -27,15 +27,15 @@ SGME_Knob : Knob {
 		Class.initClassTree(SGME_TooltipHandler);
     }
 
-    *new {|parent, bounds|
+    *new {|parent, bounds, min = 0, max = 10|
         var instance = super.new(parent, bounds);
-        instance.init();
+        instance.init(min, max);
         ^instance
     }
 
-    init {
+    init {|min, max|
         blinkView = Blink_view(this, 1, 0.1);
-        tooltipHandler = SGME_TooltipHandler.new(this);
+        tooltipHandler = SGME_TooltipHandler.new(this, min, max);
     }
 
     value_ {|val|
