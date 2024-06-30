@@ -18,29 +18,35 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 SGME_Knob : Knob {
-    var <blinkView = nil;
-    var <tooltipHandler;
+	var <blinkView = nil;
+	var <tooltipHandler;
+	var <tooltip; // true o false
 
-    *initClass {
-        Class.initClassTree(Knob);
-        Class.initClassTree(Blink_view);
+	*initClass {
+		Class.initClassTree(Knob);
+		Class.initClassTree(Blink_view);
 		Class.initClassTree(SGME_TooltipHandler);
-    }
+	}
 
-    *new {|parent, bounds, min = 0, max = 10|
-        var instance = super.new(parent, bounds);
-        instance.init(min, max);
-        ^instance
-    }
+	*new {|parent, bounds, min = 0, max = 10, tooltipEnable = true|
+		var instance = super.new(parent, bounds);
+		instance.init(min, max, tooltipEnable);
+		^instance
+	}
 
-    init {|min, max|
-        blinkView = Blink_view(this, 1, 0.1);
-        tooltipHandler = SGME_TooltipHandler.new(this, min, max);
-    }
+	init {|min, max, tooltipEnable|
+		blinkView = Blink_view(this, 1, 0.1);
+		tooltip = tooltipEnable;
+		if (tooltip) {
+			tooltipHandler = SGME_TooltipHandler.new(this, min, max);
+		}
+	}
 
-    value_ {|val|
-        super.value = val;
-        blinkView.blink;
-        tooltipHandler.updateTooltip(val);
-    }
+	value_ {|val|
+		super.value = val;
+		blinkView.blink;
+		if (tooltip) {
+			tooltipHandler.updateTooltip(val);
+		}
+	}
 }
