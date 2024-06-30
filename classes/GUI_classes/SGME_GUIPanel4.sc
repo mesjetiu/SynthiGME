@@ -71,7 +71,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		var range1, range2;
 
 		rect = Rect(left, top, size, size);
-		range1 = SGME_Knob(parent, rect)
+		range1 = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -81,7 +81,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 
 		top = top + 72;
 		rect = Rect(left, top, size, size);
-		range2 = SGME_Knob(parent, rect)
+		range2 = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -129,7 +129,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 
 		top = top + space;
 		rect = Rect(left, top, size, size);
-		velocity = SGME_Knob(parent, rect)
+		velocity = SGME_Knob(parent, rect, -5, 5)
 		.color_([yellow, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -139,7 +139,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 
 		top = top + space;
 		rect = Rect(left, top, size, size);
-		gate = SGME_Knob(parent, rect)
+		gate = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -184,7 +184,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		var space = 50;
 
 		rect = Rect(left, top, size, size);
-		gain = SGME_Knob(parent, rect)
+		gain = SGME_Knob(parent, rect, -5, 5)
 		.color_([blue, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
@@ -194,7 +194,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 
 		top = top + space;
 		rect = Rect(left, top, size, size);
-		offset = SGME_Knob(parent, rect)
+		offset = SGME_Knob(parent, rect, -5, 5)
 		.color_([blue, black, white, nil])
 		.mode_(\vert)
 		.step_(step)
