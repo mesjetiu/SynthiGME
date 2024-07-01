@@ -1,12 +1,16 @@
 SGME_TooltipHandler {
 	var <view, <tooltipWindow, <tooltipText, hideTooltipTask, funcParam;
+	var offsetLeft, offsetTop;
+	var tooltipClosable = true; // bandera en false cuando el ratón está sobre el tooltip. Para evitar bucles infinitos de abrir y cerrar.
 
-	*new { |view, min = 0, max = 10, funcParam = nil|
-		^super.new.init(view, min, max, funcParam);
+	*new { |view, min = 0, max = 10, funcParam = nil, offLeft = 0, offTop = 0|
+		^super.new.init(view, min, max, funcParam, offLeft, offTop);
 	}
 
-	init { |v, min, max, function|
+	init { |v, min, max, function, offLeft, offTop|
 		view = v;
+		offsetLeft = offLeft;
+		offsetTop = offTop;
 		if (function.isNil) {
 			funcParam = {|v| v.linlin(0, 1, min, max).round(0.01)};
 		} {
@@ -26,6 +30,7 @@ SGME_TooltipHandler {
 			"Mouse left knob.".postln;
 			hideTooltipTask = Task({
 				0.1.wait;
+				while {tooltipClosable == false} {0.01.wait};
 				{ this.hideTooltip }.defer;
 			}).play;
 		};
@@ -41,8 +46,8 @@ SGME_TooltipHandler {
 		knobPos = view.absoluteBounds;
 		windowBounds = Window.availableBounds;
 
-		x = knobPos.left + (knobPos.width / 2);
-		y = knobPos.top + knobPos.height;
+		x = knobPos.left + (knobPos.width / 2) + offsetLeft;
+		y = knobPos.top + knobPos.height + offsetTop;
 		y = windowBounds.height - y;
 
 		if (x + 100 > windowBounds.right) {
@@ -77,6 +82,14 @@ SGME_TooltipHandler {
 				Pen.fillColor = Color.red;
 				Pen.fillRect(tooltipWindow.bounds);
 			});
+
+			tooltipWindow.view.mouseEnterAction = {
+				tooltipClosable = false;
+			};
+			tooltipWindow.view.mouseLeaveAction = {
+				tooltipClosable = true;
+			};
+
 			tooltipText = StaticText(tooltipWindow, Rect(5, 2, text.size * 10, 16))
 			.string_(text)
 			.align_(\left)

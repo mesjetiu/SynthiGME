@@ -41,7 +41,7 @@ SGME_Slider : Slider {
 		blinkView = Blink_view(this, 1, 0.1);
 		tooltip = tooltipEnable;
 		if (tooltip) {
-			tooltipHandler = SGME_TooltipHandler.new(this, min, max);
+			tooltipHandler = SGME_TooltipHandler.new(this, min, max, offTop: -70, offLeft: 15);
 		}
 	}
 
