@@ -1,16 +1,17 @@
 SGME_TooltipHandler {
-	var <view, <tooltipWindow, <tooltipText, hideTooltipTask, funcParam;
+	var <view, <tooltipWindow, <tooltipText, hideTooltipTask, funcParam, prefix;
 	var offsetLeft, offsetTop;
 	var tooltipClosable = true; // bandera en false cuando el ratón está sobre el tooltip. Para evitar bucles infinitos de abrir y cerrar.
 
-	*new { |view, min = 0, max = 10, funcParam = nil, offLeft = 0, offTop = 0|
-		^super.new.init(view, min, max, funcParam, offLeft, offTop);
+	*new { |view, min = 0, max = 10, funcParam = nil, offLeft = 0, offTop = 0, prefix = "Valor:"|
+		^super.new.init(view, min, max, funcParam, offLeft, offTop, prefix);
 	}
 
-	init { |v, min, max, function, offLeft, offTop|
+	init { |v, min, max, function, offLeft, offTop, pref|
 		view = v;
 		offsetLeft = offLeft;
 		offsetTop = offTop;
+		prefix = pref;
 		if (function.isNil) {
 			funcParam = {|v| v.linlin(0, 1, min, max).round(0.01)};
 		} {
@@ -62,7 +63,7 @@ SGME_TooltipHandler {
 
 		("Updated tooltip position: " ++ x ++ ", " ++ y).postln;
 		value = funcParam.value(view.value).asString("%.2f");
-		this.showTooltip(x, y, "Valor actual: " ++ value);
+		this.showTooltip(x, y, prefix ++ value);
 	}
 
 	showTooltip { |x, y, text|
@@ -110,7 +111,7 @@ SGME_TooltipHandler {
 
 	updateTooltip { |val|
 		if (tooltipWindow.notNil) {
-			var string = "Valor actual: " ++ funcParam.value(view.value).asString("%.2f");
+			var string = prefix + funcParam.value(view.value).asString("%.2f");
 			("Updating tooltip text to: " ++ string).postln;
 			tooltipText.string = string;
 		}

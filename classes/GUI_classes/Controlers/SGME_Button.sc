@@ -42,7 +42,7 @@ SGME_Button : Button {
 		blinkView = Blink_view(this, 1, 0.1);
 		tooltip = tooltipEnable;
 		if (tooltip) {
-			tooltipHandler = SGME_TooltipHandler.new(this, min, max, funcParam);
+			tooltipHandler = SGME_TooltipHandler.new(this, min, max, funcParam, prefix: "Estado:");
 		}
 	}
 
