@@ -222,7 +222,7 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			array[index-1] = Dictionary.newFrom(List[
 				\modul, i,
 				\synth, i.group,
-				\outBus, i.outputBusBypass,
+				\outBus, i.outputBus, // i.outputBusBypass,
 			]);
 			index = index + 1;
 		});
