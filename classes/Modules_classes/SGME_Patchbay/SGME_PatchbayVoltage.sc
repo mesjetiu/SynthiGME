@@ -144,7 +144,7 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			var o = outputChannels[i];
 			array[index-1] = Dictionary.newFrom(List[
 				\modul, o,
-				\synth, o.group,
+				\synth, o.synth,
 				\inBus, o.inputBus,
 				\inFeedbackBus, o.inFeedbackBus,
 			]);
@@ -156,7 +156,7 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			var o = outputChannels[i];
 			array[index-1] = Dictionary.newFrom(List[
 				\modul, o,
-				\synth, o.group,
+				\synth, o.synth,
 				\inBus, o.inputBusLevel,
 				\inFeedbackBus, o.inFeedbackBusLevel,
 			]);
@@ -221,7 +221,7 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\modul, i,
-				\synth, i.group,
+				\synth, i.synth,
 				\outBus, i.outputBus, // i.outputBusBypass,
 			]);
 			index = index + 1;

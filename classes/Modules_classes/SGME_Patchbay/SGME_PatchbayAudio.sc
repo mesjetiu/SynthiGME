@@ -136,7 +136,7 @@ SGME_PatchbayAudio : SGME_Patchbay{
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\modul, i,
-				\synth, i.group,
+				\synth, i.synth,
 				\inBus, i.inputBus,
 				\inFeedbackBus, i.inFeedbackBus,
 			]);
@@ -174,7 +174,7 @@ SGME_PatchbayAudio : SGME_Patchbay{
 		outputChannels.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
 				\modul, i,
-				\synth, i.group,
+				\synth, i.synth,
 				\outBus, i.outputBus, // i.outputBusBypass,
 			]);
 			index = index + 1;

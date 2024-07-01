@@ -20,16 +20,16 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_OutputChannel : SGME_Connectable {
 
 	// Group y synths de la instancia
-	var <group = nil;
+	//var <group = nil;
 	var <synth = nil;
-	var <synthBypass = nil;
+	//var <synthBypass = nil;
 
 	var <server;
 	var <inputBus; // Entrada del amplificador.
 	var <inFeedbackBus; // Entrada de feedback: admite audio del ciclo anterior.
 	var <inputBusLevel; // Modulación de Level por voltaje.
 	var <inFeedbackBusLevel; // Modulación de Level por voltaje.
-	var <outputBusBypass; // Salida del amplificador sin procesado (para bus interno del synthi.
+	//var <outputBusBypass; // Salida del amplificador sin procesado (para bus interno del synthi.
 	var <outputBus; // Salida del amplificador.
 	var <outBusL; // Canal izquierdo de la salida stereo.
 	var <outBusR; // Canal derecho de la salida stereo.
@@ -95,16 +95,16 @@ SGME_OutputChannel : SGME_Connectable {
 		}, [nil, nil, nil, nil, nil, nil, nil, lag, lag, lag, lag, lag]
 		).add;
 
-		SynthDef(\SGME_outputChannelBypass, {
-			arg inputBus,
-			inFeedbackBus,
-			outputBusBypass;
+		/*SynthDef(\SGME_outputChannelBypass, {
+		arg inputBus,
+		inFeedbackBus,
+		outputBusBypass;
 
-			var sig = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
+		var sig = In.ar(inputBus) + InFeedback.ar(inFeedbackBus);
 
-			Out.ar(outputBusBypass, sig);
+		Out.ar(outputBusBypass, sig);
 		}
-		).add;
+		).add;*/
 	}
 
 
@@ -113,7 +113,7 @@ SGME_OutputChannel : SGME_Connectable {
 	init { arg serv = Server.local;
 		server = serv;
 		outputBus = Bus.audio(server);
-		outputBusBypass = Bus.audio(server);
+		//outputBusBypass = Bus.audio(server);
 		inputBus = Bus.audio(server);
 		inFeedbackBus = Bus.audio(server);
 		inputBusLevel = Bus.audio(server);
@@ -136,43 +136,28 @@ SGME_OutputChannel : SGME_Connectable {
 
 	// Crea el Synth en el servidor
 	createSynth {
-		Routine({
-			var waitTime = 0.001;
-			// se crea el grupo
-			group = Group(server).register;
-			while({group.isPlaying == false}, {wait(waitTime)});
-			// se crea el synth bypass (hace del canal un bus aunque esté apagado)
-			synthBypass = Synth(\SGME_outputChannelBypass, [
+		if(synth.isPlaying==false, {
+			synth = Synth(\SGME_outputChannel, [
 				\inputBus, inputBus,
 				\inFeedbackBus, inFeedbackBus,
-				\outputBusBypass, outputBusBypass,
-			], group).register;
-			while({synthBypass.isPlaying == false}, {wait(waitTime)});
-			// se crea el synth principal
-			if(synth.isPlaying==false, {
-				synth = Synth(\SGME_outputChannel, [
-					\inputBus, inputBus,
-					\inFeedbackBus, inFeedbackBus,
-					\inputBusLevel, inputBusLevel,
-					\inFeedbackBusLevel, inFeedbackBusLevel,
-					\outputBus, outputBus,
-					\outBusL, outBusL,
-					\outBusR, outBusR,
-					\freqHP, this.convertFilter(filter)[0],
-					\freqLP, this.convertFilter(filter)[1],
-					\pan, this.convertPan(pan),
-					\level, this.convertLevel(level),
-					\on, on,
-				], group).register; //".register" registra el Synth para poder testear ".isPlaying"
-			});
-			while({synth.isPlaying == false}, {wait(waitTime)});
-			this.synthRun;
-		}).play;
+				\inputBusLevel, inputBusLevel,
+				\inFeedbackBusLevel, inFeedbackBusLevel,
+				\outputBus, outputBus,
+				\outBusL, outBusL,
+				\outBusR, outBusR,
+				\freqHP, this.convertFilter(filter)[0],
+				\freqLP, this.convertFilter(filter)[1],
+				\pan, this.convertPan(pan),
+				\level, this.convertLevel(level),
+				\on, on,
+			], server).register; //".register" registra el Synth para poder testear ".isPlaying"
+		});
+		this.synthRun;
 	}
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = inCount + outCount;
+		var outputTotal = (inCount + outCount) * level;
 		if (outputTotal == 0, {
 			synth.run(false);
 		}, {
