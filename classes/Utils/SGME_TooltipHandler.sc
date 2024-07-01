@@ -78,7 +78,7 @@ SGME_TooltipHandler {
 		}, {
 			"Creating new tooltip window...".postln;
 			tooltipWindow = Window("Tooltip", rect, resizable: false, border: false)
-			.alwaysOnTop_(true)
+			//.alwaysOnTop_(true)
 			.drawFunc_({
 				Pen.fillColor = Color.red;
 				Pen.fillRect(tooltipWindow.bounds);
@@ -96,6 +96,10 @@ SGME_TooltipHandler {
 			.align_(\left)
 			.background_(Color.grey(0.9))
 			.font_(Font("Helvetica", 12));
+
+			SGME_GUIShortcuts.makeShortcuts(SynthiGME.instance.guiSC.panels[0], tooltipWindow, SynthiGME.instance);
+			// se le pasa un panel para que actúe con los shortcuts propios de los paneles, no del tooltip.
+
 			tooltipWindow.front;
 		});
 	}
