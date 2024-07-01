@@ -21,26 +21,36 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_Button : Button {
 
 	var <blinkView = nil;
+	var <tooltipHandler;
+	var <tooltip; // true o false
 	//*********************************************************************************************
 
 	*initClass {
 		// Inicializa otras clases antes de esta
 		Class.initClassTree(Button);
 		Class.initClassTree(Blink_view);
+		Class.initClassTree(SGME_TooltipHandler);
 	}
 
-	*new {|parent, bounds|
+	*new {|parent, bounds, min = 0, max = 1, funcParam = nil, tooltipEnable = true|
 		var instance = super.new(parent, bounds);
-		instance.init();
+		instance.init(min, max, tooltipEnable, funcParam);
 		^instance
 	}
 
-	init {
+	init {|min, max, tooltipEnable, funcParam|
 		blinkView = Blink_view(this, 1, 0.1);
+		tooltip = tooltipEnable;
+		if (tooltip) {
+			tooltipHandler = SGME_TooltipHandler.new(this, min, max, funcParam);
+		}
 	}
 
 	value_ {|val|
 		super.value = val;
 		blinkView.blink;
+		if (tooltip) {
+			tooltipHandler.updateTooltip(val);
+		}
 	}
 }

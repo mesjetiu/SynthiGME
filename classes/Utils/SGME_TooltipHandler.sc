@@ -8,7 +8,7 @@ SGME_TooltipHandler {
 	init { |v, min, max, function|
 		view = v;
 		if (function.isNil) {
-			funcParam = {|v| v.linlin(0, 1, min, max)};
+			funcParam = {|v| v.linlin(0, 1, min, max).round(0.01)};
 		} {
 			funcParam = function;
 		};
@@ -56,7 +56,7 @@ SGME_TooltipHandler {
 		};
 
 		("Updated tooltip position: " ++ x ++ ", " ++ y).postln;
-		value = funcParam.value(view.value).round(0.01).asString("%.2f");
+		value = funcParam.value(view.value).asString("%.2f");
 		this.showTooltip(x, y, "Valor actual: " ++ value);
 	}
 
@@ -97,7 +97,7 @@ SGME_TooltipHandler {
 
 	updateTooltip { |val|
 		if (tooltipWindow.notNil) {
-			var string = "Valor actual: " ++ funcParam.value(view.value).round(0.01).asString("%.2f");
+			var string = "Valor actual: " ++ funcParam.value(view.value).asString("%.2f");
 			("Updating tooltip text to: " ++ string).postln;
 			tooltipText.string = string;
 		}

@@ -81,7 +81,7 @@ SGME_GUIPanel7 : SGME_GUIPanel {
 
 		top = top + 43;
 		rect = Rect(left + 12.3, top, 10, 15);
-		on = SGME_Button(parent, rect)
+		on = SGME_Button(parent, rect, funcParam: {|v| if (v==1) {"on"} {"off"} })
 		.states_([
 			["0", Color.white, Color.black], // value 0
 			["1", Color.white, Color.red] // value 1

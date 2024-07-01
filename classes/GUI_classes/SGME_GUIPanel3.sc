@@ -93,7 +93,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		viewSizes = viewSizes.add([pulseShape, rect]);
 
 		rect = Rect(left + (spacing-7), top - 27, 10, 15);
-		range = SGME_Button(parent, rect)
+		range = SGME_Button(parent, rect, funcParam: {|v| if (v==1) {"Hi Freq"} {"Low Freq"} })
 		.states_([
 			["Lo", Color.white, Color.black], // value 0
 			["Hi", Color.white, Color.red] // value 1
