@@ -75,7 +75,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		frequency = SGME_Knob(parent, rect)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([frequency, rect]);
 
@@ -83,7 +83,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		response = SGME_Knob(parent, rect)
 		.color_([yellow, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([response, rect]);
 
@@ -91,7 +91,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		level = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([level, rect]);
 
@@ -209,7 +209,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		delay = SGME_Knob(parent, rect)
 		.color_([red, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([delay, rect]);
 
@@ -217,7 +217,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		attack = SGME_Knob(parent, rect)
 		.color_([red, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([attack, rect]);
 
@@ -225,7 +225,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		decay = SGME_Knob(parent, rect)
 		.color_([red, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([decay, rect]);
 
@@ -233,7 +233,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		sustain = SGME_Knob(parent, rect)
 		.color_([red, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([sustain, rect]);
 
@@ -241,7 +241,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		release = SGME_Knob(parent, rect)
 		.color_([red, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([release, rect]);
 
@@ -249,7 +249,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		envelopeLevel = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -259,7 +259,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		signalLevel = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -408,7 +408,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		ring1 = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([ring1, rect]);
 
@@ -416,7 +416,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		ring2 = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([ring2, rect]);
 
@@ -424,7 +424,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		ring3 = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([ring3, rect]);
 
@@ -470,7 +470,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		mix = SGME_Knob(parent, rect)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([mix, rect]);
 
@@ -478,7 +478,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		level = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([level, rect]);
 
@@ -514,7 +514,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		delay = SGME_Knob(parent, rect)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([delay, rect]);
 
@@ -522,7 +522,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		mix = SGME_Knob(parent, rect)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([mix, rect]);
 
@@ -530,7 +530,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		feedback = SGME_Knob(parent, rect)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([feedback, rect]);
 
@@ -538,7 +538,7 @@ SGME_GUIPanel1 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		level = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([level, rect]);
 

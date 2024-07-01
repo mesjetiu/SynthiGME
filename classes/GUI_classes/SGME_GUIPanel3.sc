@@ -79,7 +79,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		pulseLevel = SGME_Knob(parent, rect)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([pulseLevel, rect]);
 
@@ -87,7 +87,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		pulseShape = SGME_Knob(parent, rect, -5, 5)
 		.color_([green, black, white, nil])
-		.mode_(\vert).step_(step)
+		.mode_(\round).step_(step)
 		.centered_(true)
 		.value_(0.5);
 		viewSizes = viewSizes.add([pulseShape, rect]);
@@ -105,7 +105,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		sineLevel = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([sineLevel, rect]);
 
@@ -113,7 +113,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		sineSymmetry = SGME_Knob(parent, rect, -5, 5)
 		.color_([green, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -123,7 +123,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		triangleLevel = SGME_Knob(parent, rect)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([triangleLevel, rect]);
 
@@ -131,7 +131,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		sawtoothLevel = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([sawtoothLevel, rect]);
 
@@ -139,7 +139,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top-15, size, size);
 		frequency = SGME_Knob(parent, rect)
 		.color_([black, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step).
 		value_(0.5);
 		viewSizes = viewSizes.add([frequency, rect]);
@@ -229,7 +229,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			colour = SGME_Knob(parent, rect)
 			.color_([blue, black, white, nil])
-			.mode_(\vert)
+			.mode_(\round)
 			.step_(step)
 			.value_(0.5);
 			viewSizes = viewSizes.add([colour, rect]);
@@ -238,7 +238,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			level = SGME_Knob(parent, rect)
 			.color_([white, black, white, nil])
-			.mode_(\vert)
+			.mode_(\round)
 			.step_(step);
 			viewSizes = viewSizes.add([level, rect]);
 
@@ -278,7 +278,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		mean = SGME_Knob(parent, rect, -5, 5)
 		.color_([red, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -289,7 +289,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		variance = SGME_Knob(parent, rect, -5, 5)
 		.color_([red, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -300,7 +300,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		voltage1 = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([voltage1, rect]);
 		left = left + spacing;
@@ -308,7 +308,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		voltage2 = SGME_Knob(parent, rect)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step);
 		viewSizes = viewSizes.add([voltage2, rect]);
 
@@ -317,7 +317,7 @@ SGME_GUIPanel3 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		key = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);

@@ -65,7 +65,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			knob = SGME_Knob(parent, rect)
 			.color_([blue, black, white, nil])
-			.mode_(\vert)
+			.mode_(\round)
 			.step_(step);
 			viewSizes = viewSizes.add([knob, rect]);
 			parameterViews.put("/filterBank/" ++ (62.5*(2**(num))).ceil.asInteger, knob); // Ejemplo: /filterBank/4000
@@ -89,7 +89,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			knob = SGME_Knob(parent, rect)
 			.color_([white, black, white, nil])
-			.mode_(\vert)
+			.mode_(\round)
 			.step_(step);
 			viewSizes = viewSizes.add([knob, rect]);
 			parameterViews.put("/in/" ++ (num + 1) ++ "/level", knob);
@@ -113,7 +113,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			knob = SGME_Knob(parent, rect)
 			.color_([white, black, white, nil])
-			.mode_(\vert)
+			.mode_(\round)
 			.step_(step);
 			viewSizes = viewSizes.add([knob, rect]);
 			parameterViews.put("/send/" ++ (num + 1) ++ "/level", knob);
@@ -131,7 +131,7 @@ SGME_GUIPanel2 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			knob = SGME_Knob(parent, rect)
 			.color_([white, black, white, nil])
-			.mode_(\vert)
+			.mode_(\round)
 			.step_(step);
 			viewSizes = viewSizes.add([knob, rect]);
 			parameterViews.put("/return/" ++ (num + 1) ++ "/level", knob);

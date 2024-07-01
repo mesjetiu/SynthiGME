@@ -73,7 +73,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		range1 = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -83,7 +83,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		range2 = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -121,7 +121,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		pitch = SGME_Knob(parent, rect)
 		.color_([black, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.9);
@@ -131,7 +131,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		velocity = SGME_Knob(parent, rect, -5, 5)
 		.color_([yellow, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -141,7 +141,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		gate = SGME_Knob(parent, rect, -5, 5)
 		.color_([white, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -186,7 +186,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		gain = SGME_Knob(parent, rect, -5, 5)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -196,7 +196,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 		rect = Rect(left, top, size, size);
 		offset = SGME_Knob(parent, rect, -5, 5)
 		.color_([blue, black, white, nil])
-		.mode_(\vert)
+		.mode_(\round)
 		.step_(step)
 		.centered_(true)
 		.value_(0.5);
@@ -234,7 +234,7 @@ SGME_GUIPanel4 : SGME_GUIPanel {
 			rect = Rect(left, top, size, size);
 			slewRate = SGME_Knob(parent, rect)
 			.color_([red, black, white, nil])
-			.mode_(\vert)
+			.mode_(\round)
 			.step_(step);
 			viewSizes = viewSizes.add([slewRate, rect]);
 
