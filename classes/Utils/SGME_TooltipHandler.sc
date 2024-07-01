@@ -62,12 +62,18 @@ SGME_TooltipHandler {
 		};
 
 		("Updated tooltip position: " ++ x ++ ", " ++ y).postln;
-		value = funcParam.value(view.value).asString("%.2f");
-		this.showTooltip(x, y, prefix ++ value);
+		//value = funcParam.value(view.value).asString("%.2f");
+		this.showTooltip(x, y);
 	}
 
-	showTooltip { |x, y, text|
-		var rect = Rect(x, y, text.size * 6, 20);
+	makeText {
+		var value = funcParam.value(view.value).asString("%.2f");
+		^(prefix + value);
+	}
+
+	showTooltip { |x, y|
+		var text = this.makeText;
+		var rect = Rect(x, y, (text.size+1) * 6, 20);
 		hideTooltipTask.notNil.if({ hideTooltipTask.stop });
 		("Attempting to show tooltip at: " ++ x ++ ", " ++ y).postln;
 		tooltipWindow.isNil.not.if({
@@ -78,7 +84,7 @@ SGME_TooltipHandler {
 		}, {
 			"Creating new tooltip window...".postln;
 			tooltipWindow = Window("Tooltip", rect, resizable: false, border: false)
-			//.alwaysOnTop_(true)
+			.alwaysOnTop_(true)
 			.drawFunc_({
 				Pen.fillColor = Color.red;
 				Pen.fillRect(tooltipWindow.bounds);
@@ -91,7 +97,7 @@ SGME_TooltipHandler {
 				tooltipClosable = true;
 			};
 
-			tooltipText = StaticText(tooltipWindow, Rect(5, 2, text.size * 10, 16))
+			tooltipText = StaticText(tooltipWindow, Rect(5, 2, (text.size) * 10, 16))
 			.string_(text)
 			.align_(\left)
 			.background_(Color.grey(0.9))
@@ -115,7 +121,7 @@ SGME_TooltipHandler {
 
 	updateTooltip { |val|
 		if (tooltipWindow.notNil) {
-			var string = prefix + funcParam.value(view.value).asString("%.2f");
+			var string = this.makeText; //prefix + funcParam.value(view.value).asString("%.2f");
 			("Updating tooltip text to: " ++ string).postln;
 			tooltipText.string = string;
 		}
