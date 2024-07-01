@@ -43,7 +43,7 @@ SGME_Keyboard : SGME_Connectable {
 	*addSynthDef {
 		SynthDef(\SGME_Keyboard, {
 			arg outBusPitch, outBusVelocity, outBusGate,
-			pitch = 0, velocity = 0, gate = 0;
+			pitch = 0, velocity = 0, gate;
 			// este synth tan solo devuelve en forma de señal los valores de los parámetros que le entran.
 			Out.ar(outBusPitch, K2A.ar(pitch));
 			Out.ar(outBusVelocity, K2A.ar(velocity));
@@ -82,6 +82,7 @@ SGME_Keyboard : SGME_Connectable {
 				\outBusPitch, outBusPitch,
 				\outBusVelocity, outBusVelocity,
 				\outBusGate, outBusGate,
+				\gate, keyGate,
 			], server).register;
 		});
 		this.synthRun;
