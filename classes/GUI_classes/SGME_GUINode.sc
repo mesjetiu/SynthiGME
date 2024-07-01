@@ -24,9 +24,12 @@ SGME_GUINode {
 	classvar synthiGME = nil;
 	classvar imagesPath = nil;
 	var <visible; // atributo "dummy" para el cambio de visibilidad de los witches en los paneles. No afecta a los Nodos pero se incluye el atributo para cambios generales en la visibilidad de GUI.
+	var <tooltipHandler;
+	var <tooltip; // true o false
 
 	*initClass {
 		Class.initClassTree(SGME_Path);
+		Class.initClassTree(SGME_TooltipHandler);
 	}
 
 	*loadImages {
@@ -36,13 +39,16 @@ SGME_GUINode {
 		imageYellow = Image(imagesPath +/+ "widgets" +/+ "patchbay_yellow_pin");
 	}
 
-	*new {arg synthi, parent, bounds, stringOSC;
+	*new {arg synthi, parent, bounds, stringOSC, min = 0, max = 1, funcParam = nil, tooltipEnable = true;
 		if (synthiGME.isNil) {synthiGME = synthi};
-		^super.new.init(parent, bounds, stringOSC);
+		^super.new.init(parent, bounds, stringOSC, min, max, funcParam, tooltipEnable);
 	}
 
-	init {|parent, bounds, stringOSC|
+	init {|parent, bounds, stringOSC, min, max, funcParam, tooltipEnable|
 		value = 0;
+
+		tooltip = tooltipEnable;
+
 		view = View(parent, bounds)
 		.setBackgroundImage(imageHole, 10)
 		.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
@@ -80,8 +86,15 @@ SGME_GUINode {
 
 				}, // click izquierdo
 				1, {}, // click derecho, no implementado
-			)
+			);
+
+			if (tooltip) {
+				tooltipHandler.updateTooltip();
+			}
 		});
+		if (tooltip) {
+			tooltipHandler = SGME_TooltipHandler.new(view, min, max, funcParam, prefix: "Estado:", funcParam: {});
+		};
 	}
 
 	visible_ {|option|
