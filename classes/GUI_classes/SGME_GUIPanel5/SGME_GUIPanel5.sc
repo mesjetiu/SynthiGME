@@ -18,6 +18,20 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
+	var horizontalNames;
+	var verticalNames;
+	//
+	 *new {|synthi, parameters|
+		synthiGME = synthi;
+	 	^super.new.init(synthi, parameters);
+	 }
+
+	 init {|synthi, parameters|
+	 	horizontalNames = Dictionary.newFrom(SGME_GUIPanel5.horizontalNames);
+	 	verticalNames = Dictionary.newFrom(SGME_GUIPanel5.verticalNames);
+		^super.init(synthi, parameters);
+	 }
+
 	makeWindow {
 		var rect;
 		var image;
@@ -97,7 +111,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-		//	\windows,   { forbidenRows = [20, 21, 62] }
+			//	\windows,   { forbidenRows = [20, 21, 62] }
 		);
 
 		numRows.do({|row|
@@ -105,7 +119,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 			if (row == 33) {top = 16.5}; // reiniciamos top para comenzar en el bottomPanel
 			if((row < 30).or(row > 32), {
 				if (forbidenRows.includes(row).not)
-					{this.makeRow(panel, left, top, row, nodeCountHor)};
+				{this.makeRow(panel, left, top, row, nodeCountHor)};
 				nodeCountHor = nodeCountHor + 1;
 			});
 			top = top + spacing;
@@ -122,12 +136,12 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		Platform.case(
 			\osx,       { },
 			\linux,     { },
-		//	\windows,   { forbidenColumns = (44..58) ++ [65, 66] }
+			//	\windows,   { forbidenColumns = (44..58) ++ [65, 66] }
 		);
 		numColumns.do({|column| // 67
 			if(column != 33, {
 				if (forbidenColumns.includes(column).not)
-					{this.makeNode(parent, left, top, column, row, nodeCountHor, nodeCountVer)};
+				{this.makeNode(parent, left, top, column, row, nodeCountHor, nodeCountVer)};
 				nodeCountVer = nodeCountVer + 1;
 			});
 			left = left + spacing;
@@ -140,7 +154,8 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		var stringOSC = "/patchA/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
-		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, imagesPath);
+		var tooltipText = verticalNames[nodeCountHor.postln].asString + "-->" + horizontalNames[nodeCountVer.postln].asString;
+		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, imagesPath, tooltipTextFunc: {tooltipText});
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchA/91/36
 		parameterViews.put(stringOSC, node);

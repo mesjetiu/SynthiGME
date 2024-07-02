@@ -39,12 +39,12 @@ SGME_GUINode {
 		imageYellow = Image(imagesPath +/+ "widgets" +/+ "patchbay_yellow_pin");
 	}
 
-	*new {arg synthi, parent, bounds, stringOSC, min = 0, max = 1, funcParam = nil, tooltipEnable = true;
+	*new {arg synthi, parent, bounds, stringOSC, min = 0, max = 1, funcParam = nil, tooltipEnable = true, tooltipTextFunc = {};
 		if (synthiGME.isNil) {synthiGME = synthi};
-		^super.new.init(parent, bounds, stringOSC, min, max, funcParam, tooltipEnable);
+		^super.new.init(parent, bounds, stringOSC, min, max, funcParam, tooltipEnable, tooltipTextFunc);
 	}
 
-	init {|parent, bounds, stringOSC, min, max, funcParam, tooltipEnable|
+	init {|parent, bounds, stringOSC, min, max, funcParam, tooltipEnable, tooltipTextFunc|
 		value = 0;
 
 		tooltip = tooltipEnable;
@@ -93,7 +93,7 @@ SGME_GUINode {
 			}
 		});
 		if (tooltip) {
-			tooltipHandler = SGME_TooltipHandler.new(view, min, max, funcParam, prefix: "Estado:", funcParam: {}, funcMakeText: {"Caca, culo, pedo y pis"});
+			tooltipHandler = SGME_TooltipHandler.new(view, min, max, funcParam, prefix: "Estado:", funcParam: {}, funcMakeText: tooltipTextFunc);
 		};
 	}
 
