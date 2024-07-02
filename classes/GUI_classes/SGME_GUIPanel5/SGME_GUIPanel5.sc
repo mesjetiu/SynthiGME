@@ -154,7 +154,8 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		var stringOSC = "/patchA/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
-		var tooltipText = verticalNames[nodeCountHor.postln].asString + "-->" + horizontalNames[nodeCountVer.postln].asString;
+		// ⟶⇒⟹➜
+		var tooltipText = verticalNames[nodeCountHor.postln].asString + "⟶" + horizontalNames[nodeCountVer.postln].asString;
 		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, imagesPath, tooltipTextFunc: {tooltipText});
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchA/91/36
