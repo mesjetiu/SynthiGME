@@ -131,8 +131,9 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		var stringOSC = "/patchV/" ++ nodeCountHor ++ "/" ++ nodeCountVer;
 		var side = 5;
 		var bounds = Rect(left, top, side, side);
-
-		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, imagesPath);
+		// ⟶⇒⟹➜
+		var tooltipText = verticalNames[nodeCountHor].asString + "⟶" + horizontalNames[nodeCountVer].asString;
+		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, tooltipTextFunc: {tooltipText});
 
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchC/91/36

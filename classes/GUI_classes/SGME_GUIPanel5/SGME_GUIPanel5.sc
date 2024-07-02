@@ -20,7 +20,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 	var horizontalNames;
 	var verticalNames;
-	//
+
 	 *new {|synthi, parameters|
 		synthiGME = synthi;
 	 	^super.new.init(synthi, parameters);
@@ -156,7 +156,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		var bounds = Rect(left, top, side, side);
 		// ⟶⇒⟹➜
 		var tooltipText = verticalNames[nodeCountHor].asString + "⟶" + horizontalNames[nodeCountVer].asString;
-		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, imagesPath, tooltipTextFunc: {tooltipText});
+		var node = SGME_GUINode(synthiGME, parent, bounds, stringOSC, tooltipTextFunc: {tooltipText});
 
 		// Se añaden al diccionario cada uno de los nodos para poder cambiar su valor. /patchA/91/36
 		parameterViews.put(stringOSC, node);
