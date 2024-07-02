@@ -93,7 +93,7 @@ SGME_GUINode {
 			}
 		});
 		if (tooltip) {
-			tooltipHandler = SGME_TooltipHandler.new(view, min, max, funcParam, prefix: "Estado:", funcParam: {});
+			tooltipHandler = SGME_TooltipHandler.new(view, min, max, funcParam, prefix: "Estado:", funcParam: {}, funcMakeText: {"Caca, culo, pedo y pis"});
 		};
 	}
 

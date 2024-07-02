@@ -1,17 +1,19 @@
 SGME_TooltipHandler {
 	var <view, <tooltipWindow, <tooltipText, hideTooltipTask, funcParam, prefix;
+	var makeTextFunc = nil; // función dada externamente para crear el mensaje el tooltip
 	var offsetLeft, offsetTop;
 	var tooltipClosable = true; // bandera en false cuando el ratón está sobre el tooltip. Para evitar bucles infinitos de abrir y cerrar.
 
-	*new { |view, min = 0, max = 10, funcParam = nil, offLeft = 0, offTop = 0, prefix = "Valor:"|
-		^super.new.init(view, min, max, funcParam, offLeft, offTop, prefix);
+	*new { |view, min = 0, max = 10, funcParam = nil, offLeft = 0, offTop = 0, prefix = "Valor:", funcMakeText = nil|
+		^super.new.init(view, min, max, funcParam, offLeft, offTop, prefix, funcMakeText);
 	}
 
-	init { |v, min, max, function, offLeft, offTop, pref|
+	init { |v, min, max, function, offLeft, offTop, pref, makeText|
 		view = v;
 		offsetLeft = offLeft;
 		offsetTop = offTop;
 		prefix = pref;
+		makeTextFunc = makeText;
 		if (function.isNil) {
 			funcParam = {|v| v.linlin(0, 1, min, max).round(0.01)};
 		} {
@@ -67,8 +69,10 @@ SGME_TooltipHandler {
 	}
 
 	makeText {
-		var value = funcParam.value(view.value).asString("%.2f");
-		^(prefix + value);
+		if (makeTextFunc.isNil.not) {^makeTextFunc.()} {
+			var value = funcParam.value(view.value).asString("%.2f");
+			^(prefix + value);
+		}
 	}
 
 	showTooltip { |x, y|
