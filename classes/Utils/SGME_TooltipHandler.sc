@@ -32,8 +32,8 @@ SGME_TooltipHandler {
 		view.mouseLeaveAction = {
 			"Mouse left knob.".postln;
 			hideTooltipTask = Task({
-				0.1.wait;
-				while {tooltipClosable == false} {0.01.wait};
+				0.wait;
+				while {tooltipClosable == false} {0.001.wait};
 				{ this.hideTooltip }.defer;
 			}).play;
 		};
