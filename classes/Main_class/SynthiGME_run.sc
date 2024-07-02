@@ -26,7 +26,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 		splashWindow = SGME_SplashWindow();
 		splashWindow.showSplashWindow;
-		splashWindow.numSteps = 24;
+		splashWindow.numSteps = 23;
 
 		thisRoutine = Routine({
 			// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
@@ -488,15 +488,16 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					};
 					splashWindow.progress();
 
+					// Se lanza todo el sistema gráfico de ventanas (antes que el MIDI porque retrasa mucho la aparición de las ventanas)
+					guiSC.makeWindow;
+
 					modulKeyboards[0].initMIDI;
 					"Inicializados puertos y funciones MIDI".sgmePostln;
 					("Escuchando Upper Manual por canal MIDI" + modulKeyboards[0].midiChannel).sgmePostln;
 					("Escuchando Lower Manual por canal MIDI" + modulKeyboards[1].midiChannel).sgmePostln;
-					splashWindow.progress();
+					//splashWindow.progress();
 
 
-					// Se lanza todo el sistema gráfico de ventanas:
-					guiSC.makeWindow;
 
 					wait (0.1); // Para que le de tiempo a iniciarse correctamente antes de guardar el estado.
 
