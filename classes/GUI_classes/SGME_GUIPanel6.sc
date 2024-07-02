@@ -1,4 +1,18 @@
 SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
+	var horizontalNames;
+	var verticalNames;
+
+	 *new {|synthi, parameters|
+		synthiGME = synthi;
+	 	^super.new.init(synthi, parameters);
+	 }
+
+	 init {|synthi, parameters|
+	 	horizontalNames = Dictionary.newFrom(SGME_GUIPanel6.horizontalNames);
+	 	verticalNames = Dictionary.newFrom(SGME_GUIPanel6.verticalNames);
+		^super.init(synthi, parameters);
+	 }
+
 	makeWindow {
 		var rect;
 		var image;
