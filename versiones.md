@@ -1,3 +1,15 @@
+## Version 1.10
+
+### Importantes cambios
+- Añadido módulo de teclados y conexión MIDI
+- Añadido módulo buffer / invertor
+- Añadidos mensajes tipo pop con el puntero del ratón en todos los mandos de los módulos, incluidos los nodos de los patchbays (atajo "t")
+- On/Off de Output Channels activa y desactiva la salida paneada
+
+### Otras mejoras
+- Mejoras en la carga de patches
+- Cambio de nombres de menús más significativos
+
 ## Version 1.9 
 
 ### Importantes cambios
