@@ -27,12 +27,10 @@ SGME_TooltipHandler {
 
 	setupTooltip {
 		view.mouseEnterAction = {
-			"Mouse entered knob.".postln;
 			this.updateTooltipPosition;
 		};
 
 		view.mouseLeaveAction = {
-			"Mouse left knob.".postln;
 			hideTooltipTask = Task({
 				0.wait;
 				while {tooltipClosable == false} {0.001.wait};
@@ -67,7 +65,6 @@ SGME_TooltipHandler {
 			y = windowBounds.top;
 		};
 
-		("Updated tooltip position: " ++ x ++ ", " ++ y).postln;
 		//value = funcParam.value(view.value).asString("%.2f");
 		this.showTooltip(x, y);
 	}
@@ -86,14 +83,11 @@ SGME_TooltipHandler {
 
 		if (SGME_TooltipHandler.enabled.not) {^this};
 
-		("Attempting to show tooltip at: " ++ x ++ ", " ++ y).postln;
 		tooltipWindow.isNil.not.if({
-			"Tooltip exists, updating position...".postln;
 			tooltipWindow.bounds = rect;
 			tooltipText.string = text;
 			tooltipWindow.front;
 		}, {
-			"Creating new tooltip window...".postln;
 			tooltipWindow = Window("Tooltip", rect, resizable: false, border: false)
 			.alwaysOnTop_(true)
 			.drawFunc_({
@@ -123,7 +117,6 @@ SGME_TooltipHandler {
 
 	hideTooltip {
 		if (tooltipWindow.notNil) {
-			"Closing tooltip...".postln;
 			tooltipWindow.close;
 			tooltipWindow = nil;
 			tooltipText = nil;
@@ -134,7 +127,6 @@ SGME_TooltipHandler {
 		if (SGME_TooltipHandler.enabled.not) {^this};
 		if (tooltipWindow.notNil) {
 			var string = this.makeText; //prefix + funcParam.value(view.value).asString("%.2f");
-			("Updating tooltip text to: " ++ string).postln;
 			tooltipText.string = string;
 		}
 	}
