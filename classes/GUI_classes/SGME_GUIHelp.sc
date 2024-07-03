@@ -64,19 +64,21 @@ SGME_GUIHelp : SGME_GUIShortcuts{
 			["6", "Trae al frente el panel 6"],
 			["7", "Trae al frente el panel 7"],
 			["f", "Trae al frente todos los paneles"],
-			["v", "Conmuta visibilidad de las views"],
 
 			//	["e", "Activa o desactiva los pines sin función de las matrices"],
 
-			["o", "Lleva al tamaño y posición original el panel en foco"],
-			["Shift+O", "Lleva al tamaño y posición original todas las ventanas"],
+			//["o", "Lleva al tamaño y posición original el panel en foco"],
+			//["Shift+O", "Lleva al tamaño y posición original todas las ventanas"],
+			["o", "Lleva al tamaño y posición original todas las ventanas"],
+			["t", "Habilita/deshabilita mensajes de información de objetos"],
+			["v", "Conmuta visibilidad de las views"],
 			//	["Ctrl+O", "Establece una nueva posición \"origen\" de ventanas"],
 			["+", "Zoom in (también con doble click izquierdo)"],
 			["-", "Zoom out (también con doble click derecho)"],
 			["Ctrl + R", "Inicia o termina una grabación de audio"],
 			["Ctrl + S", "Guarda un archivo de patch"],
 			["Ctrl + O", "Abre un archivo de patch exitente"],
-			["Ctrl+C", "Cierra la aplicación"],
+			["Ctrl + C", "Cierra la aplicación"],
 		];
 
 		allTexts.do({|textRow|
