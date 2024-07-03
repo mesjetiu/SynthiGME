@@ -507,13 +507,17 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					if (myIp.isNil == false) {
 						("La IP de la red local es:" + myIp).sgmePostln;
 					} {
-						"No se ha podido obtener la IP de red local".error;
+						"No se ha podido obtener la IP de red local".sgmeWarn;
 					};
 
 					// Preparación para la grabación:
 				//	server.prepareForRecord;
 
-					"\n".postln;
+
+					"".sgmePostln;
+					"Pulsa \"h\" para ver atajos de teclado.".sgmePostln;
+					"Ver menú contextual en ventanas para más comandos.".sgmePostln;
+					"".sgmePostln;
 					("*** SynthiGME (" ++ version ++ ") en ejecución ***\n").sgmePostln;
 
 
