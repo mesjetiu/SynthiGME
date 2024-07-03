@@ -352,12 +352,24 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 			contenido.do { |line|
 				var event;
 				if (line.notEmpty) {
+					// eliminamos espacios dentro de corchetes (si hay)
+					line = line.replace("[ ", "[").replace(", ", ",").replace(" ]", "]");
 					event = line.split($ ).collect { |item|
-						if (item[0] == $/) {item.asString} {item.asFloat}
+						if (item[0] == $/) {
+							item.asString
+						} {
+							if (item.contains("[")) {
+								// procesamos el array de floats
+								item.replace("[", "").replace("]", "").split($,).collect { |num| num.asFloat }
+							} {
+								item.asFloat
+							}
+						}
 					};
 					events.add(event);
 				}
 			};
+
 
 			"Eventos cargados correctamente.".sgmePostln;
 			^exito;

@@ -464,13 +464,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			{^this}
 		);
 		// Si el mensaje es correcto se guarda el último valor de cada cadena en el diccionario
-		if (saveEvent){
-			if (value.isCollection.not){
-				oscRecievedMessages.put(string, value.round(0.01))
-			}
-		};
+		//if (saveEvent){
+		//	if (value.isCollection.not){
+		oscRecievedMessages.put(string, value.round(0.01));
+		//	}
+		//};
 		// Se almacena en la grabación de eventos
-		if (value.isCollection.not && eventRecorder.isRecording){
+		if (/*value.isCollection.not &&*/ eventRecorder.isRecording){
 			eventRecorder.push(string, value);
 		};
 
