@@ -1,6 +1,7 @@
 1. Crear una nueva rama para desarrollo del módulo.
 
 1. Crear la clase dummy. 
+	- Atención en poner nombre adecuado a la clase y a los synths en *addSynthDef() y createSynth().
 	- Copiar una clase existente con un comportamiento similar en cuanto a entradas y salidas. 
 	- Adaptar nombre, nombre del synth, entradas y salidas, métodos.
 	- Crear un bypass en el synth (para probar más adelante)
