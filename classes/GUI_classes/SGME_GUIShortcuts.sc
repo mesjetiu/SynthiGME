@@ -52,21 +52,29 @@ SGME_GUIShortcuts {
 						panel.goToOrigin
 					})
 				},
+				116, {// t: Activa y desactiva los tooltip del ratón
+					if (SGME_TooltipHandler.enabled) {SGME_TooltipHandler.enabled = false}
+					{SGME_TooltipHandler.enabled = true}
+				},
 				/*15, {// Ctrl + O. Establece un nuevo origen de todas las ventanas
 				synthiGME.guiSC.panels.do({|panel|
 				panel.saveOrigin;
 				})
 				},*/ // Funciona pero lo dejamos fuera en este momento
-				111, {// Tecla o: Panel a posición y tamaño original
-				//	this.goToOriginFocusedPanel
+				111, {// Tecla o: Todos los Paneles a posición y tamaño original
+					synthiGME.guiSC.panels.do({|panel|
+						panel.goToOrigin
+					})
+					// (antiguo)Tecla o: Panel a posición y tamaño original
+					//	this.goToOriginFocusedPanel
 				},
-				18, {// Tecla Ctrl + R: Comenzar a grabar o terminar de grabar
+				/*18, {// Tecla Ctrl + R: Comenzar a grabar o terminar de grabar
 					if (synthiGME.server.isRecording) {
 						synthiGME.server.stopRecording;
 					} {
 						synthiGME.server.record;
 					}
-				},
+				},*/
 				19, {// Tecla Ctrl + S: Guardar el patch actual
 					synthiGME.saveStateGUI();
 				},
