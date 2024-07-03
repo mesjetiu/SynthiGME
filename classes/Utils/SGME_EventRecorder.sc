@@ -86,7 +86,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		if (events.size == 0) {
 			lastTime = time;
 		};
-		events.add([(time - lastTime).round(0.001), string, value.round(0.01)]);
+		events.add([(time - lastTime)/*.round(0.001)*/, string, value.round(0.01)]);
 		//"Event added: [%, %, %]".format((time - lastTime), string, value).postln;
 		lastTime = time;
 	}
