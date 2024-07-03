@@ -4,6 +4,8 @@ SGME_TooltipHandler {
 	var offsetLeft, offsetTop;
 	var tooltipClosable = true; // bandera en false cuando el ratón está sobre el tooltip. Para evitar bucles infinitos de abrir y cerrar.
 
+	classvar <>enabled = true;
+
 	*new { |view, min = 0, max = 10, funcParam = nil, offLeft = 0, offTop = 0, prefix = "Valor:", funcMakeText = nil|
 		^super.new.init(view, min, max, funcParam, offLeft, offTop, prefix, funcMakeText);
 	}
@@ -46,6 +48,8 @@ SGME_TooltipHandler {
 	updateTooltipPosition {
 		var x, y, knobPos, windowBounds, value;
 
+		if (SGME_TooltipHandler.enabled.not) {^this};
+
 		knobPos = view.absoluteBounds;
 		windowBounds = Window.availableBounds;
 
@@ -79,6 +83,9 @@ SGME_TooltipHandler {
 		var text = this.makeText;
 		var rect = Rect(x, y, (text.size+1) * 6, 20);
 		hideTooltipTask.notNil.if({ hideTooltipTask.stop });
+
+		if (SGME_TooltipHandler.enabled.not) {^this};
+
 		("Attempting to show tooltip at: " ++ x ++ ", " ++ y).postln;
 		tooltipWindow.isNil.not.if({
 			"Tooltip exists, updating position...".postln;
@@ -124,6 +131,7 @@ SGME_TooltipHandler {
 	}
 
 	updateTooltip { |val|
+		if (SGME_TooltipHandler.enabled.not) {^this};
 		if (tooltipWindow.notNil) {
 			var string = this.makeText; //prefix + funcParam.value(view.value).asString("%.2f");
 			("Updating tooltip text to: " ++ string).postln;
