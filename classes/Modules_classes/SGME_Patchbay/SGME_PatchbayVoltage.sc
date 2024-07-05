@@ -184,6 +184,29 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			index = index + 1;
 		});
 
+		// Sequencer (60-62)
+		index = 60; // Voltage Input A C E
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\inBus, sequencer.inBusACE,
+			\inFeedbackBus, sequencer.inFeedbackBusACE,
+		]);
+		index = 61; // Voltage Input B D F
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\inBus, sequencer.inBusBDF,
+			\inFeedbackBus, sequencer.inFeedbackBusBDF,
+		]);
+		index = 62; // Key
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\inBus, sequencer.inBusKey,
+			\inFeedbackBus, sequencer.inFeedbackBusKey,
+		]);
+
 		index = 63; // Entrada al Oscilloscope, números 63 y 64 horizontales
 		array[index-1] = Dictionary.newFrom(List[
 			\modul, oscilloscope,
@@ -228,16 +251,6 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			index = index + 1;
 		});
 
-		index = 94; // Slew Limiters 1, 2 y 3, 94-96
-		slewLimiters.do({|i|
-			array[index-1] = Dictionary.newFrom(List[
-				\modul, i,
-				\synth, i.synth,
-				\outBus, i.outputBusVol,
-			]);
-			index = index + 1;
-		});
-
 		index = 83; // Oscillators 10, 11 y 12 ocupan los números 83-88
 		3.do({|i|
 			i = oscillators[i + 9];
@@ -274,6 +287,16 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			\outBus, randomGenerator.outputBusVoltage2,
 		]);
 
+		index = 94; // Slew Limiters 1, 2 y 3, 94-96
+		slewLimiters.do({|i|
+			array[index-1] = Dictionary.newFrom(List[
+				\modul, i,
+				\synth, i.synth,
+				\outBus, i.outputBusVol,
+			]);
+			index = index + 1;
+		});
+
 		index = 97; // 3 Envelope Shapers. 97-99
 		envelopeShapers.do({|i|
 			array[index-1] = Dictionary.newFrom(List[
@@ -283,6 +306,72 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		// Sequencer
+		// Layer 1
+		index = 100; // Voltage A
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer1VoltageA,
+		]);
+		index = 101; // Voltage B
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer1VoltageB,
+		]);
+		index = 102; // Key
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer1Key,
+		]);
+		// Layer 2
+		index = 103; // Voltage A
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer2VoltageA,
+		]);
+		index = 104; // Voltage B
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer2VoltageB,
+		]);
+		index = 105; // Key
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer2Key,
+		]);
+		// Layer 3
+		index = 106; // Voltage A
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer3VoltageA,
+		]);
+		index = 107; // Voltage B
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer3VoltageB,
+		]);
+		index = 108; // Key
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusLayer3Key,
+		]);
+		// Key 4
+		index = 109; // Key 4
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusKey4,
+		]);
 
 		index = 111; // 2 Keyboards. 111-116
 		keyboards.do({|keyboard|
