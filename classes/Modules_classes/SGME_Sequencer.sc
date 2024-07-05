@@ -4,14 +4,54 @@ SGME_Sequencer : SGME_Connectable {
 	var <synth = nil;
 	var <server;
 
-	// Buses de entrada y salida de audio
-	var <inBus;
-	var <inFeedbackBus;
-	var <outBus;
+	// Buses de entrada y salida de patchbay signals
+	var <inBusclock;
+	var <inFeedBackBusClock;
+	var <inBusReset;
+	var <inFeedBackBusReset;
+	var <inBusForward;
+	var <inFeedBackBusForward;
+	var <inBusReverse;
+	var <inFeedBackBusReverse;
+	var <inBusStop;
+	var <inFeedBackBusStop;
+	var <outBusKey4; // común en patchbay voltage
+	// Buses de entrada y salida de patchbay voltage
+	var <inBusACE;
+	var <inFeedBackBusACE;
+	var <inBusBDF;
+	var <inFeedBackBusBDF;
+	var <inBusKey;
+	var <inFeedBackBusKey;
+	var <outBusLayer1VoltageA;
+	var <outBusLayer1VoltageB;
+	var <outBusLayer1Key;
+	var <outBusLayer2VoltageA;
+	var <outBusLayer2VoltageB;
+	var <outBusLayer2Key;
+	var <outBusLayer3VoltageA;
+	var <outBusLayer3VoltageB;
+	var <outBusLayer3Key;
 
-	// Parámetros del Invertor
-	var <gain = 0; // -5 - 5
-	var <offset = 0; // -5 - 5
+	// Parámetros del Sequencer ///////////////////////////////////////
+
+	// Sequencer Output Range (panel 4)
+	// Layer 1
+	var <rangeVoltageA; // 0 - 10
+	var <rangeVoltageB; // 0 - 10
+	var <rangeKey1; // -5 - +5
+	// Layer 2
+	var <rangeVoltageC; // 0 - 10
+	var <rangeVoltageD; // 0 - 10
+	var <rangeKey2; // -5 - +5
+	// Layer 3
+	var <rangeVoltageE; // 0 - 10
+	var <rangeVoltageF; // 0 - 10
+	var <rangeKey3; // -5 - +5
+
+	// Sequencer Operational Control (panel 7)
+	var <switchAkey1, switchB, switchCkey2, switchD, switchEkey3, switchF, switchKey4; // 1 == up, 0 == down.
+	var buttonMasterReset, buttonRunForward, buttonRunReverse, buttonStop, buttonResetSequence, buttonStepForward, buttonStepReverse, buttonTest;
 
 	// Otros atributos de instancia
 	var pauseRoutine; // Rutina de pausado del Synth
@@ -46,9 +86,9 @@ SGME_Sequencer : SGME_Connectable {
 
 	init { arg serv;
 		server = serv;
-		outBus = Bus.audio(server);
-		inBus = Bus.audio(server);
-		inFeedbackBus = Bus.audio(server);
+	//	outBus = Bus.audio(server);
+	//	inBus = Bus.audio(server);
+	//	inFeedbackBus = Bus.audio(server);
 		pauseRoutine = Routine({
 			//running = false;
 			1.wait;
@@ -67,9 +107,9 @@ SGME_Sequencer : SGME_Connectable {
 	createSynth {
 		if(synth.isPlaying==false, {
 			synth = Synth(\SGME_Sequencer, [
-				\outBus, outBus,
-				\inBus, inBus,
-				\inFeedbackBus, inFeedbackBus,
+			//	\outBus, outBus,
+			//	\inBus, inBus,
+			//	\inFeedbackBus, inFeedbackBus,
 			], server).register;
 		});
 		this.synthRun;
@@ -85,19 +125,4 @@ SGME_Sequencer : SGME_Connectable {
 		});
 	}
 
-
-	// Setters de los parámetros con sus efectos en el synth. Estos métodos se usan internamente desde otro método "inteligente" que lleva recuento de teclas pulsadas, etc.
-	///////////////////////////////////////////////////////////////////////
-
-	gain_ {|g|
-		gain = g;
-		g = g.linlin(-5, 5, -1, 1); // gain no es otra cosa que un factor de multiplicación por 1 y -1 en sus valores extremos.
-		synth.set(\gain, g);
-	}
-
-	offset_ {|o|
-		offset = o;
-		o = o.linlin(-5, 5, -2, 2); // los valores de -2 y 2 son arbitrarios. Buscar unos valores más adecuados a la realidad.
-		synth.set(\offset, o);
-	}
 }
