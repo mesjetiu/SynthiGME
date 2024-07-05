@@ -5,7 +5,7 @@ SGME_Sequencer : SGME_Connectable {
 	var <server;
 
 	// Buses de entrada y salida de patchbay signals
-	var <inBusclock;
+	var <inBusClock;
 	var <inFeedBackBusClock;
 	var <inBusReset;
 	var <inFeedBackBusReset;
@@ -69,7 +69,7 @@ SGME_Sequencer : SGME_Connectable {
 
 	*addSynthDef {
 		SynthDef(\SGME_Sequencer, {
-			arg inBusclock, inFeedBackBusClock, inBusReset, inFeedBackBusReset,	inBusForward, inFeedBackBusForward, inBusReverse, inFeedBackBusReverse, inBusStop, inFeedBackBusStop, outBusKey4, inBusACE, inFeedBackBusACE, inBusBDF, inFeedBackBusBDF, inBusKey, inFeedBackBusKey, outBusLayer1VoltageA, outBusLayer1VoltageB, outBusLayer1Key, outBusLayer2VoltageA, outBusLayer2VoltageB, outBusLayer2Key, outBusLayer3VoltageA, outBusLayer3VoltageB, outBusLayer3Key;
+			arg inBusClock, inFeedBackBusClock, inBusReset, inFeedBackBusReset,	inBusForward, inFeedBackBusForward, inBusReverse, inFeedBackBusReverse, inBusStop, inFeedBackBusStop, outBusKey4, inBusACE, inFeedBackBusACE, inBusBDF, inFeedBackBusBDF, inBusKey, inFeedBackBusKey, outBusLayer1VoltageA, outBusLayer1VoltageB, outBusLayer1Key, outBusLayer2VoltageA, outBusLayer2VoltageB, outBusLayer2Key, outBusLayer3VoltageA, outBusLayer3VoltageB, outBusLayer3Key;
 
 
 			//Out.ar(outBus, PinkNoise.ar(0.1)); // bypass
@@ -81,7 +81,7 @@ SGME_Sequencer : SGME_Connectable {
 	init { arg serv;
 		server = serv;
 
-		inBusclock = Bus.audio(server);
+		inBusClock = Bus.audio(server);
 		inFeedBackBusClock = Bus.audio(server);
 		inBusReset = Bus.audio(server);
 		inFeedBackBusReset = Bus.audio(server);
@@ -126,7 +126,7 @@ SGME_Sequencer : SGME_Connectable {
 	createSynth {
 		if(synth.isPlaying==false, {
 			synth = Synth(\SGME_Sequencer, [
-				\inBusclock, inBusclock,
+				\inBusClock, inBusClock,
 				\inFeedBackBusClock, inFeedBackBusClock,
 				\inBusReset, inBusReset,
 				\inFeedBackBusReset,	inFeedBackBusReset,
