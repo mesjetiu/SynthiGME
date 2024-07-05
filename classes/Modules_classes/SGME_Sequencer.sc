@@ -69,17 +69,11 @@ SGME_Sequencer : SGME_Connectable {
 
 	*addSynthDef {
 		SynthDef(\SGME_Sequencer, {
-			arg outBus, inBus, inFeedbackBus,
-			gain = 0, offset = 0;
-			var sig;
-			inBus = In.ar(inBus);
-			inFeedbackBus = InFeedback.ar(inFeedbackBus);
-			sig = inBus + inFeedbackBus;
-			sig = (sig * gain) + offset;
+			arg inBusclock, inFeedBackBusClock, inBusReset, inFeedBackBusReset,	inBusForward, inFeedBackBusForward, inBusReverse, inFeedBackBusReverse, inBusStop, inFeedBackBusStop, outBusKey4, inBusACE, inFeedBackBusACE, inBusBDF, inFeedBackBusBDF, inBusKey, inFeedBackBusKey, outBusLayer1VoltageA, outBusLayer1VoltageB, outBusLayer1Key, outBusLayer2VoltageA, outBusLayer2VoltageB, outBusLayer2Key, outBusLayer3VoltageA, outBusLayer3VoltageB, outBusLayer3Key;
 
-			Out.ar(outBus, sig);
+
 			//Out.ar(outBus, PinkNoise.ar(0.1)); // bypass
-		},[nil, nil, nil, 0.2, 0.2]).add
+		}).add
 	}
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
@@ -132,9 +126,32 @@ SGME_Sequencer : SGME_Connectable {
 	createSynth {
 		if(synth.isPlaying==false, {
 			synth = Synth(\SGME_Sequencer, [
-				//	\outBus, outBus,
-				//	\inBus, inBus,
-				//	\inFeedbackBus, inFeedbackBus,
+				\inBusclock, inBusclock,
+				\inFeedBackBusClock, inFeedBackBusClock,
+				\inBusReset, inBusReset,
+				\inFeedBackBusReset,	inFeedBackBusReset,
+				\inBusForward, inBusForward,
+				\inFeedBackBusForward, inFeedBackBusForward,
+				\inBusReverse, inBusReverse,
+				\inFeedBackBusReverse, inFeedBackBusReverse,
+				\inBusStop, inBusStop,
+				\inFeedBackBusStop, inFeedBackBusStop,
+				\outBusKey4, outBusKey4,
+				\inBusACE, inBusACE,
+				\inFeedBackBusACE, inFeedBackBusACE,
+				\inBusBDF, inBusBDF,
+				\inFeedBackBusBDF, inFeedBackBusBDF,
+				\inBusKey, inBusKey,
+				\inFeedBackBusKey, inFeedBackBusKey,
+				\outBusLayer1VoltageA, outBusLayer1VoltageA,
+				\outBusLayer1VoltageB, outBusLayer1VoltageB,
+				\outBusLayer1Key, outBusLayer1Key,
+				\outBusLayer2VoltageA, outBusLayer2VoltageA,
+				\outBusLayer2VoltageB, outBusLayer2VoltageB,
+				\outBusLayer2Key, outBusLayer2Key,
+				\outBusLayer3VoltageA, outBusLayer3VoltageA,
+				\outBusLayer3VoltageB, outBusLayer3VoltageB,
+				\outBusLayer3Key, outBusLayer3Key,
 			], server).register;
 		});
 		this.synthRun;
