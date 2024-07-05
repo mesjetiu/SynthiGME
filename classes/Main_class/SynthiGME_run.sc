@@ -26,7 +26,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 		splashWindow = SGME_SplashWindow();
 		splashWindow.showSplashWindow;
-		splashWindow.numSteps = 24;
+		splashWindow.numSteps = 25;
 
 		thisRoutine = Routine({
 			// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
@@ -164,6 +164,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					modulOscilloscope = SGME_Oscilloscope(server);
 					modulKeyboards = 2.collect({|n| SGME_Keyboard(server, n+1)});
 					modulInvertor = SGME_Invertor(server);
+					modulSequencer = SGME_Sequencer(server);
 
 					server.sync;
 
@@ -400,6 +401,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					server.sync;
 					splashWindow.progress();
 
+					// Sequencer
+					"Sequencer...".sgmePostln;
+					modulSequencer.createSynth;
+					server.sync;
+					splashWindow.progress();
+
 					// conexiones de entrada y salida de cada módulo en el patchbay de audio
 					"Conexiones en Patchbay de audio...".sgmePostln;
 					modulPatchbayAudio.connect(
@@ -415,6 +422,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						echo: modulEcho,
 						outputChannels: modulOutputChannels,
 						oscilloscope: modulOscilloscope,
+						sequencer: modulSequencer,
 					);
 					splashWindow.progress();
 
@@ -433,6 +441,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 						outputChannels: modulOutputChannels,
 						keyboards: modulKeyboards,
 						invertor: modulInvertor,
+						sequencer: modulSequencer,
 					);
 					splashWindow.progress();
 

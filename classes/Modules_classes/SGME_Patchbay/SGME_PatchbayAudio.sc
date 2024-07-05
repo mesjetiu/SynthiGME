@@ -21,7 +21,7 @@ SGME_PatchbayAudio : SGME_Patchbay{
 
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, oscilloscope, outputChannels|
+	connect {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, oscilloscope, outputChannels, sequencer|
 		inputsOutputs = this.ordenateInputsOutputs(
 			reverb: reverb,
 			inputAmplifiers: inputAmplifiers,
@@ -35,12 +35,13 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			echo: echo,
 			oscilloscope: oscilloscope,
 			outputChannels: outputChannels,
+			sequencer: sequencer,
 		);
 		this.makeValues(); // Pone valores de 0 a todos los nodos existentes.
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, oscilloscope, outputChannels|
+	ordenateInputsOutputs {|reverb, inputAmplifiers, externalTreatmentReturns, filters, filterBank, envelopeShapers, oscillators, noiseGenerators, ringModulators, echo, oscilloscope, outputChannels, sequencer|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;
@@ -143,6 +144,48 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			index = index + 1;
 		});
 
+		// Sequencer: 51-55
+		index = 51;
+		// Clock
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\inBus, sequencer.inBusClock,
+			\inFeedbackBus, sequencer.inFeedbackBusClock,
+		]);
+		index = 52;
+		// Reset
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\inBus, sequencer.inBusReset,
+			\inFeedbackBus, sequencer.inFeedbackBusReset,
+		]);
+		index = 53;
+		// Forward
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\inBus, sequencer.inBusForward,
+			\inFeedbackBus, sequencer.inFeedbackBusForward,
+		]);
+		index = 54;
+		// Reverse
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\inBus, sequencer.inBusReverse,
+			\inFeedbackBus, sequencer.inFeedbackBusReverse,
+		]);
+		index = 55;
+		// Stop
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\inBus, sequencer.inBusStop,
+			\inFeedbackBus, sequencer.inFeedbackBusStop,
+		]);
+
 		index = 57; // Entrada al Oscilloscope, números 57 y 58 horizontales
 		array[index-1] = Dictionary.newFrom(List[
 			\modul, oscilloscope,
@@ -189,6 +232,22 @@ SGME_PatchbayAudio : SGME_Patchbay{
 			]);
 			index = index + 1;
 		});
+
+		// Sequencer: 87 (el 88 es para el Clock, que es otro objeto)
+		index = 87;
+		// Key 4
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer,
+			\synth, sequencer.synth,
+			\outBus, sequencer.outBusKey4,
+		]);
+		/*index = 88;
+		// Clock
+		array[index-1] = Dictionary.newFrom(List[
+			\modul, sequencer.clock,
+			\synth, sequencer.clock.synth,
+			\outBus, sequencer.clock.outBus,
+		]);*/
 
 		index = 89; // Noise Generators 89 y 90
 		noiseGenerators.do({|i|
