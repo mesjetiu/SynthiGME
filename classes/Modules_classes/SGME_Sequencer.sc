@@ -86,9 +86,34 @@ SGME_Sequencer : SGME_Connectable {
 
 	init { arg serv;
 		server = serv;
-	//	outBus = Bus.audio(server);
-	//	inBus = Bus.audio(server);
-	//	inFeedbackBus = Bus.audio(server);
+
+		inBusclock = Bus.audio(server);
+		inFeedBackBusClock = Bus.audio(server);
+		inBusReset = Bus.audio(server);
+		inFeedBackBusReset = Bus.audio(server);
+		inBusForward = Bus.audio(server);
+		inFeedBackBusForward = Bus.audio(server);
+		inBusReverse = Bus.audio(server);
+		inFeedBackBusReverse = Bus.audio(server);
+		inBusStop = Bus.audio(server);
+		inFeedBackBusStop = Bus.audio(server);
+		outBusKey4 = Bus.audio(server);
+		inBusACE = Bus.audio(server);
+		inFeedBackBusACE = Bus.audio(server);
+		inBusBDF = Bus.audio(server);
+		inFeedBackBusBDF = Bus.audio(server);
+		inBusKey = Bus.audio(server);
+		inFeedBackBusKey = Bus.audio(server);
+		outBusLayer1VoltageA = Bus.audio(server);
+		outBusLayer1VoltageB = Bus.audio(server);
+		outBusLayer1Key = Bus.audio(server);
+		outBusLayer2VoltageA = Bus.audio(server);
+		outBusLayer2VoltageB = Bus.audio(server);
+		outBusLayer2Key = Bus.audio(server);
+		outBusLayer3VoltageA = Bus.audio(server);
+		outBusLayer3VoltageB = Bus.audio(server);
+		outBusLayer3Key = Bus.audio(server);
+
 		pauseRoutine = Routine({
 			//running = false;
 			1.wait;
@@ -107,9 +132,9 @@ SGME_Sequencer : SGME_Connectable {
 	createSynth {
 		if(synth.isPlaying==false, {
 			synth = Synth(\SGME_Sequencer, [
-			//	\outBus, outBus,
-			//	\inBus, inBus,
-			//	\inFeedbackBus, inFeedbackBus,
+				//	\outBus, outBus,
+				//	\inBus, inBus,
+				//	\inFeedbackBus, inFeedbackBus,
 			], server).register;
 		});
 		this.synthRun;
@@ -119,9 +144,9 @@ SGME_Sequencer : SGME_Connectable {
 	synthRun {
 		var outputTotal = outCount;
 		if (outputTotal == 0, {
-		synth.run(false);
+			synth.run(false);
 		}, {
-		synth.run(true);
+			synth.run(true);
 		});
 	}
 
