@@ -53,6 +53,7 @@ SynthiGME {
 	var <modulOscilloscope;
 	var <modulKeyboards;
 	var <modulInvertor;
+	var <modulSequencer;
 
 	// Almacena los Synths que conectan los canales de salida de SC con los de los módulos
 	var <connectionOut = nil;
@@ -137,6 +138,7 @@ SynthiGME {
 		Class.initClassTree(SGME_GUI);
 		Class.initClassTree(SGME_Keyboard);
 		Class.initClassTree(SGME_Invertor);
+		Class.initClassTree(SGME_Sequencer);
 
 		//	appPath = SynthiGME.getAppPath();
 	}
