@@ -21,7 +21,7 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 
 
 	// Realiza las conexiones de cada output e input del pathbay con los módulos una vez en ejecución.
-	connect {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels, keyboards, invertor|
+	connect {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels, keyboards, invertor, sequencer|
 		inputsOutputs = this.ordenateInputsOutputs(
 			reverb: reverb,
 			echo: echo,
@@ -35,12 +35,13 @@ SGME_PatchbayVoltage : SGME_Patchbay{
 			outputChannels: outputChannels,
 			keyboards: keyboards,
 			invertor: invertor,
+			sequencer: sequencer,
 		);
 		this.makeValues(); // Pone valores de 0 a todos los nodos existentes.
 	}
 
 	// Declara todas las entradas y salidas de ambos ejes del patchbay de audio, ocupando el número que indica el Synthi 100
-	ordenateInputsOutputs {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels, keyboards, invertor|
+	ordenateInputsOutputs {|reverb, echo, inputAmplifiers, filters, envelopeShapers, oscillators, randomGenerator, slewLimiters, oscilloscope, outputChannels, keyboards, invertor, sequencer|
 		// almacena diccionarios [\synth, \in/outBus, \inFeedback/outFeedbackBus] para cada entrada o salida del patchbay
 		var array = Array.newClear(126); // 126 = número de entradas y salidas en el patchbay de Audio.
 		var index;

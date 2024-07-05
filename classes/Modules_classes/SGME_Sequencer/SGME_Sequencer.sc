@@ -6,23 +6,23 @@ SGME_Sequencer : SGME_Connectable {
 
 	// Buses de entrada y salida de patchbay signals
 	var <inBusClock;
-	var <inFeedBackBusClock;
+	var <inFeedbackBusClock;
 	var <inBusReset;
-	var <inFeedBackBusReset;
+	var <inFeedbackBusReset;
 	var <inBusForward;
-	var <inFeedBackBusForward;
+	var <inFeedbackBusForward;
 	var <inBusReverse;
-	var <inFeedBackBusReverse;
+	var <inFeedbackBusReverse;
 	var <inBusStop;
-	var <inFeedBackBusStop;
+	var <inFeedbackBusStop;
 	var <outBusKey4; // común en patchbay voltage
 	// Buses de entrada y salida de patchbay voltage
 	var <inBusACE;
-	var <inFeedBackBusACE;
+	var <inFeedbackBusACE;
 	var <inBusBDF;
-	var <inFeedBackBusBDF;
+	var <inFeedbackBusBDF;
 	var <inBusKey;
-	var <inFeedBackBusKey;
+	var <inFeedbackBusKey;
 	var <outBusLayer1VoltageA;
 	var <outBusLayer1VoltageB;
 	var <outBusLayer1Key;
@@ -69,10 +69,10 @@ SGME_Sequencer : SGME_Connectable {
 
 	*addSynthDef {
 		SynthDef(\SGME_Sequencer, {
-			arg inBusClock, inFeedBackBusClock, inBusReset, inFeedBackBusReset,	inBusForward, inFeedBackBusForward, inBusReverse, inFeedBackBusReverse, inBusStop, inFeedBackBusStop, outBusKey4, inBusACE, inFeedBackBusACE, inBusBDF, inFeedBackBusBDF, inBusKey, inFeedBackBusKey, outBusLayer1VoltageA, outBusLayer1VoltageB, outBusLayer1Key, outBusLayer2VoltageA, outBusLayer2VoltageB, outBusLayer2Key, outBusLayer3VoltageA, outBusLayer3VoltageB, outBusLayer3Key;
+			arg inBusClock, inFeedbackBusClock, inBusReset, inFeedbackBusReset,	inBusForward, inFeedbackBusForward, inBusReverse, inFeedbackBusReverse, inBusStop, inFeedbackBusStop, outBusKey4, inBusACE, inFeedbackBusACE, inBusBDF, inFeedbackBusBDF, inBusKey, inFeedbackBusKey, outBusLayer1VoltageA, outBusLayer1VoltageB, outBusLayer1Key, outBusLayer2VoltageA, outBusLayer2VoltageB, outBusLayer2Key, outBusLayer3VoltageA, outBusLayer3VoltageB, outBusLayer3Key;
 
 
-			//Out.ar(outBus, PinkNoise.ar(0.1)); // bypass
+			Out.ar(0, PinkNoise.ar(0.1)); // bypass
 		}).add
 	}
 
@@ -82,22 +82,22 @@ SGME_Sequencer : SGME_Connectable {
 		server = serv;
 
 		inBusClock = Bus.audio(server);
-		inFeedBackBusClock = Bus.audio(server);
+		inFeedbackBusClock = Bus.audio(server);
 		inBusReset = Bus.audio(server);
-		inFeedBackBusReset = Bus.audio(server);
+		inFeedbackBusReset = Bus.audio(server);
 		inBusForward = Bus.audio(server);
-		inFeedBackBusForward = Bus.audio(server);
+		inFeedbackBusForward = Bus.audio(server);
 		inBusReverse = Bus.audio(server);
-		inFeedBackBusReverse = Bus.audio(server);
+		inFeedbackBusReverse = Bus.audio(server);
 		inBusStop = Bus.audio(server);
-		inFeedBackBusStop = Bus.audio(server);
+		inFeedbackBusStop = Bus.audio(server);
 		outBusKey4 = Bus.audio(server);
 		inBusACE = Bus.audio(server);
-		inFeedBackBusACE = Bus.audio(server);
+		inFeedbackBusACE = Bus.audio(server);
 		inBusBDF = Bus.audio(server);
-		inFeedBackBusBDF = Bus.audio(server);
+		inFeedbackBusBDF = Bus.audio(server);
 		inBusKey = Bus.audio(server);
-		inFeedBackBusKey = Bus.audio(server);
+		inFeedbackBusKey = Bus.audio(server);
 		outBusLayer1VoltageA = Bus.audio(server);
 		outBusLayer1VoltageB = Bus.audio(server);
 		outBusLayer1Key = Bus.audio(server);
@@ -127,22 +127,22 @@ SGME_Sequencer : SGME_Connectable {
 		if(synth.isPlaying==false, {
 			synth = Synth(\SGME_Sequencer, [
 				\inBusClock, inBusClock,
-				\inFeedBackBusClock, inFeedBackBusClock,
+				\inFeedbackBusClock, inFeedbackBusClock,
 				\inBusReset, inBusReset,
-				\inFeedBackBusReset,	inFeedBackBusReset,
+				\inFeedbackBusReset,	inFeedbackBusReset,
 				\inBusForward, inBusForward,
-				\inFeedBackBusForward, inFeedBackBusForward,
+				\inFeedbackBusForward, inFeedbackBusForward,
 				\inBusReverse, inBusReverse,
-				\inFeedBackBusReverse, inFeedBackBusReverse,
+				\inFeedbackBusReverse, inFeedbackBusReverse,
 				\inBusStop, inBusStop,
-				\inFeedBackBusStop, inFeedBackBusStop,
+				\inFeedbackBusStop, inFeedbackBusStop,
 				\outBusKey4, outBusKey4,
 				\inBusACE, inBusACE,
-				\inFeedBackBusACE, inFeedBackBusACE,
+				\inFeedbackBusACE, inFeedbackBusACE,
 				\inBusBDF, inBusBDF,
-				\inFeedBackBusBDF, inFeedBackBusBDF,
+				\inFeedbackBusBDF, inFeedbackBusBDF,
 				\inBusKey, inBusKey,
-				\inFeedBackBusKey, inFeedBackBusKey,
+				\inFeedbackBusKey, inFeedbackBusKey,
 				\outBusLayer1VoltageA, outBusLayer1VoltageA,
 				\outBusLayer1VoltageB, outBusLayer1VoltageB,
 				\outBusLayer1Key, outBusLayer1Key,
@@ -159,8 +159,8 @@ SGME_Sequencer : SGME_Connectable {
 
 	// Pausa o reanuda el Synth dependiendo de si su salida es 0 o no.
 	synthRun {
-		var outputTotal = outCount;
-		if (outputTotal == 0, {
+		var inOutputTotal = inCount + outCount;
+		if (inOutputTotal == 0, {
 			synth.run(false);
 		}, {
 			synth.run(true);

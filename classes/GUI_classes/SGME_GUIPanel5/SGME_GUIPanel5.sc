@@ -106,7 +106,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		var nodeCountHor = 67;
 		var numRows = 63;
 		var panel;
-		var forbidenRows = [20, 21, 62]; // Estas filas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
+		var forbidenRows = [21, 62]; // Estas filas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
 
 		Platform.case(
 			\osx,       { },
@@ -131,7 +131,7 @@ SGME_GUIPanel5 : SGME_GUIPanelPatchbay {
 		var nodeCountVer = 1;
 		var spacing = 5.75;
 		var numColumns = 67;
-		var forbidenColumns = (44..56) ++ [65, 66]; // Estas columnas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
+		var forbidenColumns = (44..50) ++ [56, 65, 66]; // Estas columnas no se dibujarán ni se instanciarán sus nodos. Conveniente para ahorro de memoria.
 
 		Platform.case(
 			\osx,       { },
