@@ -152,7 +152,7 @@ MessageRedirector {
 	}
 
 	goFront {
-		if (window.isNil.not){
+		if (window.notNil){
 			window.front
 		}
 	}

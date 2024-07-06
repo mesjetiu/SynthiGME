@@ -70,7 +70,7 @@ SGME_TooltipHandler {
 	}
 
 	makeText {
-		if (makeTextFunc.isNil.not) {^makeTextFunc.()} {
+		if (makeTextFunc.notNil) {^makeTextFunc.()} {
 			var value = funcParam.value(view.value).asString("%.2f");
 			^(prefix + value);
 		}
@@ -83,7 +83,7 @@ SGME_TooltipHandler {
 
 		if (SGME_TooltipHandler.enabled.not) {^this};
 
-		tooltipWindow.isNil.not.if({
+		tooltipWindow.notNil.if({
 			tooltipWindow.bounds = rect;
 			tooltipText.string = text;
 			tooltipWindow.front;

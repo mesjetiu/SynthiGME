@@ -29,14 +29,14 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			oscRecievedMessages = Dictionary();
 			oscRecievedMessagesCopy.keys.do {
 				|key|
-				if (oscRecievedMessagesCopy[key].isNil.not && (oscRecievedMessagesCopy[key] != initState[key])){
+				if (oscRecievedMessagesCopy[key].notNil && (oscRecievedMessagesCopy[key] != initState[key])){
 					var value = initState[key];
 					{this.setParameterOSC(key, value/*, saveEvent: false*/)}.defer;
 					wait(waitTime);
 					//if (key.beginsWith("/patch")) {wait(waitTime)};
 				}
 			};
-			if (condition.isNil.not) {condition.unhang}
+			if (condition.notNil) {condition.unhang}
 		}.play
 	}
 

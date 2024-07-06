@@ -10,7 +10,7 @@ window = Window.new("Test Window", Rect(100, 100, 300, 100))
 showTooltip = {
     arg x, y, text;
     "Attempting to show tooltip...".postln;
-    tooltipWindow.isNil.not.if({
+    tooltipWindow.notNil.if({
         "Tooltip exists, updating position...".postln;
         tooltipWindow.bounds = Rect(x, y, text.size * 8 + 20, 20);
         tooltipWindow.front;
