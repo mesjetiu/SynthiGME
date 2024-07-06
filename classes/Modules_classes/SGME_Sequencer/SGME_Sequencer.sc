@@ -70,6 +70,24 @@ SGME_Sequencer : SGME_Connectable {
 	*addSynthDef {
 		SynthDef(\SGME_Sequencer, {
 			arg inBusClock, inFeedbackBusClock, inBusReset, inFeedbackBusReset,	inBusForward, inFeedbackBusForward, inBusReverse, inFeedbackBusReverse, inBusStop, inFeedbackBusStop, outBusKey4, inBusACE, inFeedbackBusACE, inBusBDF, inFeedbackBusBDF, inBusKey, inFeedbackBusKey, outBusLayer1VoltageA, outBusLayer1VoltageB, outBusLayer1Key, outBusLayer2VoltageA, outBusLayer2VoltageB, outBusLayer2Key, outBusLayer3VoltageA, outBusLayer3VoltageB, outBusLayer3Key;
+			/* Actions Id desde Synth
+			clock	1
+			reset	2
+			forward	3
+			reverse	4
+			stop	5
+			*/
+			var sigInClock, sigInReset, sigInForward, sigInReverse, sigInStop;
+			sigInClock = In.ar(inBusClock) + InFeedback.ar(inFeedbackBusClock);
+			sigInReset = In.ar(inBusReset) + InFeedback.ar(inFeedbackBusReset);
+			sigInForward = In.ar(inBusForward) + InFeedback.ar(inFeedbackBusForward);
+			sigInReverse = In.ar(inBusReverse) + InFeedback.ar(inFeedbackBusReverse);
+			sigInStop = In.ar(inBusStop) + InFeedback.ar(inFeedbackBusStop);
+			SendTrig.kr(Trig.kr(sigInClock, 0.1), 1);
+			SendTrig.kr(Trig.kr(sigInReset, 0.1), 2);
+			SendTrig.kr(Trig.kr(sigInForward, 0.1), 3);
+			SendTrig.kr(Trig.kr(sigInReverse, 0.1), 4);
+			SendTrig.kr(Trig.kr(sigInStop, 0.1), 5);
 
 
 			Out.ar(0, PinkNoise.ar(0.1)); // bypass
@@ -120,6 +138,8 @@ SGME_Sequencer : SGME_Connectable {
 			synth.run(true);
 			//	1.wait;
 		});
+
+		this.listenerOSC; // Se declara la función de escucha de los mensajes del synth.
 	}
 
 	// Crea el Synth en el servidor
@@ -167,4 +187,65 @@ SGME_Sequencer : SGME_Connectable {
 		});
 	}
 
+
+	// Acciones y LISTENER OSC DESDE SYNTH - para ejecutar acciones a partir de señales recibidas desde panel 5 (Audio patchbay).
+
+	clockAction {
+		"Clock action".postln;
+		Main.elapsedTime.postln;
+	}
+
+	resetAction {
+		"Reset action".postln;
+		Main.elapsedTime.postln;
+	}
+
+	forwardAction {
+		"Forward action".postln;
+		Main.elapsedTime.postln;
+	}
+
+	reverseAction {
+		"Reverse action".postln;
+		Main.elapsedTime.postln;
+	}
+
+	stopAction {
+		"Stop action".postln;
+		Main.elapsedTime.postln;
+	}
+
+	listenerOSC {
+		// Define un OSCdef que escuche por los triggers enviados desde el Synth de Sequencer Operational Controls
+		/* Actions Id desde Synth
+		clock	1
+		reset	2
+		forward	3
+		reverse	4
+		stop	5
+		*/
+		OSCdef(\triggeredControls, { |msg|
+			var id = msg[2]; // Id enviado por SentTrig desde el Synth.
+			id.switch
+			{1} {
+				this.clockAction;
+			}
+			{2} {
+				this.resetAction;
+			}
+			{3} {
+				this.forwardAction;
+			}
+			{4} {
+				this.reverseAction;
+			}
+			{5} {
+				this.stopAction;
+			}
+		}, '/tr');
+	}
+
 }
+
+
+
