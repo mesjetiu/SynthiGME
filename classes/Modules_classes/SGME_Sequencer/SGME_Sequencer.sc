@@ -99,7 +99,7 @@ SGME_Sequencer : SGME_Connectable {
 			SendTrig.kr(Trig.kr(sigInStop, 0.001), 5);
 
 
-		//	Out.ar(0, PinkNoise.ar(0.1)); // bypass
+			//	Out.ar(0, PinkNoise.ar(0.1)); // bypass
 		}).add
 	}
 
@@ -211,13 +211,17 @@ SGME_Sequencer : SGME_Connectable {
 	}
 
 	runForward { // Run forward
-		directionRun = 1;
+		if (currentStep < (2**maxStepsBits)) {
+			directionRun = 1;
 		isRunning = true;
+		}
 	}
 
 	runReverse {
-		directionRun = -1;
-		isRunning = true;
+		if (currentStep > 0){
+			directionRun = -1;
+			isRunning = true;
+		}
 	}
 
 	stopAction {
@@ -259,7 +263,7 @@ SGME_Sequencer : SGME_Connectable {
 	// Otras acciones que no entran por voltaje, solo en botonera.
 	masterReset {
 		this.stopAction;
-		currentStep = 0;
+		this.resetSequence;
 	}
 
 	stepForward {
