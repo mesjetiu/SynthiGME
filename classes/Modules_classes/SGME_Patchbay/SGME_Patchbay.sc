@@ -64,13 +64,13 @@ SGME_Patchbay {
 	}
 
 
-	getNumSynth {|synth|
+	/*getNumSynth {|synth|
 		if (synth.asString.split($()[0] == "Group", {
 			^synth.asString.split($()[1].split($))[0]; // retorna el número del group
 		}, {
 			^synth.asString.split($:)[1].split($ )[1].split($))[0]; // retorna el número de synth
 		})
-	}
+	}*/
 
 	makeValues {
 		var string = nil;
@@ -95,8 +95,8 @@ SGME_Patchbay {
 		var toModul = inputsOutputs[hor-1].at(\modul);
 		var toSynth = inputsOutputs[hor-1].at(\synth);
 		var toBus; // su valor dependerá de la relación de orden de ejecución de ambos synths
-		var numFromSynth =  this.getNumSynth(fromSynth);
-		var numToSynth = this.getNumSynth(toSynth);
+		var numFromSynth =  fromSynth.nodeID; //this.getNumSynth(fromSynth);
+		var numToSynth = toSynth.nodeID; //this.getNumSynth(toSynth);
 
 		var oldGanancy = nodeValues[stringOSC];
 
