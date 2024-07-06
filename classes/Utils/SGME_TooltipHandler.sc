@@ -92,7 +92,7 @@ SGME_TooltipHandler {
 			.alwaysOnTop_(true)
 			.drawFunc_({
 				Pen.fillColor = Color.red;
-				Pen.fillRect(tooltipWindow.bounds);
+				Pen.fillRect(rect);
 			});
 
 			tooltipWindow.view.mouseEnterAction = {
