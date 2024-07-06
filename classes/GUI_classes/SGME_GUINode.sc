@@ -135,7 +135,7 @@ SGME_GUINode {
 		{ view.setBackgroundImage(imageHole, 10) };
 	}
 
-	*isQuarkInstalled {
+	/**isQuarkInstalled {
 		var quarkName = "SynthiGME";
 		^Quarks.isInstalled(quarkName)
 	}
@@ -162,5 +162,5 @@ SGME_GUINode {
 			nil
 			}*/
 		}
-	}
+	}*/
 }
