@@ -44,10 +44,10 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		topPanel.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var factor = 2;
 			if(clickCount == 2) {
-				buttonNumber.switch(
+				/*buttonNumber.switch(
 					0, {this.resizePanel(factor)}, // botón izquierdo
 					1, {this.resizePanel(1/factor)}, // botón derecho
-				)
+				)*/
 			} {SGME_ContextualMenu.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
 		});
 		viewSizes = viewSizes.add([topPanel, topPanelBounds]);
@@ -60,10 +60,10 @@ SGME_GUIPanel6 : SGME_GUIPanelPatchbay {
 		bottomPanel.mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			var factor = 2;
 			if(clickCount == 2) {
-				buttonNumber.switch(
+				/*buttonNumber.switch(
 					0, {this.resizePanel(factor)}, // botón izquierdo
 					1, {this.resizePanel(1/factor)}, // botón derecho
-				)
+				)*/
 			} {SGME_ContextualMenu.contextualMenu(synthiGME, view, x, y, modifiers, buttonNumber)}
 		});
 		viewSizes = viewSizes.add([bottomPanel, bottomPanelBounds]);
