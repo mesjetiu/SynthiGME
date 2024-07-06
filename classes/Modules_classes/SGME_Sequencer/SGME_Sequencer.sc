@@ -53,6 +53,15 @@ SGME_Sequencer : SGME_Connectable {
 	var <switchAkey1, switchB, switchCkey2, switchD, switchEkey3, switchF, switchKey4; // 1 == up, 0 == down.
 	var buttonMasterReset, buttonRunForward, buttonRunReverse, buttonStop, buttonResetSequence, buttonStepForward, buttonStepReverse, buttonTest;
 
+	// Estados del secuenciador
+	var isRunning = false; // Si el event clock está corriendo (si pasan steps a golpe de reloj)
+	var currentStep = 0; // Estado actual del event clock
+	var isTesting = false; // Si se ha pulsado Test O/P, que pone todas las salidas al máximo para calibración.
+	var directionRun = 1; // 1: forward, -1: reverse. Sentido de la marcha.
+
+	// Límites
+	var maxStepsBits = 10; // Número máximo de steps (potencia de 2 para usar número de bits) Ejemplo: 10 bits son 2**10 = 1024.
+
 	// Otros atributos de instancia
 	var pauseRoutine; // Rutina de pausado del Synth
 	var resumeRoutine;
@@ -190,31 +199,33 @@ SGME_Sequencer : SGME_Connectable {
 
 	// Acciones y LISTENER OSC DESDE SYNTH - para ejecutar acciones a partir de señales recibidas desde panel 5 (Audio patchbay).
 
+	// Acciones que están en botonera y también se activan por voltage (panel 5)
+
 	clockAction {
-		"Clock action".postln;
-		Main.elapsedTime.postln;
+		if (isRunning) { this.step(directionRun) }
 	}
 
-	resetAction {
-		"Reset action".postln;
-		Main.elapsedTime.postln;
+	resetSequence {
+		currentStep = 0;
+		currentStep.postln;
 	}
 
-	forwardAction {
-		"Forward action".postln;
-		Main.elapsedTime.postln;
+	runForward { // Run forward
+		directionRun = 1;
+		isRunning = true;
 	}
 
-	reverseAction {
-		"Reverse action".postln;
-		Main.elapsedTime.postln;
+	runReverse {
+		directionRun = -1;
+		isRunning = true;
 	}
 
 	stopAction {
-		"Stop action".postln;
-		Main.elapsedTime.postln;
+		isRunning = false;
 	}
 
+
+	// listener que ejecuta funciones desde mensajes recibidos del Synth.
 	listenerOSC {
 		// Define un OSCdef que escuche por los triggers enviados desde el Synth de Sequencer Operational Controls
 		/* Actions Id desde Synth
@@ -225,25 +236,52 @@ SGME_Sequencer : SGME_Connectable {
 		stop	5
 		*/
 		OSCdef(\triggeredControls, { |msg|
-			var id = msg[2]; // Id enviado por SentTrig desde el Synth.
-			id.switch
+			if (msg[1] != synth.nodeID) {^this}; // se comprueba si el Synth que envía el mensaje es el del Sequencer.
+			msg[2].switch // Id enviado por SentTrig desde el Synth.
 			{1} {
 				this.clockAction;
 			}
 			{2} {
-				this.resetAction;
+				this.resetSequence;
 			}
 			{3} {
-				this.forwardAction;
+				this.runForward;
 			}
 			{4} {
-				this.reverseAction;
+				this.runReverse;
 			}
 			{5} {
 				this.stopAction;
 			}
 		}, '/tr');
 	}
+
+	// Otras acciones que no entran por voltaje, solo en botonera.
+	masterReset {
+		this.stopAction;
+		currentStep = 0;
+	}
+
+	stepForward {
+		this.step(1);
+	}
+
+	stepReverse {
+		this.step(-1)
+	}
+
+	testOP {
+
+	}
+
+	step {|direction|
+		currentStep = currentStep + direction;
+		currentStep.postln;
+		if ((currentStep == (2**maxStepsBits)) || (currentStep == 0)) {
+			this.stopAction;
+		}
+	}
+
 
 }
 
