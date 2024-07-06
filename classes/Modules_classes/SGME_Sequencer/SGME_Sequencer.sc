@@ -92,14 +92,14 @@ SGME_Sequencer : SGME_Connectable {
 			sigInForward = In.ar(inBusForward) + InFeedback.ar(inFeedbackBusForward);
 			sigInReverse = In.ar(inBusReverse) + InFeedback.ar(inFeedbackBusReverse);
 			sigInStop = In.ar(inBusStop) + InFeedback.ar(inFeedbackBusStop);
-			SendTrig.kr(Trig.kr(sigInClock, 0.1), 1);
-			SendTrig.kr(Trig.kr(sigInReset, 0.1), 2);
-			SendTrig.kr(Trig.kr(sigInForward, 0.1), 3);
-			SendTrig.kr(Trig.kr(sigInReverse, 0.1), 4);
-			SendTrig.kr(Trig.kr(sigInStop, 0.1), 5);
+			SendTrig.kr(Trig.kr(sigInClock, 0.001), 1);
+			SendTrig.kr(Trig.kr(sigInReset, 0.001), 2);
+			SendTrig.kr(Trig.kr(sigInForward, 0.001), 3);
+			SendTrig.kr(Trig.kr(sigInReverse, 0.001), 4);
+			SendTrig.kr(Trig.kr(sigInStop, 0.001), 5);
 
 
-			Out.ar(0, PinkNoise.ar(0.1)); // bypass
+		//	Out.ar(0, PinkNoise.ar(0.1)); // bypass
 		}).add
 	}
 
