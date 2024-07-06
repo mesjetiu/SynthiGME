@@ -56,7 +56,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 				//("Time: %.3f, String: %s, Value: %s".format(time, string, value)).postln;
 			};
 			isPlaying = false;
-			if (window.isNil.not) {
+			if (window.notNil) {
 				{this.updateButtons}.defer();
 				{playButton.icon = imagePlay}.defer();
 				messageDisplay = "Reproducción terminada";
@@ -286,7 +286,7 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 	}
 
 	goFront {
-		if (window.isNil.not){
+		if (window.notNil){
 			window.front
 		}
 	}

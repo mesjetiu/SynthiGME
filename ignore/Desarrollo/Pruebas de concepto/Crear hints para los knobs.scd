@@ -14,7 +14,7 @@ showTooltip = {
     arg x, y, text;
     hideTooltipTask.notNil.if({ hideTooltipTask.stop });  // Detener cualquier tarea de ocultar tooltip en curso
     "Attempting to show tooltip...".postln;
-    tooltipWindow.isNil.not.if({
+    tooltipWindow.notNil.if({
         "Tooltip exists, updating position...".postln;
         tooltipWindow.bounds = Rect(x, y, text.size * 8 + 20, 20);
         tooltipText.string = text;
