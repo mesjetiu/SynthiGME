@@ -136,31 +136,31 @@ SGME_GUINode {
 	}
 
 	/**isQuarkInstalled {
-		var quarkName = "SynthiGME";
-		^Quarks.isInstalled(quarkName)
+	var quarkName = "SynthiGME";
+	^Quarks.isInstalled(quarkName)
 	}
 
 	*getAppPath {
-		var name = "SynthiGME";
-		if (SGME_GUINode.isQuarkInstalled(name)) {
-			var quarkPath = Quarks.quarkNameAsLocalPath(name);
-			"Quark encontrado en: %".format(quarkPath).postln;
-			^quarkPath
-		} { // Si no es Quark, entonces es extensión
-			//if (SynthiGME.isExtensionInstalled.(name)) {
-			var userExtensionPath = Platform.userExtensionDir +/+ name;
-			var systemExtensionPath = Platform.systemExtensionDir +/+ name;
-			var extensionPath = if (File.existsCaseSensitive(userExtensionPath +/+ "SynthiGME.quark")) {
-				userExtensionPath
-			} {
-				systemExtensionPath
-			};
-			"Extensión encontrada en: %".format(extensionPath).postln;
-			^extensionPath
-			/*} {
-			"Ni Quark ni Extensión encontrados con el nombre: %".format(name).postln;
-			nil
-			}*/
-		}
+	var name = "SynthiGME";
+	if (SGME_GUINode.isQuarkInstalled(name)) {
+	var quarkPath = Quarks.quarkNameAsLocalPath(name);
+	"Quark encontrado en: %".format(quarkPath).postln;
+	^quarkPath
+	} { // Si no es Quark, entonces es extensión
+	//if (SynthiGME.isExtensionInstalled.(name)) {
+	var userExtensionPath = Platform.userExtensionDir +/+ name;
+	var systemExtensionPath = Platform.systemExtensionDir +/+ name;
+	var extensionPath = if (File.existsCaseSensitive(userExtensionPath +/+ "SynthiGME.quark")) {
+	userExtensionPath
+	} {
+	systemExtensionPath
+	};
+	"Extensión encontrada en: %".format(extensionPath).postln;
+	^extensionPath
+	/*} {
+	"Ni Quark ni Extensión encontrados con el nombre: %".format(name).postln;
+	nil
+	}*/
+	}
 	}*/
 }
