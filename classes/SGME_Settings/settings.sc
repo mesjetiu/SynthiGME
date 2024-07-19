@@ -72,7 +72,7 @@
 		// CONFIGURACIÓN DE INPUT AMPLIFIERS********************************************************
 
 		\inputLag, 0.2,
-		\inputLevelMax, 1,
+		\inputLevelMax, 15.dbamp, // Su trabajo es amplificar. Modificar la cantidad de decibelios. 0.dbamp = 1.
 
 		// CONFIGURACIÓN DE External Treatment Returns**********************************************
 
