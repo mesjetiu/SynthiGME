@@ -27,8 +27,8 @@
 		\sendToDeviceBusses, [14,15,16,17],
 
 		// Input Busses (solo si se elige la opción "standalone")
-		\returnFromDeviceBusses, [2,3,4,5],
-		\inputAmplifiersBusses, [6,7,8,9,10,11,12,13],
+		\returnFromDeviceBusses, [8,9,10,11],
+		\inputAmplifiersBusses, [0,1,2,3,4,5,6,7],
 		\micAmpBusses, [14,15],
 
 		// GUI (Graphical User Interface de SuperCollider)
