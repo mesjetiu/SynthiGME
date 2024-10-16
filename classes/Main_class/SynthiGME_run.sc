@@ -267,7 +267,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 								("Output Channel" + (n+1) + "conectado a salida" + (n+7)).sgmePostln;
 								result = Synth(\connectionMono, [
 									\inputBus, out.outputBus, // En este momento la salida mono sale prefader (se puede cambiar fácilmente)
-									\outputBus, settings[\individualChannelOutputsBusses][n]-1,
+									\outputBus, settings[\individualChannelOutputsBusses][n],
 									\vol, generalVol,
 								], server).register;
 								server.sync;
