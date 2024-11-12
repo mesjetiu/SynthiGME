@@ -99,7 +99,7 @@ SynthiGME {
 	classvar <appPath = nil; // Path de la aplicación
 
 	// Otras opciones.
-	var <generalVol;
+	var <>generalVol;
 
 	var <isRunning = false; // Indica si se ha ejecutado run(), para que no se le llame dos veces.
 
