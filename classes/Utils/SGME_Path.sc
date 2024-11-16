@@ -45,6 +45,7 @@ SGME_Path {
 
 	*getAppPath { |name|
 		if (name.isNil) {name = appName};
+		/*
 		if (SGME_Path.isQuarkInstalled(name)) {
 			var quarkPath = Quarks.quarkNameAsLocalPath(name);
 			"Quark encontrado en: %".format(quarkPath).postln;
@@ -64,6 +65,31 @@ SGME_Path {
 			"Ni Quark ni Extensión encontrados con el nombre: %".format(name).postln;
 			nil
 			}*/
+		}
+		*/
+
+		switch (true)
+		// Si está integrado en el directorio SCClassLibrary, donde están todas las clases de SuperCollider (no Quarks, no Extensions).
+		{File.exists(Platform.classLibraryDir +/+ name +/+ "SynthiGME.quark")} {
+			var libraryPath = Platform.classLibraryDir +/+ name;
+			("Path = " + libraryPath).postln;
+			^libraryPath;
+		}
+		// Si es un Quark
+		{SGME_Path.isQuarkInstalled(name)} {
+			var quarkPath = Quarks.quarkNameAsLocalPath(name);
+			^quarkPath;
+		}
+		// Si no es nada de lo anterior, ha de ser una extensión
+		{
+			var userExtensionPath = Platform.userExtensionDir +/+ name;
+			var systemExtensionPath = Platform.systemExtensionDir +/+ name;
+			var extensionPath = if (File.exists(userExtensionPath +/+ "SynthiGME.quark")) {
+				userExtensionPath
+			} {
+				systemExtensionPath
+			};
+			^extensionPath
 		}
 	}
 }

@@ -207,7 +207,7 @@ SynthiGME {
 		oscRecievedMessages = Dictionary.new;
 
 		// Pasos para cargar imágenes en las clases que las necesitan:
-		SGME_Path.initPath; // Se consigue el Path de aplicación (Quark o Extension)
+		SGME_Path.initPath; // Se consigue el Path de aplicación (en /SCClassLibrary, es Quark o Extension)
 		appPath = SGME_Path.rootPath;
 		pathState = appPath +/+ "Patches";
 		if (appPath.isNil) {"No se ha podido obtener el path de la aplicación".error; ^this};
