@@ -200,6 +200,28 @@ SynthiGME {
 		//version = "1.8.0";
 		//appName = "SynthiGME";
 
+		// Se añaden al servidor las declaracines SynthDefs
+		SynthiGME.addSynthDef;
+		SGME_Reverb.addSynthDef;
+		SGME_InputAmplifier.addSynthDef;
+		SGME_ExternalTreatmentReturn.addSynthDef;
+		SGME_LPFilter.addSynthDef;
+		SGME_HPFilter.addSynthDef;
+		SGME_FilterBank.addSynthDef;
+		SGME_EnvelopeShaper.addSynthDef;
+		SGME_Oscillator.addSynthDef;
+		SGME_NoiseGenerator.addSynthDef;
+		SGME_RingModulator.addSynthDef;
+		SGME_Echo.addSynthDef;
+		SGME_RandomGenerator.addSynthDef;
+		SGME_SlewLimiter.addSynthDef;
+		SGME_OutputChannel.addSynthDef;
+		SGME_PatchbayAudio.addSynthDef;
+		SGME_PatchbayVoltage.addSynthDef;
+		SGME_Oscilloscope.addSynthDef;
+		SGME_Keyboard.addSynthDef;
+		SGME_Invertor.addSynthDef;
+
 		// Carga la configuración
 		settings = SGME_Settings.get;
 
@@ -239,28 +261,6 @@ SynthiGME {
 		alwaysRebootServer = alwaysRebootServ;
 
 		stereoOutBuses = [0,1];
-
-		// Se añaden al servidor las declaracines SynthDefs
-		SynthiGME.addSynthDef;
-		SGME_Reverb.addSynthDef;
-		SGME_InputAmplifier.addSynthDef;
-		SGME_ExternalTreatmentReturn.addSynthDef;
-		SGME_LPFilter.addSynthDef;
-		SGME_HPFilter.addSynthDef;
-		SGME_FilterBank.addSynthDef;
-		SGME_EnvelopeShaper.addSynthDef;
-		SGME_Oscillator.addSynthDef;
-		SGME_NoiseGenerator.addSynthDef;
-		SGME_RingModulator.addSynthDef;
-		SGME_Echo.addSynthDef;
-		SGME_RandomGenerator.addSynthDef;
-		SGME_SlewLimiter.addSynthDef;
-		SGME_OutputChannel.addSynthDef;
-		SGME_PatchbayAudio.addSynthDef;
-		SGME_PatchbayVoltage.addSynthDef;
-		SGME_Oscilloscope.addSynthDef;
-		SGME_Keyboard.addSynthDef;
-		SGME_Invertor.addSynthDef;
 
 		this.run;
 	}
