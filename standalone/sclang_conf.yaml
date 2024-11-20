@@ -1,0 +1,6 @@
+includePaths:
+    -   ./SCClassLibrary
+excludePaths:
+    []
+postInlineWarnings: false
+excludeDefaultPaths: true
