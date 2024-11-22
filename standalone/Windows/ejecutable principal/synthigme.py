@@ -2,8 +2,10 @@ import subprocess
 import threading
 import time
 import sys
+import os
+from datetime import datetime
 
-def read_sclang_output(process, stop_event):
+def read_sclang_output(process, stop_event, log_file):
     """Lee y muestra en tiempo real las salidas del proceso de sclang, buscando las frases consecutivas clave."""
     buffer = []  # Almacena las últimas líneas leídas
     required_phrases = [
@@ -18,6 +20,10 @@ def read_sclang_output(process, stop_event):
             decoded_output = output.decode('utf-8').strip()
             print(decoded_output)
             
+            # Escribir en el archivo de log
+            with open(log_file, "a") as log:
+                log.write(decoded_output + "\n")
+            
             # Añadir la línea al buffer y mantener el tamaño máximo
             buffer.append(decoded_output)
             if len(buffer) > len(required_phrases):
@@ -26,14 +32,21 @@ def read_sclang_output(process, stop_event):
             # Verificar si las últimas líneas coinciden con las frases requeridas
             if buffer == required_phrases:
                 print("Frases clave detectadas. Cerrando automáticamente...")
-                stop_event.set()  # Marcar el evento de detención
-                return
+                stop_event.set()
+                process.terminate()
+                process.wait()
+                print("sclang cerrado.")
+                sys.exit(0)  # Salida directa al detectar las frases clave
 
         if process.poll() is not None:
             stop_event.set()
             return
 
 def main():
+    # Crear archivo de log con nombre único
+    log_file = f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+    print(f"Registro de la sesión se guardará en: {log_file}")
+    
     try:
         # Abrir el proceso de sclang
         process = subprocess.Popen(
@@ -48,7 +61,7 @@ def main():
         stop_event = threading.Event()
         
         # Iniciar un hilo para leer la salida de sclang en tiempo real
-        thread = threading.Thread(target=read_sclang_output, args=(process, stop_event), daemon=True)
+        thread = threading.Thread(target=read_sclang_output, args=(process, stop_event, log_file), daemon=True)
         thread.start()
 
         print("sclang está corriendo. Escribe tu código SuperCollider y presiona Enter.")
@@ -72,7 +85,7 @@ def main():
                 print("Canal de comunicación con sclang cerrado.")
                 break
 
-        # Esperar a que el proceso termine completamente
+        # Si el hilo se detiene, esperar su finalización y cerrar
         stop_event.set()
         thread.join()
         process.terminate()
