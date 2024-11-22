@@ -1,109 +1,102 @@
 import subprocess
 import threading
-import time
-import sys
 import os
+import sys
 from datetime import datetime
+
+# Especifica el sistema operativo: "windows" o "linux"
+OPERATING_SYSTEM = "windows"  # Cambia a "linux" si estás en Linux
 
 # Detectar el directorio donde se encuentra el archivo Python
 SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
 
-# Path personalizado para el ejecutable `sclang`, basado en el directorio del script
-SCLANG_EXECUTABLE = os.path.join(SCRIPT_DIR, "sclang")
+# Ejecutable de sclang, se puede modificar directamente aquí.
+# Si necesitas usar un archivo específico de sclang en un directorio concreto, descomenta y ajusta la línea siguiente:
+SCLANG_EXECUTABLE = os.path.join(SCRIPT_DIR, "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang")
+# SCLANG_EXECUTABLE = "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang"
 
 def read_sclang_output(process, stop_event, log_file):
-    """Lee y muestra en tiempo real las salidas del proceso de sclang, buscando las frases consecutivas clave para salir automáticamente del programa."""
-    buffer = []  # Almacena las últimas líneas leídas
-    required_phrases = [ # Estas frases son devueltas tras el comando "0.exit" en SuperCollider 3.13.0
-        "main: waiting for input thread to join...",
-        "main: quitting...",
-        "cleaning up OSC"
-    ]
-    
-    while not stop_event.is_set():
-        output = process.stdout.readline()
-        if output:
-            decoded_output = output.decode('utf-8').strip()
-            print(decoded_output)
-            
-            # Escribir en el archivo de log
-            with open(log_file, "a") as log:
+    """Lee y muestra en tiempo real las salidas del proceso de sclang."""
+    with open(log_file, "a", encoding="utf-8") as log:
+        while not stop_event.is_set():
+            output = process.stdout.readline()
+            if output:
+                decoded_output = output.strip()
+                print(decoded_output)
+                sys.stdout.flush()  # Forzar vaciado del buffer de salida
                 log.write(decoded_output + "\n")
-            
-            # Añadir la línea al buffer y mantener el tamaño máximo
-            buffer.append(decoded_output)
-            if len(buffer) > len(required_phrases):
-                buffer.pop(0)
-            
-            # Verificar si las últimas líneas coinciden con las frases requeridas
-            if buffer == required_phrases:
-                print("Frases clave detectadas. Cerrando automáticamente...")
+            if process.poll() is not None:
                 stop_event.set()
-                process.terminate()
-                process.wait()
-                print("sclang cerrado.")
-                sys.exit(0)  # Salida directa al detectar las frases clave
-
-        if process.poll() is not None:
-            stop_event.set()
-            return
+                break
 
 def main():
     # Crear archivo de log con nombre único en el mismo directorio del script
     log_file = os.path.join(SCRIPT_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
     print(f"Registro de la sesión se guardará en: {log_file}")
     print(f"Usando el ejecutable de sclang en: {SCLANG_EXECUTABLE}")
-    
+
     try:
+        # Configuración para manejar stdin y ventanas emergentes en Windows
+        startupinfo = None
+        if OPERATING_SYSTEM == "windows":
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
         # Abrir el proceso de sclang usando el path personalizado
         process = subprocess.Popen(
             [SCLANG_EXECUTABLE],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=False  # Para manejar las salidas como bytes
+            stderr=subprocess.STDOUT,  # Combinar stdout y stderr
+            universal_newlines=True,  # Convertir la salida a texto
+            startupinfo=startupinfo
         )
-        
+
         # Evento para señalar cuando parar el hilo
         stop_event = threading.Event()
-        
+
         # Iniciar un hilo para leer la salida de sclang en tiempo real
         thread = threading.Thread(target=read_sclang_output, args=(process, stop_event, log_file), daemon=True)
         thread.start()
 
         print("sclang está corriendo. Escribe tu código SuperCollider y presiona Enter.")
+        sys.stdout.flush()
         print("Para salir manualmente, escribe 'exit' o 'quit'.")
+        sys.stdout.flush()
 
-        # Bucle principal revisando periódicamente el evento de salida
+        # Manejar entrada del usuario
         while not stop_event.is_set():
             try:
-                if sys.stdin in select.select([sys.stdin], [], [], 0.1)[0]:
-                    user_input = input("> ")
-                    if user_input.lower() in ["exit", "quit"]:
-                        print("Cerrando sclang...")
-                        process.stdin.write(b"\x03")  # Enviar señal Ctrl+C
+                user_input = input("> ")
+                if user_input.lower() in ["exit", "quit"]:
+                    print("Cerrando sclang...")
+                    sys.stdout.flush()
+                    if process.stdin:  # Validar que stdin está disponible
+                        process.stdin.write("0.exit;\n")
                         process.stdin.flush()
-                        break
-                    else:
-                        process.stdin.write((user_input + "\n").encode('utf-8'))
+                    break
+                else:
+                    if process.stdin:  # Validar que stdin está disponible
+                        process.stdin.write(user_input + "\n")
                         process.stdin.flush()
-            except BrokenPipeError:
-                # Detectar si el proceso ha cerrado su canal stdin
-                print("Canal de comunicación con sclang cerrado.")
+            except EOFError:
                 break
 
-        # Si el hilo se detiene, esperar su finalización y cerrar
+        # Esperar a que el proceso termine
+        process.wait()
         stop_event.set()
         thread.join()
-        process.terminate()
-        process.wait()
         print("sclang cerrado.")
+        sys.stdout.flush()
     except KeyboardInterrupt:
         print("\nInterrumpido por el usuario. Cerrando sclang...")
+        sys.stdout.flush()
         process.terminate()
         stop_event.set()
         process.wait()
+    except OSError as e:
+        print(f"Error al manejar stdin: {e}")
+        sys.stdout.flush()
 
 if __name__ == "__main__":
-    import select  # Mover importación aquí para claridad
     main()
