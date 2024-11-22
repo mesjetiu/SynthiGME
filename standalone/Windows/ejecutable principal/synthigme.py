@@ -6,9 +6,9 @@ import os
 from datetime import datetime
 
 def read_sclang_output(process, stop_event, log_file):
-    """Lee y muestra en tiempo real las salidas del proceso de sclang, buscando las frases consecutivas clave."""
+    """Lee y muestra en tiempo real las salidas del proceso de sclang, buscando las frases consecutivas clave para salir automáticamente del programa."""
     buffer = []  # Almacena las últimas líneas leídas
-    required_phrases = [
+    required_phrases = [ # Estas frases son devueltas tras el comando "0.exit" en SuperCollider 3.13.0
         "main: waiting for input thread to join...",
         "main: quitting...",
         "cleaning up OSC"
