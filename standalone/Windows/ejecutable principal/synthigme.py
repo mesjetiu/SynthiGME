@@ -5,6 +5,12 @@ import sys
 import os
 from datetime import datetime
 
+# Detectar el directorio donde se encuentra el archivo Python
+SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# Path personalizado para el ejecutable `sclang`, basado en el directorio del script
+SCLANG_EXECUTABLE = os.path.join(SCRIPT_DIR, "sclang")
+
 def read_sclang_output(process, stop_event, log_file):
     """Lee y muestra en tiempo real las salidas del proceso de sclang, buscando las frases consecutivas clave para salir automáticamente del programa."""
     buffer = []  # Almacena las últimas líneas leídas
@@ -43,14 +49,15 @@ def read_sclang_output(process, stop_event, log_file):
             return
 
 def main():
-    # Crear archivo de log con nombre único
-    log_file = f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+    # Crear archivo de log con nombre único en el mismo directorio del script
+    log_file = os.path.join(SCRIPT_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
     print(f"Registro de la sesión se guardará en: {log_file}")
+    print(f"Usando el ejecutable de sclang en: {SCLANG_EXECUTABLE}")
     
     try:
-        # Abrir el proceso de sclang
+        # Abrir el proceso de sclang usando el path personalizado
         process = subprocess.Popen(
-            ["sclang"],
+            [SCLANG_EXECUTABLE],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
