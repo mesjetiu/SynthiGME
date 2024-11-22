@@ -5,15 +5,20 @@ import sys
 from datetime import datetime
 
 # Especifica el sistema operativo: "windows" o "linux"
-OPERATING_SYSTEM = "windows"  # Cambia a "linux" si estás en Linux
+OPERATING_SYSTEM = "linux"  # Cambia a "windows" si estás en Windows
 
 # Detectar el directorio donde se encuentra el archivo Python
 SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
+PARENT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))  # Directorio superior
 
-# Ejecutable de sclang, se puede modificar directamente aquí.
-# Si necesitas usar un archivo específico de sclang en un directorio concreto, descomenta y ajusta la línea siguiente:
+# Configuración del comando para llamar a sclang
 SCLANG_EXECUTABLE = os.path.join(SCRIPT_DIR, "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang")
-# SCLANG_EXECUTABLE = "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang"
+SCLANG_CONFIG = os.path.join(PARENT_DIR, "sclang_conf.yaml")
+SCLANG_COMMAND = [SCLANG_EXECUTABLE, "-l", SCLANG_CONFIG]
+
+# Directorio para guardar los logs
+LOG_DIR = os.path.join(PARENT_DIR, "PostWindow_Logs")
+os.makedirs(LOG_DIR, exist_ok=True)  # Crear el directorio si no existe
 
 def read_sclang_output(process, stop_event, log_file):
     """Lee y muestra en tiempo real las salidas del proceso de sclang."""
@@ -30,10 +35,10 @@ def read_sclang_output(process, stop_event, log_file):
                 break
 
 def main():
-    # Crear archivo de log con nombre único en el mismo directorio del script
-    log_file = os.path.join(SCRIPT_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+    # Crear archivo de log con nombre único en el directorio de logs
+    log_file = os.path.join(LOG_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
     print(f"Registro de la sesión se guardará en: {log_file}")
-    print(f"Usando el ejecutable de sclang en: {SCLANG_EXECUTABLE}")
+    print(f"Usando el ejecutable de sclang con el comando: {' '.join(SCLANG_COMMAND)}")
 
     try:
         # Configuración para manejar stdin y ventanas emergentes en Windows
@@ -42,9 +47,9 @@ def main():
             startupinfo = subprocess.STARTUPINFO()
             startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
-        # Abrir el proceso de sclang usando el path personalizado
+        # Abrir el proceso de sclang usando el comando configurado
         process = subprocess.Popen(
-            [SCLANG_EXECUTABLE],
+            SCLANG_COMMAND,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,  # Combinar stdout y stderr
