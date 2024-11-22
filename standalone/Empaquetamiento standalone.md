@@ -96,6 +96,10 @@ Así, sclang compilará únicamente la librería de clases, incluyendo SynthiGME
 
 ## Ejecutable de arranque de la aplicación
 
-Se creará un ejecutable (en Python, aún por ha) que detecte la dirección absoluta de su propia ubicación. Dicho ejecutable se encargará de abrir un proceso en el sistema operativo con ```sclang``` pasándole como argumento la dirección exacta del ```sclang_config.yaml```. 
+Se creará un ejecutable (en Python, aún por implementar) que detecte la dirección absoluta de su propia ubicación. Dicho ejecutable se encargará de abrir un proceso en el sistema operativo con ```sclang``` pasándole como argumento la dirección exacta del ```sclang_config.yaml```. 
 
 El resultado será una aplicación portable, sin necesidad de instalación, sin interacción con evetuales instalaciones de SuperCollider en el mismo equipo y enteramente distribuible.
+
+## Limpieza del directorio de SuperCollider
+
+Puesto que solo se usa SuperCollider para ejecutar Synthi GME, se pueden eliminar ciertos archivos y directorios inútiles que no alteran la funcionalidad, de forma que se aligera el tamaño general del paquete completo.
