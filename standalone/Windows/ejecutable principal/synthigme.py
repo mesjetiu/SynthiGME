@@ -4,7 +4,7 @@ import os
 import sys
 from datetime import datetime
 
-# Especifica el sistema operativo: "windows" o "linux"
+# Detectar el sistema operativo: "windows" o "linux"
 OPERATING_SYSTEM = "linux"  # Cambia a "windows" si estás en Windows
 
 # Detectar el directorio donde se encuentra el archivo Python
@@ -15,6 +15,7 @@ PARENT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))  # Directorio 
 SCLANG_EXECUTABLE = os.path.join(SCRIPT_DIR, "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang")
 SCLANG_CONFIG = os.path.join(PARENT_DIR, "sclang_conf.yaml")
 SCLANG_COMMAND = [SCLANG_EXECUTABLE, "-l", SCLANG_CONFIG]
+SCLANG_COMMAND = "sclang"
 
 # Directorio para guardar los logs
 LOG_DIR = os.path.join(PARENT_DIR, "PostWindow_Logs")
@@ -30,6 +31,7 @@ def read_sclang_output(process, stop_event, log_file):
                 print(decoded_output)
                 sys.stdout.flush()  # Forzar vaciado del buffer de salida
                 log.write(decoded_output + "\n")
+
             if process.poll() is not None:
                 stop_event.set()
                 break
@@ -76,9 +78,7 @@ def main():
                 if user_input.lower() in ["exit", "quit"]:
                     print("Cerrando sclang...")
                     sys.stdout.flush()
-                    if process.stdin:  # Validar que stdin está disponible
-                        process.stdin.write("0.exit;\n")
-                        process.stdin.flush()
+                    process.terminate()  # Termina el proceso sin enviar "0.exit"
                     break
                 else:
                     if process.stdin:  # Validar que stdin está disponible
