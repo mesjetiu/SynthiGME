@@ -73,6 +73,7 @@ SGME_Path {
 		{File.exists(Platform.classLibraryDir +/+ name +/+ "SynthiGME.quark")} {
 			var libraryPath = Platform.classLibraryDir +/+ name;
 			("Path = " + libraryPath).postln;
+			SynthiGME.instance.executionMode = "standalone";
 			^libraryPath;
 		}
 		// Si es un Quark

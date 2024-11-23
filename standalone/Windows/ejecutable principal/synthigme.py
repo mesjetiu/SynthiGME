@@ -32,6 +32,14 @@ def read_sclang_output(process, stop_event, log_file):
                 sys.stdout.flush()  # Forzar vaciado del buffer de salida
                 log.write(decoded_output + "\n")
 
+                # Detectar "exit" en la salida de la post window
+                if decoded_output.lower() == "exit":
+                    print("Mensaje 'exit' detectado en la Post Window. Cerrando automáticamente.")
+                    sys.stdout.flush()
+                    stop_event.set()
+                    process.terminate()
+                    break
+
             if process.poll() is not None:
                 stop_event.set()
                 break

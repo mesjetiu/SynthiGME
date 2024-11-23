@@ -22,6 +22,8 @@ SynthiGME {
 	classvar <version = "1.10";
 	classvar <appName = "SynthiGME"; // Nombre del Quark o extensión
 
+	var <>executionMode = nil; // puede ser "standalone"
+
 	// Opciones de inicio:
 	var <server; // Servidor de audio a utilizar
 	var <>verboseOSC; // true: se muestran en Post Window los mensajes OSC enviados al synthi.
@@ -405,10 +407,14 @@ SynthiGME {
 		{Window.closeAll}.defer();
 		server.freeAll;
 		modulRandomGenerator.randomRoutine.stop;
-		if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
-			0.exit;
-		});
-		thisProcess.recompile;
+		if (this.executionMode == "standalone") {
+			"exit".postln; // "exit" lo recibe el script de python de la versión standalone.
+		} {
+			if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
+				0.exit;
+			});
+			thisProcess.recompile;
+		}
 	}
 
 	// Actualiza SynthiGME:
