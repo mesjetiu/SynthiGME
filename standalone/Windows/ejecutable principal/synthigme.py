@@ -3,9 +3,15 @@ import threading
 import os
 import sys
 from datetime import datetime
+import io
 
 # Detectar el sistema operativo: "windows" o "linux"
-OPERATING_SYSTEM = "linux"  # Cambia a "windows" si estás en Windows
+OPERATING_SYSTEM = "windows"  # Cambia a "windows" si estás en Windows
+
+# Configurar codificación para evitar caracteres extraños en Windows
+if OPERATING_SYSTEM == "windows":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # Detectar el directorio donde se encuentra el archivo Python
 SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -15,11 +21,12 @@ PARENT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))  # Directorio 
 SCLANG_EXECUTABLE = os.path.join(SCRIPT_DIR, "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang")
 SCLANG_CONFIG = os.path.join(PARENT_DIR, "sclang_conf.yaml")
 SCLANG_COMMAND = [SCLANG_EXECUTABLE, "-l", SCLANG_CONFIG]
-SCLANG_COMMAND = "sclang"
+# SCLANG_COMMAND = "sclang"
 
 # Directorio para guardar los logs
 LOG_DIR = os.path.join(PARENT_DIR, "PostWindow_Logs")
 os.makedirs(LOG_DIR, exist_ok=True)  # Crear el directorio si no existe
+
 
 def read_sclang_output(process, stop_event, log_file):
     """Lee y muestra en tiempo real las salidas del proceso de sclang."""
@@ -44,11 +51,18 @@ def read_sclang_output(process, stop_event, log_file):
                 stop_event.set()
                 break
 
+
 def main():
     # Crear archivo de log con nombre único en el directorio de logs
     log_file = os.path.join(LOG_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
     print(f"Registro de la sesión se guardará en: {log_file}")
     print(f"Usando el ejecutable de sclang con el comando: {' '.join(SCLANG_COMMAND)}")
+
+    # Verificar si el ejecutable de sclang está disponible
+    if not os.path.isfile(SCLANG_EXECUTABLE):
+        print(f"Error: No se encontró el ejecutable de sclang en {SCLANG_EXECUTABLE}.")
+        print("Asegúrate de que sclang esté en el mismo directorio que este script.")
+        sys.exit(1)
 
     try:
         # Configuración para manejar stdin y ventanas emergentes en Windows
@@ -110,6 +124,7 @@ def main():
     except OSError as e:
         print(f"Error al manejar stdin: {e}")
         sys.stdout.flush()
+
 
 if __name__ == "__main__":
     main()
