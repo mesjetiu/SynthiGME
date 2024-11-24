@@ -140,6 +140,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// Arrancamos el servidor si aún no lo está
 			server.waitForBoot(
 				onComplete: {
+					this.synthdefAll;
+					server.sync;
+
 					panOutputs1to4Busses = settings[\panOutputs1to4Busses];
 					panOutputs5to8Busses = settings[\panOutputs5to8Busses];
 					individualChannelOutputsBusses = settings[\individualChannelOutputsBusses];
@@ -511,7 +514,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					};
 
 					// Preparación para la grabación:
-				//	server.prepareForRecord;
+					//	server.prepareForRecord;
 
 
 					"".sgmePostln;

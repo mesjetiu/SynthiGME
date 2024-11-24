@@ -203,6 +203,7 @@ SynthiGME {
 		//appName = "SynthiGME";
 
 		// Se añaden al servidor las declaracines SynthDefs
+		/*
 		SynthiGME.addSynthDef;
 		SGME_Reverb.addSynthDef;
 		SGME_InputAmplifier.addSynthDef;
@@ -223,6 +224,7 @@ SynthiGME {
 		SGME_Oscilloscope.addSynthDef;
 		SGME_Keyboard.addSynthDef;
 		SGME_Invertor.addSynthDef;
+		*/
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
@@ -274,6 +276,50 @@ SynthiGME {
 	// run() en SynthiGME_run.sc
 	// getFullState() en SynthiGME_getFullState.sc
 	// Herramientas de guardado y recuperación de patches en archivos, en SynthiGME_file_tools.sc
+
+
+	synthdefAll {
+		SynthiGME.addSynthDef;
+		server.sync;
+		SGME_Reverb.addSynthDef;
+		server.sync;
+		SGME_InputAmplifier.addSynthDef;
+		server.sync;
+		SGME_ExternalTreatmentReturn.addSynthDef;
+		server.sync;
+		SGME_LPFilter.addSynthDef;
+		server.sync;
+		SGME_HPFilter.addSynthDef;
+		server.sync;
+		SGME_FilterBank.addSynthDef;
+		server.sync;
+		SGME_EnvelopeShaper.addSynthDef;
+		server.sync;
+		SGME_Oscillator.addSynthDef;
+		server.sync;
+		SGME_NoiseGenerator.addSynthDef;
+		server.sync;
+		SGME_RingModulator.addSynthDef;
+		server.sync;
+		SGME_Echo.addSynthDef;
+		server.sync;
+		SGME_RandomGenerator.addSynthDef;
+		server.sync;
+		SGME_SlewLimiter.addSynthDef;
+		server.sync;
+		SGME_OutputChannel.addSynthDef;
+		server.sync;
+		SGME_PatchbayAudio.addSynthDef;
+		server.sync;
+		SGME_PatchbayVoltage.addSynthDef;
+		server.sync;
+		SGME_Oscilloscope.addSynthDef;
+		server.sync;
+		SGME_Keyboard.addSynthDef;
+		server.sync;
+		SGME_Invertor.addSynthDef;
+		server.sync;
+	}
 
 	// OBSOLETO. QUIZÁS APROVECHABLE...
 	// Envía el estado de todo el Synthi por OSC
