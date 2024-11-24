@@ -140,6 +140,9 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// Arrancamos el servidor si aún no lo está
 			server.waitForBoot(
 				onComplete: {
+
+					// Se declaran los sintetizadores
+					server.sync;
 					this.synthdefAll;
 					server.sync;
 
