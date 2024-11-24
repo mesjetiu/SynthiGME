@@ -42,7 +42,8 @@ SynthiGME_standalone/
 |   ----User_support/
 |   ----User_config/
 |       |
-|       ----startup.scd (opcional)
+|       ----startup.scd (contiene el comando de SynthiGME())
+----sclang_conf.yaml
 ----SynthiGME.exe
 ```
 
