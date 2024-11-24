@@ -23,15 +23,20 @@ from datetime import datetime
 import io
 
 # Detectar el sistema operativo: "windows" o "linux"
-OPERATING_SYSTEM = "windows"  # "windows" o "linux"
+OPERATING_SYSTEM = "windows" if os.name == "nt" else "linux"
 
 # Configurar codificación para evitar caracteres extraños en Windows
 if OPERATING_SYSTEM == "windows":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-# Detectar el directorio donde se encuentra el archivo Python
-SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))  # Directorio donde está el script
+# Detectar el directorio donde se encuentra el script o el ejecutable
+if getattr(sys, 'frozen', False) and OPERATING_SYSTEM == "windows":  # Si está empaquetado como .exe en Windows
+    SCRIPT_DIR = os.path.dirname(sys.executable)  # Directorio del ejecutable
+else:
+    SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))  # Directorio del script Python
+
+# Configurar rutas basadas en SCRIPT_DIR
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, "SuperCollider")  # Ruta a SuperCollider/
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang")
 SCLANG_CONFIG = os.path.join(SCRIPT_DIR, "sclang_conf.yaml")  # Configuración en el directorio raíz
