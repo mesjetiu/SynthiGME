@@ -93,7 +93,8 @@ def main():
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,  # Combinar stdout y stderr
-            universal_newlines=True,  # Convertir la salida a texto
+            encoding='utf-8',  # Especificar codificación UTF-8
+            errors='replace',  # Reemplazar caracteres que no se puedan decodificar
             startupinfo=startupinfo
         )
 
