@@ -150,11 +150,12 @@ SynthiGME {
 		numReturnChannels = inf, // Mínimo 0, Máximo 4
 		blockSize = 64,
 		alwaysRebootServer = false, // false: no se reinicia si se cumple la configuración del servidor.
-		postWin = true; // se abre una ventana para post window.
+		postWin = true, // se abre una ventana para post window.
+		standalone = false;
 
 		if (instance != nil) {"Ya existe una instancia"; ^this};
 
-		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin);
+		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin, standalone);
 	}
 
 
@@ -196,7 +197,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin|
+	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin, standalone|
 
 		instance = this;
 		//version = "1.8.0";
@@ -225,6 +226,8 @@ SynthiGME {
 		SGME_Keyboard.addSynthDef;
 		SGME_Invertor.addSynthDef;
 		*/
+
+		this.executionMode = "standalone";
 
 		// Carga la configuración
 		settings = SGME_Settings.get;

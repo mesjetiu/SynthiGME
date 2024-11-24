@@ -73,7 +73,7 @@ SGME_Path {
 		{File.exists(Platform.classLibraryDir +/+ name +/+ "SynthiGME.quark")} {
 			var libraryPath = Platform.classLibraryDir +/+ name;
 			("Path = " + libraryPath).postln;
-			SynthiGME.instance.executionMode = "standalone";
+			//SynthiGME.instance.executionMode = "standalone";
 			^libraryPath;
 		}
 		// Si está integrado en otro directorio al mismo nivel que SuperCollider. Es modo standalone también. No es ni extensión ni quark

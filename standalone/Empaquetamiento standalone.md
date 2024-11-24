@@ -30,12 +30,11 @@ La estructura de directorios base que construiremos es la siguiente:
 ```
 SynthiGME_standalone/
 |
+----Extensions/
+|   |
+|   ----SynthiGME/ (aquí o en SCClassLibrary, pero no en ambos)
 ----Recordings/
 ----SuperCollider/
-|   |
-|   ----SCClassLibrary/
-|       |
-|       ----SynthiGME/
 ----Support/
 |   |
 |   ----System_support/

@@ -24,4 +24,12 @@
 		var path_general = PathName(Platform.resourceDir).pathOnly;
 		^path_general +/+ "Support" +/+ "User_config";
 	}
+
+	// Ubicación de "extensions", donde se ubicará SynthiGME
+	userExtensionDir {
+		var path_general = PathName(Platform.resourceDir).pathOnly;
+		^path_general +/+ "Extensions";
+	}
+	//*userExtensionDir { ^thisProcess.platform.userExtensionDir }
+
 }
