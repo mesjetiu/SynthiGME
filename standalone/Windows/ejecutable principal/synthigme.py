@@ -6,7 +6,7 @@ from datetime import datetime
 import io
 
 # Detectar el sistema operativo: "windows" o "linux"
-OPERATING_SYSTEM = "windows"  # Cambia a "windows" si estás en Windows
+OPERATING_SYSTEM = "windows"  # "windows" o "linux"
 
 # Configurar codificación para evitar caracteres extraños en Windows
 if OPERATING_SYSTEM == "windows":
@@ -14,18 +14,14 @@ if OPERATING_SYSTEM == "windows":
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # Detectar el directorio donde se encuentra el archivo Python
-SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
-PARENT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))  # Directorio superior
+SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))  # Directorio donde está el script
+SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, "SuperCollider")  # Ruta a SuperCollider/
+SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang")
+SCLANG_CONFIG = os.path.join(SCRIPT_DIR, "sclang_conf.yaml")  # Configuración en el directorio raíz
+LOG_DIR = os.path.join(SCRIPT_DIR, "PostWindow_Logs")  # Directorio de logs
 
-# Configuración del comando para llamar a sclang
-SCLANG_EXECUTABLE = os.path.join(SCRIPT_DIR, "sclang.exe" if OPERATING_SYSTEM == "windows" else "sclang")
-SCLANG_CONFIG = os.path.join(PARENT_DIR, "sclang_conf.yaml")
-SCLANG_COMMAND = [SCLANG_EXECUTABLE, "-l", SCLANG_CONFIG]
-# SCLANG_COMMAND = "sclang"
-
-# Directorio para guardar los logs
-LOG_DIR = os.path.join(PARENT_DIR, "PostWindow_Logs")
-os.makedirs(LOG_DIR, exist_ok=True)  # Crear el directorio si no existe
+# Asegurar que el directorio de logs existe
+os.makedirs(LOG_DIR, exist_ok=True)
 
 
 def read_sclang_output(process, stop_event, log_file):
@@ -56,15 +52,19 @@ def main():
     # Crear archivo de log con nombre único en el directorio de logs
     log_file = os.path.join(LOG_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
     print(f"Registro de la sesión se guardará en: {log_file}")
-    print(f"Usando el ejecutable de sclang con el comando: {' '.join(SCLANG_COMMAND)}")
+    print(f"Usando el ejecutable de sclang en: {SCLANG_EXECUTABLE}")
+    print(f"Directorio de trabajo: {SUPER_COLLIDER_DIR}")
 
     # Verificar si el ejecutable de sclang está disponible
     if not os.path.isfile(SCLANG_EXECUTABLE):
         print(f"Error: No se encontró el ejecutable de sclang en {SCLANG_EXECUTABLE}.")
-        print("Asegúrate de que sclang esté en el mismo directorio que este script.")
+        print("Asegúrate de que el directorio SuperCollider contiene sclang.")
         sys.exit(1)
 
     try:
+        # Cambiar el directorio de trabajo a SuperCollider
+        os.chdir(SUPER_COLLIDER_DIR)
+
         # Configuración para manejar stdin y ventanas emergentes en Windows
         startupinfo = None
         if OPERATING_SYSTEM == "windows":
@@ -73,7 +73,7 @@ def main():
 
         # Abrir el proceso de sclang usando el comando configurado
         process = subprocess.Popen(
-            SCLANG_COMMAND,
+            [SCLANG_EXECUTABLE, "-l", SCLANG_CONFIG],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,  # Combinar stdout y stderr
