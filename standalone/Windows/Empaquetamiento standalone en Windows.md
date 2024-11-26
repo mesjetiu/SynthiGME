@@ -29,21 +29,20 @@ La estructura de directorios base que construiremos es la siguiente:
 
 ```
 SynthiGME_standalone/
-|
-----Extensions/
-|   |
-|   ----SynthiGME/ (aquí o en SCClassLibrary, pero no en ambos)
-----Recordings/
-----SuperCollider/
-----Support/
-|   |
-|   ----System_support/
-|   ----User_support/
-|   ----User_config/
-|       |
-|       ----startup.scd (contiene el comando de SynthiGME())
-----sclang_conf.yaml
-----SynthiGME.exe
+├── Extensions/
+│   ├── SynthiGME/ (aquí o en SuperCollider/SCClassLibrary, pero no en ambos)
+├── PostWindow_Logs/
+├── Recordings/
+│   ├── Audio/
+│   ├── Events/
+├── SuperCollider/
+├── Support/
+│   ├── System_support/
+│   ├── User_support/
+│   ├── User_config/
+│   │   └── startup.scd (contiene el comando de SynthiGME())
+├── sclang_conf.yaml
+├── SynthiGME.exe
 ```
 
 
