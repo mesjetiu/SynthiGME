@@ -4,3 +4,5 @@ Desarrollo/pruebas.scd
 /Desarrollo/Pruebas
 /scripts/binarios
 *.log
+
+standalone/Windows/SystemOverwrites/WindowsPlatform_extension.sc
