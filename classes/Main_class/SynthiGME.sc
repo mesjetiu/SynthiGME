@@ -282,6 +282,7 @@ SynthiGME {
 
 
 	synthdefAll {
+		server.sync;
 		SynthiGME.addSynthDef;
 		server.sync;
 		SGME_Reverb.addSynthDef;
