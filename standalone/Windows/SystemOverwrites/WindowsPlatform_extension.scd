@@ -14,12 +14,14 @@
 
 	// Con estos overrides se consigue que SC no busque en archivos del sistema y del usuario, ni sobrescriba ninguna configuración previa de SC en la máquina.
 	systemAppSupportDir {
-		var path_general = PathName(Platform.resourceDir).pathOnly;
-		^path_general +/+ "SC_Support" +/+ "System_support";
+		/*var path_general = PathName(Platform.resourceDir).pathOnly;
+		^path_general +/+ ".SC_Support" +/+ "System_support";*/
+		^Platform.resourceDir +/+ "SC_Support" +/+ "System_support";
 	}
 	userAppSupportDir {
-		var path_general = PathName(Platform.resourceDir).pathOnly;
-		^path_general +/+ "SC_Support" +/+ "User_support";
+		/*var path_general = PathName(Platform.resourceDir).pathOnly;
+		^path_general +/+ ".SC_Support" +/+ "User_support";*/
+		^Platform.resourceDir +/+ "SC_Support" +/+ "User_support";
 	}
 
 	// Ubicación de "startup.scd"
