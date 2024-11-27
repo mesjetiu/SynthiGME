@@ -47,9 +47,9 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		events = List.new;
 
 		if (SynthiGME.instance.executionMode == "standalone") {
-				var path_general = PathName(Platform.resourceDir).pathOnly; // path general de la aplicación standalone
-				pathEvents = path_general +/+ "Recordings" +/+ "Events";
-			}{ pathEvents = SGME_Path.rootPath +/+ "Events" };
+			var path_general = PathName(Platform.resourceDir).pathOnly; // path general de la aplicación standalone
+			pathEvents = path_general +/+ "Recordings" +/+ "Events";
+		}{ pathEvents = SGME_Path.rootPath +/+ "Events" };
 
 		player = Routine {
 			events.do { |event, i|

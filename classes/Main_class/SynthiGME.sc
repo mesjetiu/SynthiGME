@@ -200,32 +200,6 @@ SynthiGME {
 	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin, standalone|
 
 		instance = this;
-		//version = "1.8.0";
-		//appName = "SynthiGME";
-
-		// Se añaden al servidor las declaracines SynthDefs
-		/*
-		SynthiGME.addSynthDef;
-		SGME_Reverb.addSynthDef;
-		SGME_InputAmplifier.addSynthDef;
-		SGME_ExternalTreatmentReturn.addSynthDef;
-		SGME_LPFilter.addSynthDef;
-		SGME_HPFilter.addSynthDef;
-		SGME_FilterBank.addSynthDef;
-		SGME_EnvelopeShaper.addSynthDef;
-		SGME_Oscillator.addSynthDef;
-		SGME_NoiseGenerator.addSynthDef;
-		SGME_RingModulator.addSynthDef;
-		SGME_Echo.addSynthDef;
-		SGME_RandomGenerator.addSynthDef;
-		SGME_SlewLimiter.addSynthDef;
-		SGME_OutputChannel.addSynthDef;
-		SGME_PatchbayAudio.addSynthDef;
-		SGME_PatchbayVoltage.addSynthDef;
-		SGME_Oscilloscope.addSynthDef;
-		SGME_Keyboard.addSynthDef;
-		SGME_Invertor.addSynthDef;
-		*/
 
 		this.executionMode = "standalone";
 
@@ -238,7 +212,13 @@ SynthiGME {
 		// Pasos para cargar imágenes en las clases que las necesitan:
 		SGME_Path.initPath; // Se consigue el Path de aplicación (en /SCClassLibrary, es Quark o Extension)
 		appPath = SGME_Path.rootPath;
-		pathState = appPath +/+ "Patches";
+
+		if (this.executionMode == "standalone") {
+			var path_general = PathName(Platform.resourceDir).pathOnly; // path general de la aplicación standalone
+			pathState = path_general +/+ "Patches";
+		}{ pathState = appPath +/+ "Patches"; };
+
+
 		if (appPath.isNil) {"No se ha podido obtener el path de la aplicación".error; ^this};
 		SGME_GUIPanel.loadImages; // Se cargan las imágenes desde el Path adecuado
 		SGME_GUINode.loadImages; // ídem
