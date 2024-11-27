@@ -12,17 +12,17 @@
 	// Con estos overrides se consigue que SC no busque en archivos del sistema y del usuario, ni sobrescriba ninguna configuración previa de SC en la máquina.
 	systemAppSupportDir {
 		var path_general = PathName(Platform.resourceDir).pathOnly;
-		^path_general +/+ "Support" +/+ "System_support";
+		^path_general +/+ "SC_Support" +/+ "System_support";
 	}
 	userAppSupportDir {
 		var path_general = PathName(Platform.resourceDir).pathOnly;
-		^path_general +/+ "Support" +/+ "User_support";
+		^path_general +/+ "SC_Support" +/+ "User_support";
 	}
 
 	// Ubicación de "startup.scd"
 	userConfigDir {
 		var path_general = PathName(Platform.resourceDir).pathOnly;
-		^path_general +/+ "Support" +/+ "User_config";
+		^path_general +/+ "Config";
 	}
 
 	// Ubicación de "extensions", donde se ubicará SynthiGME

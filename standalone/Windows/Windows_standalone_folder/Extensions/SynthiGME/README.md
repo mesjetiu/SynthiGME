@@ -1,1 +1,0 @@
-Este directorio puede contener los archivos de SynthiGME: https://github.com/mesjetiu/SynthiGME

@@ -33,9 +33,10 @@ else:
     SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))  # Directorio del script Python
 
 # Configurar rutas basadas en SCRIPT_DIR
-SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, "SuperCollider")  # Ruta a SuperCollider/
+SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")  # Ruta a .SuperCollider/
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
-SCLANG_CONFIG = os.path.join(SCRIPT_DIR, "sclang_conf.yaml")  # Configuración en el directorio raíz
+CONFIG_DIR = os.path.join(SCRIPT_DIR, "Config") # Ruta a directorio de configuración
+SCLANG_CONFIG = os.path.join(CONFIG_DIR, "sclang_conf.yaml")  # Configuración de SC
 LOG_DIR = os.path.join(SCRIPT_DIR, "PostWindow_Logs")  # Directorio de logs
 
 # Asegurar que el directorio de logs existe
@@ -145,3 +146,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

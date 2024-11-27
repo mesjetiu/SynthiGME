@@ -1,5 +1,6 @@
 includePaths:
     -   ./SCClassLibrary
+    -   ../.Extensions
 excludePaths:
     []
 postInlineWarnings: false
