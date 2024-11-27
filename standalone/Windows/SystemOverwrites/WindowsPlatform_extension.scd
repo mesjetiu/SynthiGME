@@ -1,3 +1,6 @@
+// Usar esta extensión sólo en caso de crear apliación standalone
+
+
 + WindowsPlatform {
 
 	initPlatform {
@@ -6,7 +9,7 @@
 		// Obtenemos el path superior a la carpeta de SC:
 		path_general = PathName(Platform.resourceDir).pathOnly;
 		// Directorio de grabaciones en "Recordings"
-		recordingsDir = path_general +/+ "Recordings";
+		recordingsDir = path_general +/+ "Recordings" +/+ "Audio";
 	}
 
 	// Con estos overrides se consigue que SC no busque en archivos del sistema y del usuario, ni sobrescriba ninguna configuración previa de SC en la máquina.
@@ -28,7 +31,7 @@
 	// Ubicación de "extensions", donde se ubicará SynthiGME
 	userExtensionDir {
 		var path_general = PathName(Platform.resourceDir).pathOnly;
-		^path_general +/+ "Extensions";
+		^path_general +/+ ".Extensions";
 	}
 	//*userExtensionDir { ^thisProcess.platform.userExtensionDir }
 

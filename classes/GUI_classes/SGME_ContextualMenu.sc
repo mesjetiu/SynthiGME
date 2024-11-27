@@ -42,13 +42,14 @@ SGME_ContextualMenu {
 					MenuAction("Abrir grabadora de eventos", {
 						synthiGME.eventRecorder.makeWindow;
 					}),
-					MenuAction(grabarAudio, {
+			/*		MenuAction(grabarAudio, {
 						if (synthiGME.server.isRecording) {
 							synthiGME.server.stopRecording;
 						} {
 							synthiGME.server.record;
 						}
 					}),
+			*/
 					MenuAction(silenciarString, {
 						if (synthiGME.server.volume.isMuted,
 							{synthiGME.server.volume.unmute},
