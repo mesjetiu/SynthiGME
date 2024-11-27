@@ -67,6 +67,8 @@ SGME_GUI {
 
 		if (postWin) {
 			MessageRedirector.createWindow(synthi);
+			MessageRedirector.window.alwaysOnTop = true;
+			MessageRedirector.window.alwaysOnTop = false;
 		};
 		panels = [];
 		panels = panels.add(SGME_GUIPanel1(synthi, parameterViews));
