@@ -36,9 +36,9 @@ SynthiGME_standalone/
 │   ├── Audio/
 │   ├── Events/
 ├── .SuperCollider/
-├── Support/
-│   ├── System_support/
-│   ├── User_support/
+│   ├── SC_Support/ (creado automáticamente por SuperCollider)
+│       └── User_Support/
+│       └── System_Support/
 │   ├── Config/
 │       └── startup.scd (contiene el comando de SynthiGME())
 |       └── sclang_conf.yaml
