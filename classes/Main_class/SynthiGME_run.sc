@@ -102,7 +102,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					"Estableciendo número correcto de canales de entrada y salida:".sgmePostln;
 
 					Platform.case(
-					//	\osx,       { "OSX".postln },
+						//	\osx,       { "OSX".postln },
 						\linux,     { server.options.device_("Synthi GME") }, // En el caso de Linux, esto da nombre a la instancia (en lugar de "supercollider"), puesto que por defecto es Jack.
 						\windows,   { server.options.device_("ASIO") } // En Windows se puede proponer driver
 					);
@@ -143,10 +143,22 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 
 			// Se anuncia que se arrancará el servidor (si no lo está)
-			if(server.serverRunning == false, {"Arrancando servidor...".sgmePostln});
+			if(server.serverRunning == false, {
+				"Arrancando servidor...".sgmePostln;
+			});
 			// Arrancamos el servidor si aún no lo está
 			server.waitForBoot(
 				onComplete: {
+
+					// Primero, desregistrar al cliente si ya está registrado
+					server.sync;
+					server.sendMsg("/notify", false);
+					server.sync;
+
+					// Luego, registrar nuevamente
+					server.sendMsg("/notify", true);
+					server.sync;
+
 
 					// Se declaran los sintetizadores
 					server.sync;
