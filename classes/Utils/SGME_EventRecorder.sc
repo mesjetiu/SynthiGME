@@ -45,7 +45,12 @@ SGME_EventRecorder : SGME_GUIShortcuts{
 		imageOpen = Image(imagesPath +/+ "open");
 		imageSave = Image(imagesPath +/+ "save");
 		events = List.new;
-		pathEvents = SGME_Path.rootPath +/+ "Events";
+
+		if (SynthiGME.instance.executionMode == "standalone") {
+				var path_general = PathName(Platform.resourceDir).pathOnly; // path general de la aplicación standalone
+				pathEvents = path_general +/+ "Recordings" +/+ "Events";
+			}{ pathEvents = SGME_Path.rootPath +/+ "Events" };
+
 		player = Routine {
 			events.do { |event, i|
 				var time, string, value;
