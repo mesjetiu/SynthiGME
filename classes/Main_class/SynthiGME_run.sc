@@ -100,8 +100,15 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				(serverOptionsOK == false) && (server.serverRunning == false),
 				{
 					"Estableciendo número correcto de canales de entrada y salida:".sgmePostln;
-					server.options.device_("Synthi GME")
-					.numAudioBusChannels_(settings[\numAudioBusChannels])
+
+					Platform.case(
+					//	\osx,       { "OSX".postln },
+						\linux,     { server.options.device_("Synthi GME") }, // En el caso de Linux, esto da nombre a la instancia (en lugar de "supercollider"), puesto que por defecto es Jack.
+						\windows,   { server.options.device_("ASIO") } // En Windows se puede proponer driver
+					);
+
+
+					server.options.numAudioBusChannels_(settings[\numAudioBusChannels])
 					//.numOutputBusChannels_(settings[\numOutputBusChannels])
 					.numOutputBusChannels_(numOutputChannels)
 					.numInputBusChannels_(numInputChannels + numReturnChannels)
