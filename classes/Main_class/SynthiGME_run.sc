@@ -35,6 +35,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 			if (server.isNil) {"No se ha encontrado un puerto libre para crear un nuevo servidor".sgmePostln; this.close};
 
+			// Prepara las opciones del sevidor para que se ajusten a lo necesario.
 			this.prepareServer;
 
 			// Se anuncia que se arrancará el servidor (si no lo está)
@@ -44,17 +45,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// Arrancamos el servidor si aún no lo está
 			server.waitForBoot(
 				onComplete: {
-
-					// Primero, desregistrar al cliente si ya está registrado
-					server.sync;
-					server.sendMsg("/notify", false);
-					server.sync;
-
-					// Luego, registrar nuevamente
-					server.sendMsg("/notify", true);
-					server.sync;
-
-
+					1.wait; // tiempo de espera para debug
 					// Se declaran los sintetizadores
 					server.sync;
 					this.synthdefAll;
@@ -88,9 +79,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					server.sync;
 
 					2.do({"".sgmePostln}); // líneas en blanco para mostrar después todos los mensajes de arranque
-
-
-
 
 					"Conexión de salida stereo canales 1 a 8 mezclados a salidas 1 y 2".sgmePostln;
 					connectionOut = [];
