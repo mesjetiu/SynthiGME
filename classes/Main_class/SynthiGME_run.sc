@@ -29,118 +29,13 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 		splashWindow.numSteps = 24;
 
 		thisRoutine = Routine({
-			// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
-			var serverOptionsOK = false; // true si lo pedido coincide con las opciones actuales
 
-			if (server.isNil) {
-				var address, port, remoteServer, isFree, serverOptions, serverName, numIntentos;
-				"Buscando puertos libres para un nuevo servidor de audio".sgmePostln;
-				port = 57200;
-				numIntentos = 5; // Además del número de intentos, representa el número máximo de instancias en la misma máquina.
-
-				// Rutina para encontrar un puerto libre
-				isFree = false;
-				while ({ isFree.not && (port < (port+numIntentos)) }, {
-					address = NetAddr.new("127.0.0.1", port);
-					serverName = ("synthiGME_" ++ Date.seed.asHexString).asSymbol;
-					serverOptions = ServerOptions();
-					serverOptions.maxLogins = 2;
-
-					// Intentar conectar a un servidor remoto
-					remoteServer = Server.remote(serverName, address, serverOptions);
-					//remoteServer.connect;
-
-					wait(1); //este tiempo de espera es indispensable para que el Server se comunique con el eventual server que está en el puerto dado. Menor tiempo da serverRunning == false, aunque no sea cierto.
-
-
-					// Verificar si el servidor remoto está corriendo
-					if (remoteServer.serverRunning.not) {
-						isFree = true;
-					} {
-						remoteServer.notify = false;
-						port = port + 1;
-					}
-				});
-
-				if (isFree) {
-					server = remoteServer;
-					("Servidor creado en " + address).sgmePostln;
-				} {
-					("No se encontró un puerto libre para crear un nuevo servidor.").error;
-					^this
-				}
-			};
+			// Se busca un nuevo servidor si no se ha pasado uno por el usuario
+			if (server.isNil) {this.findServer};
 
 			if (server.isNil) {"No se ha encontrado un puerto libre para crear un nuevo servidor".sgmePostln; this.close};
 
-			if (
-				server.options.numOutputBusChannels == numOutputChannels,
-				{serverOptionsOK = true},
-				{serverOptionsOK = false}
-			);
-
-			// Apaga el servidor si es necesario
-			if (
-				(server.serverRunning && (serverOptionsOK == false || alwaysRebootServer)),
-				{
-					"El servidor de audio está encendido. Apagando servidor...".sgmePostln;
-					server.quit;
-					//server.sync;
-					if (server.serverRunning, {
-						"Servidor no apagado correctamente".error;
-						"Saliendo del programa...".sgmePostln;
-						thisRoutine.stop();
-					}, {
-						"Servidor apagado correctamente".sgmePostln;
-					});
-			});
-
-
-			if (
-				(serverOptionsOK == false) && (server.serverRunning == false),
-				{
-					"Estableciendo número correcto de canales de entrada y salida:".sgmePostln;
-
-					Platform.case(
-						//	\osx,       { "OSX".postln },
-						\linux,     { server.options.device_("Synthi GME") }, // En el caso de Linux, esto da nombre a la instancia (en lugar de "supercollider"), puesto que por defecto es Jack.
-						\windows,   { server.options.device_("ASIO") } // En Windows se puede proponer driver
-					);
-
-
-					server.options.numAudioBusChannels_(settings[\numAudioBusChannels])
-					//.numOutputBusChannels_(settings[\numOutputBusChannels])
-					.numOutputBusChannels_(numOutputChannels)
-					.numInputBusChannels_(numInputChannels + numReturnChannels)
-					.blockSize_(blockSize) // Control rate. Si es hardware lo permite se puede aproximar a 1
-					.bindAddress_("0.0.0.0")
-					.maxLogins_(2);
-					server.latency = 0.03;
-					//server.sync;
-
-					("Número de canales de Audio:" + server.options.numAudioBusChannels).sgmePostln;
-					("Número de canales de output:" + server.options.numOutputBusChannels).sgmePostln;
-					("Número de canales de input:" + server.options.numInputBusChannels).sgmePostln;
-					("Tamaño del bloque:" + server.options.blockSize).sgmePostln;
-					("Latencia del servidor:" + server.latency).sgmePostln;
-
-					if(
-						server.options.numAudioBusChannels >= settings[\numAudioBusChannels]
-						//&& server.options.numOutputBusChannels >= settings[\numOutputBusChannels]
-						&& server.options.numOutputBusChannels >= numOutputChannels
-						&& server.options.numInputBusChannels >= numInputChannels
-						&& server.options.blockSize >= blockSize
-					){
-						"Opciones actualizadas correctamente".sgmePostln;
-					}{
-						"No se han podido establecer las opciones adecuadas del servidor".error;
-						"Saliendo del programa...".sgmePostln;
-						thisRoutine.stop();
-					};
-
-				}
-			);
-
+			this.prepareServer;
 
 			// Se anuncia que se arrancará el servidor (si no lo está)
 			if(server.serverRunning == false, {
@@ -555,5 +450,121 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				}
 			);
 		}).play;
+	}
+
+
+	// FUNCIONES AUXILARES DE RUN()
+
+	// Busca un servidor libre aleatorio y lo asigna a this.server
+	findServer {
+		var address, port, remoteServer, isFree, serverOptions, serverName, numIntentos;
+		"Buscando puertos libres para un nuevo servidor de audio".sgmePostln;
+		port = 57200;
+		numIntentos = 5; // Además del número de intentos, representa el número máximo de instancias en la misma máquina.
+
+		// Rutina para encontrar un puerto libre
+		isFree = false;
+		while ({ isFree.not && (port < (port+numIntentos)) }, {
+			address = NetAddr.new("127.0.0.1", port);
+			serverName = ("synthiGME_" ++ Date.seed.asHexString).asSymbol;
+			serverOptions = ServerOptions();
+			serverOptions.maxLogins = 2;
+
+			// Intentar conectar a un servidor remoto
+			remoteServer = Server.remote(serverName, address, serverOptions);
+			//remoteServer.connect;
+
+			wait(1); //este tiempo de espera es indispensable para que el Server se comunique con el eventual server que está en el puerto dado. Menor tiempo da serverRunning == false, aunque no sea cierto.
+
+
+			// Verificar si el servidor remoto está corriendo
+			if (remoteServer.serverRunning.not) {
+				isFree = true;
+			} {
+				remoteServer.notify = false;
+				port = port + 1;
+			}
+		});
+
+		if (isFree) {
+			server = remoteServer;
+			("Servidor creado en " + address).sgmePostln;
+		} {
+			("No se encontró un puerto libre para crear un nuevo servidor.").error;
+			^this
+		}
+	}
+
+
+	prepareServer {
+		// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
+		var serverOptionsOK = true; // true si lo pedido coincide con las opciones actuales
+		if (
+			server.options.numOutputBusChannels == numOutputChannels,
+			{serverOptionsOK = true},
+			{serverOptionsOK = false}
+		);
+
+		// Apaga el servidor si es necesario
+		if (
+			(server.serverRunning && (serverOptionsOK == false || alwaysRebootServer)),
+			{
+				"El servidor de audio está encendido. Apagando servidor...".sgmePostln;
+				server.quit;
+				//server.sync;
+				if (server.serverRunning, {
+					"Servidor no apagado correctamente".error;
+					"Saliendo del programa...".sgmePostln;
+					this.thisRoutine.stop();
+				}, {
+					"Servidor apagado correctamente".sgmePostln;
+				});
+		});
+
+
+		if (
+			(serverOptionsOK == false) && (server.serverRunning == false),
+			{
+				"Estableciendo número correcto de canales de entrada y salida:".sgmePostln;
+
+				Platform.case(
+					//	\osx,       { "OSX".postln },
+					\linux,     { server.options.device_("Synthi GME") }, // En el caso de Linux, esto da nombre a la instancia (en lugar de "supercollider"), puesto que por defecto es Jack.
+					\windows,   { server.options.device_("ASIO") } // En Windows se puede proponer driver
+				);
+
+
+				server.options.numAudioBusChannels_(settings[\numAudioBusChannels])
+				//.numOutputBusChannels_(settings[\numOutputBusChannels])
+				.numOutputBusChannels_(numOutputChannels)
+				.numInputBusChannels_(numInputChannels + numReturnChannels)
+				.blockSize_(blockSize) // Control rate. Si es hardware lo permite se puede aproximar a 1
+				.bindAddress_("0.0.0.0")
+				.maxLogins_(2);
+				server.latency = 0.03;
+				//server.sync;
+
+				("Número de canales de Audio:" + server.options.numAudioBusChannels).sgmePostln;
+				("Número de canales de output:" + server.options.numOutputBusChannels).sgmePostln;
+				("Número de canales de input:" + server.options.numInputBusChannels).sgmePostln;
+				("Tamaño del bloque:" + server.options.blockSize).sgmePostln;
+				("Latencia del servidor:" + server.latency).sgmePostln;
+
+				if(
+					server.options.numAudioBusChannels >= settings[\numAudioBusChannels]
+					//&& server.options.numOutputBusChannels >= settings[\numOutputBusChannels]
+					&& server.options.numOutputBusChannels >= numOutputChannels
+					&& server.options.numInputBusChannels >= numInputChannels
+					&& server.options.blockSize >= blockSize
+				){
+					"Opciones actualizadas correctamente".sgmePostln;
+				}{
+					"No se han podido establecer las opciones adecuadas del servidor".error;
+					"Saliendo del programa...".sgmePostln;
+					this.thisRoutine.stop();
+				};
+
+			}
+		);
 	}
 }
