@@ -45,9 +45,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			// Arrancamos el servidor si aún no lo está
 			server.waitForBoot(
 				onComplete: {
-					1.wait; // tiempo de espera para debug
-					// Se declaran los sintetizadores
+					//1.wait; // tiempo de espera para debug
 					server.sync;
+					server.notify;
+					server.initTree;
+					server.sync;
+					// Se declaran los sintetizadores
 					this.synthdefAll;
 					server.sync;
 
