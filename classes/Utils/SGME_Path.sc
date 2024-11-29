@@ -91,6 +91,11 @@ SGME_Path {
 			var quarkPath = Quarks.quarkNameAsLocalPath(name);
 			^quarkPath;
 		}
+		// Si está en modo standalone
+		{SynthiGME.instance.executionMode == "standalone"} {
+			var path = Platform.userExtensionDir +/+ "SynthiGME";
+			^path;
+		}
 		// Si no es nada de lo anterior, ha de ser una extensión
 		{
 			var userExtensionPath = Platform.userExtensionDir +/+ name;
