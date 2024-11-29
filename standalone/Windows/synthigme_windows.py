@@ -25,31 +25,42 @@ from datetime import datetime
 import io
 import traceback
 
-# Configure encoding to avoid strange characters on Windows
+# Configurar codificación para evitar caracteres extraños en Windows
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-# Detect the directory where the script or executable is located
-if getattr(sys, 'frozen', False):  # If packaged as .exe
-    SCRIPT_DIR = os.path.dirname(sys.executable)  # Directory of the executable
+# Detectar el directorio donde se encuentra el script o el ejecutable
+if getattr(sys, 'frozen', False):  # Si está empaquetado como .exe
+    SCRIPT_DIR = os.path.dirname(sys.executable)  # Directorio del ejecutable
 else:
-    SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))  # Directory of the Python script
+    SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))  # Directorio del script Python
 
-# Configure paths based on SCRIPT_DIR
-SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")  # Path to .SuperCollider/
+# Configurar rutas basadas en SCRIPT_DIR
+SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")  # Ruta a .SuperCollider/
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
-CONFIG_DIR = os.path.join(SCRIPT_DIR, "Config")  # Path to configuration directory
-SCLANG_CONFIG = os.path.join(CONFIG_DIR, "sclang_conf.yaml")  # SC configuration
-LOG_DIR = os.path.join(SCRIPT_DIR, "PostWindow_Logs")  # Log directory
+CONFIG_DIR = os.path.join(SCRIPT_DIR, "Config")  # Ruta a directorio de configuración
+SCLANG_CONFIG = os.path.join(CONFIG_DIR, "sclang_conf.yaml")  # Configuración de SC
+LOG_DIR = os.path.join(SCRIPT_DIR, "PostWindow_Logs")  # Directorio de logs
+VERSION_FILE = os.path.join(SCRIPT_DIR, ".Extensions", "SynthiGME", "version")  # Archivo con la versión
 
-# Ensure the log directory exists
+# Asegurar que el directorio de logs existe
 os.makedirs(LOG_DIR, exist_ok=True)
 
 
+def get_version():
+    """Obtiene la versión de SynthiGME desde el archivo SynthiGME/version."""
+    try:
+        with open(VERSION_FILE, "r", encoding="utf-8") as version_file:
+            return version_file.read().strip()
+    except Exception:
+        return "unknown (version file not found)"
+
+
 def get_system_info():
-    """Retrieve system information for the log header."""
+    """Obtiene información relevante del sistema para el encabezado del log."""
     system_info = {
         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "SynthiGME Version": get_version(),
         "OS": platform.system(),
         "OS Version": platform.version(),
         "Architecture": platform.architecture()[0],
@@ -62,7 +73,7 @@ def get_system_info():
 
 
 def write_log_header(log_file):
-    """Write a header with system information to the log file."""
+    """Escribe un encabezado con información del sistema en el archivo de log."""
     system_info = get_system_info()
     with open(log_file, "w", encoding="utf-8") as log:
         log.write("==== SynthiGME Log ====\n")
@@ -70,11 +81,11 @@ def write_log_header(log_file):
         for key, value in system_info.items():
             log.write(f"{key}: {value}\n")
         log.write("\n==== Log Output ====\n")
-        log.flush()  # Ensure all data is written to the file
+        log.flush()  # Asegurar que todo se escriba en el archivo
 
 
 def log_error(log_file, error_message):
-    """Log error messages to the log file."""
+    """Registra mensajes de error en el archivo de log."""
     with open(log_file, "a", encoding="utf-8") as log:
         log.write("\n==== ERROR ====\n")
         log.write(error_message + "\n")
@@ -83,7 +94,7 @@ def log_error(log_file, error_message):
 
 
 def read_sclang_output(process, stop_event, log_file):
-    """Reads and displays sclang process output in real time."""
+    """Lee y muestra en tiempo real las salidas del proceso de sclang."""
     with open(log_file, "a", encoding="utf-8") as log:
         while not stop_event.is_set():
             try:
@@ -91,13 +102,13 @@ def read_sclang_output(process, stop_event, log_file):
                 if output:
                     decoded_output = output.strip()
                     print(decoded_output)
-                    sys.stdout.flush()  # Force output buffer to flush
+                    sys.stdout.flush()  # Forzar vaciado del buffer de salida
                     log.write(decoded_output + "\n")
-                    log.flush()  # Ensure the output is written to the file
+                    log.flush()  # Asegurar que la salida se escriba en el archivo
 
-                    # Detect "exit" in the post window output
+                    # Detectar "exit" en la salida de la post window
                     if decoded_output.lower() == "exit":
-                        print("Detected 'exit' message in Post Window. Automatically closing.")
+                        print("Mensaje 'exit' detectado en la Post Window. Cerrando automáticamente.")
                         sys.stdout.flush()
                         stop_event.set()
                         process.terminate()
@@ -119,57 +130,57 @@ def main():
     log_file = None
 
     try:
-        # Create a uniquely named log file in the log directory
+        # Crear archivo de log con nombre único en el directorio de logs
         log_file = os.path.join(LOG_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
-        print(f"Session log will be saved to: {log_file}")
-        print(f"Using sclang executable at: {SCLANG_EXECUTABLE}")
-        print(f"Working directory: {SUPER_COLLIDER_DIR}")
+        print(f"Registro de la sesión se guardará en: {log_file}")
+        print(f"Usando el ejecutable de sclang en: {SCLANG_EXECUTABLE}")
+        print(f"Directorio de trabajo: {SUPER_COLLIDER_DIR}")
 
-        # Write the log header
+        # Escribir el encabezado del log
         write_log_header(log_file)
 
-        # Verify that the sclang executable is available
+        # Verificar si el ejecutable de sclang está disponible
         if not os.path.isfile(SCLANG_EXECUTABLE):
             raise FileNotFoundError(f"sclang executable not found at {SCLANG_EXECUTABLE}. "
                                     "Ensure the SuperCollider directory contains sclang.")
 
-        # Change the working directory to SuperCollider
+        # Cambiar el directorio de trabajo a SuperCollider
         os.chdir(SUPER_COLLIDER_DIR)
 
-        # Configuration to handle stdin and prevent popup windows on Windows
+        # Configuración para manejar stdin y ventanas emergentes en Windows
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
-        # Open the sclang process with the configured command
+        # Abrir el proceso de sclang usando el comando configurado
         print("Starting sclang process...")
         process = subprocess.Popen(
             [SCLANG_EXECUTABLE, "-l", SCLANG_CONFIG],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,  # Combine stdout and stderr
-            encoding='utf-8',  # Specify UTF-8 encoding
-            errors='replace',  # Replace characters that cannot be decoded
+            stderr=subprocess.STDOUT,  # Combinar stdout y stderr
+            encoding='utf-8',  # Especificar codificación UTF-8
+            errors='replace',  # Reemplazar caracteres que no se puedan decodificar
             startupinfo=startupinfo
         )
 
-        # Event to signal when to stop the thread
+        # Evento para señalar cuando parar el hilo
         stop_event = threading.Event()
 
-        # Start a thread to read the sclang output in real time
+        # Iniciar un hilo para leer la salida de sclang en tiempo real
         thread = threading.Thread(target=read_sclang_output, args=(process, stop_event, log_file), daemon=True)
         thread.start()
 
-        print("sclang is running. Type your SuperCollider code and press Enter.")
+        print("sclang está corriendo. Escribe tu código SuperCollider y presiona Enter.")
         sys.stdout.flush()
-        print("To exit manually, type 'exit' or 'quit'.")
+        print("Para salir manualmente, escribe 'exit' o 'quit'.")
         sys.stdout.flush()
 
-        # Handle user input
+        # Manejar entrada del usuario
         while not stop_event.is_set():
             try:
                 user_input = input("> ")
                 if user_input.lower() in ["exit", "quit"]:
-                    print("Closing sclang...")
+                    print("Cerrando sclang...")
                     sys.stdout.flush()
                     if process.poll() is None and process.stdin:
                         process.stdin.write("0.exit\n")
@@ -186,7 +197,7 @@ def main():
             process.wait()
         stop_event.set()
         thread.join()
-        print("sclang closed.")
+        print("sclang cerrado.")
         sys.stdout.flush()
     except Exception as e:
         error_message = f"Unexpected error occurred: {str(e)}\n{traceback.format_exc()}"
