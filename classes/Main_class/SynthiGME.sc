@@ -201,7 +201,7 @@ SynthiGME {
 
 		instance = this;
 
-		this.executionMode = "standalone";
+		if (standalone) { this.executionMode = "standalone" };
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
