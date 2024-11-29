@@ -201,7 +201,7 @@ SynthiGME {
 
 		instance = this;
 
-		if (standalone) { this.executionMode = "standalone" };
+		if (standalone) { this.executionMode = "standalone" } { this.executionMode = "extension" };
 
 		// Carga la configuración
 		settings = SGME_Settings.get;
@@ -434,19 +434,24 @@ SynthiGME {
 	}
 
 	exit {
-		{Window.closeAll}.defer();
-		server.freeAll;
-		modulRandomGenerator.randomRoutine.stop;
-		if (this.executionMode == "standalone") {
-			server.quit(
-				onComplete: {
-					"exit\n".post; // "exit" lo recibe el script de python de la versión standalone.
-			})
-		} {
-			if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
-				0.exit;
-			});
-			thisProcess.recompile;
+		fork {
+			{Window.closeAll}.defer();
+			0.1.wait;
+			server.freeAll;
+			server.sync;
+			modulRandomGenerator.randomRoutine.stop;
+			if (this.executionMode == "standalone") {
+				server.quit(
+					onComplete: {
+						0.exit;
+						//"exit\n".post; // "exit" lo recibe el script de python de la versión standalone.
+				})
+			} {
+				if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
+					0.exit;
+				});
+				thisProcess.recompile;
+			}
 		}
 	}
 
