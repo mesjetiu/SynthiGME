@@ -438,7 +438,10 @@ SynthiGME {
 		server.freeAll;
 		modulRandomGenerator.randomRoutine.stop;
 		if (this.executionMode == "standalone") {
-			"exit".postln; // "exit" lo recibe el script de python de la versión standalone.
+			server.quit(
+				onComplete: {
+					"exit\n".post; // "exit" lo recibe el script de python de la versión standalone.
+			})
 		} {
 			if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
 				0.exit;
