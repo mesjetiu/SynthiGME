@@ -120,13 +120,31 @@ def read_sclang_output(process, stop_event, log_file):
                 output = process.stdout.readline()
                 if output:
                     decoded_output = output.strip()
-                    console.print(decoded_output, style="cyan")
+
+                    # Detectar patrones clave y aplicar estilos
+                    if "==== SynthiGME Log ====" in decoded_output or "==== Log Output ====" in decoded_output:
+                        console.print(f"[bold underline gold3]{decoded_output}[/bold underline gold3]")
+                    elif "WARNING:" in decoded_output:
+                        console.print(f"[bold sandy_brown]{decoded_output}[/bold sandy_brown]")
+                    elif "FAILURE IN SERVER" in decoded_output or "Node" in decoded_output and "not found" in decoded_output:
+                        console.print(f"[bold light_coral]{decoded_output}[/bold light_coral]")
+                    elif "SuperCollider 3 server ready." in decoded_output or "*** SynthiGME" in decoded_output:
+                        console.print(f"[bold olive_drab1]{decoded_output}[/bold olive_drab1]")
+                    elif "compiling" in decoded_output or "Arrancando servidor" in decoded_output or "Booting server" in decoded_output:
+                        console.print(f"[light_goldenrod3]{decoded_output}[/light_goldenrod3]")
+                    elif "Device options:" in decoded_output or "Conexión de salida stereo" in decoded_output:
+                        console.print(f"[light_slate_blue]{decoded_output}[/light_slate_blue]")
+                    else:
+                        # Texto general
+                        console.print(decoded_output, style="bright_black")
+
+                    # Escribir en el log
                     log.write(decoded_output + "\n")
                     log.flush()  # Asegurar que la salida se escriba en el archivo
 
                     # Detectar "exit" en la salida de la post window
                     if decoded_output.lower() == "exit":
-                        console.print("[bold yellow]Mensaje 'exit' detectado. Cerrando automáticamente...[/bold yellow]")
+                        console.print("[bold light_goldenrod3]Mensaje 'exit' detectado. Cerrando automáticamente...[/bold light_goldenrod3]")
                         stop_event.set()
                         process.terminate()
                         break
