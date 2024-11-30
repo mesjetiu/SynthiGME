@@ -1,17 +1,17 @@
-# This file is part of SynthiGME.
+# Este archivo es parte de SynthiGME.
 
-# SynthiGME is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# SynthiGME es software libre: puedes redistribuirlo y/o modificarlo
+# bajo los términos de la Licencia Pública General de GNU publicada por
+# la Free Software Foundation, ya sea la versión 3 de la Licencia o
+# (a tu elección) cualquier versión posterior.
 
-# SynthiGME is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
+# SynthiGME se distribuye con la esperanza de que sea útil,
+# pero SIN NINGUNA GARANTÍA; ni siquiera la garantía implícita de
+# COMERCIABILIDAD o ADECUACIÓN A UN PROPÓSITO PARTICULAR.
+# Consulta la Licencia Pública General de GNU para más detalles.
 
-# You should have received a copy of the GNU General Public License
-# along with SynthiGME. If not, see <https://www.gnu.org/licenses/>.
+# Deberías haber recibido una copia de la Licencia Pública General de GNU
+# junto con SynthiGME. Si no, consulta <https://www.gnu.org/licenses/>.
 
 # Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
@@ -20,10 +20,20 @@ import threading
 import os
 import sys
 import platform
-import psutil
+import psutil # pip install psutil (windows)
 from datetime import datetime
 import io
 import traceback
+from rich.console import Console # pip install rich (windows)
+from rich.table import Table
+from rich.traceback import install
+from rich.panel import Panel
+
+# Instalar manejo enriquecido de errores con Rich
+install()
+
+# Configurar consola Rich
+console = Console()
 
 # Configurar codificación para evitar caracteres extraños en Windows
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -83,6 +93,14 @@ def write_log_header(log_file):
         log.write("\n==== Log Output ====\n")
         log.flush()  # Asegurar que todo se escriba en el archivo
 
+    # Mostrar en consola la misma información en formato Rich
+    table = Table(title="SynthiGME Session Details")
+    table.add_column("Property", style="bold blue")
+    table.add_column("Value", style="bold green")
+    for key, value in system_info.items():
+        table.add_row(key, str(value))
+    console.print(table)
+
 
 def log_error(log_file, error_message):
     """Registra mensajes de error en el archivo de log."""
@@ -91,6 +109,7 @@ def log_error(log_file, error_message):
         log.write(error_message + "\n")
         log.write("==============\n")
         log.flush()
+    console.print(f"[bold red]ERROR:[/bold red] {error_message}")
 
 
 def read_sclang_output(process, stop_event, log_file):
@@ -101,15 +120,13 @@ def read_sclang_output(process, stop_event, log_file):
                 output = process.stdout.readline()
                 if output:
                     decoded_output = output.strip()
-                    print(decoded_output)
-                    sys.stdout.flush()  # Forzar vaciado del buffer de salida
+                    console.print(decoded_output, style="cyan")
                     log.write(decoded_output + "\n")
                     log.flush()  # Asegurar que la salida se escriba en el archivo
 
                     # Detectar "exit" en la salida de la post window
                     if decoded_output.lower() == "exit":
-                        print("Mensaje 'exit' detectado en la Post Window. Cerrando automáticamente.")
-                        sys.stdout.flush()
+                        console.print("[bold yellow]Mensaje 'exit' detectado. Cerrando automáticamente...[/bold yellow]")
                         stop_event.set()
                         process.terminate()
                         break
@@ -119,7 +136,6 @@ def read_sclang_output(process, stop_event, log_file):
                     break
             except Exception as e:
                 error_message = f"Error reading sclang output: {str(e)}\n{traceback.format_exc()}"
-                print(error_message)
                 log_error(log_file, error_message)
                 stop_event.set()
                 break
@@ -132,9 +148,9 @@ def main():
     try:
         # Crear archivo de log con nombre único en el directorio de logs
         log_file = os.path.join(LOG_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
-        print(f"Registro de la sesión se guardará en: {log_file}")
-        print(f"Usando el ejecutable de sclang en: {SCLANG_EXECUTABLE}")
-        print(f"Directorio de trabajo: {SUPER_COLLIDER_DIR}")
+        console.print(f"[bold green]Registro de la sesión se guardará en:[/bold green] {log_file}")
+        console.print(f"[bold blue]Usando el ejecutable de sclang en:[/bold blue] {SCLANG_EXECUTABLE}")
+        console.print(f"[bold magenta]Directorio de trabajo:[/bold magenta] {SUPER_COLLIDER_DIR}")
 
         # Escribir el encabezado del log
         write_log_header(log_file)
@@ -152,14 +168,14 @@ def main():
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
         # Abrir el proceso de sclang usando el comando configurado
-        print("Starting sclang process...")
+        console.print("[bold green]Starting sclang process...[/bold green]")
         process = subprocess.Popen(
             [SCLANG_EXECUTABLE, "-l", SCLANG_CONFIG],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,  # Combinar stdout y stderr
-            encoding='utf-8',  # Especificar codificación UTF-8
-            errors='replace',  # Reemplazar caracteres que no se puedan decodificar
+            stderr=subprocess.STDOUT,
+            encoding='utf-8',
+            errors='replace',
             startupinfo=startupinfo
         )
 
@@ -170,18 +186,15 @@ def main():
         thread = threading.Thread(target=read_sclang_output, args=(process, stop_event, log_file), daemon=True)
         thread.start()
 
-        print("sclang está corriendo. Escribe tu código SuperCollider y presiona Enter.")
-        sys.stdout.flush()
-        print("Para salir manualmente, escribe 'exit' o 'quit'.")
-        sys.stdout.flush()
+        console.print("[bold cyan]sclang está corriendo. Escribe tu código SuperCollider y presiona Enter.[/bold cyan]")
+        console.print("[bold yellow]Para salir manualmente, escribe 'exit' o 'quit'.[/bold yellow]")
 
         # Manejar entrada del usuario
         while not stop_event.is_set():
             try:
-                user_input = input("> ")
+                user_input = console.input("[bold green]> [/bold green]")
                 if user_input.lower() in ["exit", "quit"]:
-                    print("Cerrando sclang...")
-                    sys.stdout.flush()
+                    console.print("[bold yellow]Cerrando sclang...[/bold yellow]")
                     if process.poll() is None and process.stdin:
                         process.stdin.write("0.exit\n")
                     stop_event.set()
@@ -197,16 +210,13 @@ def main():
             process.wait()
         stop_event.set()
         thread.join()
-        print("sclang cerrado.")
-        sys.stdout.flush()
+        console.print("[bold green]sclang cerrado.[/bold green]")
     except Exception as e:
         error_message = f"Unexpected error occurred: {str(e)}\n{traceback.format_exc()}"
-        print(error_message)
-        if log_file:
-            log_error(log_file, error_message)
+        log_error(log_file, error_message)
     finally:
         if log_file:
-            print(f"Log saved to: {log_file}")
+            console.print(f"[bold green]Log saved to:[/bold green] {log_file}")
 
 
 if __name__ == "__main__":
