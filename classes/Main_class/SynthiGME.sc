@@ -437,8 +437,6 @@ SynthiGME {
 		fork {
 			{Window.closeAll}.defer();
 			0.1.wait;
-			server.freeAll;
-			server.sync;
 			modulRandomGenerator.randomRoutine.stop;
 			if (this.executionMode == "standalone") {
 				server.quit(
