@@ -44,6 +44,12 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			});
 			// Arrancamos el servidor si aún no lo está
 			server.waitForBoot(
+				limit: 25,
+				onFailure: {
+					"No se ha podido arrancar el servidor de audio".sgmeWarn;
+					"Saliendo...".sgmePostln;
+					this.close;
+				},
 				onComplete: {
 					//1.wait; // tiempo de espera para debug
 					server.sync;
