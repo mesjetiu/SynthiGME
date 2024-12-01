@@ -36,8 +36,9 @@ install()
 console = Console()
 
 # Configurar codificación para evitar caracteres extraños en Windows
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+# No parece ser necesario con Rich...
+#sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+#sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # Detectar el directorio donde se encuentra el script o el ejecutable
 if getattr(sys, 'frozen', False):  # Si está empaquetado como .exe
