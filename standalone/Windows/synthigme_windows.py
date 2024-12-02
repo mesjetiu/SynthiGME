@@ -130,6 +130,9 @@ class TkinterTerminal:
         if self.console_content:
             self.append_output(self.console_content, "bright_black")
 
+        # Configurar etiquetas de colores
+        self.configure_tags()
+
     def toggle_console(self):
         """Alterna la visibilidad de la consola incrustada."""
         if self.show_console.get():
@@ -148,6 +151,7 @@ class TkinterTerminal:
             "light_slate_blue": "#8470ff",
             "bright_black": "#808080",
             "light_cyan": "#00e5ee",
+            "green_ready": "#32cd32",  # Nuevo color para indicar SynthiGME listo
         }
         for name, color in colors.items():
             self.output_area.tag_configure(name, foreground=color)
@@ -166,6 +170,8 @@ class TkinterTerminal:
             return "olive_drab1"
         elif "[local]:" in text:
             return "light_cyan"
+        elif "*** SynthiGME" in text and "en ejecución ***" in text:  # Línea específica
+            return "green_ready"
         elif "SuperCollider 3 server ready." in text or "Cerrando Synthi GME..." in text:
             return "light_goldenrod3"
         else:
