@@ -22,6 +22,7 @@ import sys
 import traceback
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
+from tkinter import Menu
 from art import text2art  # Paquete para generar banners ASCII
 
 # Detectar el directorio donde se encuentra el script o el ejecutable
@@ -42,6 +43,9 @@ class TkinterTerminal:
         self.root = root
         self.root.title("SynthiGME Terminal")
         self.root.geometry("800x600")
+
+        # Crear menú principal
+        self.create_menu()
 
         # Área de texto para la salida
         self.output_area = ScrolledText(root, wrap=tk.WORD, font=("Courier", 12), bg="black", fg="white")
@@ -75,6 +79,27 @@ class TkinterTerminal:
         # Mostrar banner ASCII
         self.show_ascii_banner()
 
+    def create_menu(self):
+        """Crea el menú principal de la aplicación."""
+        menu_bar = Menu(self.root)
+
+        # Menú Archivo
+        file_menu = Menu(menu_bar, tearoff=0)
+        file_menu.add_command(label="Cerrar", command=self.on_close)
+        menu_bar.add_cascade(label="Archivo", menu=file_menu)
+
+        # Menú Ver
+        view_menu = Menu(menu_bar, tearoff=0)
+        view_menu.add_command(label="Próximamente...")  # Espacio para expandir
+        menu_bar.add_cascade(label="Ver", menu=view_menu)
+
+        # Menú Herramientas
+        tools_menu = Menu(menu_bar, tearoff=0)
+        tools_menu.add_command(label="Próximamente...")  # Espacio para expandir
+        menu_bar.add_cascade(label="Herramientas", menu=tools_menu)
+
+        self.root.config(menu=menu_bar)
+
     def configure_tags(self):
         """Configura etiquetas de colores para el área de texto."""
         for name, color in self.colors.items():
@@ -88,7 +113,7 @@ class TkinterTerminal:
             return "sandy_brown"
         elif "FAILURE IN SERVER" in text or ("Node" in text and "not found" in text):
             return "light_coral"
-        elif "SuperCollider 3 server ready." in text or "*** SynthiGME" in text:
+        elif "SuperCollider 3 server ready." in text or "*** Synthi GME" in text:
             return "olive_drab1"
         elif "compiling" in text or "Arrancando servidor" in text or "Booting server" in text:
             return "light_goldenrod3"
@@ -153,7 +178,7 @@ class TkinterTerminal:
 
     def on_close(self):
         """Lógica para cerrar la ventana y finalizar el proceso sclang."""
-        self.append_output("Cerrando SynthiGME...", "light_goldenrod3")
+        self.append_output("Cerrando Synthi GME...", "light_goldenrod3")
         if self.process:
             self.stop_event.set()  # Detener la lectura del proceso
             self.process.terminate()  # Terminar el proceso sclang
