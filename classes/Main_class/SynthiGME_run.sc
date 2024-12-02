@@ -495,13 +495,16 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 
 	prepareServer {
 		// Comprobamos si coinciden las opciones pedidas con las opciones actuales del Server:
-		var serverOptionsOK = true; // true si lo pedido coincide con las opciones actuales
-		if (
-			server.options.numOutputBusChannels == numOutputChannels,
-			{serverOptionsOK = true},
-			{serverOptionsOK = false}
-		);
+		var serverOptionsOK = false; // true si lo pedido coincide con las opciones actuales
 
+		// TODO: hacer una comprobación exhaustiva de si las opciones del server se cumplen
+
+		/*	if (
+		server.options.numOutputBusChannels == numOutputChannels,
+		{serverOptionsOK = true},
+		{serverOptionsOK = false}
+		);
+		*/
 		// Apaga el servidor si es necesario
 		if (
 			(server.serverRunning && (serverOptionsOK == false || alwaysRebootServer)),
@@ -527,7 +530,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				Platform.case(
 					//	\osx,       { "OSX".postln },
 					\linux,     { server.options.device_("Synthi GME") }, // En el caso de Linux, esto da nombre a la instancia (en lugar de "supercollider"), puesto que por defecto es Jack.
-					\windows,   { server.options.device_("ASIO") } // En Windows se puede proponer driver
+					\windows,   { server.options.device_("ASIO : JackRouter"); "holitaaaa".postln } // En Windows se puede proponer driver
 				);
 
 
