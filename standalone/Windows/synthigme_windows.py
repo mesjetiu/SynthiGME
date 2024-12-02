@@ -247,19 +247,38 @@ class TkinterTerminal:
             traceback.print_exc()
 
     def read_sclang_output(self):
-        """Lee la salida de sclang y la registra en el archivo de log."""
+        """Lee la salida de sclang, detecta comandos y registra en el archivo de log."""
         try:
             while not self.stop_event.is_set() and self.process:
                 output = self.process.stdout.readline()
                 if output:
+                    # Procesar comandos específicos
+                    self.process_command(output.strip())
+
+                    # Mostrar en la consola con el color correspondiente
                     self.append_output(output.strip(), self.detect_color(output.strip()))
-                if self.process.poll() is not None:
+
+                if self.process.poll() is not None:  # Si el proceso ha terminado
                     break
         except Exception as e:
             self.append_output(f"Error leyendo salida de sclang: {e}", "light_coral")
         finally:
             if self.log_file_handle:
                 self.log_file_handle.close()
+
+    def process_command(self, text):
+        """Procesa comandos especiales enviados desde sclang."""
+        if text.startswith("command: "):
+            command = text[len("command: "):].strip()  # Extraer el comando después de 'command: '
+
+            # Procesar comandos específicos
+            if command == "exit":
+                self.append_output("Recibido comando 'exit'. Cerrando la aplicación...", "light_goldenrod3")
+                self.on_close()  # Llama al método para cerrar la aplicación
+
+            # Añadir más comandos aquí si es necesario
+            else:
+                self.append_output(f"Comando desconocido: {command}", "sandy_brown")
 
     def on_close(self):
         """Lógica para cerrar la ventana y finalizar el proceso sclang."""

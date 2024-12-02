@@ -441,8 +441,8 @@ SynthiGME {
 			if (this.executionMode == "standalone") {
 				server.quit(
 					onComplete: {
-						0.exit;
-						//"exit\n".post; // "exit" lo recibe el script de python de la versión standalone.
+						//0.exit;
+						"command: exit".postln; // "exit" lo recibe el script de python de la versión standalone.
 				})
 			} {
 				if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal
