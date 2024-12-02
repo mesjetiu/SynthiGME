@@ -7,8 +7,9 @@ import psutil
 from datetime import datetime
 import traceback
 import tkinter as tk
-from tkinter.scrolledtext import ScrolledText
 from tkinter import Menu, BooleanVar
+from tkinter.scrolledtext import ScrolledText
+from tkinter import ttk  # Importamos ttk para usar Notebook (pestañas)
 
 # Detectar el directorio donde se encuentra el script o el ejecutable
 if getattr(sys, 'frozen', False):  # Si está empaquetado como .exe
@@ -80,14 +81,23 @@ class TkinterTerminal:
         # Variable para el contenido de la consola
         self.console_content = ""
 
-        # Variable para el estado de la consola
-        self.show_console = BooleanVar(value=True)
-
         # Crear menú principal
         self.create_menu()
 
-        # Consola incrustada
+        # Crear estructura de pestañas
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+
+        # Pestaña de consola
+        self.console_frame = ttk.Frame(self.notebook)
+        self.notebook.add(self.console_frame, text="Consola")
         self.create_console_widgets()
+
+        # Pestañas dummy
+        self.tab1 = ttk.Frame(self.notebook)
+        self.tab2 = ttk.Frame(self.notebook)
+        self.notebook.add(self.tab1, text="Pestaña 1")
+        self.notebook.add(self.tab2, text="Pestaña 2")
 
         self.process = None
         self.stop_event = threading.Event()
@@ -104,18 +114,10 @@ class TkinterTerminal:
         file_menu.add_command(label="Cerrar", command=self.on_close)
         menu_bar.add_cascade(label="Archivo", menu=file_menu)
 
-        # Menú Ver
-        view_menu = Menu(menu_bar, tearoff=0)
-        view_menu.add_checkbutton(label="Ver consola", variable=self.show_console, command=self.toggle_console)
-        menu_bar.add_cascade(label="Ver", menu=view_menu)
-
         self.root.config(menu=menu_bar)
 
     def create_console_widgets(self):
-        """Crea los widgets de la consola incrustada."""
-        self.console_frame = tk.Frame(self.root)
-        self.console_frame.pack(fill=tk.BOTH, expand=True)
-
+        """Crea los widgets de la consola en la pestaña 'Consola'."""
         # Área de texto para la salida
         self.output_area = ScrolledText(self.console_frame, wrap=tk.WORD, font=("Courier", 12), bg="black", fg="white")
         self.output_area.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
@@ -132,13 +134,6 @@ class TkinterTerminal:
 
         # Configurar etiquetas de colores
         self.configure_tags()
-
-    def toggle_console(self):
-        """Alterna la visibilidad de la consola incrustada."""
-        if self.show_console.get():
-            self.console_frame.pack(fill=tk.BOTH, expand=True)
-        else:
-            self.console_frame.pack_forget()
 
     def configure_tags(self):
         """Configura etiquetas de colores para el área de texto."""
