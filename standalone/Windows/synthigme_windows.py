@@ -121,6 +121,9 @@ class TkinterTerminal:
         # Crear menú principal
         self.create_menu()
 
+        # Habilitar el movimiento de pestañas
+        self.enable_tab_dragging()
+
         self.process = None
         self.stop_event = threading.Event()
 
@@ -190,6 +193,25 @@ class TkinterTerminal:
         }
         for name, color in colors.items():
             self.output_area.tag_configure(name, foreground=color)
+
+    def enable_tab_dragging(self):
+        """Habilita el movimiento de pestañas mediante arrastrar y soltar."""
+        self.notebook.bind("<ButtonPress-1>", self.on_tab_drag_start)
+        self.notebook.bind("<B1-Motion>", self.on_tab_drag_motion)
+
+    def on_tab_drag_start(self, event):
+        """Inicio del evento de arrastre de una pestaña."""
+        self.drag_start_index = self.notebook.index("@%d,%d" % (event.x, event.y))
+
+    def on_tab_drag_motion(self, event):
+        """Mueve una pestaña mientras el usuario la arrastra."""
+        try:
+            current_index = self.notebook.index("@%d,%d" % (event.x, event.y))
+            if current_index != self.drag_start_index:
+                self.notebook.insert(current_index, self.notebook.tabs()[self.drag_start_index])
+                self.drag_start_index = current_index
+        except tk.TclError:
+            pass  # Ignorar si el cursor está fuera de las pestañas
 
     def detect_color(self, text):
         """Detecta el color apropiado basado en el contenido del texto."""
@@ -272,13 +294,10 @@ class TkinterTerminal:
             while not self.stop_event.is_set() and self.process:
                 output = self.process.stdout.readline()
                 if output:
-                    # Procesar comandos específicos
                     self.process_command(output.strip())
-
-                    # Mostrar en la consola con el color correspondiente
                     self.append_output(output.strip(), self.detect_color(output.strip()))
 
-                if self.process.poll() is not None:
+                if self.process.poll() is not None:  # Si el proceso ha terminado
                     break
         except Exception as e:
             self.append_output(f"Error leyendo salida de sclang: {e}", "light_coral")
@@ -294,7 +313,6 @@ class TkinterTerminal:
             if command == "exit":
                 self.append_output("Recibido comando 'exit'. Cerrando la aplicación...", "light_goldenrod3")
                 self.on_close()
-            # Otros comandos personalizados
             else:
                 self.append_output(f"Comando desconocido: {command}", "sandy_brown")
 
