@@ -441,8 +441,10 @@ SynthiGME {
 			if (this.executionMode == "standalone") {
 				server.quit(
 					onComplete: {
+						server.freeAll;
+						thisProcess.stop; // en teoría cierra los puertos como UDP
 						//0.exit;
-						"command: exit".postln; // "exit" lo recibe el script de python de la versión standalone.
+						"command: force_exit".postln; // "exit" lo recibe el script de python de la versión standalone.
 				})
 			} {
 				if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal

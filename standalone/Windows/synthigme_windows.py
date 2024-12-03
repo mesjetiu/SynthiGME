@@ -246,18 +246,7 @@ class TkinterTerminal:
         if self.log_file_handle:
             self.log_file_handle.write(text + "\n")
             self.log_file_handle.flush()
-
-    def send_command(self, event=None):
-        """Envía un comando al proceso sclang."""
-        if self.process and self.process.stdin:
-            command = self.input_area.get().strip()
-            if command.lower() in ["exit", "quit"]:
-                self.on_close()
-            else:
-                self.process.stdin.write(command + "\n")
-                self.process.stdin.flush()
-            self.input_area.delete(0, tk.END)
-
+            
     def start_sclang(self):
         """Inicia el proceso de sclang y redirige la salida."""
         try:
@@ -305,6 +294,21 @@ class TkinterTerminal:
             if self.log_file_handle:
                 self.log_file_handle.close()
 
+    def send_command(self, event=None):
+        """Envía un comando al proceso sclang."""
+        if self.process and self.process.stdin:
+            command = self.input_area.get().strip()
+            if command.lower() in ["exit", "quit"]:
+                # Envía el comando a SynthiGME para que gestione el cierre
+                self.process.stdin.write("SynthiGME.instance.close\n")
+                self.process.stdin.flush()
+            elif command.lower() == "force_exit":
+                self.on_close()  # Llama directamente al cierre forzado
+            else:
+                self.process.stdin.write(command + "\n")
+                self.process.stdin.flush()
+            self.input_area.delete(0, tk.END)
+
     def process_command(self, text):
         """Procesa comandos específicos enviados desde sclang."""
         if text.startswith("command: "):
@@ -313,20 +317,37 @@ class TkinterTerminal:
             if command == "exit":
                 self.append_output("Recibido comando 'exit'. Cerrando la aplicación...", "light_goldenrod3")
                 self.on_close()
+            elif command == "force_exit":
+                self.append_output("Recibido comando 'force_exit'. Forzando cierre...", "light_coral")
+                self.force_exit()  # Llama a la nueva función de cierre inmediato
             else:
                 self.append_output(f"Comando desconocido: {command}", "sandy_brown")
 
-    def on_close(self):
-        """Lógica para cerrar la ventana y finalizar el proceso sclang."""
-        self.append_output("Cerrando Synthi GME...", "light_goldenrod3")
+
+    def force_exit(self):
+        """Cierra la aplicación de forma inmediata."""
+        self.append_output("Forzando el cierre de Synthi GME...", "light_coral")
         if self.process:
             self.stop_event.set()
-            self.process.terminate()
             try:
+                self.process.terminate()
                 self.process.wait(timeout=2)
             except subprocess.TimeoutExpired:
                 self.process.kill()
         self.root.destroy()
+
+
+    def on_close(self):
+        """Lógica para cerrar la ventana y finalizar el proceso sclang."""
+        self.append_output("Cerrando Synthi GME...", "light_goldenrod3")
+        if self.process and self.process.stdin:
+            try:
+                # Enviar el comando 'exit' para que SynthiGME gestione el cierre
+                self.process.stdin.write("SynthiGME.instance.close\n")
+                self.process.stdin.flush()
+            except Exception as e:
+                self.append_output(f"Error al enviar comando 'exit': {e}", "light_coral")
+
 
 
 if __name__ == "__main__":
