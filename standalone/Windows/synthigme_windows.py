@@ -343,19 +343,51 @@ class TkinterTerminal:
         """Lógica para cerrar la ventana y finalizar el proceso sclang."""
         if hasattr(self, 'close_attempted') and self.close_attempted:
             # Mostrar ventana modal para confirmar el cierre forzado
+            log_message = "Confirmación de cierre: El proceso no ha respondido. Preguntando al usuario si desea forzar el cierre."
+            self.append_output(log_message, "bright_black")  # Registrar en consola
+            if self.log_file_handle:
+                self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                self.log_file_handle.flush()
+
             if mb.askyesno("Confirmación de cierre", "El proceso no ha respondido. ¿Deseas forzar el cierre?"):
+                log_message = "Respuesta del usuario: Sí. Procediendo con el cierre forzado."
+                self.append_output(log_message, "light_coral")  # Registrar en consola
+                if self.log_file_handle:
+                    self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                    self.log_file_handle.flush()
                 self.force_exit()
+            else:
+                log_message = "Respuesta del usuario: No. Cancelando el cierre forzado."
+                self.append_output(log_message, "sandy_brown")  # Registrar en consola
+                if self.log_file_handle:
+                    self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                    self.log_file_handle.flush()
         else:
-            self.append_output("Cerrando Synthi GME...", "light_goldenrod3")
+            log_message = "Intentando cerrar SynthiGME de forma ordenada..."
+            self.append_output(log_message, "light_goldenrod3")  # Registrar en consola
+            if self.log_file_handle:
+                self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                self.log_file_handle.flush()
+
             self.close_attempted = True  # Marcar que el intento de cerrar se realizó
             if self.process and self.process.stdin:
                 try:
                     # Enviar el comando 'exit' para que SynthiGME gestione el cierre
                     self.process.stdin.write("SynthiGME.instance.close\n")
                     self.process.stdin.flush()
-                except Exception as e:
-                    self.append_output(f"Error al enviar comando 'exit': {e}", "light_coral")
 
+                    log_message = "Comando enviado a sclang: SynthiGME.instance.close"
+                    self.append_output(log_message, "light_cyan")  # Registrar en consola
+                    if self.log_file_handle:
+                        self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                        self.log_file_handle.flush()
+
+                except Exception as e:
+                    log_message = f"Error al enviar comando 'exit': {e}"
+                    self.append_output(log_message, "light_coral")  # Registrar en consola
+                    if self.log_file_handle:
+                        self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                        self.log_file_handle.flush()
 
 if __name__ == "__main__":
     root = tk.Tk()
