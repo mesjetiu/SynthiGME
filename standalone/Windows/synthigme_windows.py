@@ -339,15 +339,18 @@ class TkinterTerminal:
 
     def on_close(self):
         """Lógica para cerrar la ventana y finalizar el proceso sclang."""
-        self.append_output("Cerrando Synthi GME...", "light_goldenrod3")
-        if self.process and self.process.stdin:
-            try:
-                # Enviar el comando 'exit' para que SynthiGME gestione el cierre
-                self.process.stdin.write("SynthiGME.instance.close\n")
-                self.process.stdin.flush()
-            except Exception as e:
-                self.append_output(f"Error al enviar comando 'exit': {e}", "light_coral")
-
+        if hasattr(self, 'close_attempted') and self.close_attempted:
+            self.force_exit()
+        else:
+            self.append_output("Cerrando Synthi GME...", "light_goldenrod3")
+            self.close_attempted = True  # Marcar que el intento de cerrar se realizó
+            if self.process and self.process.stdin:
+                try:
+                    # Enviar el comando 'exit' para que SynthiGME gestione el cierre
+                    self.process.stdin.write("SynthiGME.instance.close\n")
+                    self.process.stdin.flush()
+                except Exception as e:
+                    self.append_output(f"Error al enviar comando 'exit': {e}", "light_coral")
 
 
 if __name__ == "__main__":
