@@ -29,6 +29,8 @@ import tkinter as tk
 from tkinter import Menu, BooleanVar
 from tkinter.scrolledtext import ScrolledText
 from tkinter import ttk  # Para usar Notebook (pestañas)
+import tkinter.messagebox as mb
+
 
 # Detectar el directorio donde se encuentra el script o el ejecutable
 if getattr(sys, 'frozen', False):  # Si está empaquetado como .exe
@@ -340,7 +342,9 @@ class TkinterTerminal:
     def on_close(self):
         """Lógica para cerrar la ventana y finalizar el proceso sclang."""
         if hasattr(self, 'close_attempted') and self.close_attempted:
-            self.force_exit()
+            # Mostrar ventana modal para confirmar el cierre forzado
+            if mb.askyesno("Confirmación de cierre", "El proceso no ha respondido. ¿Deseas forzar el cierre?"):
+                self.force_exit()
         else:
             self.append_output("Cerrando Synthi GME...", "light_goldenrod3")
             self.close_attempted = True  # Marcar que el intento de cerrar se realizó
