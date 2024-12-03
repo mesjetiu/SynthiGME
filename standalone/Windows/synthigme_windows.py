@@ -17,7 +17,6 @@ along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
 Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 """
 
-
 import subprocess
 import threading
 import os
@@ -29,7 +28,7 @@ import traceback
 import tkinter as tk
 from tkinter import Menu, BooleanVar
 from tkinter.scrolledtext import ScrolledText
-from tkinter import ttk  # Importamos ttk para usar Notebook (pestañas)
+from tkinter import ttk  # Para usar Notebook (pestañas)
 
 # Detectar el directorio donde se encuentra el script o el ejecutable
 if getattr(sys, 'frozen', False):  # Si está empaquetado como .exe
@@ -101,23 +100,26 @@ class TkinterTerminal:
         # Variable para el contenido de la consola
         self.console_content = ""
 
-        # Crear menú principal
-        self.create_menu()
-
-        # Crear estructura de pestañas
+        # Crear la estructura de pestañas antes de definir las pestañas
         self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
-        # Pestaña de consola
-        self.console_frame = ttk.Frame(self.notebook)
-        self.notebook.add(self.console_frame, text="Consola")
+        # Diccionario para gestionar pestañas
+        self.tabs = {
+            "Consola": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
+            "Pestaña 1": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
+            "Pestaña 2": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
+        }
+
+        # Añadir pestañas al notebook
+        for name, data in self.tabs.items():
+            self.notebook.add(data["frame"], text=name)
+
+        # Crear widgets de consola en su pestaña
         self.create_console_widgets()
 
-        # Pestañas dummy
-        self.tab1 = ttk.Frame(self.notebook)
-        self.tab2 = ttk.Frame(self.notebook)
-        self.notebook.add(self.tab1, text="Pestaña 1")
-        self.notebook.add(self.tab2, text="Pestaña 2")
+        # Crear menú principal
+        self.create_menu()
 
         self.process = None
         self.stop_event = threading.Event()
@@ -134,17 +136,35 @@ class TkinterTerminal:
         file_menu.add_command(label="Cerrar", command=self.on_close)
         menu_bar.add_cascade(label="Archivo", menu=file_menu)
 
+        # Menú Ver
+        self.view_menu = Menu(menu_bar, tearoff=0)
+        for tab_name, tab_data in self.tabs.items():
+            self.view_menu.add_checkbutton(
+                label=tab_name,
+                variable=tab_data["variable"],
+                command=lambda name=tab_name: self.toggle_tab(name),
+            )
+        menu_bar.add_cascade(label="Ver", menu=self.view_menu)
+
         self.root.config(menu=menu_bar)
+
+    def toggle_tab(self, tab_name):
+        """Abre o cierra la pestaña según el estado de la variable."""
+        tab_data = self.tabs[tab_name]
+        if tab_data["variable"].get():
+            self.notebook.add(tab_data["frame"], text=tab_name)
+        else:
+            self.notebook.forget(tab_data["frame"])
 
     def create_console_widgets(self):
         """Crea los widgets de la consola en la pestaña 'Consola'."""
         # Área de texto para la salida
-        self.output_area = ScrolledText(self.console_frame, wrap=tk.WORD, font=("Courier", 12), bg="black", fg="white")
+        self.output_area = ScrolledText(self.tabs["Consola"]["frame"], wrap=tk.WORD, font=("Courier", 12), bg="black", fg="white")
         self.output_area.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         self.output_area.configure(state="disabled")
 
         # Área de entrada para comandos
-        self.input_area = tk.Entry(self.console_frame, font=("Courier", 12), bg="black", fg="white", insertbackground="white")
+        self.input_area = tk.Entry(self.tabs["Consola"]["frame"], font=("Courier", 12), bg="black", fg="white", insertbackground="white")
         self.input_area.pack(fill=tk.X, padx=5, pady=5)
         self.input_area.bind("<Return>", self.send_command)
 
@@ -230,11 +250,11 @@ class TkinterTerminal:
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                bufsize=1,  # Desbufferizado de línea
-                universal_newlines=True,  # Leer como texto, no binario
+                bufsize=1,
+                universal_newlines=True,
                 encoding="utf-8",
                 errors="replace",
-                creationflags=subprocess.CREATE_NO_WINDOW,  # No mostrar consola de Windows
+                creationflags=subprocess.CREATE_NO_WINDOW,
             )
 
             # Abrir el archivo de log en modo append
@@ -258,7 +278,7 @@ class TkinterTerminal:
                     # Mostrar en la consola con el color correspondiente
                     self.append_output(output.strip(), self.detect_color(output.strip()))
 
-                if self.process.poll() is not None:  # Si el proceso ha terminado
+                if self.process.poll() is not None:
                     break
         except Exception as e:
             self.append_output(f"Error leyendo salida de sclang: {e}", "light_coral")
@@ -267,16 +287,14 @@ class TkinterTerminal:
                 self.log_file_handle.close()
 
     def process_command(self, text):
-        """Procesa comandos especiales enviados desde sclang."""
+        """Procesa comandos específicos enviados desde sclang."""
         if text.startswith("command: "):
-            command = text[len("command: "):].strip()  # Extraer el comando después de 'command: '
-
-            # Procesar comandos específicos
+            command = text[len("command: "):].strip()
+            self.append_output(f"Comando recibido: {command}", "light_cyan")
             if command == "exit":
                 self.append_output("Recibido comando 'exit'. Cerrando la aplicación...", "light_goldenrod3")
-                self.on_close()  # Llama al método para cerrar la aplicación
-
-            # Añadir más comandos aquí si es necesario
+                self.on_close()
+            # Otros comandos personalizados
             else:
                 self.append_output(f"Comando desconocido: {command}", "sandy_brown")
 
