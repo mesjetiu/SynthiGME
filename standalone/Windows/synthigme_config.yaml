@@ -1,0 +1,6 @@
+synthigme:
+  numInputChannels: 2
+  numOutputChannels: 2
+  numReturnChannels: 0
+  postWin: 'false'
+  server: nil
