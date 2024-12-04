@@ -31,6 +31,7 @@ from tkinter.scrolledtext import ScrolledText
 from tkinter import ttk  # Para usar Notebook (pestañas)
 import tkinter.messagebox as mb
 import yaml
+from tkinter import ttk, BooleanVar, StringVar, IntVar, Menu
 
 
 # Detectar el directorio donde se encuentra el script o el ejecutable
@@ -94,6 +95,12 @@ def load_config():
     with open(config_file, "r", encoding="utf-8") as file:
         return yaml.safe_load(file)
 
+def save_config(config):
+    """Guarda la configuración en el archivo YAML."""
+    config_file = os.path.join(CONFIG_DIR, "synthigme_config.yaml")
+    with open(config_file, "w", encoding="utf-8") as file:
+        yaml.safe_dump(config, file)
+
 
 class TkinterTerminal:
     """Interfaz gráfica para emular una terminal con Tkinter."""
@@ -123,6 +130,7 @@ class TkinterTerminal:
             "Consola": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
             "Pestaña 1": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
             "Pestaña 2": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
+            "Configuración": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
         }
 
         # Añadir pestañas al notebook
@@ -131,6 +139,9 @@ class TkinterTerminal:
 
         # Crear widgets de consola en su pestaña
         self.create_console_widgets()
+
+        # Crear widgets de configuración en su pestaña
+        self.create_config_widgets()
 
         # Crear menú principal
         self.create_menu()
@@ -147,7 +158,7 @@ class TkinterTerminal:
     def build_synthigme_command(self):
         """Construye el comando SynthiGME() a partir de la configuración."""
         params = self.config['synthigme']
-        param_str = ", ".join(f"{key}: {str(value).lower() if isinstance(value, bool) else value}" for key, value in params.items())
+        param_str = ", ".join(f"{key}: {value}" for key, value in params.items())
         command = f"SynthiGME({param_str})"
         return command
 
@@ -214,6 +225,34 @@ class TkinterTerminal:
         }
         for name, color in colors.items():
             self.output_area.tag_configure(name, foreground=color)
+
+    def create_config_widgets(self):
+        """Crea los widgets de configuración en la pestaña 'Configuración'."""
+        frame = self.tabs["Configuración"]["frame"]
+        row = 0
+        for key, value in self.config['synthigme'].items():
+            tk.Label(frame, text=key).grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
+
+            if isinstance(value, str) and value.lower() in ["true", "false"]:
+                var = StringVar(value=value)
+                widget = ttk.Combobox(frame, textvariable=var, values=["true", "false"])
+                widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+            elif isinstance(value, (int, float)):
+                var = IntVar(value=value)
+                widget = tk.Entry(frame, textvariable=var)
+                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+            else:
+                var = StringVar(value=str(value))
+                widget = tk.Entry(frame, textvariable=var)
+                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+
+            widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
+            row += 1
+
+    def update_config(self, key, value):
+        """Actualiza el archivo de configuración YAML cuando se cambia un valor."""
+        self.config['synthigme'][key] = value
+        save_config(self.config)
 
     def enable_tab_dragging(self):
         """Habilita el movimiento de pestañas mediante arrastrar y soltar."""
