@@ -132,6 +132,8 @@ class TkinterTerminal:
         # Manejar el evento de cierre de la ventana principal
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
+        self.post_compilation_command = 'SynthiGME(server: nil, standalone: true, numOutputChannels: 2, numInputChannels: 2, numReturnChannels: 0, postWin: false)'
+
     def create_menu(self):
         """Crea el menú principal de la aplicación."""
         menu_bar = Menu(self.root)
@@ -288,6 +290,10 @@ class TkinterTerminal:
                     self.process_command(output.strip())
                     self.append_output(output.strip(), self.detect_color(output.strip()))
 
+                    # Detectar finalización de compilación
+                    if "*** Welcome to SuperCollider" in output:
+                        self.on_compilation_complete()
+
                 if self.process.poll() is not None:  # Si el proceso ha terminado
                     break
         except Exception as e:
@@ -295,6 +301,13 @@ class TkinterTerminal:
         finally:
             if self.log_file_handle:
                 self.log_file_handle.close()
+
+    def on_compilation_complete(self):
+        """Ejecuta un comando arbitrario cuando la compilación ha terminado."""
+        self.append_output("Compilación completada. Ejecutando comando arbitrario...", "green_ready")
+        if self.process and self.process.stdin:
+            self.process.stdin.write(f'{self.post_compilation_command}.postln;\n')
+            self.process.stdin.flush()
 
     def send_command(self, event=None):
         """Envía un comando al proceso sclang."""
