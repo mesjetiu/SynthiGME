@@ -30,6 +30,7 @@ from tkinter import Menu, BooleanVar
 from tkinter.scrolledtext import ScrolledText
 from tkinter import ttk  # Para usar Notebook (pestañas)
 import tkinter.messagebox as mb
+import yaml
 
 
 # Detectar el directorio donde se encuentra el script o el ejecutable
@@ -87,12 +88,23 @@ def write_log_header(log_file):
         log.flush()
 
 
+def load_config():
+    """Carga la configuración desde el archivo YAML."""
+    config_file = os.path.join(CONFIG_DIR, "synthigme_config.yaml")
+    with open(config_file, "r", encoding="utf-8") as file:
+        return yaml.safe_load(file)
+
+
 class TkinterTerminal:
     """Interfaz gráfica para emular una terminal con Tkinter."""
     def __init__(self, root):
         self.root = root
         self.root.title("SynthiGME")
         self.root.geometry("800x600")
+
+        # Cargar configuración
+        self.config = load_config()
+        self.post_compilation_command = self.build_synthigme_command()
 
         # Variables para el log
         self.log_file = os.path.join(LOG_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
@@ -132,7 +144,12 @@ class TkinterTerminal:
         # Manejar el evento de cierre de la ventana principal
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
-        self.post_compilation_command = 'SynthiGME(server: nil, standalone: true, numOutputChannels: 2, numInputChannels: 2, numReturnChannels: 0, postWin: false)'
+    def build_synthigme_command(self):
+        """Construye el comando SynthiGME() a partir de la configuración."""
+        params = self.config['synthigme']
+        param_str = ", ".join(f"{key}: {str(value).lower() if isinstance(value, bool) else value}" for key, value in params.items())
+        command = f"SynthiGME({param_str})"
+        return command
 
     def create_menu(self):
         """Crea el menú principal de la aplicación."""
@@ -306,7 +323,7 @@ class TkinterTerminal:
         """Ejecuta un comando arbitrario cuando la compilación ha terminado."""
         self.append_output("Compilación completada. Ejecutando comando arbitrario...", "green_ready")
         if self.process and self.process.stdin:
-            self.process.stdin.write(f'{self.post_compilation_command}.postln;\n')
+            self.process.stdin.write(f'{self.post_compilation_command};\n')
             self.process.stdin.flush()
 
     def send_command(self, event=None):
