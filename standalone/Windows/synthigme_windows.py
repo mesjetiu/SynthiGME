@@ -26,12 +26,11 @@ import psutil
 from datetime import datetime
 import traceback
 import tkinter as tk
-from tkinter import Menu, BooleanVar
+from tkinter import Menu, BooleanVar, StringVar, IntVar
 from tkinter.scrolledtext import ScrolledText
 from tkinter import ttk  # Para usar Notebook (pestañas)
 import tkinter.messagebox as mb
 import yaml
-from tkinter import ttk, BooleanVar, StringVar, IntVar, Menu
 
 
 # Detectar el directorio donde se encuentra el script o el ejecutable
@@ -111,6 +110,7 @@ class TkinterTerminal:
 
         # Cargar configuración
         self.config = load_config()
+        self.initial_config = self.config.copy()  # Guardar la configuración inicial
         self.post_compilation_command = self.build_synthigme_command()
 
         # Variables para el log
@@ -249,10 +249,19 @@ class TkinterTerminal:
             widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             row += 1
 
+        # Añadir una etiqueta para mostrar el mensaje de advertencia
+        self.config_message = tk.Label(frame, text="", fg="red")
+        self.config_message.grid(row=row, column=0, columnspan=2, padx=5, pady=5, sticky=tk.W)
+
     def update_config(self, key, value):
         """Actualiza el archivo de configuración YAML cuando se cambia un valor."""
-        self.config['synthigme'][key] = value
-        save_config(self.config)
+        if self.config['synthigme'][key] != value:
+            self.config['synthigme'][key] = value
+            save_config(self.config)
+            # Mostrar el mensaje de advertencia
+            self.config_message.config(text="Los cambios tendrán efecto la próxima vez que se inicie SynthiGME.")
+        else:
+            self.config_message.config(text="")
 
     def enable_tab_dragging(self):
         """Habilita el movimiento de pestañas mediante arrastrar y soltar."""
