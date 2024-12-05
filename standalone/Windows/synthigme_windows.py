@@ -284,6 +284,10 @@ class TkinterTerminal:
         tk.Label(frame, text="Opciones", font=("Helvetica", 16)).grid(row=row, column=0, columnspan=2, padx=5, pady=10)
         row += 1
 
+        # Añadir una advertencia
+        tk.Label(frame, text="Advertencia: No modifique estos valores a menos que sepa lo que está haciendo.", fg="red").grid(row=row, column=0, columnspan=2, padx=5, pady=5)
+        row += 1
+
         # Añadir la opción autoStart
         tk.Label(frame, text="Abrir Synthi GME automáticamente al inicio").grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
         auto_start_var = BooleanVar(value=self.config.get('autoStart', 'false').lower() == 'true')
@@ -316,6 +320,10 @@ class TkinterTerminal:
         # Añadir una etiqueta para mostrar el mensaje de advertencia
         self.config_message = tk.Label(frame, text="", fg="red")
         self.config_message.grid(row=row, column=0, columnspan=2, padx=5, pady=5, sticky=tk.W)
+        row += 1
+
+        # Añadir un botón para restaurar los valores por defecto
+        tk.Button(frame, text="Restaurar valores por defecto", command=self.restore_defaults).grid(row=row, column=0, columnspan=2, padx=5, pady=10)
 
     def update_config(self, key, value):
         """Actualiza el archivo de configuración YAML cuando se cambia un valor."""
@@ -335,6 +343,19 @@ class TkinterTerminal:
                 self.config_message.config(text="Los cambios tendrán efecto la próxima vez que se inicie SynthiGME.")
             else:
                 self.config_message.config(text="")
+
+    def restore_defaults(self):
+        """Restaura los valores por defecto desde el archivo YAML de configuración por defecto."""
+        default_config_file = os.path.join(CONFIG_DIR, "synthigme_config_default.yaml")
+        try:
+            with open(default_config_file, "r", encoding="utf-8") as file:
+                default_config = yaml.safe_load(file)
+            self.config = default_config
+            save_config(self.config)
+            self.create_options_widgets()  # Actualizar los widgets con los valores por defecto
+            self.config_message.config(text="Valores por defecto restaurados. Reinicie SynthiGME para aplicar los cambios.", fg="green")
+        except Exception as e:
+            self.config_message.config(text=f"Error al restaurar los valores por defecto: {e}", fg="red")
 
     def enable_tab_dragging(self):
         """Habilita el movimiento de pestañas mediante arrastrar y soltar."""
