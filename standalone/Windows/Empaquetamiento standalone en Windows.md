@@ -31,18 +31,22 @@ La estructura de directorios base que construiremos es la siguiente:
 SynthiGME_standalone/
 ├── .Extensions/
 │   ├── SynthiGME/ (aquí o en SuperCollider/SCClassLibrary, pero no en ambos)
-├── PostWindow_Logs/
-├── Recordings/
-│   ├── Audio/
-│   ├── Events/
 ├── .SuperCollider/
 │   ├── SC_Support/ (creado automáticamente por SuperCollider)
 │       └── User_Support/
 │       └── System_Support/
 │   ├── Config/
-│       └── startup.scd (contiene el comando de SynthiGME())
 |       └── sclang_conf.yaml
-├── SynthiGME.exe
+│       └── startup.scd (contiene el comando de SynthiGME())
+|       └── synthigme_config.yaml (configuración de la app de Windows)
+|       └── synthigme_config_default.yaml (configuración por defecto de la app de Windows)
+├── Patches/
+├── PostWindow_Logs/
+├── Recordings/
+│   ├── Audio/
+│   ├── Events/
+├── _internal/ (archivos necesarios del ejecutable synthigme.exe)
+├── synthigme.exe
 ```
 
 
