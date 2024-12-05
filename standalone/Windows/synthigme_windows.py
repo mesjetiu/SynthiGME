@@ -183,6 +183,11 @@ class TkinterTerminal:
             )
         menu_bar.add_cascade(label="Ver", menu=self.view_menu)
 
+        # Menú Ayuda
+        help_menu = Menu(menu_bar, tearoff=0)
+        help_menu.add_command(label="Acerca de", command=self.show_about)
+        menu_bar.add_cascade(label="Ayuda", menu=help_menu)
+
         self.root.config(menu=menu_bar)
 
     def toggle_tab(self, tab_name):
@@ -511,6 +516,36 @@ class TkinterTerminal:
         # Mostrar el encabezado en la consola
         for line in program_info:
             self.append_output(line, "gold3")
+
+    def show_about(self):
+        """Muestra una ventana con la información 'Acerca de'."""
+        about_window = tk.Toplevel(self.root)
+        about_window.title("Acerca de SynthiGME")
+        about_window.geometry("400x300")
+
+        version = get_version()
+        about_info = [
+            "==== SynthiGME ====",
+            f"Versión: {version}",
+            "Autor: Carlos Arturo Guerra Parra",
+            "Contacto: carlosarturoguerra@gmail.com",
+            "",
+            "SynthiGME es un software libre distribuido bajo la",
+            "Licencia Pública General de GNU.",
+            "====================",
+        ]
+
+        # Crear un frame para el contenido
+        frame = tk.Frame(about_window, padx=10, pady=10)
+        frame.pack(fill=tk.BOTH, expand=True)
+
+        # Añadir la información al frame
+        for line in about_info:
+            tk.Label(frame, text=line, justify=tk.LEFT, anchor="w").pack(fill=tk.X)
+
+        # Botón para cerrar la ventana
+        tk.Button(frame, text="Cerrar", command=about_window.destroy).pack(pady=10)
+
 
 if __name__ == "__main__":
     root = tk.Tk()
