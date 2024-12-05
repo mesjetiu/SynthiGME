@@ -106,7 +106,7 @@ class TkinterTerminal:
     def __init__(self, root):
         self.root = root
         self.root.title("SynthiGME")
-        self.root.geometry("800x600")
+        self.root.geometry("533x600")  # Cambiar el ancho a 2/3 del tamaño original (800 * 2/3 = 533)
 
         # Cargar configuración
         self.config = load_config()
@@ -128,7 +128,7 @@ class TkinterTerminal:
         # Diccionario para gestionar pestañas
         self.tabs = {
             "Consola": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
-            "Inicio": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
+            "Opciones": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
         }
 
         # Añadir pestañas al notebook
@@ -139,7 +139,7 @@ class TkinterTerminal:
         self.create_console_widgets()
 
         # Crear widgets de configuración en su pestaña
-        self.create_config_widgets()
+        self.create_options_widgets()
 
         # Crear menú principal
         self.create_menu()
@@ -240,6 +240,48 @@ class TkinterTerminal:
 
         # Añadir un título en la pestaña
         tk.Label(frame, text="Configuración de Inicio", font=("Helvetica", 16)).grid(row=row, column=0, columnspan=2, padx=5, pady=10)
+        row += 1
+
+        # Añadir la opción autoStart
+        tk.Label(frame, text="Abrir Synthi GME automáticamente al inicio").grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
+        auto_start_var = BooleanVar(value=self.config.get('autoStart', 'false').lower() == 'true')
+        auto_start_widget = tk.Checkbutton(frame, variable=auto_start_var, onvalue=True, offvalue=False, command=lambda: self.update_config('autoStart', "true" if auto_start_var.get() else "false"))
+        auto_start_widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
+        row += 1
+
+        for key, value in self.config['synthigme'].items():
+            tk.Label(frame, text=key).grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
+
+            if key == "server":
+                var = StringVar(value="default" if value == "s" else "new")
+                widget = ttk.Combobox(frame, textvariable=var, values=["default", "new"])
+                widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, "s" if v.get() == "default" else "nil"))
+            elif isinstance(value, str) and value.lower() in ["true", "false"]:
+                var = BooleanVar(value=value.lower() == "true")
+                widget = tk.Checkbutton(frame, variable=var, onvalue=True, offvalue=False, command=lambda k=key, v=var: self.update_config(k, "true" if v.get() else "false"))
+            elif isinstance(value, (int, float)):
+                var = IntVar(value=value)
+                widget = tk.Entry(frame, textvariable=var)
+                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+            else:
+                var = StringVar(value=str(value))
+                widget = tk.Entry(frame, textvariable=var)
+                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+
+            widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
+            row += 1
+
+        # Añadir una etiqueta para mostrar el mensaje de advertencia
+        self.config_message = tk.Label(frame, text="", fg="red")
+        self.config_message.grid(row=row, column=0, columnspan=2, padx=5, pady=5, sticky=tk.W)
+
+    def create_options_widgets(self):
+        """Crea los widgets de configuración en la pestaña 'Opciones'."""
+        frame = self.tabs["Opciones"]["frame"]
+        row = 0
+
+        # Añadir un título en la pestaña
+        tk.Label(frame, text="Opciones", font=("Helvetica", 16)).grid(row=row, column=0, columnspan=2, padx=5, pady=10)
         row += 1
 
         # Añadir la opción autoStart
