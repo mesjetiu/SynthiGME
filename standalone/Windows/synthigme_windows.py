@@ -153,6 +153,9 @@ class TkinterTerminal:
         # Manejar el evento de cierre de la ventana principal
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
+        # Mostrar la información del programa en la consola
+        self.show_program_info()
+
 
     def build_synthigme_command(self):
         """Construye el comando SynthiGME() a partir de la configuración."""
@@ -490,6 +493,24 @@ class TkinterTerminal:
                     if self.log_file_handle:
                         self.log_file_handle.write(log_message + "\n")  # Registrar en log
                         self.log_file_handle.flush()
+
+    def show_program_info(self):
+        """Muestra la información del programa en la consola."""
+        version = get_version()
+        program_info = [
+            "==== Synthi GME ====",
+            f"Versión: {version}",
+            "Autor: Carlos Arturo Guerra Parra",
+            "Contacto: carlosarturoguerra@gmail.com",
+            "",
+            "Synthi GME es un software libre distribuido bajo la Licencia Pública General de GNU.",
+            "====================",
+            ""
+        ]
+
+        # Mostrar el encabezado en la consola
+        for line in program_info:
+            self.append_output(line, "gold3")
 
 if __name__ == "__main__":
     root = tk.Tk()
