@@ -378,6 +378,9 @@ class TkinterTerminal:
 
     def append_output(self, text, color="bright_black"):
         """Añade texto al área de salida con un color específico y guarda en el log."""
+        if not self.root.winfo_exists():
+            return  # Si la ventana principal ha sido destruida, no hacer nada
+
         self.console_content += text + "\n"  # Guardar en el estado interno
         self.output_area.configure(state="normal")
         self.output_area.insert(tk.END, text + "\n", color)
