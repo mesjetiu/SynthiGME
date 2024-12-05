@@ -551,6 +551,7 @@ class TkinterTerminal:
             "Contacto: carlosarturoguerra@gmail.com",
             "",
             "Synthi GME es un software libre distribuido bajo la Licencia Pública General de GNU.",
+            "Copyright 2024."
             "====================",
             ""
         ]
