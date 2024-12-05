@@ -130,7 +130,7 @@ class TkinterTerminal:
             "Consola": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
             "Pestaña 1": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
             "Pestaña 2": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
-            "Configuración": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
+            "Inicio": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
         }
 
         # Añadir pestañas al notebook
@@ -155,11 +155,12 @@ class TkinterTerminal:
         # Manejar el evento de cierre de la ventana principal
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
+
     def build_synthigme_command(self):
         """Construye el comando SynthiGME() a partir de la configuración."""
         params = self.config['synthigme']
         param_str = ", ".join(f"{key}: {value}" for key, value in params.items())
-        command = f"SynthiGME({param_str})"
+        command = f"SynthiGME({param_str}, standalone: true)"
         return command
 
     def create_menu(self):
@@ -227,16 +228,27 @@ class TkinterTerminal:
             self.output_area.tag_configure(name, foreground=color)
 
     def create_config_widgets(self):
-        """Crea los widgets de configuración en la pestaña 'Configuración'."""
-        frame = self.tabs["Configuración"]["frame"]
+        """Crea los widgets de configuración en la pestaña 'Inicio'."""
+        frame = self.tabs["Inicio"]["frame"]
         row = 0
+
+        # Añadir un título en la pestaña
+        tk.Label(frame, text="Configuración de Inicio", font=("Helvetica", 16)).grid(row=row, column=0, columnspan=2, padx=5, pady=10)
+        row += 1
+
+        # Añadir la opción autoStart
+        tk.Label(frame, text="Abrir Synthi GME automáticamente al inicio").grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
+        auto_start_var = BooleanVar(value=self.config.get('autoStart', 'false').lower() == 'true')
+        auto_start_widget = tk.Checkbutton(frame, variable=auto_start_var, onvalue=True, offvalue=False, command=lambda: self.update_config('autoStart', "true" if auto_start_var.get() else "false"))
+        auto_start_widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
+        row += 1
+
         for key, value in self.config['synthigme'].items():
             tk.Label(frame, text=key).grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
 
             if isinstance(value, str) and value.lower() in ["true", "false"]:
-                var = StringVar(value=value)
-                widget = ttk.Combobox(frame, textvariable=var, values=["true", "false"])
-                widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+                var = BooleanVar(value=value.lower() == "true")
+                widget = tk.Checkbutton(frame, variable=var, onvalue=True, offvalue=False, command=lambda k=key, v=var: self.update_config(k, "true" if v.get() else "false"))
             elif isinstance(value, (int, float)):
                 var = IntVar(value=value)
                 widget = tk.Entry(frame, textvariable=var)
@@ -255,13 +267,22 @@ class TkinterTerminal:
 
     def update_config(self, key, value):
         """Actualiza el archivo de configuración YAML cuando se cambia un valor."""
-        if self.config['synthigme'][key] != value:
-            self.config['synthigme'][key] = value
-            save_config(self.config)
-            # Mostrar el mensaje de advertencia
-            self.config_message.config(text="Los cambios tendrán efecto la próxima vez que se inicie SynthiGME.")
+        if key in self.config['synthigme']:
+            if self.config['synthigme'][key] != value:
+                self.config['synthigme'][key] = value
+                save_config(self.config)
+                # Mostrar el mensaje de advertencia
+                self.config_message.config(text="Los cambios tendrán efecto la próxima vez que se inicie SynthiGME.")
+            else:
+                self.config_message.config(text="")
         else:
-            self.config_message.config(text="")
+            if self.config.get(key) != value:
+                self.config[key] = value
+                save_config(self.config)
+                # Mostrar el mensaje de advertencia
+                self.config_message.config(text="Los cambios tendrán efecto la próxima vez que se inicie SynthiGME.")
+            else:
+                self.config_message.config(text="")
 
     def enable_tab_dragging(self):
         """Habilita el movimiento de pestañas mediante arrastrar y soltar."""
@@ -369,10 +390,11 @@ class TkinterTerminal:
 
     def on_compilation_complete(self):
         """Ejecuta un comando arbitrario cuando la compilación ha terminado."""
-        self.append_output("Compilación completada. Ejecutando comando arbitrario...", "green_ready")
+        self.append_output("Compilación completada.", "green_ready")
         if self.process and self.process.stdin:
-            self.process.stdin.write(f'{self.post_compilation_command};\n')
-            self.process.stdin.flush()
+            if self.config.get('autoStart', 'false').lower() == 'true':
+                self.process.stdin.write(f'{self.post_compilation_command};\n')
+                self.process.stdin.flush()
 
     def send_command(self, event=None):
         """Envía un comando al proceso sclang."""

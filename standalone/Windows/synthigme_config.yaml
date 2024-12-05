@@ -1,3 +1,4 @@
+autoStart: 'true'
 synthigme:
   numInputChannels: 2
   numOutputChannels: 2
