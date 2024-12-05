@@ -244,7 +244,11 @@ class TkinterTerminal:
         for key, value in self.config['synthigme'].items():
             tk.Label(frame, text=key).grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
 
-            if isinstance(value, str) and value.lower() in ["true", "false"]:
+            if key == "server":
+                var = StringVar(value="default" if value == "s" else "new")
+                widget = ttk.Combobox(frame, textvariable=var, values=["default", "new"])
+                widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, "s" if v.get() == "default" else "nil"))
+            elif isinstance(value, str) and value.lower() in ["true", "false"]:
                 var = BooleanVar(value=value.lower() == "true")
                 widget = tk.Checkbutton(frame, variable=var, onvalue=True, offvalue=False, command=lambda k=key, v=var: self.update_config(k, "true" if v.get() else "false"))
             elif isinstance(value, (int, float)):
