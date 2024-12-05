@@ -1,0 +1,9 @@
+# Este archivo contiene los valores por defecto de la configuración de Synthi GME. Estos valores pueden ser modificados por el usuario en el archivo synthigme_config.yaml directamente o desde la pestaña de configuración de Synthi GME.
+
+autoStart: 'true'
+synthigme:
+  numInputChannels: 2
+  numOutputChannels: 2
+  numReturnChannels: 0
+  postWin: 'false'
+  server: nil
