@@ -128,8 +128,6 @@ class TkinterTerminal:
         # Diccionario para gestionar pestañas
         self.tabs = {
             "Consola": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
-            "Pestaña 1": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
-            "Pestaña 2": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
             "Inicio": {"frame": ttk.Frame(self.notebook), "variable": BooleanVar(value=True)},
         }
 
