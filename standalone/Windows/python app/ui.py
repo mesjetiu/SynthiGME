@@ -1,104 +1,20 @@
-"""
-This file is part of SynthiGME.
-
-SynthiGME is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SynthiGME is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with SynthiGME.  If not, see <https://www.gnu.org/licenses/>.
-
-Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
-"""
-
 import subprocess
 import threading
 import os
-import sys
-import platform
-import psutil
-from datetime import datetime
 import traceback
-import tkinter as tk
+import yaml
+import tkinter as tk  # Importar tkinter como tk
 from tkinter import Menu, BooleanVar, StringVar, IntVar
 from tkinter.scrolledtext import ScrolledText
 from tkinter import ttk  # Para usar Notebook (pestañas)
 import tkinter.messagebox as mb
-import yaml
+from datetime import datetime
+from config import SCRIPT_DIR, CONFIG_DIR, load_config, save_config, get_version
+from logger import write_log_header, LOG_DIR
 
-
-# Detectar el directorio donde se encuentra el script o el ejecutable
-if getattr(sys, 'frozen', False):  # Si está empaquetado como .exe
-    SCRIPT_DIR = os.path.dirname(sys.executable)  # Directorio del ejecutable
-else:
-    SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))  # Directorio del script Python
-
-# Configurar rutas basadas en SCRIPT_DIR
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
-CONFIG_DIR = os.path.join(SCRIPT_DIR, "Config")
-SCLANG_CONFIG = os.path.join(CONFIG_DIR, "sclang_conf.yaml")
-LOG_DIR = os.path.join(SCRIPT_DIR, "PostWindow_Logs")
-VERSION_FILE = os.path.join(SCRIPT_DIR, ".Extensions", "SynthiGME", "version")
-
-# Asegurar que el directorio de logs existe
-os.makedirs(LOG_DIR, exist_ok=True)
-
-
-def get_version():
-    """Obtiene la versión de SynthiGME desde el archivo SynthiGME/version."""
-    try:
-        with open(VERSION_FILE, "r", encoding="utf-8") as version_file:
-            return version_file.read().strip()
-    except Exception:
-        return "unknown (version file not found)"
-
-
-def get_system_info():
-    """Obtiene información relevante del sistema para el encabezado del log."""
-    system_info = {
-        "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "SynthiGME Version": get_version(),
-        "OS": platform.system(),
-        "OS Version": platform.version(),
-        "Architecture": platform.architecture()[0],
-        "Processor": platform.processor(),
-        "CPU Cores (Logical)": psutil.cpu_count(logical=True),
-        "CPU Cores (Physical)": psutil.cpu_count(logical=False),
-        "Total RAM (GB)": round(psutil.virtual_memory().total / (1024 ** 3), 2),
-    }
-    return system_info
-
-
-def write_log_header(log_file):
-    """Escribe un encabezado con información del sistema en el archivo de log."""
-    system_info = get_system_info()
-    with open(log_file, "w", encoding="utf-8") as log:
-        log.write("==== SynthiGME Log ====\n")
-        log.write("Session Details:\n")
-        for key, value in system_info.items():
-            log.write(f"{key}: {value}\n")
-        log.write("\n==== Log Output ====\n")
-        log.flush()
-
-
-def load_config():
-    """Carga la configuración desde el archivo YAML."""
-    config_file = os.path.join(CONFIG_DIR, "synthigme_config.yaml")
-    with open(config_file, "r", encoding="utf-8") as file:
-        return yaml.safe_load(file)
-
-def save_config(config):
-    """Guarda la configuración en el archivo YAML."""
-    config_file = os.path.join(CONFIG_DIR, "synthigme_config.yaml")
-    with open(config_file, "w", encoding="utf-8") as file:
-        yaml.safe_dump(config, file)
+SCLANG_CONFIG = os.path.join(SCRIPT_DIR, "Config", "sclang_conf.yaml")
 
 
 class TkinterTerminal:
@@ -613,9 +529,3 @@ class TkinterTerminal:
         # Botón para cerrar la ventana
         tk.Button(frame, text="Cerrar", command=about_window.destroy).pack(pady=10)
 
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    terminal = TkinterTerminal(root)
-    terminal.start_sclang()
-    root.mainloop()
