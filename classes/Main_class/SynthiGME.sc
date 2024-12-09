@@ -431,6 +431,8 @@ SynthiGME {
 		);
 
 		dialog.front;
+		dialog.alwaysOnTop = true;
+		dialog.alwaysOnTop = false;
 	}
 
 	exit {
