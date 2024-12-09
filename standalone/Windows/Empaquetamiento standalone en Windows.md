@@ -37,7 +37,7 @@ SynthiGME_standalone/
 │       └── System_Support/
 │   ├── Config/
 |       └── sclang_conf.yaml
-│       └── startup.scd (contiene el comando de SynthiGME())
+│       └── startup.scd
 |       └── synthigme_config.yaml (configuración de la app de Windows)
 |       └── synthigme_config_default.yaml (configuración por defecto de la app de Windows)
 ├── Patches/
@@ -45,7 +45,6 @@ SynthiGME_standalone/
 ├── Recordings/
 │   ├── Audio/
 │   ├── Events/
-├── _internal/ (archivos necesarios del ejecutable synthigme.exe)
 ├── synthigme.exe
 ```
 
