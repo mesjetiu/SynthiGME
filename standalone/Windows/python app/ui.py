@@ -17,8 +17,8 @@ SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
 SCLANG_CONFIG = os.path.join(SCRIPT_DIR, "Config", "sclang_conf.yaml")
 
 
-class TkinterTerminal:
-    """Interfaz gráfica para emular una terminal con Tkinter."""
+class SynthiGMEApp:
+    """Interfaz gráfica para la aplicación SynthiGME con Tkinter."""
     def __init__(self, root):
         self.root = root
         self.root.title("SynthiGME")
