@@ -24,6 +24,13 @@ class SynthiGMEApp:
         self.root.title("SynthiGME")
         self.root.geometry("533x600")  # Cambiar el ancho a 2/3 del tamaño original (800 * 2/3 = 533)
 
+        # Inicializar variables para el cierre
+        self.close_attempted = False
+        self.double_click_timer = None
+
+        # Manejar el evento de cierre de la ventana principal
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
         # Cargar configuración
         self.config = load_config()
         self.initial_config = self.config.copy()  # Guardar la configuración inicial
@@ -66,16 +73,8 @@ class SynthiGMEApp:
         self.process = None
         self.stop_event = threading.Event()
 
-        # Manejar el evento de cierre de la ventana principal
-        self.close_attempted = False
-        self.double_click_timer = None
-        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
-
         # Mostrar la información del programa en la consola
         self.show_program_info()
-
-        # Enlazar el doble clic en el botón de cierre
-        self.root.bind("<Double-Button-1>", self.on_double_click_close)
 
 
     def build_synthigme_command(self):
@@ -459,17 +458,20 @@ class SynthiGMEApp:
 
     def on_close(self):
         """Lógica para cerrar la ventana y finalizar el proceso sclang."""
-        if self.double_click_timer:
+        if self.close_attempted:
+            # El usuario ha intentado cerrar de nuevo antes de que expire el temporizador
             self.root.after_cancel(self.double_click_timer)
             self.double_click_timer = None
+            self.close_attempted = False
             self.confirm_force_close()
         else:
-            self.double_click_timer = self.root.after(2000, self.reset_close_attempt)
+            # Primer intento de cierre, iniciar temporizador
             self.close_attempted = True
+            self.double_click_timer = self.root.after(2000, self.reset_close_attempt)
             log_message = "Intentando cerrar SynthiGME de forma ordenada..."
-            self.append_output(log_message, "light_goldenrod3")  # Registrar en consola
+            self.append_output(log_message, "light_goldenrod3")
             if self.log_file_handle:
-                self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                self.log_file_handle.write(log_message + "\n")
                 self.log_file_handle.flush()
 
             if self.process and self.process.stdin:
@@ -479,49 +481,47 @@ class SynthiGMEApp:
                     self.process.stdin.flush()
 
                     log_message = "Comando enviado a sclang: SynthiGME.instance.close"
-                    self.append_output(log_message, "light_cyan")  # Registrar en consola
+                    self.append_output(log_message, "light_cyan")
                     if self.log_file_handle:
-                        self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                        self.log_file_handle.write(log_message + "\n")
                         self.log_file_handle.flush()
 
                 except Exception as e:
                     log_message = f"Error al enviar comando 'exit': {e}"
-                    self.append_output(log_message, "light_coral")  # Registrar en consola
+                    self.append_output(log_message, "light_coral")
                     if self.log_file_handle:
-                        self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                        self.log_file_handle.write(log_message + "\n")
                         self.log_file_handle.flush()
+            else:
+                # Si el proceso no está ejecutándose, cerrar la aplicación
+                self.root.destroy()
 
     def reset_close_attempt(self):
-        """Resetea el intento de cierre."""
+        """Resetea el intento de cierre después de que expira el temporizador."""
         self.close_attempted = False
         self.double_click_timer = None
 
     def confirm_force_close(self):
         """Confirma el cierre forzado con el usuario."""
-        log_message = "Confirmación de cierre: El proceso no ha respondido. Preguntando al usuario si desea forzar el cierre."
-        self.append_output(log_message, "bright_black")  # Registrar en consola
+        log_message = "El proceso no ha respondido. Preguntando al usuario si desea forzar el cierre."
+        self.append_output(log_message, "bright_black")
         if self.log_file_handle:
-            self.log_file_handle.write(log_message + "\n")  # Registrar en log
+            self.log_file_handle.write(log_message + "\n")
             self.log_file_handle.flush()
 
-        if mb.askyesno("Confirmación de cierre", "El proceso no ha respondido. ¿Deseas forzar el cierre?"):
+        if mb.askyesno("Confirmación de cierre", "El proceso no ha respondido.\n¿Deseas forzar el cierre?"):
             log_message = "Respuesta del usuario: Sí. Procediendo con el cierre forzado."
-            self.append_output(log_message, "light_coral")  # Registrar en consola
+            self.append_output(log_message, "light_coral")
             if self.log_file_handle:
-                self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                self.log_file_handle.write(log_message + "\n")
                 self.log_file_handle.flush()
             self.force_exit()
         else:
             log_message = "Respuesta del usuario: No. Cancelando el cierre forzado."
-            self.append_output(log_message, "sandy_brown")  # Registrar en consola
+            self.append_output(log_message, "sandy_brown")
             if self.log_file_handle:
-                self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                self.log_file_handle.write(log_message + "\n")
                 self.log_file_handle.flush()
-
-    def on_double_click_close(self, event):
-        """Lógica para manejar el doble clic en el botón de cierre."""
-        self.close_attempted = True
-        self.on_close()
 
     def show_program_info(self):
         """Muestra la información del programa en la consola."""
