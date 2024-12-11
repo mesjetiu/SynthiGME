@@ -67,10 +67,15 @@ class SynthiGMEApp:
         self.stop_event = threading.Event()
 
         # Manejar el evento de cierre de la ventana principal
+        self.close_attempted = False
+        self.double_click_timer = None
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
         # Mostrar la información del programa en la consola
         self.show_program_info()
+
+        # Enlazar el doble clic en el botón de cierre
+        self.root.bind("<Double-Button-1>", self.on_double_click_close)
 
 
     def build_synthigme_command(self):
@@ -431,37 +436,23 @@ class SynthiGMEApp:
         self.root.destroy()
 
 
+# En la clase SynthiGMEApp, reemplaza el método on_close con el siguiente:
+
     def on_close(self):
         """Lógica para cerrar la ventana y finalizar el proceso sclang."""
-        if hasattr(self, 'close_attempted') and self.close_attempted:
-            # Mostrar ventana modal para confirmar el cierre forzado
-            log_message = "Confirmación de cierre: El proceso no ha respondido. Preguntando al usuario si desea forzar el cierre."
-            self.append_output(log_message, "bright_black")  # Registrar en consola
-            if self.log_file_handle:
-                self.log_file_handle.write(log_message + "\n")  # Registrar en log
-                self.log_file_handle.flush()
-
-            if mb.askyesno("Confirmación de cierre", "El proceso no ha respondido. ¿Deseas forzar el cierre?"):
-                log_message = "Respuesta del usuario: Sí. Procediendo con el cierre forzado."
-                self.append_output(log_message, "light_coral")  # Registrar en consola
-                if self.log_file_handle:
-                    self.log_file_handle.write(log_message + "\n")  # Registrar en log
-                    self.log_file_handle.flush()
-                self.force_exit()
-            else:
-                log_message = "Respuesta del usuario: No. Cancelando el cierre forzado."
-                self.append_output(log_message, "sandy_brown")  # Registrar en consola
-                if self.log_file_handle:
-                    self.log_file_handle.write(log_message + "\n")  # Registrar en log
-                    self.log_file_handle.flush()
+        if self.double_click_timer:
+            self.root.after_cancel(self.double_click_timer)
+            self.double_click_timer = None
+            self.confirm_force_close()
         else:
+            self.double_click_timer = self.root.after(2000, self.reset_close_attempt)
+            self.close_attempted = True
             log_message = "Intentando cerrar SynthiGME de forma ordenada..."
             self.append_output(log_message, "light_goldenrod3")  # Registrar en consola
             if self.log_file_handle:
                 self.log_file_handle.write(log_message + "\n")  # Registrar en log
                 self.log_file_handle.flush()
 
-            self.close_attempted = True  # Marcar que el intento de cerrar se realizó
             if self.process and self.process.stdin:
                 try:
                     # Enviar el comando 'exit' para que SynthiGME gestione el cierre
@@ -480,6 +471,38 @@ class SynthiGMEApp:
                     if self.log_file_handle:
                         self.log_file_handle.write(log_message + "\n")  # Registrar en log
                         self.log_file_handle.flush()
+
+    def reset_close_attempt(self):
+        """Resetea el intento de cierre."""
+        self.close_attempted = False
+        self.double_click_timer = None
+
+    def confirm_force_close(self):
+        """Confirma el cierre forzado con el usuario."""
+        log_message = "Confirmación de cierre: El proceso no ha respondido. Preguntando al usuario si desea forzar el cierre."
+        self.append_output(log_message, "bright_black")  # Registrar en consola
+        if self.log_file_handle:
+            self.log_file_handle.write(log_message + "\n")  # Registrar en log
+            self.log_file_handle.flush()
+
+        if mb.askyesno("Confirmación de cierre", "El proceso no ha respondido. ¿Deseas forzar el cierre?"):
+            log_message = "Respuesta del usuario: Sí. Procediendo con el cierre forzado."
+            self.append_output(log_message, "light_coral")  # Registrar en consola
+            if self.log_file_handle:
+                self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                self.log_file_handle.flush()
+            self.force_exit()
+        else:
+            log_message = "Respuesta del usuario: No. Cancelando el cierre forzado."
+            self.append_output(log_message, "sandy_brown")  # Registrar en consola
+            if self.log_file_handle:
+                self.log_file_handle.write(log_message + "\n")  # Registrar en log
+                self.log_file_handle.flush()
+
+    def on_double_click_close(self, event):
+        """Lógica para manejar el doble clic en el botón de cierre."""
+        self.close_attempted = True
+        self.on_close()
 
     def show_program_info(self):
         """Muestra la información del programa en la consola."""

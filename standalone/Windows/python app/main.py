@@ -1,5 +1,6 @@
 # Versión para Windows
 # Instalar dependencias de python con pip install -r requirements.txt
+# Compilar con pyinstaller --noconsole main.py
 
 
 import tkinter as tk
