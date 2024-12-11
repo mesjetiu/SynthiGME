@@ -530,7 +530,11 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 				Platform.case(
 					//	\osx,       { "OSX".postln },
 					\linux,     { server.options.device_("Synthi GME") }, // En el caso de Linux, esto da nombre a la instancia (en lugar de "supercollider"), puesto que por defecto es Jack.
-					\windows,   { server.options.device_("ASIO : JackRouter"); "holitaaaa".postln } // En Windows se puede proponer driver
+					\windows,   {
+						//server.options.device_("ASIO : JackRouter");
+						server.options.inDevice = this.deviceIn;
+						server.options.outDevice = this.deviceOut;
+					} // En Windows se puede proponer driver
 				);
 
 

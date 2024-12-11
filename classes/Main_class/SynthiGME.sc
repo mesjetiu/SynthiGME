@@ -32,6 +32,8 @@ SynthiGME {
 	var <numReturnChannels;
 	var <blockSize;
 	var <alwaysRebootServer;
+	var <>deviceIn; // dispositivo de sonido. Funciona en Windows. En Linux solo funciona con Jack, por lo que no se selecciona ningún dispositivo.
+	var <>deviceOut; // ídem
 	// fin opciones de inicio.
 
 	// Módulos que incluye:
@@ -151,11 +153,12 @@ SynthiGME {
 		blockSize = 64,
 		alwaysRebootServer = false, // false: no se reinicia si se cumple la configuración del servidor.
 		postWin = true, // se abre una ventana para post window.
-		standalone = false;
+		standalone = false,
+		deviceIn, deviceOut;
 
 		if (instance != nil) {"Ya existe una instancia"; ^this};
 
-		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin, standalone);
+		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin, standalone, deviceIn, deviceOut);
 	}
 
 
@@ -197,7 +200,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin, standalone|
+	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin, standalone, deviceIn, deviceOut|
 
 		instance = this;
 
@@ -246,6 +249,8 @@ SynthiGME {
 		numReturnChannels = numReturnChan;
 		blockSize = blockSiz;
 		alwaysRebootServer = alwaysRebootServ;
+		this.deviceIn = deviceIn;
+		this.deviceOut = deviceOut;
 
 		stereoOutBuses = [0,1];
 

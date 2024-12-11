@@ -2,6 +2,8 @@
 
 autoStart: 'true'
 synthigme:
+  deviceIn: nil
+  deviceOut: nil
   numInputChannels: 2
   numOutputChannels: 2
   numReturnChannels: 0

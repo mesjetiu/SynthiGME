@@ -81,7 +81,18 @@ class SynthiGMEApp:
     def build_synthigme_command(self):
         """Construye el comando SynthiGME() a partir de la configuración."""
         params = self.config['synthigme']
-        param_str = ", ".join(f"{key}: {value}" for key, value in params.items())
+        param_list = []
+        for key, value in params.items():
+            if key in ['server', 'deviceIn', 'deviceOut']:
+                if value == 'nil':
+                    param_list.append(f"{key}: {value}")
+                else:
+                    param_list.append(f'{key}: "{value}"')
+            elif isinstance(value, str) and value.lower() in ['true', 'false']:
+                param_list.append(f"{key}: {value.lower()}")
+            else:
+                param_list.append(f"{key}: {value}")
+        param_str = ", ".join(param_list)
         command = f"SynthiGME({param_str}, standalone: true)"
         return command
 
@@ -177,6 +188,10 @@ class SynthiGMEApp:
                 var = StringVar(value="default" if value == "s" else "new")
                 widget = ttk.Combobox(frame, textvariable=var, values=["default", "new"])
                 widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, "s" if v.get() == "default" else "nil"))
+            elif key in ["deviceIn", "deviceOut"]:
+                var = StringVar(value=value)
+                widget = tk.Entry(frame, textvariable=var)
+                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
             elif isinstance(value, str) and value.lower() in ["true", "false"]:
                 var = BooleanVar(value=value.lower() == "true")
                 widget = tk.Checkbutton(frame, variable=var, onvalue=True, offvalue=False, command=lambda k=key, v=var: self.update_config(k, "true" if v.get() else "false"))
@@ -223,6 +238,10 @@ class SynthiGMEApp:
                 var = StringVar(value="default" if value == "s" else "new")
                 widget = ttk.Combobox(frame, textvariable=var, values=["default", "new"])
                 widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, "s" if v.get() == "default" else "nil"))
+            elif key in ["deviceIn", "deviceOut"]:
+                var = StringVar(value=value)
+                widget = tk.Entry(frame, textvariable=var)
+                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
             elif isinstance(value, str) and value.lower() in ["true", "false"]:
                 var = BooleanVar(value=value.lower() == "true")
                 widget = tk.Checkbutton(frame, variable=var, onvalue=True, offvalue=False, command=lambda k=key, v=var: self.update_config(k, "true" if v.get() else "false"))
