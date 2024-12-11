@@ -424,8 +424,6 @@ SynthiGME {
 					// Acción para cancelar el cierre
 					openDialog = false;
 					dialog.close;
-					// Salir de la función de cierre actual
-					^nil;
 				})
 			);
 
