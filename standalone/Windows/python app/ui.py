@@ -21,7 +21,7 @@ class SynthiGMEApp:
     """Interfaz gráfica para la aplicación SynthiGME con Tkinter."""
     def __init__(self, root):
         self.root = root
-        self.root.title("SynthiGME")
+        self.root.title("Synthi GME")
         self.root.geometry("533x600")  # Cambiar el ancho a 2/3 del tamaño original (800 * 2/3 = 533)
 
         # Inicializar variables para el cierre
@@ -187,23 +187,40 @@ class SynthiGMEApp:
                 var = StringVar(value="default" if value == "s" else "new")
                 widget = ttk.Combobox(frame, textvariable=var, values=["default", "new"])
                 widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, "s" if v.get() == "default" else "nil"))
+                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             elif key in ["deviceIn", "deviceOut"]:
-                var = StringVar(value=value)
-                widget = tk.Entry(frame, textvariable=var)
-                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+                var = StringVar(value="default" if value == "nil" else value)
+                
+                # Opciones del Combobox
+                options = ["default", "Dummy Option 1", "Dummy Option 2", "Dummy Option 3"]
+                
+                # Crear Combobox
+                combobox = ttk.Combobox(frame, textvariable=var, values=options, state='readonly')
+                combobox.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
+                
+                # Actualizar la configuración al seleccionar del Combobox
+                def on_device_select(event, k=key, v=var):
+                    selection = v.get()
+                    if selection == "default":
+                        self.update_config(k, "nil")
+                    else:
+                        self.update_config(k, selection)
+                combobox.bind("<<ComboboxSelected>>", on_device_select)
             elif isinstance(value, str) and value.lower() in ["true", "false"]:
                 var = BooleanVar(value=value.lower() == "true")
                 widget = tk.Checkbutton(frame, variable=var, onvalue=True, offvalue=False, command=lambda k=key, v=var: self.update_config(k, "true" if v.get() else "false"))
+                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             elif isinstance(value, (int, float)):
                 var = IntVar(value=value)
                 widget = tk.Entry(frame, textvariable=var)
                 widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             else:
                 var = StringVar(value=str(value))
                 widget = tk.Entry(frame, textvariable=var)
                 widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
 
-            widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             row += 1
 
         # Añadir una etiqueta para mostrar el mensaje de advertencia
@@ -237,23 +254,40 @@ class SynthiGMEApp:
                 var = StringVar(value="default" if value == "s" else "new")
                 widget = ttk.Combobox(frame, textvariable=var, values=["default", "new"])
                 widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, "s" if v.get() == "default" else "nil"))
+                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             elif key in ["deviceIn", "deviceOut"]:
-                var = StringVar(value=value)
-                widget = tk.Entry(frame, textvariable=var)
-                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+                var = StringVar(value="default" if value == "nil" else value)
+                
+                # Opciones del Combobox
+                options = ["default", "Dummy Option 1", "Dummy Option 2", "Dummy Option 3"]
+                
+                # Crear Combobox
+                combobox = ttk.Combobox(frame, textvariable=var, values=options, state='readonly')
+                combobox.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
+                
+                # Actualizar la configuración al seleccionar del Combobox
+                def on_device_select(event, k=key, v=var):
+                    selection = v.get()
+                    if selection == "default":
+                        self.update_config(k, "nil")
+                    else:
+                        self.update_config(k, selection)
+                combobox.bind("<<ComboboxSelected>>", on_device_select)
             elif isinstance(value, str) and value.lower() in ["true", "false"]:
                 var = BooleanVar(value=value.lower() == "true")
                 widget = tk.Checkbutton(frame, variable=var, onvalue=True, offvalue=False, command=lambda k=key, v=var: self.update_config(k, "true" if v.get() else "false"))
+                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             elif isinstance(value, (int, float)):
                 var = IntVar(value=value)
                 widget = tk.Entry(frame, textvariable=var)
                 widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             else:
                 var = StringVar(value=str(value))
                 widget = tk.Entry(frame, textvariable=var)
                 widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
+                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
 
-            widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             row += 1
 
         # Añadir una etiqueta para mostrar el mensaje de advertencia
@@ -533,7 +567,7 @@ class SynthiGMEApp:
             "Contacto: carlosarturoguerra@gmail.com",
             "",
             "Synthi GME es un software libre distribuido bajo la Licencia Pública General de GNU.",
-            "Copyright 2024."
+            "Copyright 2024.",
             "====================",
             ""
         ]
