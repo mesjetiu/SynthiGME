@@ -264,7 +264,7 @@ class SynthiGMEApp:
                 widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             elif key in ["deviceIn", "deviceOut"]:
                 var = StringVar(value="default" if value == "nil" else value)
-                combobox = ttk.Combobox(frame, textvariable=var, values=self.device_list, state='readonly', name=f"{key}_combobox")
+                combobox = ttk.Combobox(frame, textvariable=var, values=self.device_list, state='readonly', name=f"{key}_combobox", width=30)  # Increase width by 50%
                 combobox.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
                 def on_device_select(event, k=key, v=var):
                     selection = v.get()
