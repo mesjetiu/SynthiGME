@@ -62,6 +62,10 @@ class SynthiGMEApp:
         self.create_console_widgets()
 
         # Crear widgets de configuración en su pestaña
+        self.process = None  # Initialize process before calling fetch_device_list
+        self.device_list = []  # Initialize device_list before calling create_options_widgets
+        self.fetching_devices = False  # Flag to indicate if fetching devices
+        self.processed_lines = set()  # Track processed lines to avoid duplicates
         self.create_options_widgets()
 
         # Crear menú principal
@@ -75,6 +79,9 @@ class SynthiGMEApp:
 
         # Mostrar la información del programa en la consola
         self.show_program_info()
+
+        self.device_list = []
+        self.fetch_device_list()
 
 
     def build_synthigme_command(self):
@@ -257,15 +264,8 @@ class SynthiGMEApp:
                 widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
             elif key in ["deviceIn", "deviceOut"]:
                 var = StringVar(value="default" if value == "nil" else value)
-                
-                # Opciones del Combobox
-                options = ["default", "Dummy Option 1", "Dummy Option 2", "Dummy Option 3"]
-                
-                # Crear Combobox
-                combobox = ttk.Combobox(frame, textvariable=var, values=options, state='readonly')
+                combobox = ttk.Combobox(frame, textvariable=var, values=self.device_list, state='readonly', name=f"{key}_combobox")
                 combobox.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
-                
-                # Actualizar la configuración al seleccionar del Combobox
                 def on_device_select(event, k=key, v=var):
                     selection = v.get()
                     if selection == "default":
@@ -375,16 +375,18 @@ class SynthiGMEApp:
         if not self.root.winfo_exists():
             return  # Si la ventana principal ha sido destruida, no hacer nada
 
-        self.console_content += text + "\n"  # Guardar en el estado interno
-        self.output_area.configure(state="normal")
-        self.output_area.insert(tk.END, text + "\n", color)
-        self.output_area.see(tk.END)
-        self.output_area.configure(state="disabled")
+        if text.strip() and text not in self.processed_lines:  # Avoid adding empty lines and duplicates
+            self.processed_lines.add(text)
+            self.console_content += text + "\n"  # Guardar en el estado interno
+            self.output_area.configure(state="normal")
+            self.output_area.insert(tk.END, text + "\n", color)
+            self.output_area.see(tk.END)
+            self.output_area.configure(state="disabled")
 
-        # Guardar en el log
-        if self.log_file_handle:
-            self.log_file_handle.write(text + "\n")
-            self.log_file_handle.flush()
+            # Guardar en el log
+            if self.log_file_handle:
+                self.log_file_handle.write(text + "\n")
+                self.log_file_handle.flush()
             
     def start_sclang(self):
         """Inicia el proceso de sclang y redirige la salida."""
@@ -441,9 +443,7 @@ class SynthiGMEApp:
         """Ejecuta un comando arbitrario cuando la compilación ha terminado."""
         self.append_output("Compilación completada.", "green_ready")
         if self.process and self.process.stdin:
-            if self.config.get('autoStart', 'false').lower() == 'true':
-                self.process.stdin.write(f'{self.post_compilation_command};\n')
-                self.process.stdin.flush()
+            self.fetch_device_list()  # Fetch device list after compilation
 
     def send_command(self, event=None):
         """Envía un comando al proceso sclang."""
@@ -473,7 +473,20 @@ class SynthiGMEApp:
                 self.force_exit()  # Llama a la nueva función de cierre inmediato
             else:
                 self.append_output(f"Comando desconocido: {command}", "sandy_brown")
-
+        elif self.fetching_devices:
+            if text.startswith("-> nil"):
+                self.device_list.append("default")
+                self.append_output(f"Device list fetched: {self.device_list}", "light_cyan")  # Debugging output
+                self.update_device_comboboxes()
+                self.fetching_devices = False
+                if self.config.get('autoStart', 'false').lower() == 'true':
+                    self.process.stdin.write(f'{self.post_compilation_command};\n')
+                    self.process.stdin.flush()
+            elif "ServerOptions.devices.do" not in text:
+                self.device_list.append(text.strip())
+                self.append_output(f"Device added: {text.strip()}", "light_cyan")  # Debugging output
+        else:
+            self.append_output(text, self.detect_color(text))  # Handle other messages with color detection
 
     def force_exit(self):
         """Cierra la aplicación de forma inmediata."""
@@ -486,6 +499,23 @@ class SynthiGMEApp:
             except subprocess.TimeoutExpired:
                 self.process.kill()
         self.root.destroy()
+
+    def fetch_device_list(self):
+        """Envía un comando a sclang para obtener la lista de dispositivos."""
+        if self.process and self.process.stdin:
+            self.append_output("Fetching device list...", "light_cyan")  # Debugging output
+            self.fetching_devices = True
+            self.device_list = []  # Clear previous device list
+            self.process.stdin.write("ServerOptions.devices.do{|device| device.postln}; nil\n")
+            self.process.stdin.flush()
+
+    def update_device_comboboxes(self):
+        """Actualiza los comboboxes de dispositivos con la lista de dispositivos obtenida."""
+        for key in ["deviceIn", "deviceOut"]:
+            combobox = self.tabs["Opciones"]["frame"].children.get(f"{key}_combobox")
+            if combobox:
+                combobox["values"] = self.device_list
+                self.append_output(f"Updated {key} combobox with devices: {self.device_list}", "light_cyan")  # Debugging output
 
 
 # En la clase SynthiGMEApp, reemplaza el método on_close con el siguiente:
