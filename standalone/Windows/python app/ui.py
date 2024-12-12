@@ -19,7 +19,7 @@ SCLANG_CONFIG = os.path.join(SCRIPT_DIR, "Config", "sclang_conf.yaml")
 
 class SynthiGMEApp:
     """Interfaz gráfica para la aplicación SynthiGME con Tkinter."""
-    def __init__(self, root):
+    def __init__(self, root, sclang_process):
         self.root = root
         self.root.title("Synthi GME")
         self.root.geometry("533x600")  # Cambiar el ancho a 2/3 del tamaño original (800 * 2/3 = 533)
@@ -63,7 +63,7 @@ class SynthiGMEApp:
 
         # Crear widgets de configuración en su pestaña
         self.synthi_started = False  # Track if SynthiGME has been started
-        self.process = None  # Initialize process before calling fetch_device_list
+        self.process = sclang_process  # Use the existing sclang process
         self.device_list = []  # Initialize device_list before calling create_options_widgets
         self.fetching_devices = False  # Flag to indicate if fetching devices
         self.processed_lines = set()  # Track processed lines to avoid duplicates
@@ -75,7 +75,6 @@ class SynthiGMEApp:
         # Habilitar el movimiento de pestañas
         self.enable_tab_dragging()
 
-        self.process = None
         self.stop_event = threading.Event()
 
         # Mostrar la información del programa en la consola
@@ -84,6 +83,12 @@ class SynthiGMEApp:
         self.device_list = []
         self.fetch_device_list()
 
+        # Auto-start SynthiGME if configured
+        if self.config.get('autoStart', 'false').lower() == 'true':
+            self.start_synthigme()
+
+        # Start reading sclang output
+        threading.Thread(target=self.read_sclang_output, daemon=True).start()
 
     def build_synthigme_command(self):
         """Construye el comando SynthiGME() a partir de la configuración."""
@@ -139,7 +144,6 @@ class SynthiGMEApp:
         if not self.synthi_started:
             self.synthi_started = True
             self.synthi_menu.entryconfig("Iniciar", state="disabled")
-            self.start_sclang()
             self.append_output("SynthiGME iniciado.", "green_ready")
             if self.process and self.process.stdin:
                 self.process.stdin.write(f'{self.build_synthigme_command()};\n')
@@ -405,36 +409,6 @@ class SynthiGMEApp:
                 self.log_file_handle.write(text + "\n")
                 self.log_file_handle.flush()
             
-    def start_sclang(self):
-        """Inicia el proceso de sclang y redirige la salida."""
-        try:
-            if not os.path.isfile(SCLANG_EXECUTABLE):
-                raise FileNotFoundError(f"sclang executable not found at {SCLANG_EXECUTABLE}.")
-
-            os.chdir(SUPER_COLLIDER_DIR)
-
-            # Iniciar el proceso con configuración para capturar toda la salida
-            self.process = subprocess.Popen(
-                [SCLANG_EXECUTABLE, "-l", SCLANG_CONFIG],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                bufsize=1,
-                universal_newlines=True,
-                encoding="utf-8",
-                errors="replace",
-                creationflags=subprocess.CREATE_NO_WINDOW,
-            )
-
-            # Abrir el archivo de log en modo append
-            self.log_file_handle = open(self.log_file, "a", encoding="utf-8")
-
-            # Crear un hilo para procesar la salida del proceso
-            threading.Thread(target=self.read_sclang_output, daemon=True).start()
-        except Exception as e:
-            self.append_output(f"Error al iniciar sclang: {e}", "light_coral")
-            traceback.print_exc()
-
     def read_sclang_output(self):
         """Lee la salida de sclang, detecta comandos y registra en el archivo de log."""
         try:
