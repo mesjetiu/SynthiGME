@@ -62,6 +62,7 @@ class SynthiGMEApp:
         self.create_console_widgets()
 
         # Crear widgets de configuración en su pestaña
+        self.synthi_started = False  # Track if SynthiGME has been started
         self.process = None  # Initialize process before calling fetch_device_list
         self.device_list = []  # Initialize device_list before calling create_options_widgets
         self.fetching_devices = False  # Flag to indicate if fetching devices
@@ -121,12 +122,28 @@ class SynthiGMEApp:
             )
         menu_bar.add_cascade(label="Ver", menu=self.view_menu)
 
+        # Menú Synthi
+        self.synthi_menu = Menu(menu_bar, tearoff=0)
+        self.synthi_menu.add_command(label="Iniciar", command=self.start_synthigme, state="normal")
+        menu_bar.add_cascade(label="Synthi", menu=self.synthi_menu)
+
         # Menú Ayuda
         help_menu = Menu(menu_bar, tearoff=0)
         help_menu.add_command(label="Acerca de", command=self.show_about)
         menu_bar.add_cascade(label="Ayuda", menu=help_menu)
 
         self.root.config(menu=menu_bar)
+
+    def start_synthigme(self):
+        """Inicia SynthiGME con los parámetros configurados."""
+        if not self.synthi_started:
+            self.synthi_started = True
+            self.synthi_menu.entryconfig("Iniciar", state="disabled")
+            self.start_sclang()
+            self.append_output("SynthiGME iniciado.", "green_ready")
+            if self.process and self.process.stdin:
+                self.process.stdin.write(f'{self.build_synthigme_command()};\n')
+                self.process.stdin.flush()
 
     def toggle_tab(self, tab_name):
         """Abre o cierra la pestaña según el estado de la variable."""
