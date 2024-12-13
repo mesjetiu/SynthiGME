@@ -154,7 +154,8 @@ SynthiGME {
 		alwaysRebootServer = false, // false: no se reinicia si se cumple la configuración del servidor.
 		postWin = true, // se abre una ventana para post window.
 		standalone = false,
-		deviceIn, deviceOut;
+		deviceIn = nil,
+		deviceOut = nil;
 
 		if (instance != nil) {"Ya existe una instancia"; ^this};
 
