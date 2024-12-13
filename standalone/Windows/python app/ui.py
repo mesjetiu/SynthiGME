@@ -38,8 +38,9 @@ class SynthiGMEApp:
 
         # Variables para el log
         self.log_file = os.path.join(LOG_DIR, f"sclang_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+        # Open the log file and store the handle
+        self.log_file_handle = open(self.log_file, "a", encoding="utf-8")  # Changed to append mode
         write_log_header(self.log_file)
-        self.log_file_handle = None
 
         # Variable para el contenido de la consola
         self.console_content = ""
@@ -399,16 +400,21 @@ class SynthiGMEApp:
         if text.strip() and text not in self.processed_lines:  # Avoid adding empty lines and duplicates
             self.processed_lines.add(text)
             self.console_content += text + "\n"  # Guardar en el estado interno
+            
+            # Update UI
             self.output_area.configure(state="normal")
             self.output_area.insert(tk.END, text + "\n", color)
             self.output_area.see(tk.END)
             self.output_area.configure(state="disabled")
 
-            # Guardar en el log
-            if self.log_file_handle:
-                self.log_file_handle.write(text + "\n")
-                self.log_file_handle.flush()
-            
+            # Write to log file
+            try:
+                if self.log_file_handle and not self.log_file_handle.closed:
+                    self.log_file_handle.write(text + "\n")
+                    self.log_file_handle.flush()
+            except Exception as e:
+                print(f"Error writing to log file: {e}")
+
     def read_sclang_output(self):
         """Lee la salida de sclang, detecta comandos y registra en el archivo de log."""
         try:
@@ -489,6 +495,11 @@ class SynthiGMEApp:
                 self.process.wait(timeout=2)
             except subprocess.TimeoutExpired:
                 self.process.kill()
+        
+        # Close log file handle
+        if self.log_file_handle and not self.log_file_handle.closed:
+            self.log_file_handle.close()
+        
         self.root.destroy()
 
     def fetch_device_list(self):
