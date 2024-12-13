@@ -13,6 +13,7 @@ from config import SCRIPT_DIR, CONFIG_DIR, load_config, save_config, get_version
 from logger import write_log_header, LOG_DIR
 from ui_colors import detect_color, configure_tags
 from ui_config import create_config_widgets_impl
+from ui_events import send_command, process_command, on_close, confirm_force_close, reset_close_attempt
 
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
@@ -356,47 +357,16 @@ class SynthiGMEApp:
             self.fetch_device_list()  # Fetch device list after compilation
 
     def send_command(self, event=None):
-        """Envía un comando al proceso sclang."""
-        if self.process and self.process.stdin:
-            command = self.input_area.get().strip()
-            if command.lower() in ["exit", "quit"]:
-                # Envía el comando a SynthiGME para que gestione el cierre
-                self.process.stdin.write("SynthiGME.instance.close\n")
-                self.process.stdin.flush()
-            elif command.lower() == "force_exit":
-                self.on_close()  # Llama directamente al cierre forzado
-            else:
-                self.process.stdin.write(command + "\n")
-                self.process.stdin.flush()
-            self.input_area.delete(0, tk.END)
-
+        send_command(self, event)
+    
     def process_command(self, text):
-        """Procesa comandos específicos enviados desde sclang."""
-        if text.startswith("command: "):
-            command = text[len("command: "):].strip()
-            self.append_output(f"Comando recibido: {command}", "light_cyan")
-            if command == "exit":
-                self.append_output("Recibido comando 'exit'. Cerrando la aplicación...", "light_goldenrod3")
-                self.on_close()
-            elif command == "force_exit":
-                self.append_output("Recibido comando 'force_exit'. Forzando cierre...", "light_coral")
-                self.force_exit()  # Llama a la nueva función de cierre inmediato
-            else:
-                self.append_output(f"Comando desconocido: {command}", "sandy_brown")
-        elif self.fetching_devices:
-            if text.startswith("-> nil"):
-                self.device_list.append("default")
-                self.append_output(f"Device list fetched: {self.device_list}", "light_cyan")  # Debugging output
-                self.update_device_comboboxes()
-                self.fetching_devices = False
-                if self.config.get('autoStart', 'false').lower() == 'true':
-                    self.process.stdin.write(f'{self.post_compilation_command};\n')
-                    self.process.stdin.flush()
-            elif "ServerOptions.devices.do" not in text:
-                self.device_list.append(text.strip())
-                self.append_output(f"Device added: {text.strip()}", "light_cyan")  # Debugging output
-        else:
-            self.append_output(text, self.detect_color(text))  # Handle other messages with color detection
+        process_command(self, text)
+    
+    def on_close(self):
+        on_close(self)
+    
+    def confirm_force_close(self):
+        confirm_force_close(self)
 
     def force_exit(self):
         """Cierra la aplicación de forma inmediata."""
@@ -434,73 +404,6 @@ class SynthiGMEApp:
 
 
 # En la clase SynthiGMEApp, reemplaza el método on_close con el siguiente:
-
-    def on_close(self):
-        """Lógica para cerrar la ventana y finalizar el proceso sclang."""
-        if self.close_attempted:
-            # El usuario ha intentado cerrar de nuevo antes de que expire el temporizador
-            self.root.after_cancel(self.double_click_timer)
-            self.double_click_timer = None
-            self.close_attempted = False
-            self.confirm_force_close()
-        else:
-            # Primer intento de cierre, iniciar temporizador
-            self.close_attempted = True
-            self.double_click_timer = self.root.after(2000, self.reset_close_attempt)
-            log_message = "Intentando cerrar SynthiGME de forma ordenada..."
-            self.append_output(log_message, "light_goldenrod3")
-            if self.log_file_handle:
-                self.log_file_handle.write(log_message + "\n")
-                self.log_file_handle.flush()
-
-            if self.process and self.process.stdin:
-                try:
-                    # Enviar el comando 'exit' para que SynthiGME gestione el cierre
-                    self.process.stdin.write("SynthiGME.instance.close\n")
-                    self.process.stdin.flush()
-
-                    log_message = "Comando enviado a sclang: SynthiGME.instance.close"
-                    self.append_output(log_message, "light_cyan")
-                    if self.log_file_handle:
-                        self.log_file_handle.write(log_message + "\n")
-                        self.log_file_handle.flush()
-
-                except Exception as e:
-                    log_message = f"Error al enviar comando 'exit': {e}"
-                    self.append_output(log_message, "light_coral")
-                    if self.log_file_handle:
-                        self.log_file_handle.write(log_message + "\n")
-                        self.log_file_handle.flush()
-            else:
-                # Si el proceso no está ejecutándose, cerrar la aplicación
-                self.root.destroy()
-
-    def reset_close_attempt(self):
-        """Resetea el intento de cierre después de que expira el temporizador."""
-        self.close_attempted = False
-        self.double_click_timer = None
-
-    def confirm_force_close(self):
-        """Confirma el cierre forzado con el usuario."""
-        log_message = "El proceso no ha respondido. Preguntando al usuario si desea forzar el cierre."
-        self.append_output(log_message, "bright_black")
-        if self.log_file_handle:
-            self.log_file_handle.write(log_message + "\n")
-            self.log_file_handle.flush()
-
-        if mb.askyesno("Confirmación de cierre", "El proceso no ha respondido.\n¿Deseas forzar el cierre?"):
-            log_message = "Respuesta del usuario: Sí. Procediendo con el cierre forzado."
-            self.append_output(log_message, "light_coral")
-            if self.log_file_handle:
-                self.log_file_handle.write(log_message + "\n")
-                self.log_file_handle.flush()
-            self.force_exit()
-        else:
-            log_message = "Respuesta del usuario: No. Cancelando el cierre forzado."
-            self.append_output(log_message, "sandy_brown")
-            if self.log_file_handle:
-                self.log_file_handle.write(log_message + "\n")
-                self.log_file_handle.flush()
 
     def show_program_info(self):
         """Muestra la información del programa en la consola."""
@@ -549,4 +452,7 @@ class SynthiGMEApp:
 
         # Botón para cerrar la ventana
         tk.Button(frame, text="Cerrar", command=about_window.destroy).pack(pady=10)
+
+    def reset_close_attempt(self):
+        reset_close_attempt(self)
 
