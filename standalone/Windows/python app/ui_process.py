@@ -94,19 +94,24 @@ def force_exit(self_instance):
 
 def process_command(self_instance, text):
     """Procesa comandos específicos enviados desde sclang."""
-    # Detectar errores de sclang
-    if text.startswith("ERROR:"):
-        if mb.askyesno("Error en SuperCollider", 
-                      f"{text}\n\n¿Desea cerrar el programa?"):
-            self_instance.append_output("Error detectado. Cerrando SynthiGME...", "light_coral")
-            self_instance.process.stdin.write("SynthiGME.instance.close\n")
-            self_instance.process.stdin.flush()
-        return
-
-    # Resto del código original
+    
+    # Detectar errores que contienen "ERROR:"
+    if text.startswith("ERROR: "):
+        if mb.askyesno("Error en SuperCollider",
+                       f"{text}\n\n¿Desea cerrar el programa?",
+                       parent=self_instance.root):
+            self_instance.append_output("Cerrando SynthiGME...", "light_coral")
+            # Comentar la línea actual
+            # if self_instance.process and self_instance.process.stdin:
+            #     self_instance.process.stdin.write("SynthiGME.instance.close\n")
+            #     self_instance.process.stdin.flush()
+            # Ejecutar force_exit en su lugar
+            self_instance.force_exit()
+        return True
+    
+    # Detectar comandos que comienzan con "command:"
     if text.startswith("command: "):
         command = text[len("command: "):].strip()
-        self_instance.append_output(f"Comando recibido: {command}", "light_cyan")
         if command == "exit":
             self_instance.append_output("Recibido comando 'exit'. Cerrando la aplicación...", "light_goldenrod3")
             self_instance.on_close()
@@ -115,7 +120,10 @@ def process_command(self_instance, text):
             self_instance.force_exit()
         else:
             self_instance.append_output(f"Comando desconocido: {command}", "sandy_brown")
-    elif self_instance.fetching_devices:
+        return True
+    
+    # Procesar otros textos
+    if self_instance.fetching_devices:
         if text.startswith("-> nil"):
             self_instance.device_list.append("default")
             self_instance.append_output(f"Device list fetched: {self_instance.device_list}", "light_cyan")
@@ -129,3 +137,4 @@ def process_command(self_instance, text):
             self_instance.append_output(f"Device added: {text.strip()}", "light_cyan")
     else:
         self_instance.append_output(text, self_instance.detect_color(text))
+    return False

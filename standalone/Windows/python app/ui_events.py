@@ -1,6 +1,7 @@
 # ui_events.py
 import tkinter as tk
 import tkinter.messagebox as mb
+from ui_process import process_command  # Importar process_command desde ui_process.py
 
 def send_command(self_instance, event=None):
     """Envía un comando al proceso sclang."""
@@ -15,34 +16,8 @@ def send_command(self_instance, event=None):
             self_instance.process.stdin.write(command + "\n")
             self_instance.process.stdin.flush()
         self_instance.input_area.delete(0, tk.END)
-
-def process_command(self_instance, text):
-    """Procesa comandos específicos enviados desde sclang."""
-    if text.startswith("command: "):
-        command = text[len("command: "):].strip()
-        self_instance.append_output(f"Comando recibido: {command}", "light_cyan")
-        if command == "exit":
-            self_instance.append_output("Recibido comando 'exit'. Cerrando la aplicación...", "light_goldenrod3")
-            self_instance.on_close()
-        elif command == "force_exit":
-            self_instance.append_output("Recibido comando 'force_exit'. Forzando cierre...", "light_coral")
-            self_instance.force_exit()
-        else:
-            self_instance.append_output(f"Comando desconocido: {command}", "sandy_brown")
-    elif self_instance.fetching_devices:
-        if text.startswith("-> nil"):
-            self_instance.device_list.append("default")
-            self_instance.append_output(f"Device list fetched: {self_instance.device_list}", "light_cyan")
-            self_instance.update_device_comboboxes()
-            self_instance.fetching_devices = False
-            if self_instance.config.get('autoStart', 'false').lower() == 'true':
-                self_instance.process.stdin.write(f'{self_instance.post_compilation_command};\n')
-                self_instance.process.stdin.flush()
-        elif "ServerOptions.devices.do" not in text:
-            self_instance.device_list.append(text.strip())
-            self_instance.append_output(f"Device added: {text.strip()}", "light_cyan")
-    else:
-        self_instance.append_output(text, self_instance.detect_color(text))
+        # Llamar a process_command para manejar el comando
+        self_instance.process_command(command)
 
 def on_close(self_instance):
     """Lógica para cerrar la ventana y finalizar el proceso sclang."""

@@ -13,7 +13,7 @@ from config import SCRIPT_DIR, CONFIG_DIR, load_config, save_config, get_version
 from logger import write_log_header, LOG_DIR
 from ui_colors import detect_color, configure_tags
 from ui_config import create_config_widgets_impl
-from ui_events import send_command, process_command, on_close, confirm_force_close, reset_close_attempt
+from ui_events import send_command, on_close, confirm_force_close, reset_close_attempt
 from ui_options import create_options_widgets_impl
 from ui_console import create_console_widgets_impl
 from ui_output import append_output, show_program_info
@@ -23,6 +23,7 @@ from ui_process import (
     build_synthigme_command,
     start_synthigme,
     fetch_device_list,
+    process_command,
     update_device_comboboxes,
     force_exit
 )
