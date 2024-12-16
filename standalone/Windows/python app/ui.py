@@ -12,7 +12,7 @@ from datetime import datetime
 from config import SCRIPT_DIR, CONFIG_DIR, load_config, save_config, get_version
 from logger import write_log_header, LOG_DIR
 from ui_colors import detect_color, configure_tags
-from ui_config import create_config_widgets_impl
+from ui_config import create_config_widgets_impl, update_config_impl, restore_defaults_impl
 from ui_events import send_command, on_close, confirm_force_close, reset_close_attempt
 from ui_options import create_options_widgets_impl
 from ui_console import create_console_widgets_impl
@@ -143,39 +143,13 @@ class SynthiGMEApp:
         """Crea los widgets de configuración en la pestaña 'Opciones'."""
         frame = self.tabs["Opciones"]["frame"]
         self.config_message = tk.Label(frame, text="", fg="red")  # Create label first
-        create_options_widgets_impl(frame, self.config, self.update_config, self.config_message, self.device_list)
+        create_options_widgets_impl(frame, self.config, self.update_config, self.config_message, self.device_list, self)  # Add self
 
     def update_config(self, key, value):
-        """Actualiza el archivo de configuración YAML cuando se cambia un valor."""
-        if key in self.config['synthigme']:
-            if self.config['synthigme'][key] != value:
-                self.config['synthigme'][key] = value
-                save_config(self.config)
-                # Mostrar el mensaje de advertencia
-                self.config_message.config(text="Los cambios tendrán efecto la próxima vez que se inicie SynthiGME.")
-            else:
-                self.config_message.config(text="")
-        else:
-            if self.config.get(key) != value:
-                self.config[key] = value
-                save_config(self.config)
-                # Mostrar el mensaje de advertencia
-                self.config_message.config(text="Los cambios tendrán efecto la próxima vez que se inicie SynthiGME.")
-            else:
-                self.config_message.config(text="")
+        update_config_impl(self, key, value)
 
     def restore_defaults(self):
-        """Restaura los valores por defecto desde el archivo YAML de configuración por defecto."""
-        default_config_file = os.path.join(CONFIG_DIR, "synthigme_config_default.yaml")
-        try:
-            with open(default_config_file, "r", encoding="utf-8") as file:
-                default_config = yaml.safe_load(file)
-            self.config = default_config
-            save_config(self.config)
-            self.create_options_widgets()  # Actualizar los widgets con los valores por defecto
-            self.config_message.config(text="Valores por defecto restaurados. Reinicie SynthiGME para aplicar los cambios.", fg="green")
-        except Exception as e:
-            self.config_message.config(text=f"Error al restaurar los valores por defecto: {e}", fg="red")
+        restore_defaults_impl(self)
 
     def enable_tab_dragging(self):
         enable_tab_dragging_impl(self)
@@ -186,14 +160,14 @@ class SynthiGMEApp:
     def on_tab_drag_motion(self, event):
         on_tab_drag_motion_impl(self, event)
 
-    def detect_color(self, text):
-        return detect_color(text)
-
     def append_output(self, text, color="bright_black"):
         append_output(self, text, color)
 
     def read_sclang_output(self):
         read_sclang_output(self)
+
+    def reset_close_attempt(self):
+        reset_close_attempt(self)
 
     def on_compilation_complete(self):
         on_compilation_complete(self)
@@ -213,21 +187,19 @@ class SynthiGMEApp:
     def force_exit(self):
         force_exit(self)
 
-    def fetch_device_list(self):
-        fetch_device_list(self)
-
-    def update_device_comboboxes(self):
-        update_device_comboboxes(self)
-
-
-# En la clase SynthiGMEApp, reemplaza el método on_close con el siguiente:
-
     def show_program_info(self):
         show_program_info(self)
 
     def show_about(self):
         show_about_impl(self)
 
-    def reset_close_attempt(self):
-        reset_close_attempt(self)
+    def detect_color(self, text):
+        return detect_color(text)
+    
+    def fetch_device_list(self):
+        fetch_device_list(self)
 
+    def update_device_comboboxes(self):
+        update_device_comboboxes(self)
+
+    

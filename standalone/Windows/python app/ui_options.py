@@ -1,8 +1,9 @@
 # ui_options.py
 import tkinter as tk
 from tkinter import ttk, BooleanVar, StringVar, IntVar
+from ui_config import restore_defaults_impl
 
-def create_options_widgets_impl(frame, config, update_config, config_message, device_list):
+def create_options_widgets_impl(frame, config, update_config, config_message, device_list, app_instance):  # Add app_instance
     """Implementación de los widgets de configuración en la pestaña 'Opciones'."""
     row = 0
 
@@ -85,5 +86,14 @@ def create_options_widgets_impl(frame, config, update_config, config_message, de
 
         row += 1
 
-    # Message label
-    config_message.grid(row=row, column=0, columnspan=2, padx=5, pady=5, sticky=tk.W)
+    # Añadir el botón de restaurar valores por defecto al final
+    tk.Button(
+        frame,
+        text="Restaurar valores por defecto",
+        command=lambda: restore_defaults_impl(app_instance),  # Pass app_instance instead of frame.master.master
+        fg="red"
+    ).grid(row=row, column=0, columnspan=2, pady=20)
+    row += 1
+
+    # El mensaje de configuración va al final
+    config_message.grid(row=row, column=0, columnspan=2, padx=5, pady=5)
