@@ -84,13 +84,6 @@ class SynthiGMEApp:
         # Mostrar la información del programa en la consola
         self.show_program_info()
 
-        self.device_list = []
-        self.fetch_device_list()
-
-        # Auto-start SynthiGME if configured
-        if self.config.get('autoStart', 'false').lower() == 'true':
-            self.start_synthigme()
-
         # Start reading sclang output
         threading.Thread(target=self.read_sclang_output, daemon=True).start()
 
@@ -353,8 +346,10 @@ class SynthiGMEApp:
     def on_compilation_complete(self):
         """Ejecuta un comando arbitrario cuando la compilación ha terminado."""
         self.append_output("Compilación completada.", "green_ready")
-        if self.process and self.process.stdin:
-            self.fetch_device_list()  # Fetch device list after compilation
+        self.device_list = []
+        self.fetch_device_list()
+        if self.config.get('autoStart', 'false').lower() == 'true':
+            self.start_synthigme()
 
     def send_command(self, event=None):
         send_command(self, event)
