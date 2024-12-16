@@ -16,6 +16,7 @@ from ui_config import create_config_widgets_impl
 from ui_events import send_command, process_command, on_close, confirm_force_close, reset_close_attempt
 from ui_options import create_options_widgets_impl
 from ui_console import create_console_widgets_impl
+from ui_output import append_output, show_program_info
 
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
@@ -237,27 +238,7 @@ class SynthiGMEApp:
         return detect_color(text)
 
     def append_output(self, text, color="bright_black"):
-        """Añade texto al área de salida con un color específico y guarda en el log."""
-        if not self.root.winfo_exists():
-            return  # Si la ventana principal ha sido destruida, no hacer nada
-
-        if text.strip() and text not in self.processed_lines:  # Avoid adding empty lines and duplicates
-            self.processed_lines.add(text)
-            self.console_content += text + "\n"  # Guardar en el estado interno
-            
-            # Update UI
-            self.output_area.configure(state="normal")
-            self.output_area.insert(tk.END, text + "\n", color)
-            self.output_area.see(tk.END)
-            self.output_area.configure(state="disabled")
-
-            # Write to log file
-            try:
-                if self.log_file_handle and not self.log_file_handle.closed:
-                    self.log_file_handle.write(text + "\n")
-                    self.log_file_handle.flush()
-            except Exception as e:
-                print(f"Error writing to log file: {e}")
+        append_output(self, text, color)
 
     def read_sclang_output(self):
         """Lee la salida de sclang, detecta comandos y registra en el archivo de log."""
@@ -338,23 +319,7 @@ class SynthiGMEApp:
 # En la clase SynthiGMEApp, reemplaza el método on_close con el siguiente:
 
     def show_program_info(self):
-        """Muestra la información del programa en la consola."""
-        version = get_version()
-        program_info = [
-            "==== Synthi GME ====",
-            f"Versión: {version}",
-            "Autor: Carlos Arturo Guerra Parra",
-            "Contacto: carlosarturoguerra@gmail.com",
-            "",
-            "Synthi GME es un software libre distribuido bajo la Licencia Pública General de GNU.",
-            "Copyright 2024.",
-            "====================",
-            ""
-        ]
-
-        # Mostrar el encabezado en la consola
-        for line in program_info:
-            self.append_output(line, "gold3")
+        show_program_info(self)
 
     def show_about(self):
         """Muestra una ventana con la información 'Acerca de'."""
