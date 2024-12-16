@@ -15,6 +15,7 @@ from ui_colors import detect_color, configure_tags
 from ui_config import create_config_widgets_impl
 from ui_events import send_command, process_command, on_close, confirm_force_close, reset_close_attempt
 from ui_options import create_options_widgets_impl
+from ui_console import create_console_widgets_impl
 
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
@@ -157,20 +158,13 @@ class SynthiGMEApp:
 
     def create_console_widgets(self):
         """Crea los widgets de la consola en la pestaña 'Consola'."""
-        # Área de texto para la salida
-        self.output_area = ScrolledText(self.tabs["Consola"]["frame"], wrap=tk.WORD, font=("Courier", 12), bg="black", fg="white")
-        self.output_area.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-        self.output_area.configure(state="disabled")
-
-        # Área de entrada para comandos
-        self.input_area = tk.Entry(self.tabs["Consola"]["frame"], font=("Courier", 12), bg="black", fg="white", insertbackground="white")
-        self.input_area.pack(fill=tk.X, padx=5, pady=5)
-        self.input_area.bind("<Return>", self.send_command)
-
-        # Restaurar contenido previo
-        if self.console_content:
-            self.append_output(self.console_content, "bright_black")
-
+        frame = self.tabs["Consola"]["frame"]
+        self.output_area, self.input_area = create_console_widgets_impl(
+            frame,
+            self.console_content,
+            self.send_command
+        )
+        
         # Configurar etiquetas de colores
         self.configure_tags()
 
