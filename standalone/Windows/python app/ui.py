@@ -14,6 +14,7 @@ from logger import write_log_header, LOG_DIR
 from ui_colors import detect_color, configure_tags
 from ui_config import create_config_widgets_impl
 from ui_events import send_command, process_command, on_close, confirm_force_close, reset_close_attempt
+from ui_options import create_options_widgets_impl
 
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
@@ -184,66 +185,8 @@ class SynthiGMEApp:
     def create_options_widgets(self):
         """Crea los widgets de configuración en la pestaña 'Opciones'."""
         frame = self.tabs["Opciones"]["frame"]
-        row = 0
-
-        # Añadir un título en la pestaña
-        tk.Label(frame, text="Opciones", font=("Helvetica", 16)).grid(row=row, column=0, columnspan=2, padx=5, pady=10)
-        row += 1
-
-        # Añadir una advertencia
-        tk.Label(frame, text="Advertencia: No modifique estos valores a menos que sepa lo que está haciendo.", fg="red").grid(row=row, column=0, columnspan=2, padx=5, pady=5)
-        row += 1
-
-        # Añadir la opción autoStart
-        tk.Label(frame, text="Abrir Synthi GME automáticamente al inicio").grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
-        auto_start_var = BooleanVar(value=self.config.get('autoStart', 'false').lower() == 'true')
-        auto_start_widget = tk.Checkbutton(frame, variable=auto_start_var, onvalue=True, offvalue=False, command=lambda: self.update_config('autoStart', "true" if auto_start_var.get() else "false"))
-        auto_start_widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
-        row += 1
-
-        for key, value in self.config['synthigme'].items():
-            tk.Label(frame, text=key).grid(row=row, column=0, padx=5, pady=5, sticky=tk.W)
-
-            if key == "server":
-                var = StringVar(value="default" if value == "s" else "new")
-                widget = ttk.Combobox(frame, textvariable=var, values=["default", "new"])
-                widget.bind("<<ComboboxSelected>>", lambda e, k=key, v=var: self.update_config(k, "s" if v.get() == "default" else "nil"))
-                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
-            elif key in ["deviceIn", "deviceOut"]:
-                var = StringVar(value="default" if value == "nil" else value)
-                combobox = ttk.Combobox(frame, textvariable=var, values=self.device_list, state='readonly', name=f"{key}_combobox", width=30)  # Increase width by 50%
-                combobox.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
-                def on_device_select(event, k=key, v=var):
-                    selection = v.get()
-                    if selection == "default":
-                        self.update_config(k, "nil")
-                    else:
-                        self.update_config(k, selection)
-                combobox.bind("<<ComboboxSelected>>", on_device_select)
-            elif isinstance(value, str) and value.lower() in ["true", "false"]:
-                var = BooleanVar(value=value.lower() == "true")
-                widget = tk.Checkbutton(frame, variable=var, onvalue=True, offvalue=False, command=lambda k=key, v=var: self.update_config(k, "true" if v.get() else "false"))
-                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
-            elif isinstance(value, (int, float)):
-                var = IntVar(value=value)
-                widget = tk.Entry(frame, textvariable=var)
-                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
-                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
-            else:
-                var = StringVar(value=str(value))
-                widget = tk.Entry(frame, textvariable=var)
-                widget.bind("<FocusOut>", lambda e, k=key, v=var: self.update_config(k, v.get()))
-                widget.grid(row=row, column=1, padx=5, pady=5, sticky=tk.W)
-
-            row += 1
-
-        # Añadir una etiqueta para mostrar el mensaje de advertencia
-        self.config_message = tk.Label(frame, text="", fg="red")
-        self.config_message.grid(row=row, column=0, columnspan=2, padx=5, pady=5, sticky=tk.W)
-        row += 1
-
-        # Añadir un botón para restaurar los valores por defecto
-        tk.Button(frame, text="Restaurar valores por defecto", command=self.restore_defaults).grid(row=row, column=0, columnspan=2, padx=5, pady=10)
+        self.config_message = tk.Label(frame, text="", fg="red")  # Create label first
+        create_options_widgets_impl(frame, self.config, self.update_config, self.config_message, self.device_list)
 
     def update_config(self, key, value):
         """Actualiza el archivo de configuración YAML cuando se cambia un valor."""
