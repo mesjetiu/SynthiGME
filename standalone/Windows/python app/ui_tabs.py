@@ -9,15 +9,21 @@ def enable_tab_dragging_impl(self_instance):
 
 def on_tab_drag_start_impl(self_instance, event):
     """Inicio del evento de arrastre de una pestaña."""
-    self_instance.drag_start_index = self_instance.notebook.index("@%d,%d" % (event.x, event.y))
+    try:
+        self_instance.drag_start_index = self_instance.notebook.index("@%d,%d" % (event.x, event.y))
+    except tk.TclError:
+        # Click was outside of any tab
+        self_instance.drag_start_index = None
 
 def on_tab_drag_motion_impl(self_instance, event):
     """Mueve una pestaña mientras el usuario la arrastra."""
     try:
-        current_index = self_instance.notebook.index("@%d,%d" % (event.x, event.y))
-        if current_index != self_instance.drag_start_index:
-            self_instance.notebook.insert(current_index, self_instance.notebook.tabs()[self_instance.drag_start_index])
-            self_instance.drag_start_index = current_index
+        # Only process motion if we started on a valid tab
+        if self_instance.drag_start_index is not None:
+            current_index = self_instance.notebook.index("@%d,%d" % (event.x, event.y))
+            if current_index != self_instance.drag_start_index:
+                self_instance.notebook.insert(current_index, self_instance.notebook.tabs()[self_instance.drag_start_index])
+                self_instance.drag_start_index = current_index
     except tk.TclError:
         pass  # Ignorar si el cursor está fuera de las pestañas
 
