@@ -17,6 +17,15 @@ from ui_events import send_command, process_command, on_close, confirm_force_clo
 from ui_options import create_options_widgets_impl
 from ui_console import create_console_widgets_impl
 from ui_output import append_output, show_program_info
+from ui_process import (
+    read_sclang_output, 
+    on_compilation_complete,
+    build_synthigme_command,
+    start_synthigme,
+    fetch_device_list,
+    update_device_comboboxes,
+    force_exit
+)
 
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
@@ -91,22 +100,7 @@ class SynthiGMEApp:
         threading.Thread(target=self.read_sclang_output, daemon=True).start()
 
     def build_synthigme_command(self):
-        """Construye el comando SynthiGME() a partir de la configuración."""
-        params = self.config['synthigme']
-        param_list = []
-        for key, value in params.items():
-            if key in ['server', 'deviceIn', 'deviceOut']:
-                if value == 'nil':
-                    param_list.append(f"{key}: {value}")
-                else:
-                    param_list.append(f'{key}: "{value}"')
-            elif isinstance(value, str) and value.lower() in ['true', 'false']:
-                param_list.append(f"{key}: {value.lower()}")
-            else:
-                param_list.append(f"{key}: {value}")
-        param_str = ", ".join(param_list)
-        command = f"SynthiGME({param_str}, standalone: true)"
-        return command
+        return build_synthigme_command(self)
 
     def create_menu(self):
         """Crea el menú principal de la aplicación."""
@@ -140,14 +134,7 @@ class SynthiGMEApp:
         self.root.config(menu=menu_bar)
 
     def start_synthigme(self):
-        """Inicia SynthiGME con los parámetros configurados."""
-        if not self.synthi_started:
-            self.synthi_started = True
-            self.synthi_menu.entryconfig("Iniciar", state="disabled")
-            self.append_output("SynthiGME iniciado.", "green_ready")
-            if self.process and self.process.stdin:
-                self.process.stdin.write(f'{self.build_synthigme_command()};\n')
-                self.process.stdin.flush()
+        start_synthigme(self)
 
     def toggle_tab(self, tab_name):
         """Abre o cierra la pestaña según el estado de la variable."""
@@ -241,33 +228,10 @@ class SynthiGMEApp:
         append_output(self, text, color)
 
     def read_sclang_output(self):
-        """Lee la salida de sclang, detecta comandos y registra en el archivo de log."""
-        try:
-            while not self.stop_event.is_set() and self.process:
-                output = self.process.stdout.readline()
-                if output:
-                    self.process_command(output.strip())
-                    self.append_output(output.strip(), self.detect_color(output.strip()))
-
-                    # Detectar finalización de compilación
-                    if "*** Welcome to SuperCollider" in output:
-                        self.on_compilation_complete()
-
-                if self.process.poll() is not None:  # Si el proceso ha terminado
-                    break
-        except Exception as e:
-            self.append_output(f"Error leyendo salida de sclang: {e}", "light_coral")
-        finally:
-            if self.log_file_handle:
-                self.log_file_handle.close()
+        read_sclang_output(self)
 
     def on_compilation_complete(self):
-        """Ejecuta un comando arbitrario cuando la compilación ha terminado."""
-        self.append_output("Compilación completada.", "green_ready")
-        self.device_list = []
-        self.fetch_device_list()
-        if self.config.get('autoStart', 'false').lower() == 'true':
-            self.start_synthigme()
+        on_compilation_complete(self)
 
     def send_command(self, event=None):
         send_command(self, event)
@@ -282,38 +246,13 @@ class SynthiGMEApp:
         confirm_force_close(self)
 
     def force_exit(self):
-        """Cierra la aplicación de forma inmediata."""
-        self.append_output("Forzando el cierre de Synthi GME...", "light_coral")
-        if self.process:
-            self.stop_event.set()
-            try:
-                self.process.terminate()
-                self.process.wait(timeout=2)
-            except subprocess.TimeoutExpired:
-                self.process.kill()
-        
-        # Close log file handle
-        if self.log_file_handle and not self.log_file_handle.closed:
-            self.log_file_handle.close()
-        
-        self.root.destroy()
+        force_exit(self)
 
     def fetch_device_list(self):
-        """Envía un comando a sclang para obtener la lista de dispositivos."""
-        if self.process and self.process.stdin:
-            self.append_output("Fetching device list...", "light_cyan")  # Debugging output
-            self.fetching_devices = True
-            self.device_list = []  # Clear previous device list
-            self.process.stdin.write("ServerOptions.devices.do{|device| device.postln}; nil\n")
-            self.process.stdin.flush()
+        fetch_device_list(self)
 
     def update_device_comboboxes(self):
-        """Actualiza los comboboxes de dispositivos con la lista de dispositivos obtenida."""
-        for key in ["deviceIn", "deviceOut"]:
-            combobox = self.tabs["Opciones"]["frame"].children.get(f"{key}_combobox")
-            if combobox:
-                combobox["values"] = self.device_list
-                self.append_output(f"Updated {key} combobox with devices: {self.device_list}", "light_cyan")  # Debugging output
+        update_device_comboboxes(self)
 
 
 # En la clase SynthiGMEApp, reemplaza el método on_close con el siguiente:
