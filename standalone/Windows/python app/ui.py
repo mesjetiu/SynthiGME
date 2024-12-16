@@ -27,6 +27,7 @@ from ui_process import (
     update_device_comboboxes,
     force_exit
 )
+from ui_menu import create_menu_impl, show_about_impl
 
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
@@ -104,35 +105,7 @@ class SynthiGMEApp:
         return build_synthigme_command(self)
 
     def create_menu(self):
-        """Crea el menú principal de la aplicación."""
-        menu_bar = Menu(self.root)
-
-        # Menú Archivo
-        file_menu = Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="Cerrar", command=self.on_close)
-        menu_bar.add_cascade(label="Archivo", menu=file_menu)
-
-        # Menú Ver
-        self.view_menu = Menu(menu_bar, tearoff=0)
-        for tab_name, tab_data in self.tabs.items():
-            self.view_menu.add_checkbutton(
-                label=tab_name,
-                variable=tab_data["variable"],
-                command=lambda name=tab_name: self.toggle_tab(name),
-            )
-        menu_bar.add_cascade(label="Ver", menu=self.view_menu)
-
-        # Menú Synthi
-        self.synthi_menu = Menu(menu_bar, tearoff=0)
-        self.synthi_menu.add_command(label="Iniciar", command=self.start_synthigme, state="normal")
-        menu_bar.add_cascade(label="Synthi", menu=self.synthi_menu)
-
-        # Menú Ayuda
-        help_menu = Menu(menu_bar, tearoff=0)
-        help_menu.add_command(label="Acerca de", command=self.show_about)
-        menu_bar.add_cascade(label="Ayuda", menu=help_menu)
-
-        self.root.config(menu=menu_bar)
+        create_menu_impl(self)
 
     def start_synthigme(self):
         start_synthigme(self)
@@ -262,33 +235,7 @@ class SynthiGMEApp:
         show_program_info(self)
 
     def show_about(self):
-        """Muestra una ventana con la información 'Acerca de'."""
-        about_window = tk.Toplevel(self.root)
-        about_window.title("Acerca de SynthiGME")
-        about_window.geometry("400x300")
-
-        version = get_version()
-        about_info = [
-            "==== SynthiGME ====",
-            f"Versión: {version}",
-            "Autor: Carlos Arturo Guerra Parra",
-            "Contacto: carlosarturoguerra@gmail.com",
-            "",
-            "SynthiGME es un software libre distribuido bajo la",
-            "Licencia Pública General de GNU.",
-            "====================",
-        ]
-
-        # Crear un frame para el contenido
-        frame = tk.Frame(about_window, padx=10, pady=10)
-        frame.pack(fill=tk.BOTH, expand=True)
-
-        # Añadir la información al frame
-        for line in about_info:
-            tk.Label(frame, text=line, justify=tk.LEFT, anchor="w").pack(fill=tk.X)
-
-        # Botón para cerrar la ventana
-        tk.Button(frame, text="Cerrar", command=about_window.destroy).pack(pady=10)
+        show_about_impl(self)
 
     def reset_close_attempt(self):
         reset_close_attempt(self)
