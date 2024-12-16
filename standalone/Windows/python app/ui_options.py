@@ -3,7 +3,16 @@ import tkinter as tk
 from tkinter import ttk, BooleanVar, StringVar, IntVar
 from ui_config import restore_defaults_impl
 
-def create_options_widgets_impl(frame, config, update_config, config_message, device_list, app_instance):  # Add app_instance
+def create_options_widgets_impl(self_instance):
+    """Implementación de los widgets de configuración en la pestaña 'Opciones'."""
+    frame = self_instance.tabs["Opciones"]["frame"]
+    self_instance.config_message = tk.Label(frame, text="", fg="red")
+    
+    # Rest of the existing implementation
+    create_widgets(frame, self_instance.config, self_instance.update_config, 
+                  self_instance.config_message, self_instance.device_list, self_instance)
+
+def create_widgets(frame, config, update_config, config_message, device_list, app_instance):  # Add app_instance
     """Implementación de los widgets de configuración en la pestaña 'Opciones'."""
     row = 0
 

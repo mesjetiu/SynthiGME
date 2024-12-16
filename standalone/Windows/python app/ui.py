@@ -136,14 +136,11 @@ class SynthiGMEApp:
 
     def create_config_widgets(self):
         """Crea los widgets de configuración en la pestaña 'Inicio'."""
-        frame = self.tabs["Inicio"]["frame"]
-        create_config_widgets_impl(frame, self.tabs, self.config, self.update_config)
+        create_config_widgets_impl(self)
 
     def create_options_widgets(self):
         """Crea los widgets de configuración en la pestaña 'Opciones'."""
-        frame = self.tabs["Opciones"]["frame"]
-        self.config_message = tk.Label(frame, text="", fg="red")  # Create label first
-        create_options_widgets_impl(frame, self.config, self.update_config, self.config_message, self.device_list, self)  # Add self
+        create_options_widgets_impl(self)
 
     def update_config(self, key, value):
         update_config_impl(self, key, value)
@@ -201,5 +198,3 @@ class SynthiGMEApp:
 
     def update_device_comboboxes(self):
         update_device_comboboxes(self)
-
-    
