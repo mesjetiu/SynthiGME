@@ -1,5 +1,5 @@
 # ui_events.py
-
+import tkinter as tk
 import tkinter.messagebox as mb
 
 def send_command(self_instance, event=None):
