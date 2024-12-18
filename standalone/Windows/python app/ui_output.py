@@ -40,7 +40,7 @@ def append_output(self_instance, text, color="bright_black"):
 
     # Para el resto del texto, mantener el comportamiento normal
     if text.strip() and text not in self_instance.processed_lines:  
-        self_instance.processed_lines.add(text)
+        self_instance.processed_lines.add(text)  # Cambiado de append a add
         self_instance.console_content += text + "\n"  
         
         # Update UI
@@ -49,10 +49,11 @@ def append_output(self_instance, text, color="bright_black"):
         self_instance.output_area.see(tk.END)
         self_instance.output_area.configure(state="disabled")
 
-        # Write to log file
+        # Write to log file with timestamp
         try:
             if self_instance.log_file_handle and not self_instance.log_file_handle.closed:
-                self_instance.log_file_handle.write(text + "\n")
+                timestamp = datetime.now().strftime("[%H:%M:%S]")
+                self_instance.log_file_handle.write(f"{timestamp} {text}\n")
                 self_instance.log_file_handle.flush()
         except Exception as e:
             print(f"Error writing to log file: {e}")
