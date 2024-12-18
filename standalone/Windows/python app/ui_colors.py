@@ -2,6 +2,10 @@ def detect_color(text):
     """Detecta el color apropiado basado en el contenido del texto."""
     if "==== SynthiGME Log ====" in text or "==== Log Output ====" in text:
         return "gold3"
+    elif "Device list fetched:" in text:
+        return "olive_drab1"
+    elif "Updated deviceIn" in text or "Updated deviceOut" in text:
+        return "light_slate_blue"
     elif "compiling" in text or "compile done" in text:
         return "light_slate_blue"
     elif "WARNING:" in text:

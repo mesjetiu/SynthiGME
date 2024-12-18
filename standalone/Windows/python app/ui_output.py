@@ -5,10 +5,40 @@ from ui_colors import detect_color
 from config import get_version  # Añadir esta importación
 
 def append_output(self_instance, text, color="bright_black"):
-    """Añade textom al área de salidae con un color específico y guarda en el log."""
+    """Añade texto al área de salida con un color específico y guarda en el log."""
     if not self_instance.root.winfo_exists():
-        return  # Sir la ventana principal ha sido destruida, no hacer nada
+        return
+        
+    # Textos que queremos colorear específicamente
+    highlight_phrases = {
+        "Device list fetched:": "olive_drab1",
+        "Updated deviceIn combobox with devices:": "light_slate_blue",
+        "Updated deviceOut combobox with devices:": "light_slate_blue"
+    }
+    
+    # Si el texto contiene alguna de las frases clave
+    for phrase, phrase_color in highlight_phrases.items():
+        if phrase in text:
+            # Separar la frase de la lista de dispositivos
+            parts = text.split(":", 1)
+            if len(parts) == 2:
+                # Insertar la frase con color
+                self_instance.output_area.configure(state="normal")
+                self_instance.output_area.insert(tk.END, f"{parts[0]}:", phrase_color)
+                # Insertar la lista de dispositivos con el color por defecto
+                self_instance.output_area.insert(tk.END, f"{parts[1]}\n", "bright_black")
+                self_instance.output_area.configure(state="disabled")
+                self_instance.console_content += text + "\n"
+                return
 
+    # Añadir espacio extra antes de ciertos mensajes
+    if any(msg in text for msg in ["Device list fetched:", "Updated deviceIn", "Updated deviceOut"]):
+        self_instance.console_content += "\n"
+        self_instance.output_area.configure(state="normal")
+        self_instance.output_area.insert(tk.END, "\n")
+        self_instance.output_area.configure(state="disabled")
+
+    # Para el resto del texto, mantener el comportamiento normal
     if text.strip() and text not in self_instance.processed_lines:  
         self_instance.processed_lines.add(text)
         self_instance.console_content += text + "\n"  
