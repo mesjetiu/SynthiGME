@@ -5,11 +5,6 @@ import tkinter as tk
 from tkinter import BooleanVar
 from config import CONFIG_DIR, save_config  # Añadir save_config a la importación
 
-def create_config_widgets_impl(self_instance):
-    """Implementación de los widgets de configuración."""
-    frame = self_instance.tabs["Inicio"]["frame"]
-    create_widgets(frame, self_instance.tabs, self_instance.config, self_instance.update_config)
-
 def create_config_widgets_impl(frame, tabs, config, update_config):
     """Implementación de los widgets de configuración."""
     row = 0
