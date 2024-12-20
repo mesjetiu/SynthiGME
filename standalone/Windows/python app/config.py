@@ -14,6 +14,7 @@ else:
 
 CONFIG_DIR = os.path.join(SCRIPT_DIR, "Config")
 VERSION_FILE = os.path.join(SCRIPT_DIR, ".Extensions", "SynthiGME", "version")
+ICON_PATH = os.path.join(SCRIPT_DIR, "icono_SynthiGME.ico")   # Adjust path as needed
 
 def get_version():
     """Obtiene la versión de SynthiGME desde el archivo SynthiGME/version."""

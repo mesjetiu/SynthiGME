@@ -1,6 +1,8 @@
 # ui_process.py
 import subprocess
 import tkinter.messagebox as mb
+import tkinter as tk
+from config import ICON_PATH
 
 def read_sclang_output(self_instance):
     """Lee la salida de sclang, detecta comandos y registra en el archivo de log."""
@@ -111,18 +113,53 @@ def force_exit(self_instance):
 def process_command(self_instance, text):
     """Procesa comandos específicos enviados desde sclang."""
     
-    # Detectar errores que contienen "ERROR:"
     if text.startswith("ERROR: "):
-        if mb.askyesno("Error en SuperCollider",
-                       f"{text}\n\n¿Desea cerrar el programa?",
-                       parent=self_instance.root):
+        error_message = text
+
+        # Verificar si el error está en la lista de ignorados
+        if error_message in self_instance.ignored_errors:
+            return True
+
+        # Crear un diálogo personalizado con tkinter
+        dialog = tk.Toplevel(self_instance.root)
+        dialog.title("Error en SuperCollider")
+        dialog.grab_set()  # Hace el diálogo modal
+        
+        # Establecer el icono
+        dialog.iconbitmap(ICON_PATH)
+        
+        # Centrar el diálogo en la pantalla
+        dialog_width = 500
+        dialog_height = 200
+        screen_width = dialog.winfo_screenwidth()
+        screen_height = dialog.winfo_screenheight()
+        x = (screen_width - dialog_width) // 2
+        y = (screen_height - dialog_height) // 2
+        dialog.geometry(f"{dialog_width}x{dialog_height}+{x}+{y}")
+        
+        # Mensaje de error
+        tk.Label(dialog, text=error_message, fg="red", wraplength=400).pack(padx=20, pady=10)
+        
+        button_frame = tk.Frame(dialog)
+        button_frame.pack(pady=10)
+        
+        def cerrar_app():
             self_instance.append_output("Cerrando SynthiGME...", "light_coral")
-            # Comentar la línea actual
-            # if self_instance.process and self_instance.process.stdin:
-            #     self_instance.process.stdin.write("SynthiGME.instance.close\n")
-            #     self_instance.process.stdin.flush()
-            # Ejecutar force_exit en su lugar
             self_instance.force_exit()
+            dialog.destroy()
+        
+        def ignorar_error():
+            dialog.destroy()
+        
+        def ignorar_siempre():
+            self_instance.ignored_errors.append(error_message)
+            dialog.destroy()
+        
+        tk.Button(button_frame, text="Cerrar aplicación", command=cerrar_app).grid(row=0, column=0, padx=5)
+        tk.Button(button_frame, text="Ignorar este error", command=ignorar_error).grid(row=0, column=1, padx=5)
+        tk.Button(button_frame, text="Ignorar siempre este error", command=ignorar_siempre).grid(row=0, column=2, padx=5)
+        
+        dialog.wait_window()
         return True
     
     # Detectar cuando SynthiGME está en ejecución

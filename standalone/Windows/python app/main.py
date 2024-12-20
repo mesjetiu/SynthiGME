@@ -8,12 +8,11 @@ import tkinter as tk
 import subprocess
 import os
 from ui import SynthiGMEApp
-from config import SCRIPT_DIR
+from config import SCRIPT_DIR, ICON_PATH
 
 SUPER_COLLIDER_DIR = os.path.join(SCRIPT_DIR, ".SuperCollider")
 SCLANG_EXECUTABLE = os.path.join(SUPER_COLLIDER_DIR, "sclang.exe")
 SCLANG_CONFIG = os.path.join(SCRIPT_DIR, "Config", "sclang_conf.yaml")
-ICON_PATH = os.path.join(SCRIPT_DIR, "icono_SynthiGME.ico")  # Ruta al icono
 
 def start_sclang():
     """Inicia el proceso de sclang y redirige la salida."""

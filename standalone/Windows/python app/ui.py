@@ -89,6 +89,7 @@ class SynthiGMEApp:
         self.device_list = []  # Initialize device_list before calling create_options_widgets
         self.fetching_devices = False  # Flag to indicate if fetching devices
         self.processed_lines = set()  # Track processed lines to avoid duplicates
+        self.ignored_errors = []  # Initialize ignored_errors list
         self.create_options_widgets()
 
         # Crear menú principal
