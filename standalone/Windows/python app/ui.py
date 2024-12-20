@@ -12,7 +12,7 @@ from datetime import datetime
 from config import SCRIPT_DIR, CONFIG_DIR, load_config, save_config, get_version
 from logger import write_log_header, LOG_DIR
 from ui_colors import detect_color, configure_tags
-from ui_config import create_config_widgets_impl, update_config_impl, restore_defaults_impl
+from ui_config import update_config_impl, restore_defaults_impl
 from ui_events import send_command, on_close, confirm_force_close, reset_close_attempt
 from ui_options import create_options_widgets_impl
 from ui_console import create_console_widgets_impl
@@ -138,10 +138,6 @@ class SynthiGMEApp:
 
     def configure_tags(self):
         configure_tags(self.output_area)
-
-    def create_config_widgets(self):
-        """Crea los widgets de configuración en la pestaña 'Inicio'."""
-        create_config_widgets_impl(self)
 
     def create_options_widgets(self):
         """Crea los widgets de configuración en la pestaña 'Opciones'."""
