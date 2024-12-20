@@ -59,16 +59,23 @@ def start_synthigme(self_instance):
             self_instance.process.stdin.write(f'{build_synthigme_command(self_instance)};\n')
             self_instance.process.stdin.flush()
 
-def close_synthigme(self_instance):
-    """Cierra la instancia de SynthiGME."""
+def close_synthigme(self_instance, on_complete=None):
+    """Cierra la instancia de SynthiGME.
+    
+    Args:
+        self_instance: Instancia de la aplicación
+        on_complete: Código sclang a ejecutar al completar el cierre (str, opcional)
+    """
     if hasattr(self_instance, 'synthi_running') and self_instance.synthi_running:
         if self_instance.process and self_instance.process.stdin:
-            self_instance.process.stdin.write("SynthiGME.instance.close\n")
+            on_complete_str = f"onComplete: {{{on_complete}}}" if on_complete else ""
+            command = f"SynthiGME.instance.close({on_complete_str})\n"
+            self_instance.process.stdin.write(command)
             self_instance.process.stdin.flush()
             self_instance.append_output("Enviado comando para cerrar SynthiGME", "light_cyan")
     else:
         self_instance.force_exit()
-
+        
 def fetch_device_list(self_instance):
     """Envía un comando a sclang para obtener la lista de dispositivos."""
     if self_instance.process and self_instance.process.stdin:
@@ -127,10 +134,7 @@ def process_command(self_instance, text):
     # Detectar comandos que comienzan con "command:"
     if text.startswith("command: "):
         command = text[len("command: "):].strip()
-        if command == "exit":
-            self_instance.append_output("Recibido comando 'exit'. Cerrando la aplicación...", "light_goldenrod3")
-            self_instance.close_synthigme() 
-        elif command == "force_exit":
+        if command == "force_exit":
             self_instance.append_output("Recibido comando 'force_exit'. Forzando cierre...", "light_coral")
             self_instance.force_exit()
         else:

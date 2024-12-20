@@ -373,7 +373,7 @@ SynthiGME {
 	}
 
 	// Libera todos los Synths del servidor y cierra la GUI
-	close {
+	close {|onComplete = nil|
 		var screenBounds = Window.availableBounds;
 		var windowWidth = 300;
 		var windowHeight = 100;
@@ -395,7 +395,7 @@ SynthiGME {
 					"Descartando cambios y saliendo...".sgmePostln;
 					// Aquí iría la lógica para salir de la aplicación
 					dialog.close;
-					this.exit;
+					this.exit(onComplete);
 				}),
 				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
 					// Acción para cancelar el cierre
@@ -419,7 +419,7 @@ SynthiGME {
 					// Acción para aceptar y salir
 					openDialog = false;
 					dialog.close;
-					this.exit;
+					this.exit(onComplete);
 				}),
 				cancelButton = Button().states_([["Cancelar", Color.black, Color.white]]).action_({
 					// Acción para cancelar el cierre
@@ -439,7 +439,7 @@ SynthiGME {
 		dialog.alwaysOnTop = false;
 	}
 
-	exit {
+	exit {|onComplete = nil|
 		fork {
 			{Window.closeAll}.defer();
 			0.1.wait;
@@ -448,9 +448,14 @@ SynthiGME {
 				server.quit(
 					onComplete: {
 						server.freeAll;
-						thisProcess.stop; // en teoría cierra los puertos como UDP
+					//	thisProcess.stop; // en teoría cierra los puertos como UDP
 						//0.exit;
-						"command: force_exit".postln; // "exit" lo recibe el script de python de la versión standalone.
+						//"command: force_exit".postln; // "exit" lo recibe el script de python de la versión standalone.
+						if (onComplete.notNil) {
+							onComplete.value;
+						}{
+							"command: force_exit".postln;
+						}
 				})
 			} {
 				if (Platform.ideName == "none", { // Si se está ejecutando desde una terminal

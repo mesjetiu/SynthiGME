@@ -1,16 +1,18 @@
 # ui_events.py
 import tkinter as tk
 import tkinter.messagebox as mb
-from ui_process import process_command, close_synthigme  # Importar process_command desde ui_process.py
+from ui_process import process_command, close_synthigme 
 
 def send_command(self_instance, event=None):
     """Envía un comando al proceso sclang."""
     if self_instance.process and self_instance.process.stdin:
         command = self_instance.input_area.get().strip()
-        if command.lower() in ["exit", "quit"]:
-            self_instance.close_synthigme()  # Usar la nueva función
+        if command.lower() == "exit":
+            self_instance.close_synthigme('"command: force_exit".postln;') 
+        elif command.lower() == "restart":
+            self_instance.close_synthigme("thisProcess.recompile;")  
         elif command.lower() == "force_exit":
-            self_instance.on_close()
+            self_instance.force_exit()
         else:
             self_instance.process.stdin.write(command + "\n")
             self_instance.process.stdin.flush()
@@ -35,7 +37,7 @@ def on_close(self_instance):
 
         if self_instance.process and self_instance.process.stdin:
             try:
-                self_instance.close_synthigme() 
+                self_instance.close_synthigme('"command: force_exit".postln;') 
                 log_message = "Comando enviado a sclang: SynthiGME.instance.close"
                 self_instance.append_output(log_message, "light_cyan")
                 if self_instance.log_file_handle:

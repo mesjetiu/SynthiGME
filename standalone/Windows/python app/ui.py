@@ -109,7 +109,7 @@ class SynthiGMEApp:
         # Start reading sclang output
         threading.Thread(target=self.read_sclang_output, daemon=True).start()
 
-        self.close_synthigme = lambda: close_synthigme(self)
+        self.close_synthigme = lambda on_complete=None: close_synthigme(self, on_complete)
 
     def build_synthigme_command(self):
         return build_synthigme_command(self)
