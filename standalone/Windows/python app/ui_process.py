@@ -111,37 +111,39 @@ def force_exit(self_instance):
     self_instance.root.destroy()
 
 def process_command(self_instance, text):
-    """Procesa comandos específicos enviados desde sclang."""
-    
     if text.startswith("ERROR: "):
         error_message = text
-
-        # Verificar si el error está en la lista de ignorados
         if error_message in self_instance.ignored_errors:
             return True
 
-        # Crear un diálogo personalizado con tkinter
         dialog = tk.Toplevel(self_instance.root)
         dialog.title("Error en SuperCollider")
-        dialog.grab_set()  # Hace el diálogo modal
-        
-        # Establecer el icono
+        dialog.grab_set()
         dialog.iconbitmap(ICON_PATH)
         
-        # Centrar el diálogo en la pantalla
-        dialog_width = 500
-        dialog_height = 200
-        screen_width = dialog.winfo_screenwidth()
-        screen_height = dialog.winfo_screenheight()
-        x = (screen_width - dialog_width) // 2
-        y = (screen_height - dialog_height) // 2
-        dialog.geometry(f"{dialog_width}x{dialog_height}+{x}+{y}")
+        # Make dialog resizable and set min/max width
+        dialog.resizable(True, False)  # Allow horizontal resize only
+        dialog.minsize(400, 0)
+        dialog.maxsize(800, 1000)
         
-        # Mensaje de error
-        tk.Label(dialog, text=error_message, fg="red", wraplength=400).pack(padx=20, pady=10)
+        # Main container with padding
+        main_frame = tk.Frame(dialog, padx=20, pady=15)
+        main_frame.pack(fill=tk.BOTH, expand=True)
         
-        button_frame = tk.Frame(dialog)
-        button_frame.pack(pady=10)
+        # Error message with automatic wrapping
+        message_label = tk.Label(
+            main_frame, 
+            text=error_message,
+            fg="red",
+            wraplength=700,  # Will wrap before dialog's maxsize
+            justify=tk.LEFT,
+            anchor="w"
+        )
+        message_label.pack(fill=tk.BOTH, expand=True, pady=(0, 20))
+        
+        # Buttons frame at bottom
+        button_frame = tk.Frame(main_frame)
+        button_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=(10, 0))
         
         def cerrar_app():
             self_instance.append_output("Cerrando SynthiGME...", "light_coral")
@@ -154,6 +156,22 @@ def process_command(self_instance, text):
         def ignorar_siempre():
             self_instance.ignored_errors.append(error_message)
             dialog.destroy()
+        
+        # Create buttons with consistent width
+        tk.Button(button_frame, text="Cerrar aplicación", command=cerrar_app, width=15).pack(side=tk.LEFT, padx=5)
+        tk.Button(button_frame, text="Ignorar este error", command=ignorar_error, width=15).pack(side=tk.LEFT, padx=5)
+        tk.Button(button_frame, text="Ignorar siempre", command=ignorar_siempre, width=15).pack(side=tk.LEFT, padx=5)
+        
+        # Center dialog on screen after it's been created
+        dialog.update_idletasks()
+        width = dialog.winfo_width()
+        height = dialog.winfo_height()
+        x = (dialog.winfo_screenwidth() // 2) - (width // 2)
+        y = (dialog.winfo_screenheight() // 2) - (height // 2)
+        dialog.geometry(f'+{x}+{y}')
+        
+        dialog.wait_window()
+        return True
         
         tk.Button(button_frame, text="Cerrar aplicación", command=cerrar_app).grid(row=0, column=0, padx=5)
         tk.Button(button_frame, text="Ignorar este error", command=ignorar_error).grid(row=0, column=1, padx=5)
