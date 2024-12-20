@@ -45,7 +45,8 @@ class SynthiGMEApp:
     """Interfaz gráfica para la aplicación SynthiGME con Tkinter."""
     def __init__(self, root, sclang_process):
         self.root = root
-        self.root.title("Synthi GME")
+        version = get_version()
+        self.root.title(f"Synthi GME v{version}")
         self.root.geometry("533x600")  # Cambiar el ancho a 2/3 del tamaño original (800 * 2/3 = 533)
 
         # Inicializar variables para el cierre
