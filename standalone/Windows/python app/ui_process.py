@@ -1,6 +1,5 @@
 # ui_process.py
 import subprocess
-import threading
 import tkinter.messagebox as mb
 
 def read_sclang_output(self_instance):

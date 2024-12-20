@@ -1,8 +1,6 @@
 # ui_config.py
 import os
 import yaml
-import tkinter as tk
-from tkinter import BooleanVar
 from config import CONFIG_DIR, save_config  # Añadir save_config a la importación
 
 def update_config_impl(self_instance, key, value):

@@ -1,7 +1,6 @@
 # ui_events.py
 import tkinter as tk
 import tkinter.messagebox as mb
-from ui_process import process_command, close_synthigme 
 
 def send_command(self_instance, event=None):
     """Envía un comando al proceso sclang."""

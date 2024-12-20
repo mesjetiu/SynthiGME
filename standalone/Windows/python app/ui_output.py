@@ -1,7 +1,6 @@
 # ui_output.py
 import tkinter as tk
 from datetime import datetime
-from ui_colors import detect_color
 from config import get_version  # Añadir esta importación
 
 def append_output(self_instance, text, color="bright_black"):

@@ -1,15 +1,10 @@
-import subprocess
 import threading
 import os
-import traceback
-import yaml
 import tkinter as tk  # Importar tkinter como tk
-from tkinter import Menu, BooleanVar, StringVar, IntVar
-from tkinter.scrolledtext import ScrolledText
+from tkinter import BooleanVar
 from tkinter import ttk  # Para usar Notebook (pestañas)
-import tkinter.messagebox as mb
 from datetime import datetime
-from config import SCRIPT_DIR, CONFIG_DIR, load_config, save_config, get_version
+from config import SCRIPT_DIR, load_config, get_version
 from logger import write_log_header, LOG_DIR
 from ui_colors import detect_color, configure_tags
 from ui_config import update_config_impl, restore_defaults_impl

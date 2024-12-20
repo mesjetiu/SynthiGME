@@ -1,6 +1,5 @@
 # ui_tabs.py
 import tkinter as tk
-from tkinter import ttk
 
 def enable_tab_dragging_impl(self_instance):
     """Habilita el movimiento de pestañas mediante arrastrar y soltar."""
