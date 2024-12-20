@@ -25,7 +25,8 @@ from ui_process import (
     fetch_device_list,
     process_command,
     update_device_comboboxes,
-    force_exit
+    force_exit,
+    close_synthigme
 )
 from ui_menu import create_menu_impl, show_about_impl
 from ui_tabs import (
@@ -87,6 +88,7 @@ class SynthiGMEApp:
 
         # Crear widgets de configuración en su pestaña
         self.synthi_started = False  # Track if SynthiGME has been started
+        self.synthi_running = False  # Inicializa el estado de SynthiGME
         self.process = sclang_process  # Use the existing sclang process
         self.device_list = []  # Initialize device_list before calling create_options_widgets
         self.fetching_devices = False  # Flag to indicate if fetching devices
@@ -106,6 +108,8 @@ class SynthiGMEApp:
 
         # Start reading sclang output
         threading.Thread(target=self.read_sclang_output, daemon=True).start()
+
+        self.close_synthigme = lambda: close_synthigme(self)
 
     def build_synthigme_command(self):
         return build_synthigme_command(self)
