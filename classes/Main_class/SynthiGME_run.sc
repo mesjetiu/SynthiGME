@@ -406,9 +406,6 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					splashWindow.progress();
 
 					modulKeyboards[0].initMIDI;
-					"Inicializados puertos y funciones MIDI".sgmePostln;
-					("Escuchando Upper Manual por canal MIDI" + modulKeyboards[0].midiChannel).sgmePostln;
-					("Escuchando Lower Manual por canal MIDI" + modulKeyboards[1].midiChannel).sgmePostln;
 					splashWindow.progress();
 
 
