@@ -252,8 +252,8 @@ SGME_Keyboard : SGME_Connectable {
 		});
 
 		"Inicializados puertos y funciones MIDI".sgmePostln;
-		("Escuchando Upper Manual por canal MIDI" + keyboards[0].midiChannel).sgmePostln;
-		("Escuchando Lower Manual por canal MIDI" + keyboards[1].midiChannel).sgmePostln;
+		("Escuchando Upper Manual por canal MIDI" + SynthiGME.instance.modulKeyboards[0].midiChannel).sgmePostln;
+		("Escuchando Lower Manual por canal MIDI" + SynthiGME.instance.modulKeyboards[1].midiChannel).sgmePostln;
 
 		midiInitialized = true;
 	}
