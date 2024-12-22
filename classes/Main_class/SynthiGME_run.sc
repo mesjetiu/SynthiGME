@@ -18,7 +18,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 */
 
 + SynthiGME {
-	run {
+	run {|initMIDI = true|
 		var thisRoutine, splashWindow;
 
 		if (isRunning || (connectionOut != nil)) {"SynthiGME en ejecución".error; ^this};
@@ -405,7 +405,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 					};
 					splashWindow.progress();
 
-					modulKeyboards[0].initMIDI;
+					if (initMIDI) {	modulKeyboards[0].initMIDI };
 					splashWindow.progress();
 
 

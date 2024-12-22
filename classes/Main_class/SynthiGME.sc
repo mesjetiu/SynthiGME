@@ -154,12 +154,13 @@ SynthiGME {
 		alwaysRebootServer = false, // false: no se reinicia si se cumple la configuración del servidor.
 		postWin = true, // se abre una ventana para post window.
 		standalone = false,
+		initMIDI = true,
 		deviceIn = nil,
 		deviceOut = nil;
 
 		if (instance != nil) {"Ya existe una instancia"; ^this};
 
-		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin, standalone, deviceIn, deviceOut);
+		^super.new.init(server, /*gui,*/ verboseOSC, numOutputChannels.clip(2,14).asInteger, numInputChannels.clip(2,8).asInteger, numReturnChannels.clip(0,4).asInteger, blockSize, alwaysRebootServer, postWin, standalone, initMIDI, deviceIn, deviceOut);
 	}
 
 
@@ -201,7 +202,7 @@ SynthiGME {
 
 	// Métodos de instancia //////////////////////////////////////////////////////////////
 
-	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin, standalone, deviceIn, deviceOut|
+	init {|serv, /*gui,*/ verboseOSC, numOutputChan, numInputChan, numReturnChan, blockSiz, alwaysRebootServ, postWin, standalone, initMIDI, deviceIn, deviceOut|
 
 		instance = this;
 
@@ -255,7 +256,7 @@ SynthiGME {
 
 		stereoOutBuses = [0,1];
 
-		this.run;
+		this.run(initMIDI: initMIDI);
 	}
 
 
