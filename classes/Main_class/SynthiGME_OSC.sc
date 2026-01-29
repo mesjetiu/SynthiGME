@@ -20,8 +20,8 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 + SynthiGME {
 
 	prepareOSC {
-		var ipDifusion = "255.255.255.255"; // Dirección de difusión de tu red
-		NetAddr.broadcastFlag = true;
+		var ipDifusion = "224.0.1.1"; // Dirección multicast (compatible con SynthiGME-web)
+		NetAddr.broadcastFlag = true; // Necesario también para multicast en SC
 		netAddr = NetAddr(ipDifusion, devicePort);
 		// Busca la IP de la red local:
 		this.getLocalIP; // no es necesario, es solo informativo
@@ -111,7 +111,7 @@ Copyright 2024 Carlos Arturo Guerra Parra <carlosarturoguerra@gmail.com>
 			var message = "/" ++ oscGroup ++ msg; // Se añade un prefijo de grupo de OSC
 			netAddr.sendMsg(message, value);
 		} {
-			"No está definida la dirección IP de este dispositivo. No se pueden enviar mensajes en broadcasting.".sgmeWarn;
+			"No está definida la dirección IP de este dispositivo. No se pueden enviar mensajes via multicast.".sgmeWarn;
 		}
 	}
 }

@@ -12,7 +12,7 @@
 		// CONFIGURACIÓN GENERAL********************************************************************
 
 		\generalVol, 0.5,
-		\OSCDevicePort, 9000,
+		\OSCDevicePort, 57121,
 
 		// Opciones del servidor de audio
 		\numAudioBusChannels, 2048,
